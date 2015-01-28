@@ -1,0 +1,48 @@
+package subsym.Models;
+
+/**
+ * Created by anon on 28.01.2015.
+ */
+public class Vec {
+
+  public double x;
+  public double y;
+
+  public Vec(double x, double y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  public Vec add(Vec o) {
+    x += o.x;
+    y += o.y;
+    return this;
+  }
+
+  public Vec divide(double size) {
+    x /= size;
+    y /= size;
+    return this;
+  }
+
+  @Override
+  public String toString() {
+    return "(" + x + ", " + y + ")";
+  }
+
+  public Vec multiply(Vec o) {
+    x *= o.x;
+    y *= o.y;
+    return this;
+  }
+
+  public Vec subtract(Vec o) {
+    x -= o.x;
+    y -= o.y;
+    return this;
+  }
+
+  public double lenght() {
+    return Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+  }
+}
