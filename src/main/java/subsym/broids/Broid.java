@@ -14,7 +14,6 @@ public class Broid extends Entity {
   public Broid(int x, int y) {
     super(x, 0, y);
     setColor(Theme.BACKGROUND_DARK);
-
     setVelocity(0, 0);
   }
 

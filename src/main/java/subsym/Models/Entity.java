@@ -16,16 +16,14 @@ public abstract class Entity implements Comparable<Entity> {
   private Color color = EMPTY;
   private String desc = "";
   private Color outlineColor = Color.black;
-  private int value;
-  private Component velocity;
 
   public Entity(int x, int index, int y) {
     this.index = index;
-    p = Vec.create(x,y);
+    p = Vec.create(x, y);
   }
 
   public void setVelocity(int x, int y) {
-    v = Vec.create(x,y);
+    v = Vec.create(x, y);
   }
 
   public void setVelocity(Vec v) {
@@ -41,16 +39,8 @@ public abstract class Entity implements Comparable<Entity> {
     return (int) p.x;
   }
 
-  public String getId() {
-    return "n" + index;
-  }
-
   public int getY() {
     return (int) p.y;
-  }
-
-  public String getDescription() {
-    return desc;
   }
 
   public Color getColor() {
@@ -81,9 +71,14 @@ public abstract class Entity implements Comparable<Entity> {
     return v;
   }
 
-  public void limitVelocity() {
-    if (v.lenght() > 50) {
-      v.divide(v.lenght()).multiply(50);
+  public void limitVelocity(int maxSpeed) {
+    if (v.lenght() > maxSpeed) {
+      v.divide(v.lenght()).multiply(maxSpeed);
     }
+  }
+
+  public void wrapAround(int width, int height) {
+    p.x = (p.x + width) % width;
+    p.y = (p.y + height) % height;
   }
 }

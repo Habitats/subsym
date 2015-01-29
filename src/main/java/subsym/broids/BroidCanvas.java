@@ -14,7 +14,7 @@ public class BroidCanvas extends AICanvas<Broid> {
   private final int itemWidth = 20;
   private double horizontalScalingFactor;
   private double verticalScalingFactor;
-  private final int padding = 300;
+  private final int padding = 0;
 
   @Override
   protected void draw(Graphics2D g) {

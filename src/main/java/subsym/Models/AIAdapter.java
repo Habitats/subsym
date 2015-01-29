@@ -14,16 +14,16 @@ public class AIAdapter<T extends Entity> {
   private int width;
   private int height;
   private AIAdapterListener listener;
-  private int minX;
-  private int minY;
 
   private List<T> items;
 
   public static double sepWeight = 0.01;
   public static double alignWeight = 0.01;
   public static double cohWeight = 0.01;
-  public static int dismissLimit = 3000;
+  public static int dismissLimit = 0000;
   public static int radius = 1000;
+  public static int maxSpeed = 50;
+  public static int maxBroids = 50;
 
   public AIAdapter() {
     items = Collections.synchronizedList(new ArrayList<>());
@@ -81,7 +81,7 @@ public class AIAdapter<T extends Entity> {
         .add(sep) //
         ;
     boid.setVelocity(newVelocity);
-    boid.limitVelocity();
+    boid.limitVelocity(maxSpeed);
 
     boid.update();
   }
@@ -122,16 +122,21 @@ public class AIAdapter<T extends Entity> {
       neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < 400)
           .forEach(neighbor -> deltaVelocity.subtract(neighbor.p));
     }
-    return deltaVelocity;
+    return deltaVelocity.multiply(-1);
 
   }
 
 
   public void update() {
     items.stream().forEach(boid -> updateDirection(boid));
-    items.removeIf(broid -> (broid.getX() > dismissLimit + getWidth() || broid.getX() < -dismissLimit
-                             || broid.getY() > dismissLimit + getHeight() || broid.getY() < -dismissLimit));
+    items.removeIf(broid -> isOutOfBounds(broid) && getSize() > maxBroids);
+    items.stream().filter(broid -> isOutOfBounds(broid)).forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
     notifyDataChanged();
+  }
+
+  private boolean isOutOfBounds(T broid) {
+    return (broid.getX() > dismissLimit + getWidth() || broid.getX() < -dismissLimit
+            || broid.getY() > dismissLimit + getHeight() || broid.getY() < -dismissLimit);
   }
 
   public List<T> neighbors(T broid, int r) {
@@ -158,4 +163,7 @@ public class AIAdapter<T extends Entity> {
   }
 
 
+  public boolean notFull() {
+    return getSize() < maxBroids;
+  }
 }

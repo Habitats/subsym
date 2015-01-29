@@ -12,6 +12,8 @@ import subsym.gui.AIGui;
 public class Broids implements Runnable {
 
   private static final String TAG = Broids.class.getSimpleName();
+  private int height = 3000;
+  private int width = 3000;
 
   public void run() {
     System.out.println("hello worlds");
@@ -19,10 +21,8 @@ public class Broids implements Runnable {
 
     AIAdapter<Broid> adapter = new AIAdapter<>();
 
-
-
-    adapter.setHeight(3000);
-    adapter.setWidth(3000);
+    adapter.setHeight(height);
+    adapter.setWidth(width);
 
     gui.setAdapter(adapter);
     adapter.notifyDataChanged();
@@ -31,8 +31,8 @@ public class Broids implements Runnable {
       while (true) {
         try {
           Thread.sleep(10);
-          while (adapter.getSize() < 200) {
-            Broid broid = new Broid((int) (Math.random() * 3000), (int) (Math.random() * 3000));
+          while (adapter.notFull()) {
+            Broid broid = new Broid((int) (Math.random() * width), (int) (Math.random() * height));
             adapter.add(broid);
           }
 

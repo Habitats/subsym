@@ -37,6 +37,12 @@ public class BroidGui extends AIGui {
   private AISlider sepSlider;
   private AILabel cohField;
   private AISlider cohSlider;
+  private AILabel numBroidsField;
+  private AILabel speedField;
+  private AISlider numBroidsSlider;
+  private AISlider speedSlider;
+  private AILabel radiusField;
+  private AISlider radiusSlider;
   private AITextField logField;
   private AITextField statusField;
   private AITextField kField;
@@ -52,6 +58,25 @@ public class BroidGui extends AIGui {
     sepSlider.addChangeListener(e -> AIAdapter.sepWeight = ((AISlider) e.getSource()).getValue() / 10000.);
     cohSlider.addChangeListener(e -> AIAdapter.cohWeight = ((AISlider) e.getSource()).getValue() / 100.);
     alignSlider.addChangeListener(e -> AIAdapter.alignWeight = ((AISlider) e.getSource()).getValue() / 100.);
+    speedSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      source.setMaximum(100);
+      source.setMinimum(0);
+      AIAdapter.maxSpeed = source.getValue();
+    });
+    radiusSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      source.setMaximum(3000);
+      source.setMinimum(0);
+      AIAdapter.radius = source.getValue();
+    });
+    numBroidsSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      source.setMaximum(200);
+      source.setMinimum(0);
+      AIAdapter.maxBroids = source.getValue();
+    });
+
   }
 
 
