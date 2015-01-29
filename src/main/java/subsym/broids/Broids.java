@@ -12,8 +12,8 @@ import subsym.gui.AIGui;
 public class Broids implements Runnable {
 
   private static final String TAG = Broids.class.getSimpleName();
-  private int height = 3000;
-  private int width = 3000;
+  private int height = (int) (3000 * 1.2);
+  private int width = (int) (3000 * 1.5);
 
   public void run() {
     System.out.println("hello worlds");

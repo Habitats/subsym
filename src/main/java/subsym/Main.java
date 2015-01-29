@@ -5,10 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import subsym.broids.Broids;
-import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
-import subsym.gui.AIPanel;
 import subsym.gui.AITextArea;
 
 /**
@@ -37,14 +35,16 @@ public class Main {
 
       @Override
       protected void init() {
-        AIPanel panel = new AIPanel();
-        panel.setPreferredSize(new Dimension(300, 200));
-        AIButton broid = new AIButton("Broids");
+//        AIPanel panel = new AIPanel();
+//        panel.setPreferredSize(new Dimension(300, 200));
+//        AIButton broid = new AIButton("Broids");
+//
+//        broid.addActionListener(e -> broid());
+//        panel.add(broid);
+//
+//        buildFrame(panel, null, null);
 
-        broid.addActionListener(e -> broid());
-        panel.add(broid);
-
-        buildFrame(panel, null, null);
+        broid();
       }
 
 
