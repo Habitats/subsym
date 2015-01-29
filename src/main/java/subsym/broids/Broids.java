@@ -31,7 +31,7 @@ public class Broids implements Runnable {
       while (true) {
         try {
           Thread.sleep(10);
-          while (adapter.getSize() < 50) {
+          while (adapter.getSize() < 200) {
             Broid broid = new Broid((int) (Math.random() * 3000), (int) (Math.random() * 3000));
             adapter.add(broid);
           }

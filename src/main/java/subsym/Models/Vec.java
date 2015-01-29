@@ -8,7 +8,7 @@ public class Vec {
   public double x;
   public double y;
 
-  public Vec(double x, double y) {
+  private Vec(double x, double y) {
     this.x = x;
     this.y = y;
   }
@@ -36,6 +36,12 @@ public class Vec {
     return this;
   }
 
+  public Vec multiply(double o) {
+    x *= o;
+    y *= o;
+    return this;
+  }
+
   public Vec subtract(Vec o) {
     x -= o.x;
     y -= o.y;
@@ -43,6 +49,14 @@ public class Vec {
   }
 
   public double lenght() {
-    return Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+  }
+
+  public static Vec create() {
+    return new Vec(2, 2);
+  }
+
+  public static Vec create(int x, int y) {
+    return new Vec(x, y);
   }
 }

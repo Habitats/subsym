@@ -19,11 +19,11 @@ public class AIAdapter<T extends Entity> {
 
   private List<T> items;
 
-  private Vec sepWeight = new Vec(0.000001, 0.000001);
-  private Vec alignWeight = new Vec(0.001, 0.001);
-  private Vec cohWeight = new Vec(0.0001, 0.0001);
-  private int dismissLimit = 1000;
-  private int radius = 1000;
+  public static double sepWeight = 0.01;
+  public static double alignWeight = 0.01;
+  public static double cohWeight = 0.01;
+  public static int dismissLimit = 3000;
+  public static int radius = 1000;
 
   public AIAdapter() {
     items = Collections.synchronizedList(new ArrayList<>());
@@ -88,35 +88,41 @@ public class AIAdapter<T extends Entity> {
 
   // a boid will steer towards the average position of other boids close to it
   private Vec getCohesion(T boid, List<T> neighbors) {
-    Vec newPos = new Vec(0, 0);
+    Vec deltaVelocity = Vec.create();
     if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.p).forEach(p -> newPos.add(p));
-      newPos.divide(neighbors.size());
+      // find the center of mass
+      neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.p).forEach(p -> deltaVelocity.add(p));
+      deltaVelocity.divide(neighbors.size());
 
-      newPos.subtract(boid.p);
+      // move with a magnitude of 1% towards the center of mass
+      deltaVelocity.subtract(boid.p).divide(100);
     }
-    return newPos;
+    return deltaVelocity;
   }
 
   // a boid will steer towards the average heading of other boids close to it
   private Vec getAlignment(T boid, List<T> neighbors) {
-    Vec newVelocity = new Vec(0, 0);
-    if (neighbors.size() > 0) {
+    Vec deltaVelocity = Vec.create();
+    if (neighbors.size() > 1) {
       neighbors.stream().filter(neighbor -> boid != neighbor).map(neighbor -> neighbor.v)
-          .forEach(neighBorVelocity -> newVelocity.add(neighBorVelocity));
-      newVelocity.divide(neighbors.size());
+          .forEach(neighBorVelocity -> deltaVelocity.add(neighBorVelocity));
+
+      // normalize
+      deltaVelocity.divide(neighbors.size() - 1);
+
+      deltaVelocity.subtract(boid.v).divide(8);
     }
-    return newVelocity;
+    return deltaVelocity;
   }
 
   // a boid will steer to avoid crashing with other boids close to it
   private Vec getSeperation(T boid, List<T> neighbors) {
-    Vec newPos = new Vec(0, 0);
+    Vec deltaVelocity = Vec.create();
     if (neighbors.size() > 0) {
       neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < 400)
-          .forEach(neighbor -> newPos.subtract(neighbor.p));
+          .forEach(neighbor -> deltaVelocity.subtract(neighbor.p));
     }
-    return newPos;
+    return deltaVelocity;
 
   }
 

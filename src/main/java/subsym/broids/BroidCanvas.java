@@ -10,8 +10,8 @@ import subsym.gui.AICanvas;
  */
 public class BroidCanvas extends AICanvas<Broid> {
 
-  private final int itemHeight = 30;
-  private final int itemWidth = 30;
+  private final int itemHeight = 20;
+  private final int itemWidth = 20;
   private double horizontalScalingFactor;
   private double verticalScalingFactor;
   private final int padding = 300;

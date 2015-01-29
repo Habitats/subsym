@@ -21,11 +21,11 @@ public abstract class Entity implements Comparable<Entity> {
 
   public Entity(int x, int index, int y) {
     this.index = index;
-    p = new Vec(x, y);
+    p = Vec.create(x,y);
   }
 
   public void setVelocity(int x, int y) {
-    v = new Vec(x, y);
+    v = Vec.create(x,y);
   }
 
   public void setVelocity(Vec v) {
@@ -83,7 +83,7 @@ public abstract class Entity implements Comparable<Entity> {
 
   public void limitVelocity() {
     if (v.lenght() > 50) {
-      v.divide(v.lenght()).multiply(new Vec(10, 10));
+      v.divide(v.lenght()).multiply(50);
     }
   }
 }

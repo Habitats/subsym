@@ -4,12 +4,14 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import subsym.Models.AIAdapter;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AICheckBox;
 import subsym.gui.AIComboBox;
 import subsym.gui.AIContiniousScrollPane;
 import subsym.gui.AIGui;
+import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.AITextField;
@@ -29,6 +31,12 @@ public class BroidGui extends AIGui {
 
   private AITextArea inputField;
   private AICanvas drawingCanvas;
+  private AILabel sepField;
+  private AILabel alignField;
+  private AISlider alignSlider;
+  private AISlider sepSlider;
+  private AILabel cohField;
+  private AISlider cohSlider;
   private AITextField logField;
   private AITextField statusField;
   private AITextField kField;
@@ -41,6 +49,9 @@ public class BroidGui extends AIGui {
 
   public BroidGui() {
     buildFrame(getMainPanel(), log, statusField);
+    sepSlider.addChangeListener(e -> AIAdapter.sepWeight = ((AISlider) e.getSource()).getValue() / 10000.);
+    cohSlider.addChangeListener(e -> AIAdapter.cohWeight = ((AISlider) e.getSource()).getValue() / 100.);
+    alignSlider.addChangeListener(e -> AIAdapter.alignWeight = ((AISlider) e.getSource()).getValue() / 100.);
   }
 
 
