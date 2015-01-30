@@ -5,10 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import subsym.Models.AIAdapter;
-import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
-import subsym.gui.AICheckBox;
-import subsym.gui.AIComboBox;
 import subsym.gui.AIContiniousScrollPane;
 import subsym.gui.AIGui;
 import subsym.gui.AILabel;
@@ -23,26 +20,31 @@ import subsym.gui.AITextField;
 public class BroidGui extends AIGui {
 
   private static final String TAG = BroidGui.class.getSimpleName();
-  private AIButton resetButton;
-  private AIButton runButton;
-  private AIButton stepButton;
-
   private JPanel mainPanel;
 
   private AITextArea inputField;
   private AICanvas drawingCanvas;
+  private AITextField statusField;
+  private AIContiniousScrollPane log;
+
   private AILabel sepField;
   private AILabel alignField;
-  private AISlider alignSlider;
-  private AISlider sepSlider;
   private AILabel cohField;
-  private AISlider cohSlider;
   private AILabel numBroidsField;
   private AILabel speedField;
+  private AILabel radiusField;
+  private AILabel obsticlesField;
+  private AILabel predatorField;
+
+  private AISlider alignSlider;
+  private AISlider sepSlider;
+  private AISlider cohSlider;
   private AISlider maxBroidSlider;
   private AISlider speedSlider;
-  private AILabel radiusField;
   private AISlider radiusSlider;
+  private AISlider obsticleSlider;
+  private AISlider predatorSlider;
+
   private JTextField sepInput;
   private JTextField alignInput;
   private JTextField cohInput;
@@ -50,20 +52,8 @@ public class BroidGui extends AIGui {
   private JTextField speedInput;
   private JTextField radiusInput;
   private JTextField obsticleInput;
-  private AILabel obsticlesField;
-  private AISlider obsticleSlider;
-  private AILabel predatorField;
-  private AISlider predatorSlider;
   private JTextField predatorInput;
-  private AITextField logField;
-  private AITextField statusField;
-  private AITextField kField;
-  private AIComboBox sampleComboBox;
-  private AISlider stepSlider;
-  private AICheckBox labelsCheckbox;
-  private AIContiniousScrollPane log;
-  private AICheckBox stepCheckBox;
-  private AIButton readFromFileButton;
+
 
   public BroidGui() {
     initValues();
