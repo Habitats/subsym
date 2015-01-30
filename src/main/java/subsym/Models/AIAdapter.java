@@ -24,6 +24,8 @@ public class AIAdapter<T extends Entity> {
   public static int radius = 1000;
   public static int maxSpeed = 50;
   public static int maxBroids = 50;
+  public static int numPredators = 1;
+  public static int numObsticles = 1;
 
   public AIAdapter() {
     items = Collections.synchronizedList(new ArrayList<>());

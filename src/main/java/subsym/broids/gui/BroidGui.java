@@ -49,7 +49,12 @@ public class BroidGui extends AIGui {
   private JTextField maxBroidInput;
   private JTextField speedInput;
   private JTextField radiusInput;
-  private JTextField textField7;
+  private JTextField obsticleInput;
+  private AILabel obsticlesField;
+  private AISlider obsticleSlider;
+  private AILabel predatorField;
+  private AISlider predatorSlider;
+  private JTextField predatorInput;
   private AITextField logField;
   private AITextField statusField;
   private AITextField kField;
@@ -111,6 +116,23 @@ public class BroidGui extends AIGui {
       maxBroidInput.setText(String.valueOf(value));
       AIAdapter.maxBroids = value;
     });
+    predatorSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      source.setMaximum(200);
+      source.setMinimum(0);
+      int value = source.getValue();
+      predatorInput.setText(String.valueOf(value));
+      AIAdapter.numPredators = value;
+    });
+    obsticleSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      source.setMaximum(200);
+      source.setMinimum(0);
+      int value = source.getValue();
+      obsticleInput.setText(String.valueOf(value));
+      AIAdapter.numObsticles = value;
+    });
+
   }
 
   private void initFieldListeners() {
@@ -138,6 +160,15 @@ public class BroidGui extends AIGui {
       String value = ((JTextField) e.getSource()).getText();
       speedSlider.setValue(Integer.parseInt(value));
     });
+    predatorInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      predatorSlider.setValue(Integer.parseInt(value));
+    });
+    obsticleInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      obsticleSlider.setValue(Integer.parseInt(value));
+    });
+
   }
 
   private void initValues() {
@@ -158,6 +189,12 @@ public class BroidGui extends AIGui {
 
     radiusInput.setText(String.valueOf(AIAdapter.radius));
     radiusSlider.setValue(AIAdapter.radius);
+
+    predatorInput.setText(String.valueOf(AIAdapter.numPredators));
+    predatorSlider.setValue(AIAdapter.numPredators);
+
+    obsticleInput.setText(String.valueOf(AIAdapter.numObsticles));
+    obsticleSlider.setValue(AIAdapter.numObsticles);
   }
 
 
