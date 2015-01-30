@@ -4,6 +4,7 @@ import subsym.Log;
 import subsym.Models.AIAdapter;
 import subsym.Models.Entity;
 import subsym.Models.Vec;
+import subsym.broids.Obsticle;
 import subsym.gui.ColorUtils;
 
 /**
@@ -33,7 +34,7 @@ public class Predator extends Entity {
 
   @Override
   public double getSepWeight() {
-    return -20;
+    return -20000;
   }
 
   @Override
@@ -59,6 +60,11 @@ public class Predator extends Entity {
   @Override
   public boolean isPurgable() {
     return false;
+  }
+
+  @Override
+  public boolean isEvil(Entity n) {
+    return n instanceof Predator || n instanceof Obsticle;
   }
 
   @Override

@@ -52,4 +52,9 @@ public class Obsticle extends Entity {
   public boolean isPurgable() {
     return false;
   }
+
+  @Override
+  public boolean isEvil(Entity n) {
+    return false;
+  }
 }

@@ -77,11 +77,11 @@ public class AIAdapter<T extends Entity> {
     Vec align = getAlignment(boid, neighbors).multiply(boid.getAlignWeight());
     Vec coh = getCohesion(boid, neighbors).multiply(boid.getCohWeight());
 
-    Vec newVelocity = boid.getVelocity() //
-        .add(coh) //
-        .add(align) //
-        .add(sep) //
-        ;
+    Vec newVelocity = boid.getVelocity().add(sep);
+
+    if (neighbors.stream().noneMatch(n -> boid.isEvil(n))) {
+      newVelocity.add(coh).add(align);
+    }
 
     boid.update(newVelocity);
   }
@@ -119,14 +119,13 @@ public class AIAdapter<T extends Entity> {
   private Vec getSeperation(T boid, List<T> neighbors) {
     Vec deltaVelocity = Vec.create();
     if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < boid.closeRadius()).forEach(
-          neighbor -> {
+      neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < boid.closeRadius())
+          .forEach(neighbor -> {
             deltaVelocity.subtract(neighbor.p);
             deltaVelocity.add(boid.p);
           });
     }
     return deltaVelocity;
-
   }
 
 

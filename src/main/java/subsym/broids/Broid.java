@@ -4,6 +4,7 @@ import subsym.Log;
 import subsym.Models.AIAdapter;
 import subsym.Models.Entity;
 import subsym.Models.Vec;
+import subsym.broids.gui.Predator;
 import subsym.gui.ColorUtils;
 
 /**
@@ -61,5 +62,10 @@ public class Broid extends Entity {
   @Override
   public boolean isPurgable() {
     return true;
+  }
+
+  @Override
+  public boolean isEvil(Entity n) {
+    return n instanceof Predator;
   }
 }

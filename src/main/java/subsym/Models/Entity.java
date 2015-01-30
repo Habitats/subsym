@@ -100,4 +100,6 @@ public abstract class Entity implements Comparable<Entity> {
   public abstract double closeRadius();
 
   public abstract boolean isPurgable();
+
+  public abstract boolean isEvil(Entity n);
 }
