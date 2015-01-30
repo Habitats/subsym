@@ -81,7 +81,7 @@ public class AIAdapter<T extends Entity> {
         .add(sep) //
         ;
     // tighten the bound
-    newVelocity.divide(1);
+//    newVelocity.divide(1);
 
     boid.setVelocity(newVelocity);
     boid.limitVelocity(maxSpeed);

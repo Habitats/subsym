@@ -39,10 +39,17 @@ public class BroidGui extends AIGui {
   private AISlider cohSlider;
   private AILabel numBroidsField;
   private AILabel speedField;
-  private AISlider numBroidsSlider;
+  private AISlider maxBroidSlider;
   private AISlider speedSlider;
   private AILabel radiusField;
   private AISlider radiusSlider;
+  private JTextField sepInput;
+  private JTextField alignInput;
+  private JTextField cohInput;
+  private JTextField maxBroidInput;
+  private JTextField speedInput;
+  private JTextField radiusInput;
+  private JTextField textField7;
   private AITextField logField;
   private AITextField statusField;
   private AITextField kField;
@@ -54,35 +61,109 @@ public class BroidGui extends AIGui {
   private AIButton readFromFileButton;
 
   public BroidGui() {
+    initValues();
+    initFieldListeners();
+    initSliderListeners();
+
     buildFrame(getMainPanel(), log, statusField);
-    sepSlider.addChangeListener(e -> AIAdapter.sepWeight = ((AISlider) e.getSource()).getValue() / 100.);
-    cohSlider.addChangeListener(e -> AIAdapter.cohWeight = ((AISlider) e.getSource()).getValue() / 100.);
-    alignSlider.addChangeListener(e -> AIAdapter.alignWeight = ((AISlider) e.getSource()).getValue() / 100.);
+  }
+
+  private void initSliderListeners() {
+    sepSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      int value = source.getValue();
+      sepInput.setText(String.valueOf(value));
+      AIAdapter.sepWeight = value / 100.;
+    });
+    cohSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      int value = source.getValue();
+      cohInput.setText(String.valueOf(value));
+      AIAdapter.cohWeight = value / 100.;
+    });
+    alignSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      int value = source.getValue();
+      AIAdapter.alignWeight = value / 100.;
+      alignInput.setText(String.valueOf(value));
+    });
     speedSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       source.setMaximum(100);
       source.setMinimum(0);
-      AIAdapter.maxSpeed = source.getValue();
+      int value = source.getValue();
+      AIAdapter.maxSpeed = value;
+      speedInput.setText(String.valueOf(value));
     });
     radiusSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       source.setMaximum(3000);
       source.setMinimum(0);
-      AIAdapter.radius = source.getValue();
+      int value = source.getValue();
+      radiusInput.setText(String.valueOf(value));
+      AIAdapter.radius = value;
     });
-    numBroidsSlider.addChangeListener(e -> {
+    maxBroidSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       source.setMaximum(200);
       source.setMinimum(0);
-      AIAdapter.maxBroids = source.getValue();
+      int value = source.getValue();
+      maxBroidInput.setText(String.valueOf(value));
+      AIAdapter.maxBroids = value;
     });
+  }
 
+  private void initFieldListeners() {
+    alignInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      alignSlider.setValue(Integer.parseInt(value));
+    });
+    cohInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      cohSlider.setValue(Integer.parseInt(value));
+    });
+    sepInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      sepSlider.setValue(Integer.parseInt(value));
+    });
+    maxBroidInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      maxBroidSlider.setValue(Integer.parseInt(value));
+    });
+    radiusInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      radiusSlider.setValue(Integer.parseInt(value));
+    });
+    speedInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      speedSlider.setValue(Integer.parseInt(value));
+    });
+  }
+
+  private void initValues() {
+    sepInput.setText(String.valueOf(AIAdapter.sepWeight));
+    sepSlider.setValue((int) AIAdapter.sepWeight);
+
+    alignInput.setText(String.valueOf(AIAdapter.alignWeight));
+    alignSlider.setValue((int) AIAdapter.alignWeight);
+
+    cohInput.setText(String.valueOf(AIAdapter.cohWeight));
+    cohSlider.setValue((int) AIAdapter.cohWeight);
+
+    maxBroidInput.setText(String.valueOf(AIAdapter.maxBroids));
+    maxBroidSlider.setValue(AIAdapter.maxBroids);
+
+    speedInput.setText(String.valueOf(AIAdapter.maxSpeed));
+    speedSlider.setValue(AIAdapter.maxSpeed);
+
+    radiusInput.setText(String.valueOf(AIAdapter.radius));
+    radiusSlider.setValue(AIAdapter.radius);
   }
 
 
   @Override
   protected int getDefaultCloseOperation() {
-    return WindowConstants.DISPOSE_ON_CLOSE;
+    return WindowConstants.EXIT_ON_CLOSE;
   }
 
   @Override
