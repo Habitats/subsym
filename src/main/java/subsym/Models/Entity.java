@@ -59,7 +59,12 @@ public abstract class Entity implements Comparable<Entity> {
     return outlineColor;
   }
 
-  public abstract void update();
+  public void update(Vec newVelocity) {
+    setVelocity(newVelocity);
+    limitVelocity(getMaxSpeed());
+  }
+
+  protected abstract int getMaxSpeed();
 
   public double distance(Entity neighbor) {
     double sqrt = Math.sqrt(Math.pow(getX() - neighbor.getX(), 2) + Math.pow(getY() - neighbor.getY(), 2));
@@ -81,4 +86,18 @@ public abstract class Entity implements Comparable<Entity> {
     p.x = (p.x + width) % width;
     p.y = (p.y + height) % height;
   }
+
+  public abstract double getSepWeight();
+
+
+  public abstract double getAlignWeight();
+
+
+  public abstract double getCohWeight();
+
+  public abstract int getRadius();
+
+  public abstract double closeRadius();
+
+  public abstract boolean isPurgable();
 }

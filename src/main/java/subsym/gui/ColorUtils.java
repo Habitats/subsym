@@ -8,6 +8,7 @@ import java.awt.*;
 public class ColorUtils {
 
   private static final String TAG = ColorUtils.class.getSimpleName();
+  private static final int NUM_COLORS = 10;
 
   public static Color toHsv(double normalizedValue, double brightness) {
     // all values are in the range of [0, 1]
@@ -22,5 +23,12 @@ public class ColorUtils {
   public static Color toHsv(int value, int numberOfColors, double brightness) {
     float percentage = ((float) value) / numberOfColors;
     return toHsv(percentage, brightness);
+  }
+
+  public static Color c(int i) {
+    if (i > NUM_COLORS) {
+      throw new IllegalArgumentException("Not that many colors!");
+    }
+    return toHsv(i, NUM_COLORS, 1);
   }
 }

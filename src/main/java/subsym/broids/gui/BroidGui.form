@@ -17,7 +17,7 @@
           <foreground color="-131586"/>
         </properties>
       </component>
-      <grid id="c0da9" layout-manager="GridLayoutManager" row-count="25" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="c0da9" layout-manager="GridLayoutManager" row-count="27" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -30,7 +30,7 @@
         <children>
           <component id="d1e44" class="subsym.gui.AISlider" binding="sepSlider">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -43,7 +43,7 @@
           </component>
           <component id="c1914" class="subsym.gui.AILabel" binding="alignField">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="16"/>
               </grid>
             </constraints>
@@ -53,7 +53,7 @@
           </component>
           <component id="1c610" class="subsym.gui.AISlider" binding="alignSlider">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -64,7 +64,7 @@
           </component>
           <component id="e97f3" class="subsym.gui.AILabel" binding="cohField">
             <constraints>
-              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="16"/>
               </grid>
             </constraints>
@@ -74,7 +74,7 @@
           </component>
           <component id="c105f" class="subsym.gui.AISlider" binding="cohSlider">
             <constraints>
-              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -85,7 +85,7 @@
           </component>
           <component id="41048" class="subsym.gui.AILabel" binding="numBroidsField">
             <constraints>
-              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="16"/>
               </grid>
             </constraints>
@@ -95,7 +95,7 @@
           </component>
           <component id="8af60" class="subsym.gui.AILabel" binding="speedField">
             <constraints>
-              <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="12" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="16"/>
               </grid>
             </constraints>
@@ -105,7 +105,7 @@
           </component>
           <component id="3167c" class="subsym.gui.AILabel" binding="radiusField">
             <constraints>
-              <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="15" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="16"/>
               </grid>
             </constraints>
@@ -115,7 +115,7 @@
           </component>
           <component id="1e352" class="subsym.gui.AILabel" binding="obsticlesField">
             <constraints>
-              <grid row="18" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="18" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="0"/>
               </grid>
             </constraints>
@@ -125,7 +125,7 @@
           </component>
           <component id="8ed7c" class="subsym.gui.AISlider" binding="maxBroidSlider">
             <constraints>
-              <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -133,7 +133,7 @@
           </component>
           <component id="7d827" class="subsym.gui.AISlider" binding="speedSlider">
             <constraints>
-              <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="13" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -141,7 +141,7 @@
           </component>
           <component id="f9276" class="subsym.gui.AISlider" binding="radiusSlider">
             <constraints>
-              <grid row="16" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="16" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -149,7 +149,7 @@
           </component>
           <component id="72c32" class="subsym.gui.AISlider" binding="obsticleSlider">
             <constraints>
-              <grid row="19" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="19" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -157,14 +157,14 @@
           </component>
           <vspacer id="eb709">
             <constraints>
-              <grid row="24" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+              <grid row="26" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="14"/>
               </grid>
             </constraints>
           </vspacer>
           <component id="8f242" class="javax.swing.JTextField" binding="sepInput">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="24"/>
               </grid>
             </constraints>
@@ -172,7 +172,7 @@
           </component>
           <component id="6b54a" class="javax.swing.JTextField" binding="alignInput">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -180,7 +180,7 @@
           </component>
           <component id="9bf9d" class="javax.swing.JTextField" binding="cohInput">
             <constraints>
-              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -188,7 +188,7 @@
           </component>
           <component id="215f5" class="javax.swing.JTextField" binding="maxBroidInput">
             <constraints>
-              <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="11" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -196,7 +196,7 @@
           </component>
           <component id="8087f" class="javax.swing.JTextField" binding="speedInput">
             <constraints>
-              <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="14" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -204,7 +204,7 @@
           </component>
           <component id="ed7d" class="javax.swing.JTextField" binding="radiusInput">
             <constraints>
-              <grid row="17" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="17" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -212,7 +212,7 @@
           </component>
           <component id="e33a6" class="javax.swing.JTextField" binding="obsticleInput">
             <constraints>
-              <grid row="20" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="20" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
@@ -220,7 +220,7 @@
           </component>
           <component id="f6c16" class="subsym.gui.AILabel" binding="sepField">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="16"/>
               </grid>
             </constraints>
@@ -230,7 +230,7 @@
           </component>
           <component id="c8ee0" class="subsym.gui.AILabel" binding="predatorField">
             <constraints>
-              <grid row="21" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="21" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="0"/>
               </grid>
             </constraints>
@@ -240,7 +240,7 @@
           </component>
           <component id="a69b7" class="subsym.gui.AISlider" binding="predatorSlider">
             <constraints>
-              <grid row="22" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+              <grid row="22" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="19"/>
               </grid>
             </constraints>
@@ -248,11 +248,35 @@
           </component>
           <component id="b0fe8" class="javax.swing.JTextField" binding="predatorInput">
             <constraints>
-              <grid row="23" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="23" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
             <properties/>
+          </component>
+          <component id="88b1b" class="subsym.gui.AIButton" binding="spawnPredButton">
+            <constraints>
+              <grid row="24" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Predator++"/>
+            </properties>
+          </component>
+          <component id="ea6ac" class="subsym.gui.AIButton" binding="spawnObsticleButton">
+            <constraints>
+              <grid row="24" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Obsticle++"/>
+            </properties>
+          </component>
+          <component id="76194" class="subsym.gui.AIButton" binding="clearButton">
+            <constraints>
+              <grid row="25" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Clear All"/>
+            </properties>
           </component>
         </children>
       </grid>

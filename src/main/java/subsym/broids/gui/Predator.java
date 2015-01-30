@@ -1,5 +1,6 @@
-package subsym.broids;
+package subsym.broids.gui;
 
+import subsym.Log;
 import subsym.Models.AIAdapter;
 import subsym.Models.Entity;
 import subsym.Models.Vec;
@@ -8,48 +9,60 @@ import subsym.gui.ColorUtils;
 /**
  * Created by Patrick on 30.01.2015.
  */
-public class Obsticle extends Entity {
+public class Predator extends Entity {
 
-  public Obsticle(int x, int y) {
+  private static final String TAG = Predator.class.getSimpleName();
+
+  public Predator(int x, int y) {
     super(x, 0, y);
-    setColor(ColorUtils.c(4));
+    setColor(ColorUtils.c(8));
     setVelocity(0, 0);
   }
 
   @Override
   public void update(Vec newVelocity) {
-
+    super.update(newVelocity);
+    p.add(v);
+    Log.v(TAG, toString());
   }
 
   @Override
   protected int getMaxSpeed() {
-    return 0;
+    return (int) (0.5 * AIAdapter.maxSpeed);
   }
 
+  @Override
   public double getSepWeight() {
-    return -AIAdapter.sepWeight * 20;
+    return -20;
   }
 
+  @Override
   public double getAlignWeight() {
     return 1;
   }
 
+  @Override
   public double getCohWeight() {
     return 1;
   }
 
   @Override
   public int getRadius() {
-    return 100;
+    return 1000;
   }
 
   @Override
   public double closeRadius() {
-    return 20;
+    return 1000;
   }
 
   @Override
   public boolean isPurgable() {
     return false;
+  }
+
+  @Override
+  public String toString() {
+    return "PREDATOR --> P: " + p.toString() + " - V: " + v.toString();
   }
 }

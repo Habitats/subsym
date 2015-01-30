@@ -69,4 +69,5 @@ public abstract class AIGui<T extends Entity> {
   public abstract AICanvas getDrawingCanvas();
 
   public abstract AITextArea getInputField();
+
 }

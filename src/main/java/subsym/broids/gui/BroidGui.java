@@ -5,6 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import subsym.Models.AIAdapter;
+import subsym.broids.Broids;
+import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIContiniousScrollPane;
 import subsym.gui.AIGui;
@@ -53,12 +55,20 @@ public class BroidGui extends AIGui {
   private JTextField radiusInput;
   private JTextField obsticleInput;
   private JTextField predatorInput;
+  private AIButton spawnPredButton;
+  private AIButton spawnObsticleButton;
+  private AIButton clearButton;
 
+  private Broids broids;
 
   public BroidGui() {
     initValues();
     initFieldListeners();
     initSliderListeners();
+
+    spawnObsticleButton.addActionListener(e -> broids.spawnObsticle());
+    spawnPredButton.addActionListener(e -> broids.spawnPredator());
+    clearButton.addActionListener(e->broids.clearAll());
 
     buildFrame(getMainPanel(), log, statusField);
   }
@@ -213,4 +223,7 @@ public class BroidGui extends AIGui {
     return inputField;
   }
 
+  public void addListener(Broids broids) {
+    this.broids = broids;
+  }
 }

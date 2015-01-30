@@ -3,12 +3,13 @@ package subsym.broids;
 import java.awt.*;
 import java.util.Collection;
 
+import subsym.Models.Entity;
 import subsym.gui.AICanvas;
 
 /**
  * Created by anon on 28.01.2015.
  */
-public class BroidCanvas extends AICanvas<Broid> {
+public class BroidCanvas extends AICanvas<Entity> {
 
   private final int itemHeight = 20;
   private final int itemWidth = 20;
@@ -34,9 +35,9 @@ public class BroidCanvas extends AICanvas<Broid> {
 
   private void drawNodes(Graphics2D g) {
 
-    Collection<Broid> items = getAdapter().getItems();
+    Collection<Entity> items = getAdapter().getItems();
     synchronized (items) {
-      for (Broid item : items) {
+      for (Entity item : items) {
         int x = getX(item);
         int y = getY(item);
         g.setColor(item.getColor());
@@ -56,19 +57,19 @@ public class BroidCanvas extends AICanvas<Broid> {
     }
   }
 
-  private int getY(Broid item) {
+  private int getY(Entity item) {
     return (int) (getHeight() - item.getY() * getVerticalScalingFactor()) - (padding + itemHeight);
   }
 
-  private int getX(Broid item) {
+  private int getX(Entity item) {
     return (int) (item.getX() * getHorizontalScalingFactor()) + padding;
   }
 
-  private int getCenterY(Broid item) {
+  private int getCenterY(Entity item) {
     return getY(item) + getItemHeight() / 2;
   }
 
-  private int getCenterX(Broid item) {
+  private int getCenterX(Entity item) {
     return getX(item) + getItemWidth() / 2;
   }
 

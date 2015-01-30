@@ -71,24 +71,19 @@ public class AIAdapter<T extends Entity> {
   }
 
   private void updateDirection(T boid) {
-    List<T> neighbors = neighbors(boid, radius);
+    List<T> neighbors = neighbors(boid, boid.getRadius());
 
-    Vec sep = getSeperation(boid, neighbors).multiply(sepWeight);
-    Vec align = getAlignment(boid, neighbors).multiply(alignWeight);
-    Vec coh = getCohesion(boid, neighbors).multiply(cohWeight);
+    Vec sep = getSeperation(boid, neighbors).multiply(boid.getSepWeight());
+    Vec align = getAlignment(boid, neighbors).multiply(boid.getAlignWeight());
+    Vec coh = getCohesion(boid, neighbors).multiply(boid.getCohWeight());
 
     Vec newVelocity = boid.getVelocity() //
         .add(coh) //
         .add(align) //
         .add(sep) //
         ;
-    // tighten the bound
-//    newVelocity.divide(1);
 
-    boid.setVelocity(newVelocity);
-    boid.limitVelocity(maxSpeed);
-
-    boid.update();
+    boid.update(newVelocity);
   }
 
   // a boid will steer towards the average position of other boids close to it
@@ -124,10 +119,11 @@ public class AIAdapter<T extends Entity> {
   private Vec getSeperation(T boid, List<T> neighbors) {
     Vec deltaVelocity = Vec.create();
     if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < 100).forEach(neighbor -> {
-        deltaVelocity.subtract(neighbor.p);
-        deltaVelocity.add(boid.p);
-      });
+      neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < boid.closeRadius()).forEach(
+          neighbor -> {
+            deltaVelocity.subtract(neighbor.p);
+            deltaVelocity.add(boid.p);
+          });
     }
     return deltaVelocity;
 
@@ -136,7 +132,7 @@ public class AIAdapter<T extends Entity> {
 
   public void update() {
     items.stream().forEach(boid -> updateDirection(boid));
-    items.removeIf(broid -> isOutOfBounds(broid) && getSize() > maxBroids);
+    items.removeIf(broid -> broid.isPurgable() && isOutOfBounds(broid) && getSize() > maxBroids);
     items.stream().filter(broid -> isOutOfBounds(broid)).forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
     notifyDataChanged();
   }
