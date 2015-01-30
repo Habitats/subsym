@@ -55,7 +55,7 @@ public class BroidGui extends AIGui {
 
   public BroidGui() {
     buildFrame(getMainPanel(), log, statusField);
-    sepSlider.addChangeListener(e -> AIAdapter.sepWeight = ((AISlider) e.getSource()).getValue() / 1000.);
+    sepSlider.addChangeListener(e -> AIAdapter.sepWeight = ((AISlider) e.getSource()).getValue() / 100.);
     cohSlider.addChangeListener(e -> AIAdapter.cohWeight = ((AISlider) e.getSource()).getValue() / 100.);
     alignSlider.addChangeListener(e -> AIAdapter.alignWeight = ((AISlider) e.getSource()).getValue() / 100.);
     speedSlider.addChangeListener(e -> {

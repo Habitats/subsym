@@ -17,10 +17,10 @@ public class AIAdapter<T extends Entity> {
 
   private List<T> items;
 
-  public static double sepWeight = 0.01;
-  public static double alignWeight = 0.01;
-  public static double cohWeight = 0.01;
-  public static int dismissLimit = 0000;
+  public static double sepWeight = 0.1;
+  public static double alignWeight = 0.1;
+  public static double cohWeight = 0.1;
+  public static int dismissLimit = -3000;
   public static int radius = 1000;
   public static int maxSpeed = 50;
   public static int maxBroids = 50;
@@ -80,6 +80,9 @@ public class AIAdapter<T extends Entity> {
         .add(align) //
         .add(sep) //
         ;
+    // tighten the bound
+    newVelocity.divide(1);
+
     boid.setVelocity(newVelocity);
     boid.limitVelocity(maxSpeed);
 
@@ -89,10 +92,10 @@ public class AIAdapter<T extends Entity> {
   // a boid will steer towards the average position of other boids close to it
   private Vec getCohesion(T boid, List<T> neighbors) {
     Vec deltaVelocity = Vec.create();
-    if (neighbors.size() > 0) {
+    if (neighbors.size() > 1) {
       // find the center of mass
       neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.p).forEach(p -> deltaVelocity.add(p));
-      deltaVelocity.divide(neighbors.size());
+      deltaVelocity.divide(neighbors.size() - 1);
 
       // move with a magnitude of 1% towards the center of mass
       deltaVelocity.subtract(boid.p).divide(100);
@@ -119,10 +122,12 @@ public class AIAdapter<T extends Entity> {
   private Vec getSeperation(T boid, List<T> neighbors) {
     Vec deltaVelocity = Vec.create();
     if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < 400)
-          .forEach(neighbor -> deltaVelocity.subtract(neighbor.p));
+      neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < 100).forEach(neighbor -> {
+        deltaVelocity.subtract(neighbor.p);
+        deltaVelocity.add(boid.p);
+      });
     }
-    return deltaVelocity.multiply(-1);
+    return deltaVelocity;
 
   }
 
@@ -140,14 +145,9 @@ public class AIAdapter<T extends Entity> {
   }
 
   public List<T> neighbors(T broid, int r) {
-    return items.stream().filter(neighbor -> {
-      if (broid == neighbor) {
-        return false;
-      }
-      return broid.distance(neighbor) < r;
-
-
-    }).collect(Collectors.toList());
+    return items.stream() //
+        .filter(neighbor -> broid != neighbor && broid.distance(neighbor) < r) //
+        .collect(Collectors.toList());
   }
 
   public void addAll(List<T> broids) {
