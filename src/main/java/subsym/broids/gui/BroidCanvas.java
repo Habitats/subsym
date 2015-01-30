@@ -3,7 +3,9 @@ package subsym.broids.gui;
 import java.awt.*;
 import java.util.Collection;
 
+import subsym.broids.Vec;
 import subsym.broids.entities.Entity;
+import subsym.broids.entities.Obsticle;
 import subsym.gui.AICanvas;
 
 /**
@@ -37,16 +39,24 @@ public class BroidCanvas extends AICanvas<Entity> {
 
     Collection<Entity> items = getAdapter().getItems();
     synchronized (items) {
-      for (Entity item : items) {
-        int x = getX(item);
-        int y = getY(item);
-        g.setColor(item.getColor());
+      // draw objects
+      items.stream().forEach(broid -> {
+        int x = getX(broid);
+        int y = getY(broid);
+        g.setColor(broid.getColor());
         g.fillOval(x, y, getItemWidth(), getItemHeight());
-        g.setColor(item.getOutlineColor());
+        g.setColor(broid.getOutlineColor());
 
         // with thickness 3
         drawOutline(g, x, y, 3);
-      }
+      });
+
+      // draw vectors
+      items.stream().filter(broid -> !(broid instanceof Obsticle)).forEach(broid -> {
+        int x = getX(broid);
+        int y = getY(broid);
+        drawArrow(g, Vec.create(x + itemWidth / 2, y + itemHeight / 2), Vec.create(broid.v.x, -broid.v.y), 10);
+      });
     }
   }
 

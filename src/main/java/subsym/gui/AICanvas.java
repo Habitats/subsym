@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import subsym.Models.AIAdapter;
 import subsym.Models.AIAdapterListener;
+import subsym.broids.Vec;
 import subsym.broids.entities.Entity;
 
 /**
@@ -69,6 +70,17 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
     int offsetHeight = getItemHeight() - stringHeight / 2;
     g2d.drawString(s, offsetWidth + XPos, offsetHeight + YPos);
   }
+
+protected void drawArrow(Graphics g, Vec p, Vec v, int length) {
+    Point start = new Point();
+    Point end = new Point();
+
+    start.setLocation(p.x, p.y);
+    end.setLocation(p.x + v.x, p.y + v.y);
+
+    createArrowShape((Graphics2D) g, start, end);
+  }
+
 
   public static void createArrowShape(Graphics2D g, Point fromPt, Point toPt) {
     Polygon arrowPolygon = new Polygon();
