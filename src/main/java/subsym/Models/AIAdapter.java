@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import subsym.broids.models.Entity;
+
 /**
  * Created by Patrick on 08.09.2014.
  */

@@ -1,9 +1,11 @@
 package subsym.broids;
 
 import subsym.Models.AIAdapter;
-import subsym.Models.Entity;
+import subsym.broids.models.Broid;
+import subsym.broids.models.Entity;
 import subsym.broids.gui.BroidGui;
-import subsym.broids.gui.Predator;
+import subsym.broids.models.Obsticle;
+import subsym.broids.models.Predator;
 
 /**
  * Created by anon on 28.01.2015.

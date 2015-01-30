@@ -3,7 +3,7 @@ package subsym.broids;
 import java.awt.*;
 import java.util.Collection;
 
-import subsym.Models.Entity;
+import subsym.broids.models.Entity;
 import subsym.gui.AICanvas;
 
 /**

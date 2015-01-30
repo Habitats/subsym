@@ -7,7 +7,7 @@ import javax.swing.*;
 
 import subsym.Models.AIAdapter;
 import subsym.Models.AIAdapterListener;
-import subsym.Models.Entity;
+import subsym.broids.models.Entity;
 
 /**
  * Created by Patrick on 24.08.2014.
