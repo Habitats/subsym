@@ -1,11 +1,9 @@
 package subsym.broids;
 
-import subsym.Models.AIAdapter;
-import subsym.broids.models.Broid;
-import subsym.broids.models.Entity;
 import subsym.broids.gui.BroidGui;
-import subsym.broids.models.Obsticle;
-import subsym.broids.models.Predator;
+import subsym.broids.entities.Broid;
+import subsym.broids.entities.Obsticle;
+import subsym.broids.entities.Predator;
 
 /**
  * Created by anon on 28.01.2015.
@@ -15,14 +13,14 @@ public class Broids implements Runnable {
   private static final String TAG = Broids.class.getSimpleName();
   private int height = (int) (3000 * 1.2);
   private int width = (int) (3000 * 1.5);
-  private AIAdapter<Entity> adapter;
+  private BroidAdapter adapter;
 
   public void run() {
     System.out.println("hello worlds");
     BroidGui gui = new BroidGui();
     gui.addListener(this);
 
-    adapter = new AIAdapter<>();
+    adapter = new BroidAdapter();
 
     adapter.setHeight(height);
     adapter.setWidth(width);

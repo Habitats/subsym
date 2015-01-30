@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import subsym.broids.models.Entity;
+import subsym.broids.entities.Entity;
 
 /**
  * Created by Patrick on 08.09.2014.
@@ -18,16 +17,6 @@ public class AIAdapter<T extends Entity> {
   private AIAdapterListener listener;
 
   private List<T> items;
-
-  public static double sepWeight = 0.1;
-  public static double alignWeight = 0.1;
-  public static double cohWeight = 0.1;
-  public static int dismissLimit = -3000;
-  public static int radius = 1000;
-  public static int maxSpeed = 50;
-  public static int maxBroids = 50;
-  public static int numPredators = 1;
-  public static int numObsticles = 1;
 
   public AIAdapter() {
     items = Collections.synchronizedList(new ArrayList<>());
@@ -72,82 +61,6 @@ public class AIAdapter<T extends Entity> {
     this.height = height;
   }
 
-  private void updateDirection(T boid) {
-    List<T> neighbors = neighbors(boid, boid.getRadius());
-
-    Vec sep = getSeperation(boid, neighbors).multiply(boid.getSepWeight());
-    Vec align = getAlignment(boid, neighbors).multiply(boid.getAlignWeight());
-    Vec coh = getCohesion(boid, neighbors).multiply(boid.getCohWeight());
-
-    Vec newVelocity = boid.getVelocity().add(sep);
-
-    if (neighbors.stream().noneMatch(n -> boid.isEvil(n))) {
-      newVelocity.add(coh).add(align);
-    }
-
-    boid.update(newVelocity);
-  }
-
-  // a boid will steer towards the average position of other boids close to it
-  private Vec getCohesion(T boid, List<T> neighbors) {
-    Vec deltaVelocity = Vec.create();
-    if (neighbors.size() > 1) {
-      // find the center of mass
-      neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.p).forEach(p -> deltaVelocity.add(p));
-      deltaVelocity.divide(neighbors.size() - 1);
-
-      // move with a magnitude of 1% towards the center of mass
-      deltaVelocity.subtract(boid.p).divide(100);
-    }
-    return deltaVelocity;
-  }
-
-  // a boid will steer towards the average heading of other boids close to it
-  private Vec getAlignment(T boid, List<T> neighbors) {
-    Vec deltaVelocity = Vec.create();
-    if (neighbors.size() > 1) {
-      neighbors.stream().filter(neighbor -> boid != neighbor).map(neighbor -> neighbor.v)
-          .forEach(neighBorVelocity -> deltaVelocity.add(neighBorVelocity));
-
-      // normalize
-      deltaVelocity.divide(neighbors.size() - 1);
-
-      deltaVelocity.subtract(boid.v).divide(8);
-    }
-    return deltaVelocity;
-  }
-
-  // a boid will steer to avoid crashing with other boids close to it
-  private Vec getSeperation(T boid, List<T> neighbors) {
-    Vec deltaVelocity = Vec.create();
-    if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid && neighbor.distance(boid) < boid.closeRadius())
-          .forEach(neighbor -> {
-            deltaVelocity.subtract(neighbor.p);
-            deltaVelocity.add(boid.p);
-          });
-    }
-    return deltaVelocity;
-  }
-
-
-  public void update() {
-    items.stream().forEach(boid -> updateDirection(boid));
-    items.removeIf(broid -> broid.isPurgable() && isOutOfBounds(broid) && getSize() > maxBroids);
-    items.stream().filter(broid -> isOutOfBounds(broid)).forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
-    notifyDataChanged();
-  }
-
-  private boolean isOutOfBounds(T broid) {
-    return (broid.getX() > dismissLimit + getWidth() || broid.getX() < -dismissLimit
-            || broid.getY() > dismissLimit + getHeight() || broid.getY() < -dismissLimit);
-  }
-
-  public List<T> neighbors(T broid, int r) {
-    return items.stream() //
-        .filter(neighbor -> broid != neighbor && broid.distance(neighbor) < r) //
-        .collect(Collectors.toList());
-  }
 
   public void addAll(List<T> broids) {
     synchronized (items) {
@@ -159,10 +72,5 @@ public class AIAdapter<T extends Entity> {
     synchronized (items) {
       items.add(broid);
     }
-  }
-
-
-  public boolean notFull() {
-    return getSize() < maxBroids;
   }
 }

@@ -1,8 +1,8 @@
-package subsym.broids.models;
+package subsym.broids.entities;
 
 import subsym.Log;
-import subsym.Models.AIAdapter;
-import subsym.Models.Vec;
+import subsym.broids.BroidAdapter;
+import subsym.broids.Vec;
 import subsym.gui.ColorUtils;
 
 /**
@@ -27,7 +27,7 @@ public class Broid extends Entity {
 
   @Override
   protected int getMaxSpeed() {
-    return AIAdapter.maxSpeed;
+    return BroidAdapter.maxSpeed;
   }
 
   @Override
@@ -36,20 +36,20 @@ public class Broid extends Entity {
   }
 
   public double getSepWeight() {
-    return AIAdapter.sepWeight;
+    return BroidAdapter.sepWeight;
   }
 
   public double getAlignWeight() {
-    return AIAdapter.alignWeight;
+    return BroidAdapter.alignWeight;
   }
 
   public double getCohWeight() {
-    return AIAdapter.cohWeight;
+    return BroidAdapter.cohWeight;
   }
 
   @Override
   public int getRadius() {
-    return AIAdapter.radius;
+    return BroidAdapter.radius;
   }
 
   @Override

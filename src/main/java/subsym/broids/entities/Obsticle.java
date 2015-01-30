@@ -1,7 +1,7 @@
-package subsym.broids.models;
+package subsym.broids.entities;
 
-import subsym.Models.AIAdapter;
-import subsym.Models.Vec;
+import subsym.broids.BroidAdapter;
+import subsym.broids.Vec;
 import subsym.gui.ColorUtils;
 
 /**
@@ -26,7 +26,7 @@ public class Obsticle extends Entity {
   }
 
   public double getSepWeight() {
-    return -AIAdapter.sepWeight * 20;
+    return -BroidAdapter.sepWeight * 20;
   }
 
   public double getAlignWeight() {

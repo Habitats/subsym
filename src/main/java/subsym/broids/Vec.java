@@ -1,4 +1,4 @@
-package subsym.Models;
+package subsym.broids;
 
 /**
  * Created by anon on 28.01.2015.

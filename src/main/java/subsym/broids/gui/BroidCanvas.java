@@ -1,9 +1,9 @@
-package subsym.broids;
+package subsym.broids.gui;
 
 import java.awt.*;
 import java.util.Collection;
 
-import subsym.broids.models.Entity;
+import subsym.broids.entities.Entity;
 import subsym.gui.AICanvas;
 
 /**

@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import subsym.Models.AIAdapter;
+import subsym.broids.BroidAdapter;
 import subsym.broids.Broids;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
@@ -78,18 +78,18 @@ public class BroidGui extends AIGui {
       AISlider source = (AISlider) e.getSource();
       int value = source.getValue();
       sepInput.setText(String.valueOf(value));
-      AIAdapter.sepWeight = value / 100.;
+      BroidAdapter.sepWeight = value / 100.;
     });
     cohSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       int value = source.getValue();
       cohInput.setText(String.valueOf(value));
-      AIAdapter.cohWeight = value / 100.;
+      BroidAdapter.cohWeight = value / 100.;
     });
     alignSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       int value = source.getValue();
-      AIAdapter.alignWeight = value / 100.;
+      BroidAdapter.alignWeight = value / 100.;
       alignInput.setText(String.valueOf(value));
     });
     speedSlider.addChangeListener(e -> {
@@ -97,7 +97,7 @@ public class BroidGui extends AIGui {
       source.setMaximum(100);
       source.setMinimum(0);
       int value = source.getValue();
-      AIAdapter.maxSpeed = value;
+      BroidAdapter.maxSpeed = value;
       speedInput.setText(String.valueOf(value));
     });
     radiusSlider.addChangeListener(e -> {
@@ -106,7 +106,7 @@ public class BroidGui extends AIGui {
       source.setMinimum(0);
       int value = source.getValue();
       radiusInput.setText(String.valueOf(value));
-      AIAdapter.radius = value;
+      BroidAdapter.radius = value;
     });
     maxBroidSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
@@ -114,7 +114,7 @@ public class BroidGui extends AIGui {
       source.setMinimum(0);
       int value = source.getValue();
       maxBroidInput.setText(String.valueOf(value));
-      AIAdapter.maxBroids = value;
+      BroidAdapter.maxBroids = value;
     });
     predatorSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
@@ -122,7 +122,7 @@ public class BroidGui extends AIGui {
       source.setMinimum(0);
       int value = source.getValue();
       predatorInput.setText(String.valueOf(value));
-      AIAdapter.numPredators = value;
+      BroidAdapter.numPredators = value;
     });
     obsticleSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
@@ -130,7 +130,7 @@ public class BroidGui extends AIGui {
       source.setMinimum(0);
       int value = source.getValue();
       obsticleInput.setText(String.valueOf(value));
-      AIAdapter.numObsticles = value;
+      BroidAdapter.numObsticles = value;
     });
 
   }
@@ -172,29 +172,29 @@ public class BroidGui extends AIGui {
   }
 
   private void initValues() {
-    sepInput.setText(String.valueOf(AIAdapter.sepWeight));
-    sepSlider.setValue((int) AIAdapter.sepWeight);
+    sepInput.setText(String.valueOf(BroidAdapter.sepWeight));
+    sepSlider.setValue((int) BroidAdapter.sepWeight);
 
-    alignInput.setText(String.valueOf(AIAdapter.alignWeight));
-    alignSlider.setValue((int) AIAdapter.alignWeight);
+    alignInput.setText(String.valueOf(BroidAdapter.alignWeight));
+    alignSlider.setValue((int) BroidAdapter.alignWeight);
 
-    cohInput.setText(String.valueOf(AIAdapter.cohWeight));
-    cohSlider.setValue((int) AIAdapter.cohWeight);
+    cohInput.setText(String.valueOf(BroidAdapter.cohWeight));
+    cohSlider.setValue((int) BroidAdapter.cohWeight);
 
-    maxBroidInput.setText(String.valueOf(AIAdapter.maxBroids));
-    maxBroidSlider.setValue(AIAdapter.maxBroids);
+    maxBroidInput.setText(String.valueOf(BroidAdapter.maxBroids));
+    maxBroidSlider.setValue(BroidAdapter.maxBroids);
 
-    speedInput.setText(String.valueOf(AIAdapter.maxSpeed));
-    speedSlider.setValue(AIAdapter.maxSpeed);
+    speedInput.setText(String.valueOf(BroidAdapter.maxSpeed));
+    speedSlider.setValue(BroidAdapter.maxSpeed);
 
-    radiusInput.setText(String.valueOf(AIAdapter.radius));
-    radiusSlider.setValue(AIAdapter.radius);
+    radiusInput.setText(String.valueOf(BroidAdapter.radius));
+    radiusSlider.setValue(BroidAdapter.radius);
 
-    predatorInput.setText(String.valueOf(AIAdapter.numPredators));
-    predatorSlider.setValue(AIAdapter.numPredators);
+    predatorInput.setText(String.valueOf(BroidAdapter.numPredators));
+    predatorSlider.setValue(BroidAdapter.numPredators);
 
-    obsticleInput.setText(String.valueOf(AIAdapter.numObsticles));
-    obsticleSlider.setValue(AIAdapter.numObsticles);
+    obsticleInput.setText(String.valueOf(BroidAdapter.numObsticles));
+    obsticleSlider.setValue(BroidAdapter.numObsticles);
   }
 
 
