@@ -58,6 +58,9 @@ public class BroidGui extends AIGui {
   private AIButton spawnPredButton;
   private AIButton spawnObsticleButton;
   private AIButton clearButton;
+  private AILabel simSpeedField;
+  private AISlider simSpeedSlider;
+  private JTextField simSpeedInput;
 
   private Broids broids;
 
@@ -132,6 +135,14 @@ public class BroidGui extends AIGui {
       obsticleInput.setText(String.valueOf(value));
       BroidAdapter.numObsticles = value;
     });
+    simSpeedSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      source.setMaximum(100);
+      source.setMinimum(1);
+      int value = source.getValue();
+      simSpeedInput.setText(String.valueOf(value));
+      Broids.updateFrequency = value;
+    });
 
   }
 
@@ -168,6 +179,10 @@ public class BroidGui extends AIGui {
       String value = ((JTextField) e.getSource()).getText();
       obsticleSlider.setValue(Integer.parseInt(value));
     });
+    simSpeedInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      simSpeedSlider.setValue(Integer.parseInt(value));
+    });
 
   }
 
@@ -195,6 +210,9 @@ public class BroidGui extends AIGui {
 
     obsticleInput.setText(String.valueOf(BroidAdapter.numObsticles));
     obsticleSlider.setValue(BroidAdapter.numObsticles);
+    
+    simSpeedInput.setText(String.valueOf(Broids.updateFrequency));
+    simSpeedSlider.setValue((int) Broids.updateFrequency);
   }
 
 

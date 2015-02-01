@@ -24,7 +24,7 @@ public abstract class Entity implements Comparable<Entity> {
     p = Vec.create(x, y);
   }
 
-  public void setVelocity(int x, int y) {
+  public void setVelocity(double x, double y) {
     v = Vec.create(x, y);
   }
 

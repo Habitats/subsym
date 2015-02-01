@@ -17,7 +17,7 @@
           <foreground color="-131586"/>
         </properties>
       </component>
-      <grid id="c0da9" layout-manager="GridLayoutManager" row-count="27" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="c0da9" layout-manager="GridLayoutManager" row-count="30" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -157,7 +157,7 @@
           </component>
           <vspacer id="eb709">
             <constraints>
-              <grid row="26" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+              <grid row="29" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="14"/>
               </grid>
             </constraints>
@@ -256,7 +256,7 @@
           </component>
           <component id="88b1b" class="subsym.gui.AIButton" binding="spawnPredButton">
             <constraints>
-              <grid row="24" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="27" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Predator++"/>
@@ -264,7 +264,7 @@
           </component>
           <component id="ea6ac" class="subsym.gui.AIButton" binding="spawnObsticleButton">
             <constraints>
-              <grid row="24" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="27" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Obsticle++"/>
@@ -272,11 +272,37 @@
           </component>
           <component id="76194" class="subsym.gui.AIButton" binding="clearButton">
             <constraints>
-              <grid row="25" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="28" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Clear All"/>
             </properties>
+          </component>
+          <component id="b881b" class="subsym.gui.AILabel" binding="simSpeedField">
+            <constraints>
+              <grid row="24" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="61" height="0"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="Simulation Speed"/>
+            </properties>
+          </component>
+          <component id="89ff9" class="subsym.gui.AISlider" binding="simSpeedSlider">
+            <constraints>
+              <grid row="25" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="61" height="19"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="91feb" class="javax.swing.JTextField" binding="simSpeedInput">
+            <constraints>
+              <grid row="26" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
           </component>
         </children>
       </grid>

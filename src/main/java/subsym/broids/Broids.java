@@ -1,9 +1,9 @@
 package subsym.broids;
 
-import subsym.broids.gui.BroidGui;
 import subsym.broids.entities.Broid;
 import subsym.broids.entities.Obsticle;
 import subsym.broids.entities.Predator;
+import subsym.broids.gui.BroidGui;
 
 /**
  * Created by anon on 28.01.2015.
@@ -11,9 +11,11 @@ import subsym.broids.entities.Predator;
 public class Broids implements Runnable {
 
   private static final String TAG = Broids.class.getSimpleName();
-  private int height = (int) (3000 * 1.2);
-  private int width = (int) (3000 * 1.5);
+  private int height = (int) (5000 * 1.2);
+  private int width = (int) (5000 * 1.5);
   private BroidAdapter adapter;
+
+  public static long updateFrequency = 0;
 
   public void run() {
     System.out.println("hello worlds");
@@ -28,15 +30,16 @@ public class Broids implements Runnable {
     gui.setAdapter(adapter);
     adapter.notifyDataChanged();
 
-    adapter.add(new Obsticle(1400, 1200));
-    adapter.add(new Predator(1200, 1400));
+//    adapter.add(new Obsticle(1400, 1200));
+//    adapter.add(new Predator(1200, 1400));
 
     new Thread(() -> {
       while (true) {
         try {
-          Thread.sleep(10);
+          Thread.sleep(updateFrequency);
           while (adapter.notFull()) {
             Broid broid = new Broid((int) (Math.random() * width), (int) (Math.random() * height));
+            broid.setVelocity(Math.random(), Math.random());
             adapter.add(broid);
           }
 

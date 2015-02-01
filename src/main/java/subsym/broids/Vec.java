@@ -53,7 +53,7 @@ public class Vec {
   }
 
   public static Vec create() {
-    return new Vec(2, 2);
+    return new Vec(0, 0);
   }
 
   public static Vec create(double x, double y) {

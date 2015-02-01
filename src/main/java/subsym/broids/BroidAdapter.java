@@ -55,7 +55,9 @@ public class BroidAdapter extends AIAdapter<Entity> {
   private Vec getAlignment(Entity boid, List<Entity> neighbors) {
     Vec deltaVelocity = Vec.create();
     if (neighbors.size() > 1) {
-      neighbors.stream().filter(neighbor -> boid != neighbor).map(neighbor -> neighbor.v)
+      neighbors.stream()
+          .filter(neighbor -> boid != neighbor)
+          .map(neighbor -> neighbor.v)
           .forEach(neighBorVelocity -> deltaVelocity.add(neighBorVelocity));
 
       // normalize
@@ -82,7 +84,8 @@ public class BroidAdapter extends AIAdapter<Entity> {
   public void update() {
     getItems().stream().forEach(boid -> updateDirection(boid));
     getItems().removeIf(broid -> broid.isPurgable() && isOutOfBounds(broid) && getSize() > maxBroids);
-    getItems().stream().filter(broid -> isOutOfBounds(broid)).forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
+    getItems().stream().filter(broid -> isOutOfBounds(broid)).forEach(
+        broid -> broid.wrapAround(getWidth(), getHeight()));
     notifyDataChanged();
   }
 
