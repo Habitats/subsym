@@ -113,7 +113,7 @@ public class BroidGui extends AIGui {
     });
     maxBroidSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
-      source.setMaximum(200);
+      source.setMaximum(500);
       source.setMinimum(0);
       int value = source.getValue();
       maxBroidInput.setText(String.valueOf(value));
