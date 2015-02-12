@@ -1,5 +1,7 @@
 package subsym.broids.entities;
 
+import java.awt.*;
+
 import subsym.Log;
 import subsym.broids.BroidAdapter;
 import subsym.broids.Vec;
@@ -14,8 +16,12 @@ public class Predator extends Entity {
 
   public Predator(int x, int y) {
     super(x, 0, y);
-    setColor(ColorUtils.c(8));
+    setColor(getOriginalColor());
     setVelocity(0, 0);
+  }
+
+  public Color getOriginalColor() {
+    return ColorUtils.c(2);
   }
 
   @Override

@@ -1,6 +1,7 @@
 package subsym.broids.entities;
 
-import subsym.broids.BroidAdapter;
+import java.awt.*;
+
 import subsym.broids.Vec;
 import subsym.gui.ColorUtils;
 
@@ -11,8 +12,12 @@ public class Obsticle extends Entity {
 
   public Obsticle(int x, int y) {
     super(x, 0, y);
-    setColor(ColorUtils.c(4));
+    setColor(getOriginalColor());
     setVelocity(0, 0);
+  }
+
+  public Color getOriginalColor() {
+    return ColorUtils.c(3);
   }
 
   @Override
@@ -26,7 +31,7 @@ public class Obsticle extends Entity {
   }
 
   public double getSepWeight() {
-    return -BroidAdapter.sepWeight * 20;
+    return -1;
   }
 
   public double getAlignWeight() {
@@ -44,7 +49,7 @@ public class Obsticle extends Entity {
 
   @Override
   public double closeRadius() {
-    return 20;
+    return 1000;
   }
 
   @Override

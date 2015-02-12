@@ -8,13 +8,13 @@ import java.awt.*;
 public class ColorUtils {
 
   private static final String TAG = ColorUtils.class.getSimpleName();
-  private static final int NUM_COLORS = 10;
+  private static final int NUM_COLORS = 5;
 
   public static Color toHsv(double normalizedValue, double brightness) {
     // all values are in the range of [0, 1]
     float hue = (float) normalizedValue;
     float value = (float) (1f * brightness);
-    float sat = 0.45f;
+    float sat = 0.75f;
 //    Log.v(TAG, "H: " + hue + ", S: " + sat + ", V: " + value);
 
     return Color.getHSBColor(hue, sat, value);

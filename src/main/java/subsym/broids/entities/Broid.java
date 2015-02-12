@@ -1,6 +1,7 @@
 package subsym.broids.entities;
 
-import subsym.Log;
+import java.awt.*;
+
 import subsym.broids.BroidAdapter;
 import subsym.broids.Vec;
 import subsym.gui.ColorUtils;
@@ -14,15 +15,19 @@ public class Broid extends Entity {
 
   public Broid(int x, int y) {
     super(x, 0, y);
-    setColor(ColorUtils.c(0));
-    setVelocity(0, 0);
+    setColor(getOriginalColor());
+    setVelocity(Math.random(), Math.random());
+  }
+
+  public Color getOriginalColor() {
+    return ColorUtils.c(1);
   }
 
   @Override
   public void update(Vec newVelocity) {
     super.update(newVelocity);
     p.add(v);
-    Log.v(TAG, toString());
+//    Log.v(TAG, toString());
   }
 
   @Override
@@ -54,7 +59,7 @@ public class Broid extends Entity {
 
   @Override
   public double closeRadius() {
-    return 200;
+    return 100;
   }
 
   @Override

@@ -27,7 +27,7 @@ public class Vec {
 
   @Override
   public String toString() {
-    return "(" + x + ", " + y + ")";
+    return "(" + x + ", " + y + ") - | " + lenght() + " |";
   }
 
   public Vec multiply(Vec o) {

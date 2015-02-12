@@ -8,6 +8,7 @@ import subsym.broids.BroidAdapter;
 import subsym.broids.Broids;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
+import subsym.gui.AICheckBox;
 import subsym.gui.AIContiniousScrollPane;
 import subsym.gui.AIGui;
 import subsym.gui.AILabel;
@@ -22,6 +23,14 @@ import subsym.gui.AITextField;
 public class BroidGui extends AIGui {
 
   private static final String TAG = BroidGui.class.getSimpleName();
+
+  private static final int COH_HIGH = 100;
+  private static final int COH_LOW = 10;
+  private static final int ALIGN_HIGH = 100;
+  private static final int ALIGN_LOW = 10;
+  private static final int SEP_HIGH = 80;
+  private static final int SEP_LOW = 0;
+
   private JPanel mainPanel;
 
   private AITextArea inputField;
@@ -61,6 +70,17 @@ public class BroidGui extends AIGui {
   private AILabel simSpeedField;
   private AISlider simSpeedSlider;
   private JTextField simSpeedInput;
+  private AIButton scenario1Button;
+  private AIButton scenario6Button;
+  private AIButton scenario2Button;
+  private AIButton scenario3Button;
+  private AIButton scenario4Button;
+  private AIButton scenario5Button;
+  private AICheckBox wrapAroundPhysicsCheckbox;
+  public AILabel sepValField;
+  public AILabel alignValField;
+  public AILabel cohValField;
+  private AICheckBox enableVectorsCheckbox;
 
   private Broids broids;
 
@@ -69,11 +89,43 @@ public class BroidGui extends AIGui {
     initFieldListeners();
     initSliderListeners();
 
+    scenario1Button.addActionListener(e -> initScenario(SEP_LOW, ALIGN_LOW, COH_HIGH));
+    scenario2Button.addActionListener(e -> initScenario(SEP_LOW, ALIGN_HIGH, COH_LOW));
+    scenario3Button.addActionListener(e -> initScenario(SEP_HIGH, ALIGN_LOW, COH_LOW));
+    scenario4Button.addActionListener(e -> initScenario(SEP_LOW, ALIGN_LOW, COH_HIGH));
+    scenario5Button.addActionListener(e -> initScenario(SEP_HIGH, ALIGN_LOW, COH_HIGH));
+    scenario6Button.addActionListener(e -> initScenario(SEP_HIGH, ALIGN_HIGH, COH_LOW));
+
+    wrapAroundPhysicsCheckbox.setSelected(true);
+    wrapAroundPhysicsCheckbox
+        .addActionListener(e -> BroidAdapter.WRAP_AROUND_PHYSICS_ENABLED = ((JCheckBox) e.getSource()).isSelected());
+    wrapAroundPhysicsCheckbox.setSelected(false);
+    enableVectorsCheckbox
+        .addActionListener(e -> BroidAdapter.VECTORS_ENABLED = ((JCheckBox) e.getSource()).isSelected());
+
     spawnObsticleButton.addActionListener(e -> broids.spawnObsticle());
     spawnPredButton.addActionListener(e -> broids.spawnPredator());
-    clearButton.addActionListener(e->broids.clearAll());
+    clearButton.addActionListener(e -> broids.clearAll());
 
     buildFrame(getMainPanel(), log, statusField);
+  }
+
+  private void initScenario(double sepWeight, double alignWeight, double cohWeight) {
+    BroidAdapter.setSepWeight(sepWeight);
+    BroidAdapter.setAlignWeight(alignWeight);
+    BroidAdapter.setCohWeight(cohWeight);
+    updateWeights();
+  }
+
+  private void updateWeights() {
+    sepInput.setText(String.valueOf(BroidAdapter.getSepWeight()));
+    sepSlider.setValue(BroidAdapter.getSepWeight());
+
+    alignInput.setText(String.valueOf((int) BroidAdapter.getAlignWeight()));
+    alignSlider.setValue(BroidAdapter.getAlignWeight());
+
+    cohInput.setText(String.valueOf(BroidAdapter.getCohWeight()));
+    cohSlider.setValue(BroidAdapter.getCohWeight());
   }
 
   private void initSliderListeners() {
@@ -81,19 +133,19 @@ public class BroidGui extends AIGui {
       AISlider source = (AISlider) e.getSource();
       int value = source.getValue();
       sepInput.setText(String.valueOf(value));
-      BroidAdapter.sepWeight = value / 100.;
+      BroidAdapter.setSepWeight(value);
     });
     cohSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       int value = source.getValue();
       cohInput.setText(String.valueOf(value));
-      BroidAdapter.cohWeight = value / 100.;
+      BroidAdapter.setCohWeight(value);
     });
     alignSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       int value = source.getValue();
-      BroidAdapter.alignWeight = value / 100.;
       alignInput.setText(String.valueOf(value));
+      BroidAdapter.setAlignWeight(value);
     });
     speedSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
@@ -113,7 +165,7 @@ public class BroidGui extends AIGui {
     });
     maxBroidSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
-      source.setMaximum(500);
+      source.setMaximum(1000);
       source.setMinimum(0);
       int value = source.getValue();
       maxBroidInput.setText(String.valueOf(value));
@@ -187,14 +239,7 @@ public class BroidGui extends AIGui {
   }
 
   private void initValues() {
-    sepInput.setText(String.valueOf(BroidAdapter.sepWeight));
-    sepSlider.setValue((int) BroidAdapter.sepWeight);
-
-    alignInput.setText(String.valueOf(BroidAdapter.alignWeight));
-    alignSlider.setValue((int) BroidAdapter.alignWeight);
-
-    cohInput.setText(String.valueOf(BroidAdapter.cohWeight));
-    cohSlider.setValue((int) BroidAdapter.cohWeight);
+    updateWeights();
 
     maxBroidInput.setText(String.valueOf(BroidAdapter.maxBroids));
     maxBroidSlider.setValue(BroidAdapter.maxBroids);
@@ -210,7 +255,7 @@ public class BroidGui extends AIGui {
 
     obsticleInput.setText(String.valueOf(BroidAdapter.numObsticles));
     obsticleSlider.setValue(BroidAdapter.numObsticles);
-    
+
     simSpeedInput.setText(String.valueOf(Broids.updateFrequency));
     simSpeedSlider.setValue((int) Broids.updateFrequency);
   }

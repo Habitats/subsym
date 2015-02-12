@@ -4,6 +4,7 @@ import subsym.broids.entities.Broid;
 import subsym.broids.entities.Obsticle;
 import subsym.broids.entities.Predator;
 import subsym.broids.gui.BroidGui;
+import subsym.gui.ColorUtils;
 
 /**
  * Created by anon on 28.01.2015.
@@ -15,7 +16,7 @@ public class Broids implements Runnable {
   private int width = (int) (5000 * 1.5);
   private BroidAdapter adapter;
 
-  public static long updateFrequency = 0;
+  public static long updateFrequency = 20;
 
   public void run() {
     System.out.println("hello worlds");
@@ -32,6 +33,9 @@ public class Broids implements Runnable {
 
 //    adapter.add(new Obsticle(1400, 1200));
 //    adapter.add(new Predator(1200, 1400));
+    Broid specialBroid = new Broid(50, 50);
+    specialBroid.setColor(ColorUtils.c(0));
+    adapter.add(specialBroid);
 
     new Thread(() -> {
       while (true) {
@@ -39,12 +43,13 @@ public class Broids implements Runnable {
           Thread.sleep(updateFrequency);
           while (adapter.notFull()) {
             Broid broid = new Broid((int) (Math.random() * width), (int) (Math.random() * height));
-            broid.setVelocity(Math.random(), Math.random());
             adapter.add(broid);
           }
 
-          adapter.notifyDataChanged();
           synchronized (adapter) {
+            adapter.getItems().stream().filter(b -> b != specialBroid).forEach(b -> b.setColor(b.getOriginalColor()));
+            adapter.neighbors(specialBroid).stream().forEach(b -> b.setColor(ColorUtils.c(4)));
+
             adapter.update();
           }
         } catch (InterruptedException e) {
@@ -68,7 +73,7 @@ public class Broids implements Runnable {
 
   public void clearAll() {
     synchronized (adapter) {
-      adapter.getItems().clear();
+      adapter.getItems().removeIf(b -> !b.getColor().equals(ColorUtils.c(0)));
     }
   }
 }

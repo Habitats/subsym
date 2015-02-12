@@ -3,6 +3,7 @@ package subsym.broids.gui;
 import java.awt.*;
 import java.util.Collection;
 
+import subsym.broids.BroidAdapter;
 import subsym.broids.Vec;
 import subsym.broids.entities.Entity;
 import subsym.broids.entities.Obsticle;
@@ -13,8 +14,8 @@ import subsym.gui.AICanvas;
  */
 public class BroidCanvas extends AICanvas<Entity> {
 
-  private final int itemHeight = 20;
-  private final int itemWidth = 20;
+  private final int itemHeight = 10;
+  private final int itemWidth = 10;
   private double horizontalScalingFactor;
   private double verticalScalingFactor;
   private final int padding = 0;
@@ -48,16 +49,22 @@ public class BroidCanvas extends AICanvas<Entity> {
         g.setColor(broid.getOutlineColor());
 
         // with thickness 3
-        drawOutline(g, x, y, 3);
+        drawOutline(g, x, y, 2);
       });
 
       // draw vectors
-      items.stream().filter(broid -> !(broid instanceof Obsticle)).forEach(broid -> {
-        int x = getX(broid);
-        int y = getY(broid);
-        drawArrow(g, Vec.create(x + itemWidth / 2, y + itemHeight / 2), Vec.create(broid.v.x, -broid.v.y), 10);
-      });
+      if (BroidAdapter.VECTORS_ENABLED) {
+        drawVectors(g, items);
+      }
     }
+  }
+
+  private void drawVectors(Graphics2D g, Collection<Entity> items) {
+    items.stream().filter(broid -> !(broid instanceof Obsticle)).forEach(broid -> {
+      int x = getX(broid);
+      int y = getY(broid);
+      drawArrow(g, Vec.create(x + itemWidth / 2, y + itemHeight / 2), Vec.create(broid.v.x, -broid.v.y));
+    });
   }
 
   @Override

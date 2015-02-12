@@ -78,11 +78,20 @@ public abstract class Entity implements Comparable<Entity> {
     return v;
   }
 
+  public Vec getLimitedVelocity() {
+    if (v.lenght() > getMaxSpeed()) {
+      Vec limited = Vec.create(v.x / v.lenght(), v.y / v.lenght()).multiply(getMaxSpeed());
+      return limited;
+    }
+    return v;
+  }
+
   public void limitVelocity(int maxSpeed) {
     if (v.lenght() > maxSpeed) {
       v.divide(v.lenght()).multiply(maxSpeed);
     }
   }
+  public abstract Color getOriginalColor();
 
   public void wrapAround(int width, int height) {
     p.x = (p.x + width) % width;

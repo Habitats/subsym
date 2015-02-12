@@ -15,6 +15,8 @@ import subsym.broids.entities.Entity;
  */
 public abstract class AICanvas<T extends Entity> extends JPanel implements AIAdapterListener {
 
+  private long delta = 0;
+
   public enum Direction {
     UP(0), RIGHT(1), DOWN(2), LEFT(3);
     private final int i;
@@ -71,12 +73,12 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
     g2d.drawString(s, offsetWidth + XPos, offsetHeight + YPos);
   }
 
-protected void drawArrow(Graphics g, Vec p, Vec v, int length) {
+  protected void drawArrow(Graphics g, Vec p, Vec v) {
     Point start = new Point();
     Point end = new Point();
 
     start.setLocation(p.x, p.y);
-    end.setLocation(p.x + v.x, p.y + v.y);
+    end.setLocation(p.x + v.x / 2, p.y + v.y / 2);
 
     createArrowShape((Graphics2D) g, start, end);
   }
@@ -119,7 +121,10 @@ protected void drawArrow(Graphics g, Vec p, Vec v, int length) {
 
   @Override
   public void notifyDataChanged() {
-    repaint();
+    if (System.currentTimeMillis() - delta > 10) {
+      repaint();
+      delta = System.currentTimeMillis();
+    }
   }
 
   public void setAdapter(AIAdapter<T> adapter) {
