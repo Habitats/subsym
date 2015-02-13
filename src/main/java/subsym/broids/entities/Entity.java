@@ -91,6 +91,7 @@ public abstract class Entity implements Comparable<Entity> {
       v.divide(v.lenght()).multiply(maxSpeed);
     }
   }
+
   public abstract Color getOriginalColor();
 
   public void wrapAround(int width, int height) {

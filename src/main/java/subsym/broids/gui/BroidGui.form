@@ -3,7 +3,7 @@
   <grid id="fb8ba" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="49" y="22" width="783" height="765"/>
+      <xy x="49" y="22" width="783" height="800"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -17,7 +17,7 @@
           <foreground color="-131586"/>
         </properties>
       </component>
-      <grid id="c0da9" layout-manager="GridLayoutManager" row-count="33" column-count="10" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="c0da9" layout-manager="GridLayoutManager" row-count="35" column-count="10" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -162,7 +162,7 @@
           </component>
           <vspacer id="eb709">
             <constraints>
-              <grid row="32" column="3" row-span="1" col-span="7" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+              <grid row="34" column="3" row-span="1" col-span="7" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
                 <preferred-size width="61" height="14"/>
               </grid>
             </constraints>
@@ -261,7 +261,7 @@
           </component>
           <component id="88b1b" class="subsym.gui.AIButton" binding="spawnPredButton">
             <constraints>
-              <grid row="27" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="29" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Predator++"/>
@@ -269,7 +269,7 @@
           </component>
           <component id="ea6ac" class="subsym.gui.AIButton" binding="spawnObsticleButton">
             <constraints>
-              <grid row="27" column="6" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="29" column="6" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Obsticle++"/>
@@ -277,7 +277,7 @@
           </component>
           <component id="76194" class="subsym.gui.AIButton" binding="clearButton">
             <constraints>
-              <grid row="29" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="31" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Clear All"/>
@@ -301,17 +301,9 @@
             </constraints>
             <properties/>
           </component>
-          <component id="91feb" class="javax.swing.JTextField" binding="simSpeedInput">
-            <constraints>
-              <grid row="26" column="0" row-span="1" col-span="10" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="-1"/>
-              </grid>
-            </constraints>
-            <properties/>
-          </component>
           <component id="82d4a" class="subsym.gui.AIButton" binding="scenario1Button">
             <constraints>
-              <grid row="28" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="30" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="1"/>
@@ -319,7 +311,7 @@
           </component>
           <component id="8539d" class="subsym.gui.AIButton" binding="scenario6Button">
             <constraints>
-              <grid row="28" column="9" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="30" column="9" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="6"/>
@@ -327,7 +319,7 @@
           </component>
           <component id="fb20b" class="subsym.gui.AIButton" binding="scenario2Button">
             <constraints>
-              <grid row="28" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="30" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="2"/>
@@ -335,7 +327,7 @@
           </component>
           <component id="3cbdf" class="subsym.gui.AIButton" binding="scenario3Button">
             <constraints>
-              <grid row="28" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="30" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="3"/>
@@ -343,7 +335,7 @@
           </component>
           <component id="c5817" class="subsym.gui.AIButton" binding="scenario4Button">
             <constraints>
-              <grid row="28" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="30" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="4"/>
@@ -351,7 +343,7 @@
           </component>
           <component id="9b8cd" class="subsym.gui.AIButton" binding="scenario5Button">
             <constraints>
-              <grid row="28" column="7" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="30" column="7" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="5"/>
@@ -359,7 +351,7 @@
           </component>
           <component id="38237" class="subsym.gui.AICheckBox" binding="wrapAroundPhysicsCheckbox">
             <constraints>
-              <grid row="30" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="32" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Wrap Around Physics"/>
@@ -385,11 +377,41 @@
           </component>
           <component id="1b2b6" class="subsym.gui.AICheckBox" binding="enableVectorsCheckbox">
             <constraints>
-              <grid row="31" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="33" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Show Vectors"/>
             </properties>
+          </component>
+          <component id="e6c86" class="subsym.gui.AILabel" binding="scaleField">
+            <constraints>
+              <grid row="27" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="61" height="0"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value="Size"/>
+            </properties>
+          </component>
+          <component id="f0292" class="subsym.gui.AISlider" binding="scaleSLider">
+            <constraints>
+              <grid row="28" column="0" row-span="1" col-span="10" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="61" height="19"/>
+              </grid>
+            </constraints>
+            <properties>
+              <majorTickSpacing value="1"/>
+              <maximum value="100"/>
+              <minimum value="1"/>
+            </properties>
+          </component>
+          <component id="91feb" class="javax.swing.JTextField" binding="simSpeedInput">
+            <constraints>
+              <grid row="26" column="0" row-span="1" col-span="10" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
           </component>
         </children>
       </grid>

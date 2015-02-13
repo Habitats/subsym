@@ -16,6 +16,7 @@ import subsym.models.Vec;
 public class BroidAdapter extends AIAdapter<Entity> {
 
   private static final String TAG = BroidAdapter.class.getSimpleName();
+  public static double SCALE = 2;
   private static double multiplier = 100;
 
   public static double sepWeight = 20 / multiplier;
@@ -28,7 +29,7 @@ public class BroidAdapter extends AIAdapter<Entity> {
   public static int maxBroids = 50;
   public static int numPredators = 1;
   public static int numObsticles = 1;
-  public static boolean WRAP_AROUND_PHYSICS_ENABLED = true;
+  public static boolean WRAP_AROUND_PHYSICS_ENABLED = false;
   public static boolean VECTORS_ENABLED = false;
 
   public static int getSepWeight() {

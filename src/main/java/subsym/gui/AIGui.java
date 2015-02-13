@@ -35,9 +35,7 @@ public abstract class AIGui<T extends Entity> {
   }
 
   public void setAdapter(AIAdapter<T> adapter) {
-
 //    setAdapter.setOrigin(minX, minY);
-
     getDrawingCanvas().setAdapter(adapter);
     Log.v(TAG, "setting setAdapter!" + adapter);
     getMainPanel().repaint();
@@ -70,4 +68,8 @@ public abstract class AIGui<T extends Entity> {
 
   public abstract AITextArea getInputField();
 
+  public void updateScale(double i) {
+    getDrawingCanvas().getAdapter().updateScale(i);
+    getDrawingCanvas().updateScale(i);
+  }
 }

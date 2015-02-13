@@ -17,6 +17,7 @@ public class AIAdapter<T extends Entity> {
   private AIAdapterListener listener;
 
   private List<T> items;
+  private double scale = 1;
 
   public AIAdapter() {
     items = Collections.synchronizedList(new ArrayList<>());
@@ -28,11 +29,11 @@ public class AIAdapter<T extends Entity> {
   }
 
   public int getWidth() {
-    return width;
+    return (int) (width * scale);
   }
 
   public int getHeight() {
-    return height;
+    return (int) (height * scale);
   }
 
   public void notifyDataChanged() {
@@ -48,6 +49,7 @@ public class AIAdapter<T extends Entity> {
   public void setWidth(int width) {
     this.width = width;
   }
+
 
   public int getSize() {
     return items.size();
@@ -72,5 +74,9 @@ public class AIAdapter<T extends Entity> {
     synchronized (items) {
       items.add(broid);
     }
+  }
+
+  public void updateScale(double i) {
+    scale = i;
   }
 }

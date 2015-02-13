@@ -17,6 +17,8 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
 
   private long delta = 0;
 
+  public abstract void updateScale(double i);
+
   public enum Direction {
     UP(0), RIGHT(1), DOWN(2), LEFT(3);
     private final int i;

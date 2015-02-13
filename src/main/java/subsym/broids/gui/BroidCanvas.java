@@ -4,21 +4,22 @@ import java.awt.*;
 import java.util.Collection;
 
 import subsym.broids.BroidAdapter;
-import subsym.models.Vec;
 import subsym.broids.entities.Entity;
 import subsym.broids.entities.Obsticle;
 import subsym.gui.AICanvas;
+import subsym.models.Vec;
 
 /**
  * Created by anon on 28.01.2015.
  */
 public class BroidCanvas extends AICanvas<Entity> {
 
-  private final int itemHeight = 10;
-  private final int itemWidth = 10;
   private double horizontalScalingFactor;
   private double verticalScalingFactor;
   private final int padding = 0;
+  private int itemWidth = 10;
+  private int itemHeight = 10;
+  private double size = 1;
 
   @Override
   protected void draw(Graphics2D g) {
@@ -27,14 +28,18 @@ public class BroidCanvas extends AICanvas<Entity> {
 
   @Override
   protected int getItemHeight() {
-    return itemHeight;
+    return (int) (itemHeight / size);
   }
 
   @Override
   protected int getItemWidth() {
-    return itemWidth;
+    return (int) (itemWidth / size);
   }
 
+  @Override
+  public void updateScale(double i) {
+    size = i;
+  }
 
   private void drawNodes(Graphics2D g) {
 
@@ -63,7 +68,7 @@ public class BroidCanvas extends AICanvas<Entity> {
     items.stream().filter(broid -> !(broid instanceof Obsticle)).forEach(broid -> {
       int x = getX(broid);
       int y = getY(broid);
-      drawArrow(g, Vec.create(x + itemWidth / 2, y + itemHeight / 2), Vec.create(broid.v.x, -broid.v.y));
+      drawArrow(g, Vec.create(x + getItemWidth() / 2, y + getItemHeight() / 2), Vec.create(broid.v.x, -broid.v.y));
     });
   }
 
@@ -75,7 +80,7 @@ public class BroidCanvas extends AICanvas<Entity> {
   }
 
   private int getY(Entity item) {
-    return (int) (getHeight() - item.getY() * getVerticalScalingFactor()) - (padding + itemHeight);
+    return (int) (getHeight() - item.getY() * getVerticalScalingFactor()) - (padding + getItemHeight());
   }
 
   private int getX(Entity item) {
@@ -97,7 +102,7 @@ public class BroidCanvas extends AICanvas<Entity> {
   }
 
   public void setHorizontalScalingFactor(double width, double adapterWidth) {
-    this.horizontalScalingFactor = (width - (padding * 2 + itemWidth)) / adapterWidth;
+    this.horizontalScalingFactor = (width - (padding * 2 + getItemWidth())) / adapterWidth;
   }
 
   public double getHorizontalScalingFactor() {
@@ -105,7 +110,7 @@ public class BroidCanvas extends AICanvas<Entity> {
   }
 
   public void setVerticalScalingFactor(double height, double adapterHeight) {
-    this.verticalScalingFactor = (height - (padding * 2 + itemHeight)) / adapterHeight;
+    this.verticalScalingFactor = (height - (padding * 2 + getItemHeight())) / adapterHeight;
   }
 
   public double getVerticalScalingFactor() {

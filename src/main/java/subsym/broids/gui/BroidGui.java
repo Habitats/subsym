@@ -81,6 +81,8 @@ public class BroidGui extends AIGui {
   public AILabel alignValField;
   public AILabel cohValField;
   private AICheckBox enableVectorsCheckbox;
+  private AILabel scaleField;
+  private AISlider scaleSLider;
 
   private Broids broids;
 
@@ -195,6 +197,7 @@ public class BroidGui extends AIGui {
       simSpeedInput.setText(String.valueOf(value));
       Broids.updateFrequency = value;
     });
+    scaleSLider.addChangeListener(e -> updateScale(((AISlider) e.getSource()).getValue() / 50.));
 
   }
 
