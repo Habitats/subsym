@@ -2,7 +2,7 @@ package subsym.broids.entities;
 
 import java.awt.*;
 
-import subsym.broids.Vec;
+import subsym.models.Vec;
 
 /**
  * Created by Patrick on 08.09.2014.

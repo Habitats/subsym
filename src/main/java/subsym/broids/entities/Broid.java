@@ -3,7 +3,7 @@ package subsym.broids.entities;
 import java.awt.*;
 
 import subsym.broids.BroidAdapter;
-import subsym.broids.Vec;
+import subsym.models.Vec;
 import subsym.gui.ColorUtils;
 
 /**

@@ -2,9 +2,8 @@ package subsym.broids.entities;
 
 import java.awt.*;
 
-import subsym.Log;
 import subsym.broids.BroidAdapter;
-import subsym.broids.Vec;
+import subsym.models.Vec;
 import subsym.gui.ColorUtils;
 
 /**
@@ -28,7 +27,6 @@ public class Predator extends Entity {
   public void update(Vec newVelocity) {
     super.update(newVelocity);
     p.add(v);
-    Log.v(TAG, toString());
   }
 
   @Override
@@ -53,12 +51,12 @@ public class Predator extends Entity {
 
   @Override
   public int getRadius() {
-    return 1000;
+    return 1500;
   }
 
   @Override
   public double closeRadius() {
-    return 1000;
+    return 1500;
   }
 
   @Override

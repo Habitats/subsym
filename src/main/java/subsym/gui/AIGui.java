@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import javax.swing.*;
 
 import subsym.Log;
-import subsym.Models.AIAdapter;
+import subsym.models.AIAdapter;
 import subsym.broids.entities.Entity;
 
 

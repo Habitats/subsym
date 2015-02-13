@@ -2,7 +2,7 @@ package subsym.broids.entities;
 
 import java.awt.*;
 
-import subsym.broids.Vec;
+import subsym.models.Vec;
 import subsym.gui.ColorUtils;
 
 /**
@@ -22,7 +22,7 @@ public class Obsticle extends Entity {
 
   @Override
   public void update(Vec newVelocity) {
-
+// obsticles should never update
   }
 
   @Override

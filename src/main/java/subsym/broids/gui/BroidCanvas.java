@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Collection;
 
 import subsym.broids.BroidAdapter;
-import subsym.broids.Vec;
+import subsym.models.Vec;
 import subsym.broids.entities.Entity;
 import subsym.broids.entities.Obsticle;
 import subsym.gui.AICanvas;

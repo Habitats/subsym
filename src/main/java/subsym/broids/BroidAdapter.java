@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import subsym.Log;
-import subsym.Models.AIAdapter;
+import subsym.models.AIAdapter;
 import subsym.broids.entities.Entity;
 import subsym.broids.entities.Predator;
 import subsym.gui.ColorUtils;
+import subsym.models.Vec;
 
 /**
  * Created by Patrick on 30.01.2015.
@@ -57,15 +58,15 @@ public class BroidAdapter extends AIAdapter<Entity> {
   private void updateDirection(Entity boid) {
     List<Entity> neighbors = neighbors(boid);
 
-    Vec sep = getSeperation(boid, neighbors).multiply(boid.getSepWeight());
-    Vec align = getAlignment(boid, neighbors).multiply(boid.getAlignWeight());
-    Vec coh = getCohesion(boid, neighbors).multiply(boid.getCohWeight());
+    Vec sep = Vec.multiply(getSeperation(boid, neighbors), boid.getSepWeight());
+    Vec align = Vec.multiply(getAlignment(boid, neighbors), boid.getAlignWeight());
+    Vec coh = Vec.multiply(getCohesion(boid, neighbors), boid.getCohWeight());
 
     double alignLength = align.lenght();
     double cohLength = coh.lenght();
     double sepLength = sep.lenght();
 
-    Vec newVelocity = boid.getVelocity().add(sep);
+    Vec newVelocity = Vec.add(boid.getVelocity(), sep);
 
     if (neighbors.stream().noneMatch(n -> boid.isEvil(n))) {
       newVelocity.add(coh).add(align);
@@ -82,7 +83,7 @@ public class BroidAdapter extends AIAdapter<Entity> {
 
   // a boid will steer towards the average position of other boids close to it
   private Vec getCohesion(Entity boid, List<Entity> neighbors) {
-    Vec deltaVelocity = Vec.create();
+    Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 1) {
       // find the center of mass
       neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.p).forEach(p -> deltaVelocity.add(p));
@@ -96,7 +97,7 @@ public class BroidAdapter extends AIAdapter<Entity> {
 
   // a boid will steer towards the average heading of other boids close to it
   private Vec getAlignment(Entity boid, List<Entity> neighbors) {
-    Vec deltaVelocity = Vec.create();
+    Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 1) {
       neighbors.stream().filter(neighbor -> boid != neighbor).map(neighbor -> neighbor.v)
           .forEach(neighBorVelocity -> deltaVelocity.add(neighBorVelocity));
@@ -111,7 +112,7 @@ public class BroidAdapter extends AIAdapter<Entity> {
 
   // a boid will steer to avoid crashing with other boids close to it
   private Vec getSeperation(Entity boid, List<Entity> neighbors) {
-    Vec deltaVelocity = Vec.create();
+    Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 0) {
       neighbors.stream().filter(neighbor -> neighbor != boid && distance(boid, neighbor) < boid.closeRadius())
           .forEach(neighbor -> {
