@@ -17,30 +17,6 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
 
   private long delta = 0;
 
-  public abstract void updateScale(double i);
-
-  public enum Direction {
-    UP(0), RIGHT(1), DOWN(2), LEFT(3);
-    private final int i;
-
-    Direction(int i) {
-      this.i = i;
-    }
-
-    public int getId() {
-      return i;
-    }
-
-    public static Direction getDirection(Integer value) {
-      for (Direction dir : Direction.values()) {
-        if (dir.getId() == value) {
-          return dir;
-        }
-      }
-      return null;
-    }
-  }
-
   private static final String TAG = AICanvas.class.getSimpleName();
   private AIAdapter adapter;
   public boolean drawLabels;
@@ -61,19 +37,8 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
 
   protected abstract void draw(Graphics2D g);
 
-  protected abstract void drawOutline(Graphics2D g, int x, int y, int thickness);
+  protected abstract void drawOutline(Entity broid, Graphics2D g, int x, int y, int thickness);
 
-  protected void drawStringCenter(Graphics g, String s, int XPos, int YPos) {
-    Graphics2D g2d = (Graphics2D) g;
-    Font font = new Font("Consolas", Font.PLAIN, 14);
-    g.setFont(font);
-    g.setColor(Theme.getForeground());
-    int stringLen = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();
-    int stringHeight = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getHeight();
-    int offsetWidth = getItemWidth() / 2 - stringLen / 2;
-    int offsetHeight = getItemHeight() - stringHeight / 2;
-    g2d.drawString(s, offsetWidth + XPos, offsetHeight + YPos);
-  }
 
   protected void drawArrow(Graphics g, Vec p, Vec v) {
     Point start = new Point();
@@ -115,10 +80,6 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
     return new Point((int) ((p1.x + p2.x) / 2.0), (int) ((p1.y + p2.y) / 2.0));
   }
 
-  protected abstract int getItemHeight();
-
-  protected abstract int getItemWidth();
-
   protected abstract void updateMetrics();
 
   @Override
@@ -134,10 +95,6 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
     adapter.setListener(this);
   }
 
-  public void drawLabels(boolean selected) {
-    this.drawLabels = selected;
-    repaint();
-  }
 
   public AIAdapter<T> getAdapter() {
     return adapter;

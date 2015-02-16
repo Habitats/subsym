@@ -95,4 +95,7 @@ public abstract class Entity {
 
   public abstract boolean isEvil(Entity n);
 
+  public abstract int getItemWidth();
+
+  public abstract int getItemHeight();
 }

@@ -17,7 +17,7 @@ public class AIAdapter<T extends Entity> {
   private AIAdapterListener listener;
 
   private List<T> items;
-  private double scale = 1;
+  public static double scale = 1;
 
   public AIAdapter() {
     items = Collections.synchronizedList(new ArrayList<>());

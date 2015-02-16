@@ -70,6 +70,6 @@ public abstract class AIGui<T extends Entity> {
 
   public void updateScale(double i) {
     getDrawingCanvas().getAdapter().updateScale(i);
-    getDrawingCanvas().updateScale(i);
+//    getDrawingCanvas().updateScale(i);
   }
 }

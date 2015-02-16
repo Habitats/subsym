@@ -50,7 +50,7 @@ public class Obsticle extends Entity {
 
   @Override
   public double closeRadius() {
-    return 150;
+    return 250;
   }
 
   @Override
@@ -63,4 +63,13 @@ public class Obsticle extends Entity {
     return false;
   }
 
+  @Override
+  public int getItemHeight() {
+    return (int) (20 / BoidAdapter.scale);
+  }
+
+  @Override
+  public int getItemWidth() {
+    return (int) (20 / BoidAdapter.scale);
+  }
 }

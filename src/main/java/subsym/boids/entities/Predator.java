@@ -74,4 +74,13 @@ public class Predator extends Entity {
     return "PREDATOR --> P: " + p.toString() + " - V: " + v.toString();
   }
 
+  @Override
+  public int getItemHeight() {
+    return (int) (15 / BoidAdapter.scale);
+  }
+
+  @Override
+  public int getItemWidth() {
+    return (int) (15 / BoidAdapter.scale);
+  }
 }

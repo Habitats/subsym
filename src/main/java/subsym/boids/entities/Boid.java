@@ -72,4 +72,13 @@ public class Boid extends Entity {
     return n instanceof Predator;
   }
 
+  @Override
+  public int getItemHeight() {
+    return (int) (10 / BoidAdapter.scale);
+  }
+
+  @Override
+  public int getItemWidth() {
+    return (int) (10 / BoidAdapter.scale);
+  }
 }
