@@ -13,9 +13,9 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 30.01.2015.
  */
-public class BroidAdapter extends AIAdapter<Entity> {
+public class BoidAdapter extends AIAdapter<Entity> {
 
-  private static final String TAG = BroidAdapter.class.getSimpleName();
+  private static final String TAG = BoidAdapter.class.getSimpleName();
   public static double SCALE = 2;
   private static double multiplier = 100;
 
@@ -38,11 +38,11 @@ public class BroidAdapter extends AIAdapter<Entity> {
   }
 
   public static void setSepWeight(double sepWeight) {
-    BroidAdapter.sepWeight = sepWeight / multiplier;
+    BoidAdapter.sepWeight = sepWeight / multiplier;
   }
 
   public static void setObsticleSepWeight(double obsticleSepWeight) {
-BroidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
+BoidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
   }
 
   public static int getAlignWeight() {
@@ -50,7 +50,7 @@ BroidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
   }
 
   public static void setAlignWeight(double alignWeight) {
-    BroidAdapter.alignWeight = alignWeight / multiplier;
+    BoidAdapter.alignWeight = alignWeight / multiplier;
   }
 
   public static int getCohWeight() {
@@ -58,7 +58,7 @@ BroidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
   }
 
   public static void setCohWeight(double cohWeight) {
-    BroidAdapter.cohWeight = cohWeight / multiplier;
+    BoidAdapter.cohWeight = cohWeight / multiplier;
   }
 
   public static int getObsticleSepWeight() {

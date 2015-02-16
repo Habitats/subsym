@@ -2,18 +2,18 @@ package subsym.broids.entities;
 
 import java.awt.*;
 
-import subsym.broids.BroidAdapter;
+import subsym.broids.BoidAdapter;
 import subsym.models.Vec;
 import subsym.gui.ColorUtils;
 
 /**
  * Created by anon on 28.01.2015.
  */
-public class Broid extends Entity {
+public class Boid extends Entity {
 
-  private static final String TAG = Broid.class.getSimpleName();
+  private static final String TAG = Boid.class.getSimpleName();
 
-  public Broid(int x, int y) {
+  public Boid(int x, int y) {
     super(x, 0, y);
     setColor(getOriginalColor());
     setVelocity(Math.random(), Math.random());
@@ -32,7 +32,7 @@ public class Broid extends Entity {
 
   @Override
   protected int getMaxSpeed() {
-    return BroidAdapter.maxSpeed;
+    return BoidAdapter.maxSpeed;
   }
 
   @Override
@@ -41,20 +41,20 @@ public class Broid extends Entity {
   }
 
   public double getSepWeight() {
-    return BroidAdapter.sepWeight;
+    return BoidAdapter.sepWeight;
   }
 
   public double getAlignWeight() {
-    return BroidAdapter.alignWeight;
+    return BoidAdapter.alignWeight;
   }
 
   public double getCohWeight() {
-    return BroidAdapter.cohWeight;
+    return BoidAdapter.cohWeight;
   }
 
   @Override
   public int getRadius() {
-    return BroidAdapter.radius;
+    return BoidAdapter.radius;
   }
 
   @Override

@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import subsym.broids.Broids;
+import subsym.broids.Boids;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -37,7 +37,7 @@ public class Main {
       protected void init() {
 //        AIPanel panel = new AIPanel();
 //        panel.setPreferredSize(new Dimension(300, 200));
-//        AIButton broid = new AIButton("Broids");
+//        AIButton broid = new AIButton("BBoids);
 //
 //        broid.addActionListener(e -> broid());
 //        panel.add(broid);
@@ -66,7 +66,7 @@ public class Main {
   }
 
   private static void broid() {
-    new Thread(new Broids()).start();
+    new Thread(new Boids()).start();
   }
 
 }

@@ -1,29 +1,29 @@
 package subsym.broids;
 
-import subsym.broids.entities.Broid;
+import subsym.broids.entities.Boid;
 import subsym.broids.entities.Obsticle;
 import subsym.broids.entities.Predator;
-import subsym.broids.gui.BroidGui;
+import subsym.broids.gui.BoidGui;
 import subsym.gui.ColorUtils;
 
 /**
  * Created by anon on 28.01.2015.
  */
-public class Broids implements Runnable {
+public class Boids implements Runnable {
 
-  private static final String TAG = Broids.class.getSimpleName();
+  private static final String TAG = Boids.class.getSimpleName();
   private int height = (int) (5000 * 1.2);
   private int width = (int) (5000 * 1.5);
-  private BroidAdapter adapter;
+  private BoidAdapter adapter;
 
   public static long updateFrequency = 20;
 
   public void run() {
     System.out.println("hello worlds");
-    BroidGui gui = new BroidGui();
+    BoidGui gui = new BoidGui();
     gui.addListener(this);
 
-    adapter = new BroidAdapter();
+    adapter = new BoidAdapter();
 
     adapter.setHeight(height);
     adapter.setWidth(width);
@@ -33,22 +33,22 @@ public class Broids implements Runnable {
 
 //    adapter.add(new Obsticle(1400, 1200));
 //    adapter.add(new Predator(1200, 1400));
-    Broid specialBroid = new Broid(50, 50);
-    specialBroid.setColor(ColorUtils.c(0));
-    adapter.add(specialBroid);
+    Boid specialBoid = new Boid(50, 50);
+    specialBoid.setColor(ColorUtils.c(0));
+    adapter.add(specialBoid);
 
     new Thread(() -> {
       while (true) {
         try {
           Thread.sleep(updateFrequency);
           while (adapter.notFull()) {
-            Broid broid = new Broid((int) (Math.random() * width), (int) (Math.random() * height));
-            adapter.add(broid);
+            Boid boid = new Boid((int) (Math.random() * width), (int) (Math.random() * height));
+            adapter.add(boid);
           }
 
           synchronized (adapter) {
-            adapter.getItems().stream().filter(b -> b != specialBroid).forEach(b -> b.setColor(b.getOriginalColor()));
-            adapter.neighbors(specialBroid).stream().forEach(b -> b.setColor(ColorUtils.c(4)));
+            adapter.getItems().stream().filter(b -> b != specialBoid).forEach(b -> b.setColor(b.getOriginalColor()));
+            adapter.neighbors(specialBoid).stream().forEach(b -> b.setColor(ColorUtils.c(4)));
 
             adapter.update();
           }

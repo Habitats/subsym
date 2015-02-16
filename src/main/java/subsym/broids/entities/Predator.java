@@ -2,7 +2,7 @@ package subsym.broids.entities;
 
 import java.awt.*;
 
-import subsym.broids.BroidAdapter;
+import subsym.broids.BoidAdapter;
 import subsym.models.Vec;
 import subsym.gui.ColorUtils;
 
@@ -31,7 +31,7 @@ public class Predator extends Entity {
 
   @Override
   protected int getMaxSpeed() {
-    return (int) (0.5 * BroidAdapter.maxSpeed);
+    return (int) (0.5 * BoidAdapter.maxSpeed);
   }
 
   @Override
