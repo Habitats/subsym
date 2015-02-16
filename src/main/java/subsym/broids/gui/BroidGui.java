@@ -83,6 +83,9 @@ public class BroidGui extends AIGui {
   private AICheckBox enableVectorsCheckbox;
   private AILabel scaleField;
   private AISlider scaleSLider;
+  private AILabel obsticleSepField;
+  private AISlider obsticleSepSlider;
+  private JTextField obsticleSepInput;
 
   private Broids broids;
 
@@ -122,6 +125,9 @@ public class BroidGui extends AIGui {
   private void updateWeights() {
     sepInput.setText(String.valueOf(BroidAdapter.getSepWeight()));
     sepSlider.setValue(BroidAdapter.getSepWeight());
+    
+    obsticleSepInput.setText(String.valueOf(BroidAdapter.getObsticleSepWeight()));
+    obsticleSepSlider.setValue(BroidAdapter.getObsticleSepWeight());
 
     alignInput.setText(String.valueOf((int) BroidAdapter.getAlignWeight()));
     alignSlider.setValue(BroidAdapter.getAlignWeight());
@@ -136,6 +142,12 @@ public class BroidGui extends AIGui {
       int value = source.getValue();
       sepInput.setText(String.valueOf(value));
       BroidAdapter.setSepWeight(value);
+    });
+    obsticleSepSlider.addChangeListener(e -> {
+      AISlider source = (AISlider) e.getSource();
+      int value = source.getValue();
+      obsticleSepInput.setText(String.valueOf(value));
+      BroidAdapter.setObsticleSepWeight(value);
     });
     cohSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
@@ -213,6 +225,10 @@ public class BroidGui extends AIGui {
     sepInput.addActionListener(e -> {
       String value = ((JTextField) e.getSource()).getText();
       sepSlider.setValue(Integer.parseInt(value));
+    });
+    obsticleSepInput.addActionListener(e -> {
+      String value = ((JTextField) e.getSource()).getText();
+      obsticleSepSlider.setValue(Integer.parseInt(value));
     });
     maxBroidInput.addActionListener(e -> {
       String value = ((JTextField) e.getSource()).getText();

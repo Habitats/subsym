@@ -36,7 +36,7 @@ public class Predator extends Entity {
 
   @Override
   public double getSepWeight() {
-    return -20000;
+    return 2;
   }
 
   @Override
@@ -56,7 +56,7 @@ public class Predator extends Entity {
 
   @Override
   public double closeRadius() {
-    return 1500;
+    return 500;
   }
 
   @Override
@@ -72,5 +72,10 @@ public class Predator extends Entity {
   @Override
   public String toString() {
     return "PREDATOR --> P: " + p.toString() + " - V: " + v.toString();
+  }
+
+  @Override
+  public double getEvilWeight() {
+    return 1;
   }
 }

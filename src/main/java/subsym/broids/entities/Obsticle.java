@@ -2,8 +2,9 @@ package subsym.broids.entities;
 
 import java.awt.*;
 
-import subsym.models.Vec;
+import subsym.broids.BroidAdapter;
 import subsym.gui.ColorUtils;
+import subsym.models.Vec;
 
 /**
  * Created by Patrick on 30.01.2015.
@@ -31,7 +32,7 @@ public class Obsticle extends Entity {
   }
 
   public double getSepWeight() {
-    return -1;
+    return BroidAdapter.obsticleSepWeight;
   }
 
   public double getAlignWeight() {
@@ -44,12 +45,12 @@ public class Obsticle extends Entity {
 
   @Override
   public int getRadius() {
-    return 100;
+    return BroidAdapter.radius;
   }
 
   @Override
   public double closeRadius() {
-    return 1000;
+    return 150;
   }
 
   @Override
@@ -60,5 +61,10 @@ public class Obsticle extends Entity {
   @Override
   public boolean isEvil(Entity n) {
     return false;
+  }
+
+  @Override
+  public double getEvilWeight() {
+    return 1;
   }
 }

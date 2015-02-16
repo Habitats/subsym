@@ -114,4 +114,6 @@ public abstract class Entity implements Comparable<Entity> {
   public abstract boolean isPurgable();
 
   public abstract boolean isEvil(Entity n);
+
+  public abstract double getEvilWeight();
 }

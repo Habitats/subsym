@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import subsym.Log;
-import subsym.models.AIAdapter;
 import subsym.broids.entities.Entity;
 import subsym.broids.entities.Predator;
 import subsym.gui.ColorUtils;
+import subsym.models.AIAdapter;
 import subsym.models.Vec;
 
 /**
@@ -22,6 +22,7 @@ public class BroidAdapter extends AIAdapter<Entity> {
   public static double sepWeight = 20 / multiplier;
   public static double alignWeight = 20 / multiplier;
   public static double cohWeight = 20 / multiplier;
+  public static double obsticleSepWeight = 20 / (multiplier / 10);
 
   public static int dismissLimit = 0;
   public static int radius = 1000;
@@ -40,6 +41,10 @@ public class BroidAdapter extends AIAdapter<Entity> {
     BroidAdapter.sepWeight = sepWeight / multiplier;
   }
 
+  public static void setObsticleSepWeight(double obsticleSepWeight) {
+BroidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
+  }
+
   public static int getAlignWeight() {
     return (int) (alignWeight * multiplier);
   }
@@ -56,10 +61,15 @@ public class BroidAdapter extends AIAdapter<Entity> {
     BroidAdapter.cohWeight = cohWeight / multiplier;
   }
 
+  public static int getObsticleSepWeight() {
+    return (int) (obsticleSepWeight * (multiplier / 10));
+  }
+
   private void updateDirection(Entity boid) {
     List<Entity> neighbors = neighbors(boid);
 
-    Vec sep = Vec.multiply(getSeperation(boid, neighbors), boid.getSepWeight());
+//    Vec sep = Vec.multiply(getSeperation(boid, neighbors), boid.getSepWeight());
+    Vec sep = getSeperation(boid, neighbors);
     Vec align = Vec.multiply(getAlignment(boid, neighbors), boid.getAlignWeight());
     Vec coh = Vec.multiply(getCohesion(boid, neighbors), boid.getCohWeight());
 
@@ -115,10 +125,11 @@ public class BroidAdapter extends AIAdapter<Entity> {
   private Vec getSeperation(Entity boid, List<Entity> neighbors) {
     Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid && distance(boid, neighbor) < boid.closeRadius())
+      neighbors.stream().filter(neighbor -> neighbor != boid && distance(boid, neighbor) < neighbor.closeRadius())
           .forEach(neighbor -> {
             deltaVelocity.subtract(neighbor.p);
             deltaVelocity.add(boid.p);
+            deltaVelocity.multiply(neighbor.getSepWeight());
           });
     }
     return deltaVelocity;
@@ -187,4 +198,5 @@ public class BroidAdapter extends AIAdapter<Entity> {
   public boolean notFull() {
     return getSize() < maxBroids;
   }
+
 }

@@ -71,4 +71,9 @@ public class Broid extends Entity {
   public boolean isEvil(Entity n) {
     return n instanceof Predator;
   }
+
+  @Override
+  public double getEvilWeight() {
+    return 1;
+  }
 }
