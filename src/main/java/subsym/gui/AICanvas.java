@@ -51,7 +51,7 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
   }
 
 
-  public static void createArrowShape(Graphics2D g, Point fromPt, Point toPt) {
+  public void createArrowShape(Graphics2D g, Point fromPt, Point toPt) {
     Polygon arrowPolygon = new Polygon();
     arrowPolygon.addPoint(-6, 1);
     arrowPolygon.addPoint(3, 1);
@@ -76,7 +76,7 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
     g.fill(shape);
   }
 
-  private static Point midpoint(Point p1, Point p2) {
+  private Point midpoint(Point p1, Point p2) {
     return new Point((int) ((p1.x + p2.x) / 2.0), (int) ((p1.y + p2.y) / 2.0));
   }
 
