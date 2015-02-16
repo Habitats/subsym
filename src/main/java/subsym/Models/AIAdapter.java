@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import subsym.broids.entities.Entity;
+import subsym.boids.entities.Entity;
 
 /**
  * Created by Patrick on 08.09.2014.

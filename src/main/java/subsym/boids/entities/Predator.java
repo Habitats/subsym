@@ -1,8 +1,8 @@
-package subsym.broids.entities;
+package subsym.boids.entities;
 
 import java.awt.*;
 
-import subsym.broids.BoidAdapter;
+import subsym.boids.BoidAdapter;
 import subsym.models.Vec;
 import subsym.gui.ColorUtils;
 
@@ -74,8 +74,4 @@ public class Predator extends Entity {
     return "PREDATOR --> P: " + p.toString() + " - V: " + v.toString();
   }
 
-  @Override
-  public double getEvilWeight() {
-    return 1;
-  }
 }

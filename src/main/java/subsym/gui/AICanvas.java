@@ -8,7 +8,7 @@ import javax.swing.*;
 import subsym.models.AIAdapter;
 import subsym.models.AIAdapterListener;
 import subsym.models.Vec;
-import subsym.broids.entities.Entity;
+import subsym.boids.entities.Entity;
 
 /**
  * Created by Patrick on 24.08.2014.

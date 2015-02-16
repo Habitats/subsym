@@ -1,11 +1,11 @@
-package subsym.broids.gui;
+package subsym.boids.gui;
 
 import java.awt.*;
 
 import javax.swing.*;
 
-import subsym.broids.Boids;
-import subsym.broids.BoidAdapter;
+import subsym.boids.Boids;
+import subsym.boids.BoidAdapter;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AICheckBox;
@@ -34,7 +34,7 @@ public class BoidGui extends AIGui {
   private JPanel mainPanel;
 
   private AITextArea inputField;
-  private AICanvas drawingCanvas;
+  private BoidCanvas drawingCanvas;
   private AITextField statusField;
   private AIContiniousScrollPane log;
 

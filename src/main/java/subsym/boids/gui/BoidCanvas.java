@@ -1,11 +1,11 @@
-package subsym.broids.gui;
+package subsym.boids.gui;
 
 import java.awt.*;
 import java.util.Collection;
 
-import subsym.broids.BoidAdapter;
-import subsym.broids.entities.Entity;
-import subsym.broids.entities.Obsticle;
+import subsym.boids.BoidAdapter;
+import subsym.boids.entities.Entity;
+import subsym.boids.entities.Obsticle;
 import subsym.gui.AICanvas;
 import subsym.models.Vec;
 

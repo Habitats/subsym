@@ -1,8 +1,8 @@
-package subsym.broids.entities;
+package subsym.boids.entities;
 
 import java.awt.*;
 
-import subsym.broids.BoidAdapter;
+import subsym.boids.BoidAdapter;
 import subsym.models.Vec;
 import subsym.gui.ColorUtils;
 
@@ -72,8 +72,4 @@ public class Boid extends Entity {
     return n instanceof Predator;
   }
 
-  @Override
-  public double getEvilWeight() {
-    return 1;
-  }
 }

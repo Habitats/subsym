@@ -1,8 +1,8 @@
-package subsym.broids.entities;
+package subsym.boids.entities;
 
 import java.awt.*;
 
-import subsym.broids.BoidAdapter;
+import subsym.boids.BoidAdapter;
 import subsym.gui.ColorUtils;
 import subsym.models.Vec;
 
@@ -63,8 +63,4 @@ public class Obsticle extends Entity {
     return false;
   }
 
-  @Override
-  public double getEvilWeight() {
-    return 1;
-  }
 }

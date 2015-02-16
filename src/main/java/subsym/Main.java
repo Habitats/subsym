@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import subsym.broids.Boids;
+import subsym.boids.Boids;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;

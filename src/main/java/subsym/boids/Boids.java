@@ -1,9 +1,9 @@
-package subsym.broids;
+package subsym.boids;
 
-import subsym.broids.entities.Boid;
-import subsym.broids.entities.Obsticle;
-import subsym.broids.entities.Predator;
-import subsym.broids.gui.BoidGui;
+import subsym.boids.entities.Boid;
+import subsym.boids.entities.Obsticle;
+import subsym.boids.entities.Predator;
+import subsym.boids.gui.BoidGui;
 import subsym.gui.ColorUtils;
 
 /**

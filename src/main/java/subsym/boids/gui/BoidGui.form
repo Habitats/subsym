@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="subsym.boids.gui.BroidGui">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="subsym.boids.gui.BoidGui">
   <grid id="fb8ba" binding="mainPanel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="49" y="22" width="995" height="878"/>
+      <xy x="49" y="22" width="995" height="858"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <component id="a59fc" class="subsym.boids.gui.BroidCanvas" binding="drawingCanvas">
+      <component id="b97c5" class="subsym.boids.gui.BoidCanvas" binding="drawingCanvas">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <background color="-10037010"/>
-          <foreground color="-131586"/>
+          <background color="-8524801"/>
+          <foreground color="-8524801"/>
         </properties>
       </component>
       <grid id="c0da9" layout-manager="GridLayoutManager" row-count="38" column-count="10" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

@@ -1,4 +1,4 @@
-package subsym.broids.entities;
+package subsym.boids.entities;
 
 import java.awt.*;
 
@@ -7,7 +7,7 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 08.09.2014.
  */
-public abstract class Entity implements Comparable<Entity> {
+public abstract class Entity {
 
 
   private static final Color EMPTY = Color.WHITE;
@@ -30,11 +30,6 @@ public abstract class Entity implements Comparable<Entity> {
 
   public void setVelocity(Vec v) {
     this.v = v;
-  }
-
-  @Override
-  public int compareTo(Entity o) {
-    return 0;
   }
 
   public int getX() {
@@ -66,23 +61,7 @@ public abstract class Entity implements Comparable<Entity> {
     limitVelocity(getMaxSpeed());
   }
 
-  protected abstract int getMaxSpeed();
-
-  public double distance(Entity neighbor) {
-    double sqrt = Math.sqrt(Math.pow(getX() - neighbor.getX(), 2) + Math.pow(getY() - neighbor.getY(), 2));
-    return sqrt;
-  }
-
-
   public Vec getVelocity() {
-    return v;
-  }
-
-  public Vec getLimitedVelocity() {
-    if (v.lenght() > getMaxSpeed()) {
-      Vec limited = Vec.create(v.x / v.lenght(), v.y / v.lenght()).multiply(getMaxSpeed());
-      return limited;
-    }
     return v;
   }
 
@@ -92,18 +71,19 @@ public abstract class Entity implements Comparable<Entity> {
     }
   }
 
-  public abstract Color getOriginalColor();
 
   public void wrapAround(int width, int height) {
     p.x = (p.x + width) % width;
     p.y = (p.y + height) % height;
   }
 
+  protected abstract int getMaxSpeed();
+
   public abstract double getSepWeight();
 
+  public abstract Color getOriginalColor();
 
   public abstract double getAlignWeight();
-
 
   public abstract double getCohWeight();
 
@@ -115,5 +95,4 @@ public abstract class Entity implements Comparable<Entity> {
 
   public abstract boolean isEvil(Entity n);
 
-  public abstract double getEvilWeight();
 }

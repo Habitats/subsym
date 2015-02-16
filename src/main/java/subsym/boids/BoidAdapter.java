@@ -1,11 +1,11 @@
-package subsym.broids;
+package subsym.boids;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import subsym.Log;
-import subsym.broids.entities.Entity;
-import subsym.broids.entities.Predator;
+import subsym.boids.entities.Entity;
+import subsym.boids.entities.Predator;
 import subsym.gui.ColorUtils;
 import subsym.models.AIAdapter;
 import subsym.models.Vec;
