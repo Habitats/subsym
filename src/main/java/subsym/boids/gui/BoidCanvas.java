@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import subsym.boids.BoidAdapter;
 import subsym.boids.entities.Entity;
-import subsym.boids.entities.Obsticle;
+import subsym.boids.entities.Obstacle;
 import subsym.gui.AICanvas;
 import subsym.models.Vec;
 
@@ -47,7 +47,7 @@ public class BoidCanvas extends AICanvas<Entity> {
   }
 
   private void drawVectors(Graphics2D g, Collection<Entity> items) {
-    items.stream().filter(broid -> !(broid instanceof Obsticle)).forEach(broid -> {
+    items.stream().filter(broid -> !(broid instanceof Obstacle)).forEach(broid -> {
       int x = getX(broid);
       int y = getY(broid);
       drawArrow(g, Vec.create(x + broid.getItemWidth() / 2, y + broid.getItemHeight() / 2),

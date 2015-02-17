@@ -1,7 +1,7 @@
 package subsym.boids;
 
 import subsym.boids.entities.Boid;
-import subsym.boids.entities.Obsticle;
+import subsym.boids.entities.Obstacle;
 import subsym.boids.entities.Predator;
 import subsym.boids.gui.BoidGui;
 import subsym.gui.ColorUtils;
@@ -67,7 +67,7 @@ public class Boids implements Runnable {
 
   public void spawnObsticle() {
     synchronized (adapter) {
-      adapter.add(new Obsticle((int) (Math.random() * width), (int) (Math.random() * height)));
+      adapter.add(new Obstacle((int) (Math.random() * width), (int) (Math.random() * height)));
     }
   }
 

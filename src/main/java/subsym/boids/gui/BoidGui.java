@@ -44,8 +44,6 @@ public class BoidGui extends AIGui {
   private AILabel numBroidsField;
   private AILabel speedField;
   private AILabel radiusField;
-  private AILabel obsticlesField;
-  private AILabel predatorField;
 
   private AISlider alignSlider;
   private AISlider sepSlider;
@@ -53,8 +51,6 @@ public class BoidGui extends AIGui {
   private AISlider maxBroidSlider;
   private AISlider speedSlider;
   private AISlider radiusSlider;
-  private AISlider obsticleSlider;
-  private AISlider predatorSlider;
 
   private JTextField sepInput;
   private JTextField alignInput;
@@ -62,8 +58,6 @@ public class BoidGui extends AIGui {
   private JTextField maxBroidInput;
   private JTextField speedInput;
   private JTextField radiusInput;
-  private JTextField obsticleInput;
-  private JTextField predatorInput;
   private AIButton spawnPredButton;
   private AIButton spawnObsticleButton;
   private AIButton clearButton;
@@ -185,22 +179,6 @@ public class BoidGui extends AIGui {
       maxBroidInput.setText(String.valueOf(value));
       BoidAdapter.maxBroids = value;
     });
-    predatorSlider.addChangeListener(e -> {
-      AISlider source = (AISlider) e.getSource();
-      source.setMaximum(200);
-      source.setMinimum(0);
-      int value = source.getValue();
-      predatorInput.setText(String.valueOf(value));
-      BoidAdapter.numPredators = value;
-    });
-    obsticleSlider.addChangeListener(e -> {
-      AISlider source = (AISlider) e.getSource();
-      source.setMaximum(200);
-      source.setMinimum(0);
-      int value = source.getValue();
-      obsticleInput.setText(String.valueOf(value));
-      BoidAdapter.numObsticles = value;
-    });
     simSpeedSlider.addChangeListener(e -> {
       AISlider source = (AISlider) e.getSource();
       source.setMaximum(100);
@@ -242,14 +220,6 @@ public class BoidGui extends AIGui {
       String value = ((JTextField) e.getSource()).getText();
       speedSlider.setValue(Integer.parseInt(value));
     });
-    predatorInput.addActionListener(e -> {
-      String value = ((JTextField) e.getSource()).getText();
-      predatorSlider.setValue(Integer.parseInt(value));
-    });
-    obsticleInput.addActionListener(e -> {
-      String value = ((JTextField) e.getSource()).getText();
-      obsticleSlider.setValue(Integer.parseInt(value));
-    });
     simSpeedInput.addActionListener(e -> {
       String value = ((JTextField) e.getSource()).getText();
       simSpeedSlider.setValue(Integer.parseInt(value));
@@ -268,12 +238,6 @@ public class BoidGui extends AIGui {
 
     radiusInput.setText(String.valueOf(BoidAdapter.radius));
     radiusSlider.setValue(BoidAdapter.radius);
-
-    predatorInput.setText(String.valueOf(BoidAdapter.numPredators));
-    predatorSlider.setValue(BoidAdapter.numPredators);
-
-    obsticleInput.setText(String.valueOf(BoidAdapter.numObsticles));
-    obsticleSlider.setValue(BoidAdapter.numObsticles);
 
     simSpeedInput.setText(String.valueOf(Boids.updateFrequency));
     simSpeedSlider.setValue((int) Boids.updateFrequency);

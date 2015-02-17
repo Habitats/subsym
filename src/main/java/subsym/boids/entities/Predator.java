@@ -31,7 +31,7 @@ public class Predator extends Entity {
 
   @Override
   protected int getMaxSpeed() {
-    return (int) (0.5 * BoidAdapter.maxSpeed);
+    return (int) (0.8 * BoidAdapter.maxSpeed);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class Predator extends Entity {
 
   @Override
   public boolean isEvil(Entity n) {
-    return n instanceof Predator || n instanceof Obsticle;
+    return n instanceof Predator || n instanceof Obstacle;
   }
 
   @Override

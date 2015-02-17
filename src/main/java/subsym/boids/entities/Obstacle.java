@@ -9,9 +9,9 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 30.01.2015.
  */
-public class Obsticle extends Entity {
+public class Obstacle extends Entity {
 
-  public Obsticle(int x, int y) {
+  public Obstacle(int x, int y) {
     super(x, 0, y);
     setColor(getOriginalColor());
     setVelocity(0, 0);
@@ -50,7 +50,7 @@ public class Obsticle extends Entity {
 
   @Override
   public double closeRadius() {
-    return 250;
+    return 200;
   }
 
   @Override

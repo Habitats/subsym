@@ -19,17 +19,18 @@ public class BoidAdapter extends AIAdapter<Entity> {
   public static double SCALE = 2;
   private static double multiplier = 100;
 
-  public static double sepWeight = 20 / multiplier;
-  public static double alignWeight = 20 / multiplier;
-  public static double cohWeight = 20 / multiplier;
-  public static double obsticleSepWeight = 20 / (multiplier / 10);
+  public static double sepWeight = 10 / multiplier;
+  public static double alignWeight = 100 / multiplier;
+  public static double cohWeight = 10 / multiplier;
+  public static double obsticleSepWeight = 1 / (multiplier / 10);
 
   public static int dismissLimit = 0;
   public static int radius = 1000;
-  public static int maxSpeed = 50;
-  public static int maxBroids = 50;
+  public static int maxSpeed = 30;
+  public static int maxBroids = 500;
   public static int numPredators = 1;
   public static int numObsticles = 1;
+
   public static boolean WRAP_AROUND_PHYSICS_ENABLED = false;
   public static boolean VECTORS_ENABLED = false;
 
