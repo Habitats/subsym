@@ -77,7 +77,8 @@ public class Main {
     double genomeMutationRate = .02;
     DoubleStream.of(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1).forEach(crossOverRate -> {
       Arrays.stream(GeneticProblem.AdultSelection.values()).forEach(as -> {
-        OneMax oneMax = new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as);
+        OneMax oneMax = new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as,
+                                   GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
         Log.v(TAG, String.format("CR: %.2f - G: %.2f - AS: %s", crossOverRate, GeneticEngine.solve(oneMax, 100), as));
       });
     });
