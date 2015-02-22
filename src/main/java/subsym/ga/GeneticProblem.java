@@ -5,7 +5,7 @@ package subsym.ga;
  */
 public abstract class GeneticProblem {
 
-  protected final MateSelection fitnessProportionate;
+  protected final MateSelection matingMode;
   private final int populationSize;
   private Population population;
   protected double crossOverRate = .8;
@@ -21,7 +21,7 @@ public abstract class GeneticProblem {
     this.adultSelectMode = adultSelectMode;
     this.populationSize = populationSize;
     population = new Population(populationSize);
-    this.fitnessProportionate = matingMode;
+    this.matingMode = matingMode;
   }
 
   public int generations() {
@@ -57,7 +57,7 @@ public abstract class GeneticProblem {
   }
 
   public void crossOver() {
-    population.crossOver(crossOverRate);
+    population.crossOver(crossOverRate, matingMode);
   }
 
   public void mutate() {

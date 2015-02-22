@@ -2,13 +2,14 @@ package subsym;
 
 import java.awt.*;
 import java.util.Arrays;
-import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
 import javax.swing.*;
 
 import subsym.boids.Boids;
 import subsym.ga.GeneticEngine;
-import subsym.ga.GeneticProblem;
+import subsym.ga.GeneticProblem.AdultSelection;
+import subsym.ga.GeneticProblem.MateSelection;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -75,13 +76,31 @@ public class Main {
 //    double crossOverRate = .5;
     double genotypeMutationRate = .02;
     double genomeMutationRate = .02;
-    DoubleStream.of(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1).forEach(crossOverRate -> {
-      Arrays.stream(GeneticProblem.AdultSelection.values()).forEach(as -> {
-        OneMax oneMax = new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as,
-                                   GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
-        Log.v(TAG, String.format("CR: %.2f - G: %.2f - AS: %s", crossOverRate, GeneticEngine.solve(oneMax, 100), as));
+    double crossOverRate = 1;
+
+    Arrays.stream(MateSelection.values()).forEach(mateSelection -> {
+      Arrays.stream(AdultSelection.values()).forEach(as -> {
+        double average = IntStream.range(0, 1000) //
+            .map(i -> getGenerations(genotypeMutationRate, genomeMutationRate, crossOverRate, as, mateSelection)) //
+            .average().getAsDouble();
+        prettyPrint(crossOverRate, mateSelection, as, average);
       });
     });
+  }
+
+  private static void prettyPrint(double crossOverRate, MateSelection mateSelection, AdultSelection as,
+                                  double average) {
+    int asLength = Arrays.stream(AdultSelection.values()).mapToInt(v -> v.name().length()).max().getAsInt();
+    int msLength = Arrays.stream(MateSelection.values()).mapToInt(v -> v.name().length()).max().getAsInt();
+    Log.v(TAG, String.format("CR: %.2f - G: %.2f - AS: %" + asLength + "s - MS: %" + msLength + "s", //
+                             crossOverRate, average, as, mateSelection));
+  }
+
+  private static int getGenerations(double genotypeMutationRate, double genomeMutationRate, double crossOverRate,
+                                    AdultSelection as, MateSelection mateSelection) {
+    return GeneticEngine
+        .solve(new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as, mateSelection))
+        .generations();
   }
 
   private static void broid() {

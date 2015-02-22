@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import subsym.onemax.OneMaxGenotype;
-
 /**
  * Created by anon on 21.02.2015.
  */
@@ -59,9 +57,9 @@ public class Population {
     return (int) ((1 - mixingRate) * maxPopulationSize);
   }
 
-  public void crossOver(double crossOverRate) {
+  public void crossOver(double crossOverRate, GeneticProblem.MateSelection matingMode) {
     while (getFreeSpots() > 0) {
-      globalCrossover(crossOverRate, Math.random());
+      globalCrossover(crossOverRate, Math.random(), matingMode);
     }
   }
 
@@ -69,13 +67,31 @@ public class Population {
     return freeSpots;
   }
 
-  public void globalCrossover(double crossOverRate, double cut) {
+  public void globalCrossover(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
     if (crossOverRate < Math.random()) {
       return;
     }
     List<Genotype> populationList = new ArrayList<>(currentPopulation.stream().collect(Collectors.toList()));
-    Genotype p1 = getCrossOverCandidate(populationList);
-    Genotype p2 = getCrossOverCandidate(populationList);
+    Genotype p1 = null;
+    Genotype p2 = null;
+    switch (matingMode) {
+      case FITNESS_PROPORTIONATE:
+        p1 = getFitnessPrportinateParent(populationList);
+        p2 = getFitnessPrportinateParent(populationList);
+        break;
+      case SIGMA_SCALING:
+        p1 = getSigmaScaledParent(populationList);
+        p2 = getSigmaScaledParent(populationList);
+        break;
+      case TOURNAMENT:
+        p1 = getFitnessPrportinateParent(populationList);
+        p2 = getFitnessPrportinateParent(populationList);
+        break;
+      case UNKNOWN:
+        p1 = getSigmaScaledParent(populationList);
+        p2 = getSigmaScaledParent(populationList);
+        break;
+    }
 
     Genotype c1 = Genotype.crossOver(p1, p1, cut);
     Genotype c2 = Genotype.crossOver(p2, p2, cut);
@@ -87,14 +103,36 @@ public class Population {
     freeSpots -= 2;
   }
 
-  public Genotype getCrossOverCandidate(List<Genotype> populationList) {
-    int sum = populationList.stream() //
-        .mapToInt(v -> v.fitness()).sum();
+  private Genotype getSigmaScaledParent(List<Genotype> populationList) {
+    double averageFitness = populationList.stream().mapToInt(v -> v.fitness()).average().getAsDouble();
+    double standardDeviation = standardDeviation(populationList);
+    List<Double> weights = populationList.stream() //
+        .map(v -> Math.random() * (1 + (v.fitness() - averageFitness) / 2 * standardDeviation)) //
+        .collect(Collectors.toList());
+    int index = weights.indexOf(Collections.max(weights));
+    return populationList.remove(index);
+  }
+
+  public Genotype getFitnessPrportinateParent(List<Genotype> populationList) {
+    int sum = populationList.stream().mapToInt(v -> v.fitness()).sum();
     List<Double> weights = populationList.stream() //
         .map(v -> Math.random() * v.fitness() / sum) //
         .collect(Collectors.toList());
     int index = weights.indexOf(Collections.max(weights));
     return populationList.remove(index);
+  }
+
+  private double standardDeviation(List<Genotype> population) {
+    double M = 0.0;
+    double S = 0.0;
+    int k = 1;
+    for (Genotype genotype : population) {
+      double tmpM = M;
+      M += (genotype.fitness() - tmpM) / k;
+      S += (genotype.fitness() - tmpM) * (genotype.fitness() - M);
+      k++;
+    }
+    return Math.sqrt(S / (k - 2));
   }
 
   public void mutate(double genomeMutationRate, double genotypeMutationRate) {
