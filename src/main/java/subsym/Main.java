@@ -7,7 +7,7 @@ import java.util.stream.DoubleStream;
 import javax.swing.*;
 
 import subsym.boids.Boids;
-import subsym.ga.GA;
+import subsym.ga.GeneticEngine;
 import subsym.ga.GeneticProblem;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
@@ -78,7 +78,7 @@ public class Main {
     DoubleStream.of(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1).forEach(crossOverRate -> {
       Arrays.stream(GeneticProblem.AdultSelection.values()).forEach(as -> {
         OneMax oneMax = new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as);
-        Log.v(TAG, String.format("CR: %.2f - G: %.2f - AS: %s", crossOverRate, GA.solve(oneMax, 100), as));
+        Log.v(TAG, String.format("CR: %.2f - G: %.2f - AS: %s", crossOverRate, GeneticEngine.solve(oneMax, 100), as));
       });
     });
   }

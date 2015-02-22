@@ -123,7 +123,7 @@ public class BoidGui extends AIGui {
     obsticleSepInput.setText(String.valueOf(BoidAdapter.getObsticleSepWeight()));
     obsticleSepSlider.setValue(BoidAdapter.getObsticleSepWeight());
 
-    alignInput.setText(String.valueOf((int) BoidAdapter.getAlignWeight()));
+    alignInput.setText(String.valueOf(BoidAdapter.getAlignWeight()));
     alignSlider.setValue(BoidAdapter.getAlignWeight());
 
     cohInput.setText(String.valueOf(BoidAdapter.getCohWeight()));

@@ -1,5 +1,7 @@
 package subsym.ga;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.stream.IntStream;
 /**
  * Created by anon on 21.02.2015.
  */
-public class Genotype implements Comparable<Genotype> {
+public abstract class Genotype implements Comparable<Genotype> {
 
   private static Random random = new Random();
   private boolean shouldDie = false;
@@ -19,26 +21,26 @@ public class Genotype implements Comparable<Genotype> {
   /**
    * Static factory method for initialization of a random bit vector
    */
-  public static Genotype getRandom(int size) {
-    Genotype v = new Genotype(size);
-    v.bits = new BitSet();
+  public Genotype setRandom() {
+    bits = new BitSet();
     for (int i = 0; i < size; i++) {
-      v.bits.set(i, random.nextBoolean());
+      bits.set(i, random.nextBoolean());
     }
-    return v;
+    return this;
   }
 
-  public static Genotype getEmpty(int size) {
-    Genotype v = new Genotype(size);
-    v.bits = new BitSet();
-    v.bits.set(0, size, false);
-    return v;
+  protected abstract Genotype newInstance(int size);
+
+  public Genotype setEmpty() {
+    bits = new BitSet();
+    bits.set(0, size, false);
+    return this;
   }
 
   private final int size;
   private BitSet bits;
 
-  private Genotype(int size) {
+  protected Genotype(int size) {
     this.size = size;
   }
 
@@ -46,8 +48,8 @@ public class Genotype implements Comparable<Genotype> {
     return generation;
   }
 
-  public static Genotype fromString(final String s) {
-    Genotype v = new Genotype(s.length());
+  public Genotype fromString(final String s) {
+    Genotype v = newInstance(s.length());
     v.bits = BitSet.valueOf(new long[]{Long.parseLong(s, 2)});
     return v;
   }
@@ -62,7 +64,7 @@ public class Genotype implements Comparable<Genotype> {
    * @return a new Genotype with a genome of v.from(0, cut) + u.from(cut, end)
    */
   public static Genotype crossOver(Genotype v, Genotype u, double cut) {
-    Genotype w = getEmpty(v.size);
+    Genotype w = v.copy();
     for (int i = v.bits.length(); i >= 0; i--) {
       boolean value = (1 - cut) * v.size <= i ? v.bits.get(i) : u.bits.get(i);
       w.bits.set(i, value);
@@ -81,11 +83,11 @@ public class Genotype implements Comparable<Genotype> {
   }
 
   public int fitness() {
-    return  bits.cardinality();
+    return getPhenotype().fitness();
   }
 
   public Genotype copy() {
-    Genotype copy = new Genotype(size);
+    Genotype copy = newInstance(size);
     copy.bits = bits.get(0, bits.length());
     return copy;
   }
@@ -115,8 +117,16 @@ public class Genotype implements Comparable<Genotype> {
     this.generation = generation;
   }
 
+  protected BitSet getBits() {
+    return bits;
+  }
+
   @Override
   public int compareTo(Genotype o) {
     return o.fitness() - fitness();
+  }
+
+  public Phenotype getPhenotype() {
+    throw new NotImplementedException();
   }
 }

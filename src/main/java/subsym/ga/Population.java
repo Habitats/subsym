@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
+import subsym.onemax.OneMaxGenotype;
 
 /**
  * Created by anon on 21.02.2015.
@@ -14,7 +15,6 @@ import java.util.stream.IntStream;
 public class Population {
 
   private final int maxPopulationSize;
-  private final int bitVectorSize;
 
   private MinMaxPriorityQueue<Genotype> currentPopulation;
   private List<Genotype> nextGeneration;
@@ -26,11 +26,9 @@ public class Population {
   private int freeSpots = 0;
   private int currentGeneration = 0;
 
-  public Population(int populationSize, int bitVectorSize) {
-    this.maxPopulationSize = populationSize;
-    this.bitVectorSize = bitVectorSize;
+  public Population(int maxPopulationSize) {
+    this.maxPopulationSize = maxPopulationSize;
     currentPopulation = MinMaxPriorityQueue.create();
-    IntStream.range(0, populationSize).forEach(i -> currentPopulation.add(Genotype.getRandom(bitVectorSize)));
   }
 
   public void selectAdults(GeneticProblem.AdultSelection selectionMode) {
@@ -170,4 +168,5 @@ public class Population {
   public int getCurrentGeneration() {
     return currentGeneration;
   }
+
 }

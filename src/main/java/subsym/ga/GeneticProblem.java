@@ -25,13 +25,10 @@ public abstract class GeneticProblem {
 
   public abstract void initPopulation();
 
-  public abstract void evaluate();
-
   public abstract void select();
 
   public abstract void crossOver();
 
   public abstract void mutate();
 
-  public abstract Phenotype generatePhenotype(Genotype genotype);
 }

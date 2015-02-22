@@ -1,8 +1,8 @@
 package subsym.onemax;
 
+import java.util.stream.IntStream;
+
 import subsym.ga.GeneticProblem;
-import subsym.ga.Genotype;
-import subsym.ga.Phenotype;
 import subsym.ga.Population;
 
 /**
@@ -37,12 +37,8 @@ public class OneMax extends GeneticProblem {
 
   @Override
   public void initPopulation() {
-    population = new Population(populationSize, bitVectorSize);
-  }
-
-  @Override
-  public void evaluate() {
-//    Log.v(TAG, population.getBestGenotype());
+    population = new Population(populationSize);
+    IntStream.range(0, populationSize).forEach(i -> population.add(new OneMaxGenotype(bitVectorSize).setRandom()));
   }
 
   @Override
@@ -63,11 +59,6 @@ public class OneMax extends GeneticProblem {
   @Override
   protected Population getPopulation() {
     return population;
-  }
-
-  @Override
-  public Phenotype generatePhenotype(Genotype genotype) {
-    return null;
   }
 
   @Override

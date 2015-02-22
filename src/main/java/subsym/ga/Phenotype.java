@@ -5,4 +5,5 @@ package subsym.ga;
  */
 public interface Phenotype {
 
+  int fitness();
 }

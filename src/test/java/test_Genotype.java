@@ -1,8 +1,11 @@
 import org.junit.Test;
 
+import java.util.stream.IntStream;
+
 import subsym.ga.GeneticProblem;
 import subsym.ga.Genotype;
 import subsym.ga.Population;
+import subsym.onemax.OneMaxGenotype;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,7 +16,7 @@ public class test_Genotype {
 
   @Test
   public void test_mutate() {
-    Genotype v = Genotype.getRandom(10);
+    Genotype v = new OneMaxGenotype(10).setRandom();
     Genotype u = v.copy();
     v.mutate(10);
     u.invert();
@@ -22,48 +25,48 @@ public class test_Genotype {
 
   @Test
   public void test_equals() {
-    Genotype v = Genotype.getEmpty(20);
-    Genotype u = Genotype.getEmpty(20);
+    Genotype v = new OneMaxGenotype(20).setEmpty();
+    Genotype u = new OneMaxGenotype(20).setEmpty();
     assertEquals(v, u);
   }
 
   @Test
   public void test_copy() {
-    Genotype v = Genotype.getEmpty(20);
+    Genotype v = new OneMaxGenotype(20).setEmpty();
     Genotype u = v.copy();
     assertEquals(v, u);
   }
 
   @Test
   public void test_crossover() {
-    Genotype v = Genotype.fromString("11111000001010101010");
-    Genotype u = Genotype.fromString("10101010101111100000");
+    Genotype v = new OneMaxGenotype(10).fromString("11111000001010101010");
+    Genotype u = new OneMaxGenotype(10).fromString("10101010101111100000");
 
-    assertEquals(Genotype.crossOver(v, u, 0.5), Genotype.fromString("11111000001111100000"));
-    assertEquals(Genotype.crossOver(u, v, 0.5), Genotype.fromString("10101010101010101010"));
+    assertEquals(Genotype.crossOver(v, u, 0.5), new OneMaxGenotype(10).fromString("11111000001111100000"));
+    assertEquals(Genotype.crossOver(u, v, 0.5), new OneMaxGenotype(10).fromString("10101010101010101010"));
 
-    assertEquals(Genotype.crossOver(v, u, 0.8), Genotype.fromString("11111000001010100000"));
-    assertEquals(Genotype.crossOver(v, u, 0.2), Genotype.fromString("11111010101111100000"));
+    assertEquals(Genotype.crossOver(v, u, 0.8), new OneMaxGenotype(10).fromString("11111000001010100000"));
+    assertEquals(Genotype.crossOver(v, u, 0.2), new OneMaxGenotype(10).fromString("11111010101111100000"));
   }
 
   @Test
   public void test_populationMutate() {
-    Population p = new Population(10, 10);
-    Genotype v = Genotype.fromString("1111111111");
-    Genotype u = Genotype.fromString("0000000000");
+    Population p = getPopulation(10);
+    Genotype v = new OneMaxGenotype(10).fromString("1111111111");
+    Genotype u = new OneMaxGenotype(10).fromString("0000000000");
     p.add(v);
     p.add(u);
     p.mutate(1, 1);
 
-    assertEquals(v, Genotype.fromString("0000000000"));
-    assertEquals(u, Genotype.fromString("1111111111"));
+    assertEquals(v, new OneMaxGenotype(10).fromString("0000000000"));
+    assertEquals(u, new OneMaxGenotype(10).fromString("1111111111"));
   }
 
   @Test
   public void test_populationMisc() {
-    Population p = new Population(10, 10);
-    Genotype v = Genotype.fromString("1111111111");
-    Genotype u = Genotype.fromString("0000000000");
+    Population p = getPopulation(10);
+    Genotype v = new OneMaxGenotype(10).fromString("1111111111");
+    Genotype u = new OneMaxGenotype(10).fromString("0000000000");
     p.add(v);
     p.add(u);
 
@@ -75,7 +78,7 @@ public class test_Genotype {
   @Test
   public void test_populationOverProductionSelection() {
     int initialSize = 10;
-    Population p = new Population(initialSize, 10);
+    Population p = getPopulation(initialSize);
     p.selectAdults(GeneticProblem.AdultSelection.OVER_PRODUCTION);
     p.crossOver(1);
     // adults + children * overProductionRate should be present
@@ -87,7 +90,7 @@ public class test_Genotype {
 
   @Test
   public void test_populationMixingSelection() {
-    Population p = new Population(10, 10);
+    Population p = getPopulation(10);
     p.selectAdults(GeneticProblem.AdultSelection.MIXING);
     p.crossOver(1);
     assertEquals(p.size() + p.nextGenerationSize(), 10 + p.getChildLimit());
@@ -97,9 +100,15 @@ public class test_Genotype {
 
   @Test
   public void test_populationFullTurnoverSelection() {
-    Population p = new Population(10, 10);
+    Population p = getPopulation(10);
     p.selectAdults(GeneticProblem.AdultSelection.FULL_TURNOVER);
     p.cleanUp();
     assertEquals(p.size(), 0);
+  }
+
+  public Population getPopulation(int size) {
+    Population p = new Population(size);
+    IntStream.range(0, size).forEach(i -> p.add(new OneMaxGenotype(10).setRandom()));
+    return p;
   }
 }
