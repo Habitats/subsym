@@ -79,7 +79,7 @@ public class test_Genotype {
     p.selectAdults(GeneticProblem.AdultSelection.OVER_PRODUCTION);
     p.crossOver(1);
     // adults + children * overProductionRate should be present
-    assertEquals(p.size(), initialSize + (int) (initialSize * Population.overProductionRate));
+    assertEquals(p.nextGenerationSize(), (int) (initialSize * Population.overProductionRate));
     // only the initalSize amount should be retained
     p.cleanUp();
     assertEquals(p.size(), initialSize);
@@ -90,7 +90,7 @@ public class test_Genotype {
     Population p = new Population(10, 10);
     p.selectAdults(GeneticProblem.AdultSelection.MIXING);
     p.crossOver(1);
-    assertEquals(p.size(), 10 + p.getChildLimit());
+    assertEquals(p.size() + p.nextGenerationSize(), 10 + p.getChildLimit());
     p.cleanUp();
     assertEquals(p.size(), 10);
   }

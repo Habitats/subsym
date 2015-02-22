@@ -15,37 +15,40 @@ public class Population {
 
   private final int maxPopulationSize;
   private final int bitVectorSize;
-  private MinMaxPriorityQueue<Genotype> population;
+
+  private MinMaxPriorityQueue<Genotype> currentPopulation;
+  private List<Genotype> nextGeneration;
+
   private GeneticProblem.AdultSelection selectionMode;
-  private int currentGeneration = 0;
 
   public static double mixingRate = 0.4;
   public static double overProductionRate = 2;
-  private int freeSpots;
+  private int freeSpots = 0;
+  private int currentGeneration = 0;
 
   public Population(int populationSize, int bitVectorSize) {
     this.maxPopulationSize = populationSize;
     this.bitVectorSize = bitVectorSize;
-    population = MinMaxPriorityQueue.create();
-    IntStream.range(0, populationSize).forEach(i -> population.add(Genotype.getRandom(bitVectorSize)));
+    currentPopulation = MinMaxPriorityQueue.create();
+    IntStream.range(0, populationSize).forEach(i -> currentPopulation.add(Genotype.getRandom(bitVectorSize)));
   }
 
-
   public void selectAdults(GeneticProblem.AdultSelection selectionMode) {
+    nextGeneration = new ArrayList<>();
     this.selectionMode = selectionMode;
     switch (selectionMode) {
       case FULL_TURNOVER:
-        population.stream().filter(v -> v.getGeneration() <= currentGeneration).forEach(v -> v.tagForRemoval());
-        freeSpots = (int) population.stream().filter(v -> v.shouldDie()).count();
+        currentPopulation.stream().forEach(v -> v.tagForRemoval());
+        freeSpots = maxPopulationSize;
         break;
       case OVER_PRODUCTION:
-        population.stream().filter(v -> v.getGeneration() <= currentGeneration).forEach(v -> v.tagForRemoval());
-        freeSpots = (int) (population.stream().filter(v -> v.shouldDie()).count() * overProductionRate);
+        currentPopulation.stream().forEach(v -> v.tagForRemoval());
+        freeSpots = (int) (maxPopulationSize * overProductionRate);
         break;
       case MIXING:
-        population.stream().filter(v -> v.getGeneration() <= currentGeneration).forEach(v -> v.tagForRemoval());
-        population.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
-        freeSpots = (int) population.stream().filter(v -> v.shouldDie()).count();
+        currentPopulation.stream().forEach(v -> v.tagForRemoval());
+        currentPopulation.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
+        freeSpots = (int) currentPopulation.stream().filter(v -> v.shouldDie()).count();
         break;
     }
   }
@@ -72,9 +75,7 @@ public class Population {
     if (crossOverRate < Math.random()) {
       return;
     }
-    List<Genotype> populationList = new ArrayList<>(population.stream() //
-                                                        .filter(v -> v.getGeneration() <= currentGeneration)//
-                                                        .collect(Collectors.toList()));
+    List<Genotype> populationList = new ArrayList<>(currentPopulation.stream().collect(Collectors.toList()));
     Genotype p1 = getCrossOverCandidate(populationList);
     Genotype p2 = getCrossOverCandidate(populationList);
 
@@ -82,8 +83,8 @@ public class Population {
     Genotype c2 = Genotype.crossOver(p2, p2, cut);
     c1.setGeneration(currentGeneration + 1);
     c2.setGeneration(currentGeneration + 1);
-    population.add(c1);
-    population.add(c2);
+    nextGeneration.add(c1);
+    nextGeneration.add(c2);
 
     freeSpots -= 2;
   }
@@ -99,9 +100,9 @@ public class Population {
   }
 
   public void mutate(double genomeMutationRate, double genotypeMutationRate) {
-    List<Genotype> children = new ArrayList<>(population);
+    List<Genotype> children = new ArrayList<>(currentPopulation);
     Collections.shuffle(children);
-    int numBitsToMutate = (int) Math.ceil(genomeMutationRate * population.peek().size());
+    int numBitsToMutate = (int) Math.ceil(genomeMutationRate * currentPopulation.peek().size());
     int genotypesToMutate = (int) Math.ceil(genotypeMutationRate * maxPopulationSize);
     children.stream() //
         .filter(v -> !v.shouldDie()) //
@@ -125,37 +126,44 @@ public class Population {
   }
 
   public void fullTurnoverSelection() {
-    population.removeIf(v -> v.getGeneration() <= currentGeneration && v.shouldDie());
+    currentPopulation.clear();
+    currentPopulation.addAll(nextGeneration);
   }
 
   public void overProductionSelection() {
-    population.removeIf(v -> v.getGeneration() <= currentGeneration && v.shouldDie());
-    while (population.size() > maxPopulationSize) {
-      population.removeLast();
+    currentPopulation.clear();
+    currentPopulation.addAll(nextGeneration);
+    while (currentPopulation.size() > maxPopulationSize) {
+      currentPopulation.removeLast();
     }
   }
 
   public void mixingSelection() {
-    population.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
-    population.removeIf(v -> v.getGeneration() <= currentGeneration && v.shouldDie());
-    while (population.size() > maxPopulationSize) {
-      population.removeLast();
+    currentPopulation.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
+    currentPopulation.removeIf(v -> v.shouldDie());
+    currentPopulation.addAll(nextGeneration);
+    while (currentPopulation.size() > maxPopulationSize) {
+      currentPopulation.removeLast();
     }
   }
 
   public void add(Genotype genotype) {
-    population.add(genotype);
+    currentPopulation.add(genotype);
   }
 
   public Genotype getWorstGenotype() {
-    return population.peekLast();
+    return currentPopulation.peekLast();
   }
 
   public Genotype getBestGenotype() {
-    return population.peekFirst();
+    return currentPopulation.peekFirst();
   }
 
   public int size() {
-    return population.size();
+    return currentPopulation.size();
+  }
+
+  public int nextGenerationSize() {
+    return nextGeneration.size();
   }
 }
