@@ -17,8 +17,8 @@ public class OneMax extends GeneticProblem {
   private Population population;
 
   private static double crossOverRate = .8;
-  private static double genotypeMutationRate = .2 / 10;
-  private static double genomeMutationRate = .2 / 10;
+  private static double genotypeMutationRate = .02;
+  private static double genomeMutationRate = .02;
   private static AdultSelection adultSelectionMode = AdultSelection.FULL_TURNOVER;
 
   public OneMax(int populationSize, int bitVectorSize) {

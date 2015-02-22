@@ -81,7 +81,7 @@ public class Genotype implements Comparable<Genotype> {
   }
 
   public int fitness() {
-    return shouldDie ? 0 : bits.cardinality();
+    return  bits.cardinality();
   }
 
   public Genotype copy() {

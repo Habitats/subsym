@@ -16,8 +16,8 @@ public class GA {
       problem.evaluate();
       problem.select();
       problem.crossOver();
-      problem.mutate();
       problem.cleanUp();
+      problem.mutate();
       gen++;
     }
     Log.v(TAG, "Generation:" + gen);
