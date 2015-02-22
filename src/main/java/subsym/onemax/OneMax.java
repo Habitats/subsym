@@ -16,6 +16,11 @@ public class OneMax extends GeneticProblem {
   private int bitVectorSize;
   private Population population;
 
+  private static double crossOverRate = .8;
+  private static double genotypeMutationRate = .2 / 10;
+  private static double genomeMutationRate = .2 / 10;
+  private static AdultSelection adultSelectionMode = AdultSelection.FULL_TURNOVER;
+
   public OneMax(int populationSize, int bitVectorSize) {
     this.populationSize = populationSize;
     this.bitVectorSize = bitVectorSize;
@@ -23,7 +28,7 @@ public class OneMax extends GeneticProblem {
 
   @Override
   public boolean solution() {
-    return population.getBestGenotype().numOnes() == bitVectorSize;
+    return population.getBestGenotype().fitness() == bitVectorSize;
   }
 
   @Override
@@ -38,17 +43,17 @@ public class OneMax extends GeneticProblem {
 
   @Override
   public void select() {
-    population.selectAdults(AdultSelection.FULL_TURNOVER);
+    population.selectAdults(adultSelectionMode);
   }
 
   @Override
   public void crossOver() {
-    population.crossOver(0.5);
+    population.crossOver(crossOverRate);
   }
 
   @Override
   public void mutate() {
-    population.mutate(0.9, 0.7);
+    population.mutate(genomeMutationRate, genotypeMutationRate);
   }
 
   @Override

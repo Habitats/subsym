@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 /**
  * Created by anon on 21.02.2015.
  */
-public class Genotype {
+public class Genotype implements Comparable<Genotype> {
 
   private static Random random = new Random();
   private boolean shouldDie = false;
@@ -53,7 +53,9 @@ public class Genotype {
   }
 
   public String toString() {
-    return String.format("%" + size() + "s - %d", Long.toString(bits.toLongArray()[0], 2), numOnes());
+    return String.format("%" + size() + "s - %d - G: %d - Keep: %s", //
+                         bits.toLongArray().length > 0 ? Long.toString(bits.toLongArray()[0], 2) : "0",  //
+                         fitness(), getGeneration(), !shouldDie);
   }
 
   /**
@@ -78,7 +80,7 @@ public class Genotype {
     return size;
   }
 
-  public int numOnes() {
+  public int fitness() {
     return shouldDie ? 0 : bits.cardinality();
   }
 
@@ -111,5 +113,10 @@ public class Genotype {
 
   public void setGeneration(int generation) {
     this.generation = generation;
+  }
+
+  @Override
+  public int compareTo(Genotype o) {
+    return o.fitness() - fitness();
   }
 }

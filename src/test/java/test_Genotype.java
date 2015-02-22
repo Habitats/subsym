@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+import subsym.ga.GeneticProblem;
 import subsym.ga.Genotype;
 import subsym.ga.Population;
 
@@ -48,5 +49,57 @@ public class test_Genotype {
   @Test
   public void test_populationMutate() {
     Population p = new Population(10, 10);
+    Genotype v = Genotype.fromString("1111111111");
+    Genotype u = Genotype.fromString("0000000000");
+    p.add(v);
+    p.add(u);
+    p.mutate(1, 1);
+
+    assertEquals(v, Genotype.fromString("0000000000"));
+    assertEquals(u, Genotype.fromString("1111111111"));
+  }
+
+  @Test
+  public void test_populationMisc() {
+    Population p = new Population(10, 10);
+    Genotype v = Genotype.fromString("1111111111");
+    Genotype u = Genotype.fromString("0000000000");
+    p.add(v);
+    p.add(u);
+
+    assertEquals(p.size(), 12);
+    assertEquals(v, p.getBestGenotype());
+    assertEquals(u, p.getWorstGenotype());
+  }
+
+  @Test
+  public void test_populationOverProductionSelection() {
+    int initialSize = 10;
+    Population p = new Population(initialSize, 10);
+    p.selectAdults(GeneticProblem.AdultSelection.OVER_PRODUCTION);
+    p.crossOver(1);
+    // adults + children * overProductionRate should be present
+    assertEquals(p.size(), initialSize + (int) (initialSize * Population.overProductionRate));
+    // only the initalSize amount should be retained
+    p.cleanUp();
+    assertEquals(p.size(), initialSize);
+  }
+
+  @Test
+  public void test_populationMixingSelection() {
+    Population p = new Population(10, 10);
+    p.selectAdults(GeneticProblem.AdultSelection.MIXING);
+    p.crossOver(1);
+    assertEquals(p.size(), 10 + p.getChildLimit());
+    p.cleanUp();
+    assertEquals(p.size(), 10);
+  }
+
+  @Test
+  public void test_populationFullTurnoverSelection() {
+    Population p = new Population(10, 10);
+    p.selectAdults(GeneticProblem.AdultSelection.FULL_TURNOVER);
+    p.cleanUp();
+    assertEquals(p.size(), 0);
   }
 }
