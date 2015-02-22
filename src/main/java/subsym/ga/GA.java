@@ -1,6 +1,8 @@
 package subsym.ga;
 
-import subsym.Log;
+import java.util.stream.IntStream;
+
+import subsym.onemax.OneMax;
 
 /**
  * Created by anon on 21.02.2015.
@@ -20,7 +22,11 @@ public class GA {
       problem.mutate();
       gen++;
     }
-    Log.v(TAG, "Generation:" + gen);
+//    Log.v(TAG, "Generation:" + gen);
     return problem;
+  }
+
+  public static double solve(OneMax oneMax, int rounds) {
+    return IntStream.range(0, rounds).map(i -> solve(oneMax).generations()).average().getAsDouble();
   }
 }

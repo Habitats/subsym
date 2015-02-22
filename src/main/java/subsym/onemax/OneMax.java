@@ -1,6 +1,5 @@
 package subsym.onemax;
 
-import subsym.Log;
 import subsym.ga.GeneticProblem;
 import subsym.ga.Genotype;
 import subsym.ga.Phenotype;
@@ -16,14 +15,19 @@ public class OneMax extends GeneticProblem {
   private int bitVectorSize;
   private Population population;
 
-  private static double crossOverRate = .8;
-  private static double genotypeMutationRate = .02;
-  private static double genomeMutationRate = .02;
-  private static AdultSelection adultSelectionMode = AdultSelection.FULL_TURNOVER;
+  private double crossOverRate = .8;
+  private double genotypeMutationRate = .02;
+  private double genomeMutationRate = .02;
+  private AdultSelection adultSelectionMode = AdultSelection.OVER_PRODUCTION;
 
-  public OneMax(int populationSize, int bitVectorSize) {
+  public OneMax(int populationSize, int bitVectorSize, double crossOverRate, double genomeMutationRate,
+                double genotypeMutationRate, AdultSelection adultSelectionMode) {
     this.populationSize = populationSize;
     this.bitVectorSize = bitVectorSize;
+    this.crossOverRate = crossOverRate;
+    this.genomeMutationRate = genomeMutationRate;
+    this.genotypeMutationRate = genotypeMutationRate;
+    this.adultSelectionMode = adultSelectionMode;
   }
 
   @Override
@@ -38,7 +42,7 @@ public class OneMax extends GeneticProblem {
 
   @Override
   public void evaluate() {
-    Log.v(TAG, population.getBestGenotype());
+//    Log.v(TAG, population.getBestGenotype());
   }
 
   @Override
@@ -69,5 +73,10 @@ public class OneMax extends GeneticProblem {
   @Override
   public String toString() {
     return "Best: " + population.getBestGenotype().toString();
+  }
+
+  @Override
+  public int generations() {
+    return population.getCurrentGeneration();
   }
 }

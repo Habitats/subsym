@@ -5,9 +5,10 @@ package subsym.ga;
  */
 public abstract class GeneticProblem {
 
+  public abstract int generations();
 
   public enum AdultSelection {
-    FULL_TURNOVER, OVER_PRODUCTION,  MIXING
+    FULL_TURNOVER, OVER_PRODUCTION, MIXING
   }
 
   public enum MateSelection {

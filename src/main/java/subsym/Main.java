@@ -1,11 +1,14 @@
 package subsym;
 
 import java.awt.*;
+import java.util.Arrays;
+import java.util.stream.DoubleStream;
 
 import javax.swing.*;
 
 import subsym.boids.Boids;
 import subsym.ga.GA;
+import subsym.ga.GeneticProblem;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -69,8 +72,15 @@ public class Main {
   }
 
   private static void oneMax() {
-    OneMax oneMax = new OneMax(20, 20);
-    Log.v(TAG, GA.solve(oneMax));
+//    double crossOverRate = .5;
+    double genotypeMutationRate = .02;
+    double genomeMutationRate = .02;
+    DoubleStream.of(.1, .2, .3, .4, .5, .6, .7, .8, .9, 1).forEach(crossOverRate -> {
+      Arrays.stream(GeneticProblem.AdultSelection.values()).forEach(as -> {
+        OneMax oneMax = new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as);
+        Log.v(TAG, String.format("CR: %.2f - G: %.2f - AS: %s", crossOverRate, GA.solve(oneMax, 100), as));
+      });
+    });
   }
 
   private static void broid() {

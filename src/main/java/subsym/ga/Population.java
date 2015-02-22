@@ -166,4 +166,8 @@ public class Population {
   public int nextGenerationSize() {
     return nextGeneration.size();
   }
+
+  public int getCurrentGeneration() {
+    return currentGeneration;
+  }
 }
