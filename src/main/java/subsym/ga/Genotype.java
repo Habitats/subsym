@@ -14,6 +14,7 @@ public class Genotype {
 
   private static Random random = new Random();
   private boolean shouldDie = false;
+  private int generation = 0;
 
   /**
    * Static factory method for initialization of a random bit vector
@@ -39,6 +40,10 @@ public class Genotype {
 
   private Genotype(int size) {
     this.size = size;
+  }
+
+  public int getGeneration() {
+    return generation;
   }
 
   public static Genotype fromString(final String s) {
@@ -74,7 +79,7 @@ public class Genotype {
   }
 
   public int numOnes() {
-    return bits.cardinality();
+    return shouldDie ? 0 : bits.cardinality();
   }
 
   public Genotype copy() {
@@ -98,5 +103,13 @@ public class Genotype {
 
   public boolean shouldDie() {
     return shouldDie;
+  }
+
+  public void tagForRevival() {
+    shouldDie = false;
+  }
+
+  public void setGeneration(int generation) {
+    this.generation = generation;
   }
 }

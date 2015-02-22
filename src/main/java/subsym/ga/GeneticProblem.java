@@ -7,7 +7,7 @@ public abstract class GeneticProblem {
 
 
   public enum AdultSelection {
-    FULL_TURNOVER, OVER_PRODUCTION, TOP_HALF, MIXING
+    FULL_TURNOVER, OVER_PRODUCTION,  MIXING
   }
 
   public enum MateSelection {

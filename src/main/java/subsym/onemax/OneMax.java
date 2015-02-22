@@ -1,7 +1,5 @@
 package subsym.onemax;
 
-import java.util.stream.IntStream;
-
 import subsym.Log;
 import subsym.ga.GeneticProblem;
 import subsym.ga.Genotype;
@@ -45,12 +43,12 @@ public class OneMax extends GeneticProblem {
 
   @Override
   public void crossOver() {
-    IntStream.range(0, 20).forEach(i -> population.crossOver(1, Math.random()));
+    population.crossOver(0.5);
   }
 
   @Override
   public void mutate() {
-    population.mutate(0.5, .3);
+    population.mutate(0.9, 0.7);
   }
 
   @Override
