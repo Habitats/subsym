@@ -29,9 +29,4 @@ public class OneMax extends GeneticProblem {
         .forEach(i -> getPopulation().add(new OneMaxGenotype(bitVectorSize).setRandom()));
   }
 
-  @Override
-  public String toString() {
-    return "Best: " + getPopulation().getBestGenotype().toString();
-  }
-
 }

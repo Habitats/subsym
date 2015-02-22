@@ -18,6 +18,7 @@ public class GeneticEngine {
       problem.crossOver();
       problem.cleanUp();
       problem.mutate();
+      problem.log();
     }
     return problem;
   }

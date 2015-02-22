@@ -18,7 +18,7 @@ public class OneMaxGenotype extends Genotype implements Phenotype {
   }
 
   @Override
-  public int fitness() {
+  public double fitness() {
     return getBits().cardinality();
   }
 

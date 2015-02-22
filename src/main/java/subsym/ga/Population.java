@@ -3,7 +3,9 @@ package subsym.ga;
 import com.google.common.collect.MinMaxPriorityQueue;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,7 @@ public class Population {
 
   public static double mixingRate = 0.4;
   public static double overProductionRate = 2;
+  public static double tornamentLimit = .2;
   private int freeSpots = 0;
   private int currentGeneration = 0;
 
@@ -59,7 +62,7 @@ public class Population {
 
   public void crossOver(double crossOverRate, GeneticProblem.MateSelection matingMode) {
     while (getFreeSpots() > 0) {
-      globalCrossover(crossOverRate, Math.random(), matingMode);
+      crossOver(crossOverRate, Math.random(), matingMode);
     }
   }
 
@@ -67,7 +70,7 @@ public class Population {
     return freeSpots;
   }
 
-  public void globalCrossover(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
+  public void crossOver(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
     if (crossOverRate < Math.random()) {
       return;
     }
@@ -76,16 +79,16 @@ public class Population {
     Genotype p2 = null;
     switch (matingMode) {
       case FITNESS_PROPORTIONATE:
-        p1 = getFitnessPrportinateParent(populationList);
-        p2 = getFitnessPrportinateParent(populationList);
+        p1 = getFitnessProportionateParent(populationList);
+        p2 = getFitnessProportionateParent(populationList);
         break;
       case SIGMA_SCALING:
         p1 = getSigmaScaledParent(populationList);
         p2 = getSigmaScaledParent(populationList);
         break;
       case TOURNAMENT:
-        p1 = getFitnessPrportinateParent(populationList);
-        p2 = getFitnessPrportinateParent(populationList);
+        p1 = getTournamentParent(populationList);
+        p2 = getTournamentParent(populationList);
         break;
       case UNKNOWN:
         p1 = getSigmaScaledParent(populationList);
@@ -103,8 +106,16 @@ public class Population {
     freeSpots -= 2;
   }
 
+  private Genotype getTournamentParent(List<Genotype> populationList) {
+    Collections.shuffle(populationList);
+    int limit = (int) (tornamentLimit * populationList.size());
+    return populationList.stream() //
+        .limit(limit) //
+        .max(Comparator.<Genotype>reverseOrder()).get();
+  }
+
   private Genotype getSigmaScaledParent(List<Genotype> populationList) {
-    double averageFitness = populationList.stream().mapToInt(v -> v.fitness()).average().getAsDouble();
+    double averageFitness = populationList.stream().mapToDouble(v -> v.fitness()).average().getAsDouble();
     double standardDeviation = standardDeviation(populationList);
     List<Double> weights = populationList.stream() //
         .map(v -> Math.random() * (1 + (v.fitness() - averageFitness) / 2 * standardDeviation)) //
@@ -113,8 +124,8 @@ public class Population {
     return populationList.remove(index);
   }
 
-  public Genotype getFitnessPrportinateParent(List<Genotype> populationList) {
-    int sum = populationList.stream().mapToInt(v -> v.fitness()).sum();
+  public Genotype getFitnessProportionateParent(List<Genotype> populationList) {
+    double sum = populationList.stream().mapToDouble(v -> v.fitness()).sum();
     List<Double> weights = populationList.stream() //
         .map(v -> Math.random() * v.fitness() / sum) //
         .collect(Collectors.toList());
@@ -122,7 +133,7 @@ public class Population {
     return populationList.remove(index);
   }
 
-  private double standardDeviation(List<Genotype> population) {
+  private double standardDeviation(Collection<Genotype> population) {
     double M = 0.0;
     double S = 0.0;
     int k = 1;
@@ -207,4 +218,12 @@ public class Population {
     return currentGeneration;
   }
 
+  @Override
+  public String toString() {
+    return String.format("Gen: %5d - Fitness (max/avg): %.3f / %.3f - SD: %.3f - Phenotype: %s",//
+                         currentGeneration,
+                         currentPopulation.stream().mapToDouble(v -> v.fitness()).max().getAsDouble(),
+                         currentPopulation.stream().mapToDouble(v -> v.fitness()).average().getAsDouble(),
+                         standardDeviation(currentPopulation), currentPopulation.peek().getPhenotype());
+  }
 }

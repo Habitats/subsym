@@ -1,7 +1,5 @@
 package subsym.ga;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +53,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public String toString() {
-    return String.format("%" + size() + "s - %d - G: %d - Keep: %s", //
+    return String.format("%" + size() + "s - %f - From Gen: %d - Keep: %s", //
                          bits.toLongArray().length > 0 ? Long.toString(bits.toLongArray()[0], 2) : "0",  //
                          fitness(), getGeneration(), !shouldDie);
   }
@@ -82,7 +80,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     return size;
   }
 
-  public int fitness() {
+  public double fitness() {
     return getPhenotype().fitness();
   }
 
@@ -123,10 +121,10 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   @Override
   public int compareTo(Genotype o) {
-    return o.fitness() - fitness();
+    return (int) (o.fitness() - fitness());
   }
 
-  public Phenotype getPhenotype() {
-    throw new NotImplementedException();
-  }
+  public abstract Phenotype getPhenotype();
+
+
 }
