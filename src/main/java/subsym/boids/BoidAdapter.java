@@ -3,7 +3,6 @@ package subsym.boids;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import subsym.Log;
 import subsym.boids.entities.Entity;
 import subsym.boids.entities.Predator;
 import subsym.gui.ColorUtils;
@@ -87,9 +86,9 @@ BoidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
     boid.update(newVelocity);
 
     if (boid.getColor().equals(ColorUtils.c(0))) {
-      Log.v(TAG, String
-          .format("Align: %9.3f - Seperation: %9.3f - Coherence: %9.3f - V: %s", alignLength, sepLength, cohLength,
-                  boid.getVelocity()));
+//      Log.v(TAG, String
+//          .format("Align: %9.3f - Seperation: %9.3f - Coherence: %9.3f - V: %s", alignLength, sepLength, cohLength,
+//                  boid.getVelocity()));
     }
   }
 

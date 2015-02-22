@@ -5,9 +5,11 @@ import java.awt.*;
 import javax.swing.*;
 
 import subsym.boids.Boids;
+import subsym.ga.GA;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
+import subsym.onemax.OneMax;
 
 /**
  * Created by anon on 28.01.2015.
@@ -44,7 +46,8 @@ public class Main {
 //
 //        buildFrame(panel, null, null);
 
-        broid();
+//        broid();
+        oneMax();
       }
 
 
@@ -63,6 +66,11 @@ public class Main {
         return null;
       }
     }.init();
+  }
+
+  private static void oneMax() {
+    OneMax oneMax = new OneMax(20, 20);
+    Log.v(TAG, GA.solve(oneMax));
   }
 
   private static void broid() {

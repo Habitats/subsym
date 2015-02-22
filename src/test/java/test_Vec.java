@@ -1,5 +1,6 @@
 import org.junit.Test;
 
+
 import subsym.models.Vec;
 
 import static org.junit.Assert.assertEquals;
