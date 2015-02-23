@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -107,8 +108,11 @@ public class Population {
   }
 
   private Genotype getTournamentParent(List<Genotype> populationList) {
-    Collections.shuffle(populationList);
+    Random r = new Random();
     int limit = (int) (tornamentLimit * populationList.size());
+    for (int i = 0; i < limit; i++) {
+      Collections.swap(populationList, i, i + r.nextInt(populationList.size() - i));
+    }
     return populationList.stream() //
         .limit(limit) //
         .max(Comparator.<Genotype>reverseOrder()).get();
@@ -148,9 +152,13 @@ public class Population {
 
   public void mutate(double genomeMutationRate, double genotypeMutationRate) {
     List<Genotype> children = new ArrayList<>(currentPopulation);
-    Collections.shuffle(children);
+
     int numBitsToMutate = (int) Math.ceil(genomeMutationRate * currentPopulation.peek().size());
     int genotypesToMutate = (int) Math.ceil(genotypeMutationRate * maxPopulationSize);
+    Random r = new Random();
+    for (int i = 0; i < genotypesToMutate; i++) {
+      Collections.swap(children, i, i + r.nextInt(children.size() - i));
+    }
     children.stream() //
         .filter(v -> !v.shouldDie()) //
         .limit(genotypesToMutate) //

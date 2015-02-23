@@ -88,7 +88,10 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   public void mutate(int numBits) {
     List<Integer> randomSequence = IntStream.range(0, size).boxed().collect(Collectors.toList());
-    Collections.shuffle(randomSequence);
+    Random r = new Random();
+    for (int i = 0; i < numBits; i++) {
+      Collections.swap(randomSequence, i, i + r.nextInt(randomSequence.size() - i));
+    }
     IntStream.range(0, numBits).forEach(i -> bits.flip(randomSequence.remove(0)));
   }
 
