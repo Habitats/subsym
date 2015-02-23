@@ -3,7 +3,6 @@ package subsym.surprisingsequence;
 import java.util.BitSet;
 import java.util.List;
 
-import subsym.Log;
 import subsym.ga.Genotype;
 import subsym.ga.Phenotype;
 
@@ -34,7 +33,7 @@ public class SurprisingGenotype extends Genotype {
     setSize(groupSize * permutation.size());
     bits = toBitSet(permutation, groupSize);
     phenotype = new SurprisingPhenotype(this);
-    Log.v(TAG, phenotype);
+//    Log.v(TAG, phenotype);
   }
 
   public int getGroupSize() {

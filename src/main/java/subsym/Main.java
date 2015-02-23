@@ -103,13 +103,16 @@ public class Main {
     double genotypeMutationRate = .2;
     double genomeMutationRate = .001;
     double crossOverRate = 1;
-    int alphabetSize = 100;
+    int alphabetSize = 10;
     int populationSize = 20;
-    int length = 10;
-    SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, length, crossOverRate,  //
-                                                          genomeMutationRate, genotypeMutationRate,
-                                                          AdultSelection.OVER_PRODUCTION, MateSelection.SIGMA_SCALING);
-    Log.v(TAG, GeneticEngine.solve(problem));
+    int length = 9;
+    IntStream.range(2, 30).forEach(len -> {
+      SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, len, crossOverRate,  //
+                                                            genomeMutationRate, genotypeMutationRate,
+                                                            AdultSelection.OVER_PRODUCTION,
+                                                            MateSelection.SIGMA_SCALING);
+      Log.v(TAG, GeneticEngine.solve(problem));
+    });
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
   }

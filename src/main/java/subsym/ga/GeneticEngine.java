@@ -11,7 +11,7 @@ import subsym.onemax.OneMax;
 public class GeneticEngine {
 
   private static final String TAG = GeneticEngine.class.getSimpleName();
-  private static boolean loggingEnabled = true;
+  private static boolean loggingEnabled = false;
 
   public static GeneticProblem solve(GeneticProblem problem) {
     problem.initPopulation();

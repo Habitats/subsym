@@ -40,6 +40,6 @@ public class SurprisingSequences extends GeneticProblem {
 
   @Override
   public boolean solution() {
-    return getPopulation().getBestGenotype().fitness() > 0.9;
+    return getPopulation().getBestGenotype().fitness() == 1;
   }
 }

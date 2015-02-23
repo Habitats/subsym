@@ -11,8 +11,10 @@ import subsym.ga.Population;
 import subsym.lolz.LolzGenotype;
 import subsym.onemax.OneMaxGenotype;
 import subsym.surprisingsequence.SurprisingGenotype;
+import subsym.surprisingsequence.SurprisingPhenotype;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by anon on 22.02.2015.
@@ -140,6 +142,39 @@ public class test_Genotype {
     List<Integer> lst2 = Arrays.asList(1, 2, 3, 4);
 
     assertEquals(lst1, lst2);
+  }
+
+  @Test
+  public void test_surprisingSequence() {
+    List<Integer> seq1 = Arrays.asList(1, 2, 2, 1);
+    double fg1 = SurprisingPhenotype.getGlobalSurprisingSequenceFitness(seq1);
+    double fl1 = SurprisingPhenotype.getLocalSurprisingSequenceFitness(seq1);
+    assertEquals(fg1, 1., 0);
+    assertEquals(fl1, 1., 0);
+
+    List<Integer> seq2 = Arrays.asList(1, 2, 3, 3, 2, 1);
+    double fg2 = SurprisingPhenotype.getGlobalSurprisingSequenceFitness(seq2);
+    double fl2 = SurprisingPhenotype.getLocalSurprisingSequenceFitness(seq2);
+    assertEquals(fg2, 1., 0);
+    assertEquals(fl2, 1., 0);
+
+    List<Integer> seq3 = Arrays.asList(1, 1, 2, 3, 3);
+    double fg3 = SurprisingPhenotype.getGlobalSurprisingSequenceFitness(seq3);
+    double fl3 = SurprisingPhenotype.getLocalSurprisingSequenceFitness(seq3);
+    assertNotEquals(fg3, 1., 0);
+    assertEquals(fl3, 1., 0);
+
+    List<Integer> seq4 = Arrays.asList(1, 2, 2, 1, 3, 3, 1);
+    double fg4 = SurprisingPhenotype.getGlobalSurprisingSequenceFitness(seq4);
+    double fl4 = SurprisingPhenotype.getLocalSurprisingSequenceFitness(seq4);
+    assertNotEquals(fg4, 1., 0);
+    assertEquals(fl4, 1., 0);
+
+    List<Integer> seq5 = Arrays.asList(0, 0, 2, 3, 3, 0, 3, 1, 2, 1, 1, 3, 2, 2, 0, 1, 0);
+    double fg5 = SurprisingPhenotype.getGlobalSurprisingSequenceFitness(seq5);
+    double fl5 = SurprisingPhenotype.getLocalSurprisingSequenceFitness(seq5);
+    assertNotEquals(fg5, 1., 0);
+    assertEquals(fl5, 1., 0);
   }
 
   public Population getPopulation(int size) {
