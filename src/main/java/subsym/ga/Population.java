@@ -220,7 +220,7 @@ public class Population {
 
   @Override
   public String toString() {
-    return String.format("Gen: %5d - Fitness (max/avg): %3.3f / %3.3f - SD: %.3f > Phenotype > %s > Genotype > %s",//
+    return String.format("Gen: %5d - Fitness (max/avg): %6.3f / %6.3f - SD: %6.3f > Phenotype > %s > Genotype > %s",//
                          currentGeneration,
                          currentPopulation.stream().mapToDouble(v -> v.fitness()).max().getAsDouble(),
                          currentPopulation.stream().mapToDouble(v -> v.fitness()).average().getAsDouble(),

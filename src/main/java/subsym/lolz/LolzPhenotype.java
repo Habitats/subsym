@@ -44,6 +44,6 @@ public class LolzPhenotype implements Phenotype {
 
   @Override
   public String toString() {
-    return String.format("Fitness: %d", (int) fitness());
+    return String.format("Fitness: %2d", (int) fitness());
   }
 }

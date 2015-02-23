@@ -79,7 +79,7 @@ public class Main {
     double genotypeMutationRate = .02;
     double genomeMutationRate = .0002;
     double crossOverRate = 1;
-    Log.v(TAG, GeneticEngine.solve(new Lolz(20, 60, crossOverRate, genomeMutationRate, genotypeMutationRate,//
+    Log.v(TAG, GeneticEngine.solve(new Lolz(20, 63, crossOverRate, genomeMutationRate, genotypeMutationRate,//
                                             AdultSelection.MIXING, MateSelection.TOURNAMENT)));
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);

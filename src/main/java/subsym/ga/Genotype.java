@@ -54,11 +54,6 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-  public String toString() {
-    return String.format("%" + size() + "s - %f - From Gen: %d - Keep: %s", //
-                         getBitsString(),  //
-                         fitness(), getGeneration(), !shouldDie);
-  }
 
   public String getBitsString() {
     return bits.toLongArray().length > 0 ? Long.toString(bits.toLongArray()[0], 2) : "0";
@@ -136,12 +131,16 @@ public abstract class Genotype implements Comparable<Genotype> {
     return bits;
   }
 
+  public abstract Phenotype getPhenotype();
+
+  public String toString() {
+    return String.format("%" + size() + "s - From Gen: %6d - Keep: %s", //
+                         getBitsString(), getGeneration(), !shouldDie);
+  }
+
   @Override
   public int compareTo(Genotype o) {
     return (int) (o.fitness() - fitness());
   }
-
-  public abstract Phenotype getPhenotype();
-
 
 }
