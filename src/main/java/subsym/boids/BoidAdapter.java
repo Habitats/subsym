@@ -42,7 +42,7 @@ public class BoidAdapter extends AIAdapter<Entity> {
   }
 
   public static void setObsticleSepWeight(double obsticleSepWeight) {
-BoidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
+    BoidAdapter.obsticleSepWeight = obsticleSepWeight / (multiplier / 10);
   }
 
   public static int getAlignWeight() {

@@ -4,8 +4,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import subsym.boids.Boids;
 import subsym.boids.BoidAdapter;
+import subsym.boids.Boids;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AICheckBox;
@@ -119,7 +119,7 @@ public class BoidGui extends AIGui {
   private void updateWeights() {
     sepInput.setText(String.valueOf(BoidAdapter.getSepWeight()));
     sepSlider.setValue(BoidAdapter.getSepWeight());
-    
+
     obsticleSepInput.setText(String.valueOf(BoidAdapter.getObsticleSepWeight()));
     obsticleSepSlider.setValue(BoidAdapter.getObsticleSepWeight());
 

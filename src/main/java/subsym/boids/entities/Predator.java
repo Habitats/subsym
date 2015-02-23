@@ -3,8 +3,8 @@ package subsym.boids.entities;
 import java.awt.*;
 
 import subsym.boids.BoidAdapter;
-import subsym.models.Vec;
 import subsym.gui.ColorUtils;
+import subsym.models.Vec;
 
 /**
  * Created by Patrick on 30.01.2015.

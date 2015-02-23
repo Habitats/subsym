@@ -9,8 +9,8 @@ import java.nio.file.Paths;
 import javax.swing.*;
 
 import subsym.Log;
-import subsym.models.AIAdapter;
 import subsym.boids.entities.Entity;
+import subsym.models.AIAdapter;
 
 
 /**

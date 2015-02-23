@@ -5,10 +5,10 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
+import subsym.boids.entities.Entity;
 import subsym.models.AIAdapter;
 import subsym.models.AIAdapterListener;
 import subsym.models.Vec;
-import subsym.boids.entities.Entity;
 
 /**
  * Created by Patrick on 24.08.2014.

@@ -32,11 +32,10 @@ public class SurprisingSequences extends GeneticProblem {
 
   @Override
   public void initPopulation() {
-    IntStream.range(0, getPopulationSize())
-        .forEach(i -> {
-          List<Integer> permutation = createPermutation(alphabet, length);
-          getPopulation().add(new SurprisingGenotype(permutation,alphabet));
-        });
+    IntStream.range(0, getPopulationSize()).forEach(i -> {
+      List<Integer> permutation = createPermutation(alphabet, length);
+      getPopulation().add(new SurprisingGenotype(permutation, alphabet));
+    });
   }
 
   @Override
