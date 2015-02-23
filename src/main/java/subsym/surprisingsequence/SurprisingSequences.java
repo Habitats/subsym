@@ -24,7 +24,7 @@ public class SurprisingSequences extends GeneticProblem {
     alphabet = IntStream.range(0, alphabetSize).boxed().collect(Collectors.toList());
   }
 
-  private List<Integer> craetePermutaton(List<Integer> alphabet, int length) {
+  private List<Integer> createPermutation(List<Integer> alphabet, int length) {
     Random random = new Random();
     return IntStream.range(0, length)//
         .map(v -> alphabet.get(random.nextInt(alphabet.size()))).boxed().collect(Collectors.toList());
@@ -34,13 +34,13 @@ public class SurprisingSequences extends GeneticProblem {
   public void initPopulation() {
     IntStream.range(0, getPopulationSize())
         .forEach(i -> {
-          List<Integer> permutation = craetePermutaton(alphabet, length);
+          List<Integer> permutation = createPermutation(alphabet, length);
           getPopulation().add(new SurprisingGenotype(permutation,alphabet));
         });
   }
 
   @Override
   public boolean solution() {
-    return getPopulation().getBestGenotype().fitness() > 0.8;
+    return getPopulation().getBestGenotype().fitness() > 0.9;
   }
 }

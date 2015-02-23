@@ -100,15 +100,15 @@ public class Main {
 
   private static void surprisingSequence() {
 //    double crossOverRate = .5;
-    double genotypeMutationRate = .05;
-    double genomeMutationRate = .002;
+    double genotypeMutationRate = .2;
+    double genomeMutationRate = .001;
     double crossOverRate = 1;
-    int alphabetSize = 1000;
-    int populationSize = 30;
-    int length = 5;
+    int alphabetSize = 100;
+    int populationSize = 20;
+    int length = 10;
     SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, length, crossOverRate,  //
                                                           genomeMutationRate, genotypeMutationRate,
-                                                          AdultSelection.MIXING, MateSelection.SIGMA_SCALING);
+                                                          AdultSelection.OVER_PRODUCTION, MateSelection.SIGMA_SCALING);
     Log.v(TAG, GeneticEngine.solve(problem));
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);

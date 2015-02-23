@@ -23,7 +23,8 @@ public class SurprisingGenotype extends Genotype {
   @Override
   public void copy(Genotype copy) {
     SurprisingGenotype surpriseCopy = (SurprisingGenotype) copy;
-    surpriseCopy.phenotype = phenotype;
+    surpriseCopy.alphabet = alphabet;
+    surpriseCopy.phenotype = new SurprisingPhenotype(surpriseCopy);
     surpriseCopy.groupSize = groupSize;
   }
 
