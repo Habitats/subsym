@@ -7,7 +7,6 @@ import subsym.Log;
  */
 public abstract class GeneticProblem {
 
-
   private static final String TAG = GeneticProblem.class.getSimpleName();
 
   public enum AdultSelection {

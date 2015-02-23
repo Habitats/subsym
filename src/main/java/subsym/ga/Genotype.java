@@ -20,6 +20,15 @@ public abstract class Genotype implements Comparable<Genotype> {
   private int generation = 0;
   private int size;
 
+  // ###############################################################################
+  // ### CONSTRUCTORS ##############################################################
+  // ###############################################################################
+
+  protected Genotype() {
+  }
+
+  protected abstract Genotype newInstance();
+
   /**
    * Static factory method for initialization of a random bit vector
    */
@@ -32,8 +41,6 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-  protected abstract Genotype newInstance();
-
   public Genotype setEmpty(int size) {
     this.size = size;
     bits = new BitSet();
@@ -41,14 +48,15 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-  protected BitSet bits;
-
-  protected Genotype() {
+  public Genotype copy() {
+    Genotype copy = newInstance();
+    copy.bits = bits.get(0, bits.length());
+    copy.size = size;
+    copy(copy);
+    return copy;
   }
 
-  public int getGeneration() {
-    return generation;
-  }
+  public abstract void copy(Genotype copy);
 
   public Genotype fromString(final String s) {
     size = s.length();
@@ -56,24 +64,12 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
+  // ###############################################################################
+  // ### INSTANCE PROPERTIES #######################################################
+  // ###############################################################################
 
-  public String getBitsString() {
-    BigInteger b = BigInteger.ZERO;
-    for (int i = bits.nextSetBit(0); i >= 0; i = bits.nextSetBit(i + 1)) {
-      b = b.setBit(i);
-    }
-    return b.toString(2);
-  }
+  protected BitSet bits;
 
-  public List<Integer> getOnBits() {
-    List<Integer> lst = new ArrayList<>();
-    for (int i = bits.nextSetBit(0); i >= 0; i = bits.nextSetBit(i + 1)) {
-      lst.add(i);
-    }
-
-    Collections.reverse(lst);
-    return lst;
-  }
 
   /**
    * @return a new Genotype with a genome of v.from(0, cut) + u.from(cut, end)
@@ -121,47 +117,38 @@ public abstract class Genotype implements Comparable<Genotype> {
     return ints;
   }
 
-  public int size() {
-    return size;
+  public String getBitsString() {
+    BigInteger b = BigInteger.ZERO;
+    for (int i = bits.nextSetBit(0); i >= 0; i = bits.nextSetBit(i + 1)) {
+      b = b.setBit(i);
+    }
+    return b.toString(2);
   }
 
-  public int getBitGroupSize(List<Integer> ints) {
-    return BigInteger.valueOf(Collections.max(ints)).bitLength();
+  public List<Integer> getOnBits() {
+    List<Integer> lst = new ArrayList<>();
+    for (int i = bits.nextSetBit(0); i >= 0; i = bits.nextSetBit(i + 1)) {
+      lst.add(i);
+    }
+
+    Collections.reverse(lst);
+    return lst;
   }
 
   public double fitness() {
     return getPhenotype().fitness();
   }
 
-  public Genotype copy() {
-    Genotype copy = newInstance();
-    copy.bits = bits.get(0, bits.length());
-    copy.size = size;
-    copy(copy);
-    return copy;
-  }
-
-  public abstract void copy(Genotype copy);
-
-  public void setSize(int size) {
-    this.size = size;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof Genotype && bits.equals(((Genotype) obj).bits);
-  }
-
   public void invert() {
     bits.flip(0, size);
   }
 
-  public void tagForRemoval() {
-    shouldDie = true;
-  }
-
   public boolean shouldDie() {
     return shouldDie;
+  }
+
+  public void tagForRemoval() {
+    shouldDie = true;
   }
 
   public void tagForRevival() {
@@ -172,15 +159,37 @@ public abstract class Genotype implements Comparable<Genotype> {
     this.generation = generation;
   }
 
+  public void setSize(int size) {
+    this.size = size;
+  }
+
+  public int size() {
+    return size;
+  }
+
+  public int getBitGroupSize(List<Integer> ints) {
+    return BigInteger.valueOf(Collections.max(ints)).bitLength();
+  }
+
   protected BitSet getBits() {
     return bits;
   }
 
   public abstract Phenotype getPhenotype();
 
+  public int getGeneration() {
+    return generation;
+  }
+
+
   public String toString() {
     return String.format("%" + size() + "s - From Gen: %6d - Keep: %s", //
                          getBitsString(), getGeneration(), !shouldDie);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof Genotype && bits.equals(((Genotype) obj).bits);
   }
 
   @Override

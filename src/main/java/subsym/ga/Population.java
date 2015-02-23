@@ -53,22 +53,10 @@ public class Population {
     }
   }
 
-  public int getAdultLimit() {
-    return (int) (mixingRate * maxPopulationSize);
-  }
-
-  public int getChildLimit() {
-    return (int) ((1 - mixingRate) * maxPopulationSize);
-  }
-
   public void crossOver(double crossOverRate, GeneticProblem.MateSelection matingMode) {
     while (getFreeSpots() > 0) {
       crossOver(crossOverRate, Math.random(), matingMode);
     }
-  }
-
-  public int getFreeSpots() {
-    return freeSpots;
   }
 
   public void crossOver(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
@@ -204,6 +192,18 @@ public class Population {
 
   public void add(Genotype genotype) {
     currentPopulation.add(genotype);
+  }
+
+  public int getAdultLimit() {
+    return (int) (mixingRate * maxPopulationSize);
+  }
+
+  public int getChildLimit() {
+    return (int) ((1 - mixingRate) * maxPopulationSize);
+  }
+
+  public int getFreeSpots() {
+    return freeSpots;
   }
 
   public Genotype getWorstGenotype() {
