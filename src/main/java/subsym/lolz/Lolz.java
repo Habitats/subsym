@@ -18,12 +18,13 @@ public class Lolz extends GeneticProblem {
   }
 
   @Override
-  public void initPopulation() {
-    IntStream.range(0, getPopulationSize()).forEach(v -> getPopulation().add(new LolzGenotype(bitVectorSize)));
+  public boolean solution() {
+    return getPopulation().getBestGenotype().fitness() == bitVectorSize;
   }
 
   @Override
-  public boolean solution() {
-    return false;
+  public void initPopulation() {
+    IntStream.range(0, getPopulationSize())
+        .forEach(v -> getPopulation().add(new LolzGenotype().setRandom(bitVectorSize)));
   }
 }

@@ -26,7 +26,7 @@ public class OneMax extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize())
-        .forEach(i -> getPopulation().add(new OneMaxGenotype(bitVectorSize).setRandom()));
+        .forEach(i -> getPopulation().add(new OneMaxGenotype().setRandom(bitVectorSize)));
   }
 
 }

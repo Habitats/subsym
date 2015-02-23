@@ -9,12 +9,12 @@ import subsym.ga.Phenotype;
 public class OneMaxGenotype extends Genotype implements Phenotype {
 
   @Override
-  protected Genotype newInstance(int size) {
-    return new OneMaxGenotype(size);
+  protected Genotype newInstance() {
+    return new OneMaxGenotype();
   }
 
-  public OneMaxGenotype(int size) {
-    super(size);
+  public OneMaxGenotype() {
+    super();
   }
 
   @Override

@@ -13,6 +13,7 @@ import subsym.ga.GeneticProblem.MateSelection;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
+import subsym.lolz.Lolz;
 import subsym.onemax.OneMax;
 
 /**
@@ -51,7 +52,8 @@ public class Main {
 //        buildFrame(panel, null, null);
 
 //        broid();
-        oneMax();
+//        oneMax();
+        lolz();
       }
 
 
@@ -70,6 +72,17 @@ public class Main {
         return null;
       }
     }.init();
+  }
+
+  private static void lolz() {
+//    double crossOverRate = .5;
+    double genotypeMutationRate = .02;
+    double genomeMutationRate = .0002;
+    double crossOverRate = 1;
+    Log.v(TAG, GeneticEngine.solve(new Lolz(20, 60, crossOverRate, genomeMutationRate, genotypeMutationRate,//
+                                            AdultSelection.MIXING, MateSelection.TOURNAMENT)));
+
+//    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
   }
 
   private static void oneMax() {

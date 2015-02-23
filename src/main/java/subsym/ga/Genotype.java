@@ -1,5 +1,6 @@
 package subsym.ga;
 
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
@@ -15,11 +16,13 @@ public abstract class Genotype implements Comparable<Genotype> {
   private static Random random = new Random();
   private boolean shouldDie = false;
   private int generation = 0;
+  private int size;
 
   /**
    * Static factory method for initialization of a random bit vector
    */
-  public Genotype setRandom() {
+  public Genotype setRandom(int size) {
+    this.size = size;
     bits = new BitSet();
     for (int i = 0; i < size; i++) {
       bits.set(i, random.nextBoolean());
@@ -27,19 +30,18 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-  protected abstract Genotype newInstance(int size);
+  protected abstract Genotype newInstance();
 
-  public Genotype setEmpty() {
+  public Genotype setEmpty(int size) {
+    this.size = size;
     bits = new BitSet();
     bits.set(0, size, false);
     return this;
   }
 
-  private final int size;
   private BitSet bits;
 
-  protected Genotype(int size) {
-    this.size = size;
+  protected Genotype() {
   }
 
   public int getGeneration() {
@@ -47,15 +49,29 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public Genotype fromString(final String s) {
-    Genotype v = newInstance(s.length());
-    v.bits = BitSet.valueOf(new long[]{Long.parseLong(s, 2)});
-    return v;
+    size = s.length();
+    bits = BitSet.valueOf(new long[]{Long.parseLong(s, 2)});
+    return this;
   }
 
   public String toString() {
     return String.format("%" + size() + "s - %f - From Gen: %d - Keep: %s", //
-                         bits.toLongArray().length > 0 ? Long.toString(bits.toLongArray()[0], 2) : "0",  //
+                         getBitsString(),  //
                          fitness(), getGeneration(), !shouldDie);
+  }
+
+  public String getBitsString() {
+    return bits.toLongArray().length > 0 ? Long.toString(bits.toLongArray()[0], 2) : "0";
+  }
+
+  public List<Integer> getOnBits() {
+    String str = bits.toString();
+    str = str.substring(1, str.length() - 1);
+
+    List<Integer> lst = Arrays.stream(str.split(",")) //
+        .mapToInt(s -> Integer.parseInt(s.trim())).boxed().collect(Collectors.toList());
+    Collections.reverse(lst);
+    return lst;
   }
 
   /**
@@ -85,8 +101,9 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public Genotype copy() {
-    Genotype copy = newInstance(size);
+    Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
+    copy.size = size;
     return copy;
   }
 
