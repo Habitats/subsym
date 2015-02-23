@@ -1,6 +1,6 @@
 package subsym.ga;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
@@ -60,11 +60,11 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public List<Integer> getOnBits() {
-    String str = bits.toString();
-    str = str.substring(1, str.length() - 1);
+    List<Integer> lst = new ArrayList<>();
+    for (int i = bits.nextSetBit(0); i >= 0; i = bits.nextSetBit(i + 1)) {
+      lst.add(i);
+    }
 
-    List<Integer> lst = Arrays.stream(str.split(",")) //
-        .mapToInt(s -> Integer.parseInt(s.trim())).boxed().collect(Collectors.toList());
     Collections.reverse(lst);
     return lst;
   }
