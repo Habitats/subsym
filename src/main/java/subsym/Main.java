@@ -15,6 +15,7 @@ import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
 import subsym.lolz.Lolz;
 import subsym.onemax.OneMax;
+import subsym.surprisingsequence.SurprisingSequences;
 
 /**
  * Created by anon on 28.01.2015.
@@ -52,8 +53,8 @@ public class Main {
 //        buildFrame(panel, null, null);
 
 //        broid();
-//        oneMax();
-        lolz();
+        oneMax();
+//        lolz();
       }
 
 
@@ -79,19 +80,32 @@ public class Main {
     double genotypeMutationRate = .02;
     double genomeMutationRate = .0002;
     double crossOverRate = 1;
-    Log.v(TAG, GeneticEngine.solve(new Lolz(20, 63, crossOverRate, genomeMutationRate, genotypeMutationRate,//
-                                            AdultSelection.MIXING, MateSelection.TOURNAMENT)));
+    Log.v(TAG, GeneticEngine.solve(new Lolz(20, 1000, crossOverRate, genomeMutationRate, genotypeMutationRate,//
+                                            AdultSelection.OVER_PRODUCTION, MateSelection.TOURNAMENT)));
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
   }
 
   private static void oneMax() {
 //    double crossOverRate = .5;
+    double genotypeMutationRate = .002;
+    double genomeMutationRate = .00002;
+    double crossOverRate = 1;
+    Log.v(TAG, GeneticEngine.solve(new OneMax(20, 1000, crossOverRate, genomeMutationRate, genotypeMutationRate,//
+                                              AdultSelection.MIXING, MateSelection.TOURNAMENT)));
+
+//    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
+  }
+
+  private static void surprisingSequence() {
+//    double crossOverRate = .5;
     double genotypeMutationRate = .02;
     double genomeMutationRate = .0002;
     double crossOverRate = 1;
-    Log.v(TAG, GeneticEngine.solve(new OneMax(20, 40, crossOverRate, genomeMutationRate, genotypeMutationRate,//
-                                              AdultSelection.MIXING, MateSelection.TOURNAMENT)));
+    int alphabetSize = 4;
+    Log.v(TAG, GeneticEngine.solve(new SurprisingSequences(20, alphabetSize, crossOverRate, genomeMutationRate,  //
+                                                           genotypeMutationRate, AdultSelection.MIXING,
+                                                           MateSelection.TOURNAMENT)));
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
   }

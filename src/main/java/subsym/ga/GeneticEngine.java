@@ -2,6 +2,7 @@ package subsym.ga;
 
 import java.util.stream.IntStream;
 
+import subsym.Log;
 import subsym.onemax.OneMax;
 
 /**
@@ -10,16 +11,26 @@ import subsym.onemax.OneMax;
 public class GeneticEngine {
 
   private static final String TAG = GeneticEngine.class.getSimpleName();
+  private static boolean loggingEnabled = true;
 
   public static GeneticProblem solve(GeneticProblem problem) {
     problem.initPopulation();
+    int count = 0;
+    long start = System.currentTimeMillis();
     while (!problem.solution()) {
       problem.select();
       problem.crossOver();
       problem.cleanUp();
       problem.mutate();
-      problem.log();
+      if (loggingEnabled) {
+        problem.log();
+      }
+      count++;
+      if (count % 1000 == 0) {
+        Log.v(TAG, "Gen ... " + count);
+      }
     }
+    Log.v(TAG, "Search took: " + (System.currentTimeMillis() - start) / 1000. + " s");
     return problem;
   }
 
