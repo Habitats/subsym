@@ -43,10 +43,9 @@ public class LolzGenotype extends Genotype {
   }
 
   @Override
-  public Genotype copy() {
-    LolzGenotype copy = (LolzGenotype) super.copy();
-    copy.phenotype = new LolzPhenotype(copy);
-    return copy;
+  public void copy(Genotype copy) {
+    LolzGenotype lolzCopy = (LolzGenotype) copy;
+    lolzCopy.phenotype = new LolzPhenotype(lolzCopy);
   }
 
   @Override

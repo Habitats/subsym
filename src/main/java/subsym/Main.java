@@ -53,8 +53,9 @@ public class Main {
 //        buildFrame(panel, null, null);
 
 //        broid();
-        oneMax();
+//        oneMax();
 //        lolz();
+        surprisingSequence();
       }
 
 
@@ -99,13 +100,16 @@ public class Main {
 
   private static void surprisingSequence() {
 //    double crossOverRate = .5;
-    double genotypeMutationRate = .02;
-    double genomeMutationRate = .0002;
+    double genotypeMutationRate = .05;
+    double genomeMutationRate = .002;
     double crossOverRate = 1;
-    int alphabetSize = 4;
-    Log.v(TAG, GeneticEngine.solve(new SurprisingSequences(20, alphabetSize, crossOverRate, genomeMutationRate,  //
-                                                           genotypeMutationRate, AdultSelection.MIXING,
-                                                           MateSelection.TOURNAMENT)));
+    int alphabetSize = 1000;
+    int populationSize = 30;
+    int length = 5;
+    SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, length, crossOverRate,  //
+                                                          genomeMutationRate, genotypeMutationRate,
+                                                          AdultSelection.MIXING, MateSelection.SIGMA_SCALING);
+    Log.v(TAG, GeneticEngine.solve(problem));
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
   }

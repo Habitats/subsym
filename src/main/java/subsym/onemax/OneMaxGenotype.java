@@ -23,6 +23,11 @@ public class OneMaxGenotype extends Genotype implements Phenotype {
   }
 
   @Override
+  public void copy(Genotype copy) {
+
+  }
+
+  @Override
   public Phenotype getPhenotype() {
     return this;
   }

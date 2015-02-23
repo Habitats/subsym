@@ -1,5 +1,8 @@
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import subsym.ga.GeneticProblem;
@@ -7,6 +10,7 @@ import subsym.ga.Genotype;
 import subsym.ga.Population;
 import subsym.lolz.LolzGenotype;
 import subsym.onemax.OneMaxGenotype;
+import subsym.surprisingsequence.SurprisingGenotype;
 
 import static org.junit.Assert.assertEquals;
 
@@ -115,6 +119,27 @@ public class test_Genotype {
     assertEquals((int) u.getPhenotype().fitness(), 2);
     Genotype w = new LolzGenotype().fromString("1111111111");
     assertEquals((int) w.getPhenotype().fitness(), 10);
+  }
+
+  @Test
+  public void test_intToBit() {
+    List<Integer> permutation = Arrays.asList(1, 2, 3, 4);
+    SurprisingGenotype v = new SurprisingGenotype(permutation, permutation);
+    BitSet bits = v.toBitSet(permutation, v.getGroupSize());
+    v.setBits(bits);
+    SurprisingGenotype
+        w =
+        (SurprisingGenotype) new SurprisingGenotype(permutation, permutation).fromString("100011010001");
+    assertEquals(v.getOnBits(), w.getOnBits());
+  }
+
+  @Test
+  public void test_bitToInt() {
+    SurprisingGenotype w = (SurprisingGenotype) new SurprisingGenotype().fromString("100011010001");
+    List<Integer> lst1 = w.toList(3);
+    List<Integer> lst2 = Arrays.asList(1, 2, 3, 4);
+
+    assertEquals(lst1, lst2);
   }
 
   public Population getPopulation(int size) {

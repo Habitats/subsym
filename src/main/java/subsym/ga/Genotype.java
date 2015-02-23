@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-  private BitSet bits;
+  protected BitSet bits;
 
   protected Genotype() {
   }
@@ -95,8 +96,37 @@ public abstract class Genotype implements Comparable<Genotype> {
     IntStream.range(0, numBits).forEach(i -> bits.flip(randomSequence.remove(0)));
   }
 
+  public BitSet toBitSet(List<Integer> ints, int groupSize) {
+    BitSet bitSet = new BitSet();
+
+    Iterator<Integer> iter = ints.iterator();
+    IntStream.range(0, ints.size()).forEach(intIndex -> {
+      BitSet bitInt = BitSet.valueOf(new long[]{iter.next()});
+      int start = intIndex * groupSize;
+      IntStream.range(0, groupSize).forEach(bitIndex -> bitSet.set(start + bitIndex, bitInt.get(bitIndex)));
+    });
+    return bitSet;
+  }
+
+  public List<Integer> toList(int bitGroupSize) {
+    List<Integer> ints = new ArrayList<>();
+
+    int numInts = size / bitGroupSize;
+    IntStream.range(0, numInts).forEach(intIndex -> {
+      int start = intIndex * bitGroupSize;
+      BitSet bitSet = bits.get(start, start + bitGroupSize);
+      int bitInt = !bitSet.isEmpty() ? (int) bitSet.toLongArray()[0] : 0;
+      ints.add(bitInt);
+    });
+    return ints;
+  }
+
   public int size() {
     return size;
+  }
+
+  public int getBitGroupSize(List<Integer> ints) {
+    return BigInteger.valueOf(Collections.max(ints)).bitLength();
   }
 
   public double fitness() {
@@ -107,7 +137,14 @@ public abstract class Genotype implements Comparable<Genotype> {
     Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
     copy.size = size;
+    copy(copy);
     return copy;
+  }
+
+  public abstract void copy(Genotype copy);
+
+  public void setSize(int size) {
+    this.size = size;
   }
 
   @Override
