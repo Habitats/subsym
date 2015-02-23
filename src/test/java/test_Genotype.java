@@ -150,12 +150,27 @@ public class test_Genotype {
     Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet);
     Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet);
 
-    Genotype w1 = Genotype.crossOver(v, u, 0.5);
-    assertEquals(w1.toList(), Arrays.asList(5, 6, 3, 4));
-    Genotype w2 = Genotype.crossOver(v, u, 0.25);
-    assertEquals(w2.toList(), Arrays.asList(5, 6, 7, 4));
-    Genotype w3 = Genotype.crossOver(v, u, 0.75);
-    assertEquals(w3.toList(), Arrays.asList(5, 2, 3, 4));
+    Genotype w;
+    w = Genotype.crossOver(v, u, 0);
+    assertEquals(w.toList(), Arrays.asList(5, 6, 7, 8));
+
+    w = Genotype.crossOver(v, u, 0.25);
+    assertEquals(w.toList(), Arrays.asList(5, 6, 7, 4));
+
+    w = Genotype.crossOver(v, u, 0.5);
+    assertEquals(w.toList(), Arrays.asList(5, 6, 3, 4));
+
+    w = Genotype.crossOver(v, u, 0.75);
+    assertEquals(w.toList(), Arrays.asList(5, 2, 3, 4));
+    w = Genotype.crossOver(v, u, 0.76);
+    assertEquals(w.toList(), Arrays.asList(5, 2, 3, 4));
+    w = Genotype.crossOver(v, u, 0.74);
+    assertEquals(w.toList(), Arrays.asList(5, 2, 3, 4));
+
+    w = Genotype.crossOver(v, u, 0.90);
+    assertEquals(w.toList(), Arrays.asList(1, 2, 3, 4));
+    w = Genotype.crossOver(v, u, 1);
+    assertEquals(w.toList(), Arrays.asList(1, 2, 3, 4));
   }
 
   @Test
