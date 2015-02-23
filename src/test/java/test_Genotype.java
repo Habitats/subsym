@@ -87,7 +87,7 @@ public class test_Genotype {
     int initialSize = 10;
     Population p = getPopulation(initialSize);
     p.selectAdults(GeneticProblem.AdultSelection.OVER_PRODUCTION);
-    p.crossOver(1, GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
+    p.crossOver(1, Math.random(), GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
     // adults + children * overProductionRate should be present
     assertEquals(p.nextGenerationSize(), (int) (initialSize * Population.overProductionRate));
     // only the initalSize amount should be retained
@@ -99,7 +99,7 @@ public class test_Genotype {
   public void test_populationMixingSelection() {
     Population p = getPopulation(10);
     p.selectAdults(GeneticProblem.AdultSelection.MIXING);
-    p.crossOver(1, GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
+    p.crossOver(1, Math.random(), GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
     assertEquals(p.size() + p.nextGenerationSize(), 10 + p.getChildLimit());
     p.cleanUp();
     assertEquals(p.size(), 10);
@@ -127,7 +127,7 @@ public class test_Genotype {
   public void test_intToBit() {
     List<Integer> permutation = Arrays.asList(1, 2, 3, 4);
     SurprisingGenotype v = new SurprisingGenotype(permutation, permutation);
-    BitSet bits = v.toBitSet(permutation, v.getGroupSize());
+    BitSet bits = v.toBitSet(permutation, v.getBitGroupSize());
     v.setBits(bits);
     SurprisingGenotype
         w =
@@ -137,11 +137,25 @@ public class test_Genotype {
 
   @Test
   public void test_bitToInt() {
-    SurprisingGenotype w = (SurprisingGenotype) new SurprisingGenotype().fromString("100011010001");
-    List<Integer> lst1 = w.toList(3);
+    SurprisingGenotype w = (SurprisingGenotype) new SurprisingGenotype(3).fromString("100011010001");
+    List<Integer> lst1 = w.toList();
     List<Integer> lst2 = Arrays.asList(1, 2, 3, 4);
 
     assertEquals(lst1, lst2);
+  }
+
+  @Test
+  public void test_bitBlockCrossOver() {
+    List<Integer> alphabet = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
+    Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet);
+    Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet);
+
+    Genotype w1 = Genotype.crossOver(v, u, 0.5);
+    assertEquals(w1.toList(), Arrays.asList(5, 6, 3, 4));
+    Genotype w2 = Genotype.crossOver(v, u, 0.25);
+    assertEquals(w2.toList(), Arrays.asList(5, 6, 7, 4));
+    Genotype w3 = Genotype.crossOver(v, u, 0.75);
+    assertEquals(w3.toList(), Arrays.asList(5, 2, 3, 4));
   }
 
   @Test

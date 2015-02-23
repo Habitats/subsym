@@ -70,14 +70,15 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   protected BitSet bits;
 
-
   /**
    * @return a new Genotype with a genome of v.from(0, cut) + u.from(cut, end)
    */
   public static Genotype crossOver(Genotype v, Genotype u, double cut) {
     Genotype w = v.copy();
+    int cutAtGroup = (int) Math.round((v.size()) / v.getBitGroupSize() * (1 - cut));
+    int cutAtBit = cutAtGroup * v.getBitGroupSize();
     for (int i = v.bits.length(); i >= 0; i--) {
-      boolean value = (1 - cut) * v.size <= i ? v.bits.get(i) : u.bits.get(i);
+      boolean value = cutAtBit <= i ? v.bits.get(i) : u.bits.get(i);
       w.bits.set(i, value);
     }
     return w;
@@ -104,13 +105,13 @@ public abstract class Genotype implements Comparable<Genotype> {
     return bitSet;
   }
 
-  public List<Integer> toList(int bitGroupSize) {
+  public List<Integer> toList() {
     List<Integer> ints = new ArrayList<>();
 
-    int numInts = size / bitGroupSize;
+    int numInts = size / getBitGroupSize();
     IntStream.range(0, numInts).forEach(intIndex -> {
-      int start = intIndex * bitGroupSize;
-      BitSet bitSet = bits.get(start, start + bitGroupSize);
+      int start = intIndex * getBitGroupSize();
+      BitSet bitSet = bits.get(start, start + getBitGroupSize());
       int bitInt = !bitSet.isEmpty() ? (int) bitSet.toLongArray()[0] : 0;
       ints.add(bitInt);
     });
@@ -176,6 +177,8 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public abstract Phenotype getPhenotype();
+
+  public abstract int getBitGroupSize();
 
   public int getGeneration() {
     return generation;

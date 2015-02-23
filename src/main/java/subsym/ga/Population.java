@@ -53,13 +53,13 @@ public class Population {
     }
   }
 
-  public void crossOver(double crossOverRate, GeneticProblem.MateSelection matingMode) {
+  public void crossOver(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
     while (getFreeSpots() > 0) {
-      crossOver(crossOverRate, Math.random(), matingMode);
+      crossOverSingle(crossOverRate, cut, matingMode);
     }
   }
 
-  public void crossOver(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
+  public void crossOverSingle(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
     if (crossOverRate < Math.random()) {
       return;
     }

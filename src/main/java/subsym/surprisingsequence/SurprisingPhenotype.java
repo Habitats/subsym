@@ -45,15 +45,12 @@ public class SurprisingPhenotype implements Phenotype {
       return distinctCount + i; //
     }).average().getAsDouble();
 
-    return unique / (((double) ints.size() - 1));
+    return unique / (double) (ints.size() - 1);
   }
 
   private static int getDistinctCount(List<Integer> ints, List<Integer> shifted, int startIndex) {
     return (int) IntStream.range(0, ints.size() - 1 - startIndex) //
-        .mapToObj(i -> {
-          String s = Integer.toString(ints.get(i)) + ":" + Integer.toString(shifted.get(i));
-          return s;
-        }) //
+        .mapToObj(i -> Integer.toString(ints.get(i)) + ":" + Integer.toString(shifted.get(i))) //
         .distinct().count();
   }
 
@@ -67,8 +64,9 @@ public class SurprisingPhenotype implements Phenotype {
 
   @Override
   public String toString() {
-    return surprisingGenotype.toList().stream().map(v -> String.format("%" + maxWidth + "d", v)) //
-        .collect(Collectors.joining(", ", String.format(" > Phenotype > S: %d - L: %d - Seq: ",
+    return surprisingGenotype.toList().stream() //
+        .map(v -> String.format("%" + maxWidth + "d", v)) //
+        .collect(Collectors.joining(", ", String.format(" > Phenotype > S: %d - L: %d - Seq: ", //
                                                         surprisingGenotype.getAlphabet().size(),
                                                         surprisingGenotype.toList().size()), ""));
   }

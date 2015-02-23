@@ -23,6 +23,11 @@ public class Lolz extends GeneticProblem {
   }
 
   @Override
+  protected double getCrossoverCut() {
+    return Math.random();
+  }
+
+  @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize())
         .forEach(v -> getPopulation().add(new LolzGenotype().setRandom(bitVectorSize)));

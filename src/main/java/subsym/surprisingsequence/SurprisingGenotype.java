@@ -16,7 +16,12 @@ public class SurprisingGenotype extends Genotype {
   private SurprisingPhenotype phenotype;
   private int groupSize;
 
+  public SurprisingGenotype(int bitGroupSize) {
+    this.groupSize = bitGroupSize;
+  }
+
   public SurprisingGenotype() {
+    this(1);
   }
 
   @Override
@@ -29,14 +34,15 @@ public class SurprisingGenotype extends Genotype {
 
   public SurprisingGenotype(List<Integer> permutation, List<Integer> alphabet) {
     this.alphabet = alphabet;
-    groupSize = getBitGroupSize(permutation);
+    groupSize = getBitGroupSize(alphabet);
     setSize(groupSize * permutation.size());
     bits = toBitSet(permutation, groupSize);
     phenotype = new SurprisingPhenotype(this);
 //    Log.v(TAG, phenotype);
   }
 
-  public int getGroupSize() {
+  @Override
+  public int getBitGroupSize() {
     return groupSize;
   }
 
@@ -50,12 +56,9 @@ public class SurprisingGenotype extends Genotype {
     return phenotype;
   }
 
+
   public void setBits(BitSet bits) {
     this.bits = bits;
-  }
-
-  public List<Integer> toList() {
-    return toList(groupSize);
   }
 
   public List<Integer> getAlphabet() {

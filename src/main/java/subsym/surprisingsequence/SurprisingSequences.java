@@ -31,6 +31,11 @@ public class SurprisingSequences extends GeneticProblem {
   }
 
   @Override
+  protected double getCrossoverCut() {
+    return Math.random();
+  }
+
+  @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
       List<Integer> permutation = createPermutation(alphabet, length);

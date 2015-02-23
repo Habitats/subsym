@@ -57,8 +57,10 @@ public abstract class GeneticProblem {
   }
 
   public void crossOver() {
-    population.crossOver(crossOverRate, matingMode);
+    population.crossOver(crossOverRate, getCrossoverCut(), matingMode);
   }
+
+  protected abstract double getCrossoverCut();
 
   public void mutate() {
     population.mutate(genomeMutationRate, genotypeMutationRate);

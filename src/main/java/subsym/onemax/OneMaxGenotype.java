@@ -31,4 +31,9 @@ public class OneMaxGenotype extends Genotype implements Phenotype {
   public Phenotype getPhenotype() {
     return this;
   }
+
+  @Override
+  public int getBitGroupSize() {
+    return 1;
+  }
 }

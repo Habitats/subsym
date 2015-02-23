@@ -22,6 +22,11 @@ public class LolzGenotype extends Genotype {
   }
 
   @Override
+  public int getBitGroupSize() {
+    return 1;
+  }
+
+  @Override
   public Genotype setRandom(int size) {
     super.setRandom(size);
     phenotype = new LolzPhenotype(this);
