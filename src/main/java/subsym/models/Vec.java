@@ -1,4 +1,4 @@
-package subsym.yoloswag;
+package subsym.models;
 
 import java.util.Arrays;
 

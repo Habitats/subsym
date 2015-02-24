@@ -4,7 +4,7 @@ import java.awt.*;
 
 import subsym.boids.BoidAdapter;
 import subsym.gui.ColorUtils;
-import subsym.yoloswag.Vec;
+import subsym.models.Vec;
 
 /**
  * Created by Patrick on 30.01.2015.

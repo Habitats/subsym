@@ -10,7 +10,7 @@ import javax.swing.*;
 
 import subsym.Log;
 import subsym.boids.entities.Entity;
-import subsym.yoloswag.AIAdapter;
+import subsym.models.AIAdapter;
 
 
 /**

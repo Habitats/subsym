@@ -6,9 +6,9 @@ import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
 import subsym.boids.entities.Entity;
-import subsym.yoloswag.AIAdapter;
-import subsym.yoloswag.AIAdapterListener;
-import subsym.yoloswag.Vec;
+import subsym.models.AIAdapter;
+import subsym.models.AIAdapterListener;
+import subsym.models.Vec;
 
 /**
  * Created by Patrick on 24.08.2014.
