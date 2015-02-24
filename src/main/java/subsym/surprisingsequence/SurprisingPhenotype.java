@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.ga.Phenotype;
+import subsym.genetics.Phenotype;
 
 /**
  * Created by anon on 23.02.2015.

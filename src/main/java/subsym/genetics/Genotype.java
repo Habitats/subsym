@@ -1,4 +1,4 @@
-package subsym.ga;
+package subsym.genetics;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

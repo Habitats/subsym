@@ -2,7 +2,7 @@ package subsym.onemax;
 
 import java.util.stream.IntStream;
 
-import subsym.ga.GeneticProblem;
+import subsym.genetics.GeneticProblem;
 
 /**
  * Created by anon on 21.02.2015.

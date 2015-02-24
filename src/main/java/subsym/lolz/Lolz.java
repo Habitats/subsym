@@ -2,7 +2,7 @@ package subsym.lolz;
 
 import java.util.stream.IntStream;
 
-import subsym.ga.GeneticProblem;
+import subsym.genetics.GeneticProblem;
 
 /**
  * Created by anon on 23.02.2015.

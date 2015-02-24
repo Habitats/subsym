@@ -1,4 +1,4 @@
-package subsym.ga;
+package subsym.genetics;
 
 /**
  * Created by anon on 21.02.2015.

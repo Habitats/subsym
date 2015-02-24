@@ -1,7 +1,7 @@
 package subsym.onemax;
 
-import subsym.ga.Genotype;
-import subsym.ga.Phenotype;
+import subsym.genetics.Genotype;
+import subsym.genetics.Phenotype;
 
 /**
  * Created by anon on 22.02.2015.

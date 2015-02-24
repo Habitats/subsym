@@ -2,8 +2,8 @@ package subsym.lolz;
 
 import java.util.BitSet;
 
-import subsym.ga.Genotype;
-import subsym.ga.Phenotype;
+import subsym.genetics.Genotype;
+import subsym.genetics.Phenotype;
 
 /**
  * Created by anon on 23.02.2015.

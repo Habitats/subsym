@@ -1,4 +1,4 @@
-package subsym.ga;
+package subsym.genetics;
 
 import com.google.common.collect.MinMaxPriorityQueue;
 

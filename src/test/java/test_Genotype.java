@@ -5,9 +5,9 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import subsym.ga.GeneticProblem;
-import subsym.ga.Genotype;
-import subsym.ga.Population;
+import subsym.genetics.GeneticProblem;
+import subsym.genetics.Genotype;
+import subsym.genetics.Population;
 import subsym.lolz.LolzGenotype;
 import subsym.onemax.OneMaxGenotype;
 import subsym.surprisingsequence.SurprisingGenotype;

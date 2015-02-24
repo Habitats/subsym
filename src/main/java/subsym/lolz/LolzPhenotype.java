@@ -3,7 +3,7 @@ package subsym.lolz;
 import java.util.Iterator;
 import java.util.List;
 
-import subsym.ga.Phenotype;
+import subsym.genetics.Phenotype;
 
 /**
  * Created by anon on 23.02.2015.

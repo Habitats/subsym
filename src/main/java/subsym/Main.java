@@ -13,10 +13,10 @@ import java.util.stream.IntStream;
 import javax.swing.*;
 
 import subsym.boids.Boids;
-import subsym.ga.GeneticEngine;
-import subsym.ga.GeneticProblem;
-import subsym.ga.GeneticProblem.AdultSelection;
-import subsym.ga.GeneticProblem.MateSelection;
+import subsym.genetics.GeneticEngine;
+import subsym.genetics.GeneticProblem;
+import subsym.genetics.GeneticProblem.AdultSelection;
+import subsym.genetics.GeneticProblem.MateSelection;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
