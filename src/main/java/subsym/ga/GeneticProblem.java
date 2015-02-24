@@ -14,7 +14,7 @@ public abstract class GeneticProblem {
   }
 
   public enum MateSelection {
-    FITNESS_PROPORTIONATE, SIGMA_SCALING, TOURNAMENT, UNKNOWN
+    FITNESS_PROPORTIONATE, SIGMA_SCALING, TOURNAMENT
   }
 
   protected final MateSelection matingMode;
@@ -73,6 +73,11 @@ public abstract class GeneticProblem {
   public abstract void initPopulation();
 
   public abstract boolean solution();
+
+  public String getId() {
+    return String.format("CR: %.2f - GMR: %.2f IMR: %.2f - AS: %s - MS: %s", //
+                         crossOverRate, genomeMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
+  }
 
   @Override
   public String toString() {

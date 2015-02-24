@@ -1,13 +1,20 @@
 package subsym;
 
+
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.*;
 
 import subsym.boids.Boids;
 import subsym.ga.GeneticEngine;
+import subsym.ga.GeneticProblem;
 import subsym.ga.GeneticProblem.AdultSelection;
 import subsym.ga.GeneticProblem.MateSelection;
 import subsym.gui.AICanvas;
@@ -81,8 +88,8 @@ public class Main {
     double genotypeMutationRate = .02;
     double genomeMutationRate = .0002;
     double crossOverRate = 1;
-    Log.v(TAG, GeneticEngine.solve(new Lolz(20, 1000, crossOverRate, genomeMutationRate, genotypeMutationRate,//
-                                            AdultSelection.OVER_PRODUCTION, MateSelection.TOURNAMENT)));
+    Log.v(TAG, GeneticEngine.solve(new Lolz(20, 100, crossOverRate, genomeMutationRate, genotypeMutationRate,//
+                                            AdultSelection.OVER_PRODUCTION, MateSelection.TOURNAMENT), true));
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
   }
@@ -93,28 +100,71 @@ public class Main {
     double genomeMutationRate = .00002;
     double crossOverRate = 1;
     Log.v(TAG, GeneticEngine.solve(new OneMax(20, 1000, crossOverRate, genomeMutationRate, genotypeMutationRate,//
-                                              AdultSelection.MIXING, MateSelection.TOURNAMENT)));
+                                              AdultSelection.MIXING, MateSelection.TOURNAMENT), true));
 
 //    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
   }
 
   private static void surprisingSequence() {
-//    double crossOverRate = .5;
-    double genotypeMutationRate = .2;
-    double genomeMutationRate = .001;
+//    profileSurprisingSequence();
+    profileSingleSurprisingSequence();
+
+//    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
+  }
+
+  private static void profileSingleSurprisingSequence() {
+    double crossOverRate = .5;
+    double genotypeMutationRate = .02;
+    double genomeMutationRate = .01;
+    AdultSelection adultSelectionMode = AdultSelection.FULL_TURNOVER;
+    MateSelection mateSelectionMode = MateSelection.FITNESS_PROPORTIONATE;
+    int alphabetSize = 40;
+    int populationSize = 20;
+    for (int length = 2; length < alphabetSize * 3; length++) {
+      SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, //
+                                                            length, crossOverRate, genomeMutationRate,
+                                                            genotypeMutationRate, adultSelectionMode,
+                                                            mateSelectionMode);
+      GeneticProblem solution = GeneticEngine.solve(problem, false);
+      Log.v(TAG, solution);
+    }
+  }
+
+  private static void profileSurprisingSequence() {
+    //    double crossOverRate = .5;
+//    double genotypeMutationRate = .02;
+//    double genomeMutationRate = .01;
+    AdultSelection adultSelectionMode = AdultSelection.FULL_TURNOVER;
+    MateSelection mateSelectionMode = MateSelection.FITNESS_PROPORTIONATE;
     double crossOverRate = 1;
     int alphabetSize = 10;
     int populationSize = 20;
-    int length = 9;
-    IntStream.range(2, 30).forEach(len -> {
-      SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, len, crossOverRate,  //
-                                                            genomeMutationRate, genotypeMutationRate,
-                                                            AdultSelection.OVER_PRODUCTION,
-                                                            MateSelection.SIGMA_SCALING);
-      Log.v(TAG, GeneticEngine.solve(problem));
-    });
+    int length = 4;
+    GeneticRun runs = new GeneticRun();
+//    for (AdultSelection adultSelectionMode : AdultSelection.values()) {
+//      for (MateSelection mateSelectionMode : MateSelection.values()) {
+    for (Double genomeMutationRate : IntStream.range(2, 7)//
+        .mapToDouble(i -> (i + 0.1) / 10.).boxed().collect(Collectors.toList())) {
+      for (Double genotypeMutationRate : IntStream.range(2, 7) //
+          .mapToDouble(i -> (i + 0.1) / 10.).boxed().collect(Collectors.toList())) {
 
-//    averageOver(genotypeMutationRate, genomeMutationRate, crossOverRate, 1000);
+        for (Integer len : IntStream.range(13, 17).boxed().collect(Collectors.toList())) {
+          for (int i = 0; i < 10; i++) {
+            SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, //
+                                                                  len, crossOverRate, genomeMutationRate,
+                                                                  genotypeMutationRate, adultSelectionMode,
+                                                                  mateSelectionMode);
+            GeneticProblem solution = GeneticEngine.solve(problem, false);
+            Log.v(TAG, solution);
+            runs.add(solution);
+          }
+        }
+//      }
+//    }
+      }
+    }
+
+    Log.v(TAG, "Best: " + runs.getBest());
   }
 
   private static void averageOver(double genotypeMutationRate, double genomeMutationRate, double crossOverRate,
@@ -140,7 +190,7 @@ public class Main {
   private static int getGenerations(double genotypeMutationRate, double genomeMutationRate, double crossOverRate,
                                     AdultSelection as, MateSelection mateSelection) {
     return GeneticEngine
-        .solve(new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as, mateSelection))
+        .solve(new OneMax(20, 20, crossOverRate, genomeMutationRate, genotypeMutationRate, as, mateSelection), false)
         .generations();
   }
 
@@ -148,4 +198,28 @@ public class Main {
     new Thread(new Boids()).start();
   }
 
+  private static class GeneticRun {
+
+    private List<GeneticProblem> runs = new ArrayList<>();
+
+    public void add(GeneticProblem solution) {
+      runs.add(solution);
+    }
+
+    public String getBest() {
+      Map<String, Double> avgMap = runs.stream()//
+          .map(p -> p.getId()).distinct() //
+          .collect(Collectors.toMap(p -> p, p -> runs.stream() //
+              .filter(p2 -> p.equals(p2.getId())) //
+              .mapToDouble(p2 -> p2.generations()) //
+              .average().getAsDouble()));
+      Double bestAvg = avgMap.values().stream().min(Comparator.<Double>naturalOrder()).get();
+      String
+          best =
+          "Best Average: " + bestAvg + " - " + avgMap.keySet().stream().filter(p -> avgMap.get(p) == bestAvg)
+              .findFirst().get();
+
+      return best;
+    }
+  }
 }

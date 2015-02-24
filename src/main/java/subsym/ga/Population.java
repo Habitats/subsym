@@ -79,10 +79,6 @@ public class Population {
         p1 = getTournamentParent(populationList);
         p2 = getTournamentParent(populationList);
         break;
-      case UNKNOWN:
-        p1 = getSigmaScaledParent(populationList);
-        p2 = getSigmaScaledParent(populationList);
-        break;
     }
 
     Genotype c1 = Genotype.crossOver(p1, p1, cut);

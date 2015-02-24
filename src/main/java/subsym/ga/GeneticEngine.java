@@ -11,9 +11,8 @@ import subsym.onemax.OneMax;
 public class GeneticEngine {
 
   private static final String TAG = GeneticEngine.class.getSimpleName();
-  private static boolean loggingEnabled = false;
 
-  public static GeneticProblem solve(GeneticProblem problem) {
+  public static GeneticProblem solve(GeneticProblem problem, boolean loggingEnabled) {
     problem.initPopulation();
     int count = 0;
     long start = System.currentTimeMillis();
@@ -30,11 +29,13 @@ public class GeneticEngine {
         Log.v(TAG, "Gen ... " + count);
       }
     }
-    Log.v(TAG, "Search took: " + (System.currentTimeMillis() - start) / 1000. + " s");
+    if (loggingEnabled) {
+      Log.v(TAG, "Search took: " + (System.currentTimeMillis() - start) / 1000. + " s");
+    }
     return problem;
   }
 
   public static double solve(OneMax oneMax, int rounds) {
-    return IntStream.range(0, rounds).map(i -> solve(oneMax).generations()).average().getAsDouble();
+    return IntStream.range(0, rounds).map(i -> solve(oneMax,false).generations()).average().getAsDouble();
   }
 }
