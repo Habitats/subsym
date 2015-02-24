@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +49,7 @@ public class Population {
       case MIXING:
         currentPopulation.stream().forEach(v -> v.tagForRemoval());
         currentPopulation.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
-        freeSpots = (int) currentPopulation.stream().filter(v -> v.shouldDie()).count();
+        freeSpots = maxPopulationSize - (int) currentPopulation.stream().filter(v -> !v.shouldDie()).count();
         break;
     }
   }
@@ -134,14 +135,14 @@ public class Population {
     return Math.sqrt(S / (k - 2));
   }
 
-  public void mutate(double genomeMutationRate, double genotypeMutationRate) {
+  public void mutate(double populationMutationRate, double genotypeMutationRate) {
     List<Genotype> children = new ArrayList<>(currentPopulation);
 
-    int numBitsToMutate = (int) Math.ceil(genomeMutationRate * currentPopulation.peek().size());
-    int genotypesToMutate = (int) Math.ceil(genotypeMutationRate * maxPopulationSize);
+    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peek().size());
+    int genotypesToMutate = (int) Math.ceil(populationMutationRate * children.size() - 1);
     Random r = new Random();
-    for (int i = 0; i < genotypesToMutate; i++) {
-      Collections.swap(children, i, i + r.nextInt(children.size() - i));
+    for (int i = 0; i < (genotypesToMutate); i++) {
+      Collections.swap(children, i, r.nextInt(children.size() - i));
     }
     children.stream() //
         .filter(v -> !v.shouldDie()) //
@@ -179,7 +180,8 @@ public class Population {
 
   public void mixingSelection() {
     currentPopulation.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
-    currentPopulation.removeIf(v -> v.shouldDie());
+    Predicate<Genotype> filter = v -> v.shouldDie();
+    currentPopulation.removeIf(filter);
     currentPopulation.addAll(nextGeneration);
     while (currentPopulation.size() > maxPopulationSize) {
       currentPopulation.removeLast();

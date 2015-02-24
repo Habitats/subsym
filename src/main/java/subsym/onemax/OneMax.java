@@ -12,9 +12,9 @@ public class OneMax extends GeneticProblem {
   private static final String TAG = GeneticProblem.class.getSimpleName();
   private int bitVectorSize;
 
-  public OneMax(int populationSize, int bitVectorSize, double crossOverRate, double genomeMutationRate,
+  public OneMax(int populationSize, int bitVectorSize, double crossOverRate, double populationMutationRate,
                 double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode) {
-    super(populationSize, crossOverRate, genomeMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
+    super(populationSize, crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
     this.bitVectorSize = bitVectorSize;
   }
 

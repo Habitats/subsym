@@ -16,9 +16,9 @@ public class SurprisingSequences extends GeneticProblem {
   private final int length;
 
   public SurprisingSequences(int populationSize, int alphabetSize, int length, double crossOverRate,
-                             double genomeMutationRate, double genotypeMutationRate, AdultSelection adultSelectMode,
+                             double populationMutationRate, double genotypeMutationRate, AdultSelection adultSelectMode,
                              MateSelection matingMode) {
-    super(populationSize, crossOverRate, genomeMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
+    super(populationSize, crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
 
     this.length = length;
     alphabet = IntStream.range(0, alphabetSize).boxed().collect(Collectors.toList());

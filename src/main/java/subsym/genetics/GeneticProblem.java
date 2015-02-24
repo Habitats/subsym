@@ -22,14 +22,14 @@ public abstract class GeneticProblem {
   private Population population;
   protected double crossOverRate = .8;
   protected double genotypeMutationRate = .02;
-  protected double genomeMutationRate = .02;
+  protected double populationMutationRate = .02;
   protected AdultSelection adultSelectMode = AdultSelection.OVER_PRODUCTION;
 
-  public GeneticProblem(int populationSize, double crossOverRate, double genomeMutationRate,
+  public GeneticProblem(int populationSize, double crossOverRate, double populationMutationRate,
                         double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode) {
     this.genotypeMutationRate = genotypeMutationRate;
     this.crossOverRate = crossOverRate;
-    this.genomeMutationRate = genomeMutationRate;
+    this.populationMutationRate = populationMutationRate;
     this.adultSelectMode = adultSelectMode;
     this.populationSize = populationSize;
     population = new Population(populationSize);
@@ -63,7 +63,7 @@ public abstract class GeneticProblem {
   protected abstract double getCrossoverCut();
 
   public void mutate() {
-    population.mutate(genomeMutationRate, genotypeMutationRate);
+    population.mutate(populationMutationRate, genotypeMutationRate);
   }
 
   public void log() {
@@ -76,7 +76,7 @@ public abstract class GeneticProblem {
 
   public String getId() {
     return String.format("CR: %.2f - GMR: %.2f IMR: %.2f - AS: %s - MS: %s", //
-                         crossOverRate, genomeMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
+                         crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
   }
 
   @Override
@@ -86,7 +86,7 @@ public abstract class GeneticProblem {
     String l1 = "";
     String l2 = "";
     return String.format("CR: %.2f - GMR: %.2f IMR: %.2f - AS: %" + l1 + "s - MS: %" + l2 + "s > Population > %s", //
-                         crossOverRate, genomeMutationRate, genotypeMutationRate, adultSelectMode, matingMode,
+                         crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode,
                          population);
   }
 }
