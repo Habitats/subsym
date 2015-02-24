@@ -1,9 +1,9 @@
 package subsym;
 
-import com.google.common.collect.MinMaxPriorityQueue;
-
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,12 +16,13 @@ import subsym.genetics.Genotype;
 public class UniquePriorityQueue {
 
   private final boolean ensureUnique;
-  private MinMaxPriorityQueue<Genotype> queue;
-  private Set<String> dupeSet;
+  private PriorityQueue<Genotype> queue;
+  private Set<Genotype> dupeSet;
 
   public UniquePriorityQueue(boolean ensureUnique) {
     this.ensureUnique = ensureUnique;
-    queue = MinMaxPriorityQueue.create();
+//    queue = MinMaxPriorityQueue.create();
+    queue = new PriorityQueue<>();
     dupeSet = new HashSet<>();
     checkConsistency();
   }
@@ -32,9 +33,9 @@ public class UniquePriorityQueue {
 
   public boolean add(Genotype child) {
     boolean b;
-    if (!ensureUnique || !dupeSet.contains(child.getBitsString())) {
+    if (!ensureUnique || !dupeSet.contains(child)) {
       queue.add(child);
-      dupeSet.add(child.getBitsString());
+      dupeSet.add(child);
       b = true;
     } else {
       b = false;
@@ -55,9 +56,9 @@ public class UniquePriorityQueue {
   }
 
   public void addAll(Collection<Genotype> nextGeneration) {
-    nextGeneration.stream().filter(v -> !ensureUnique || !dupeSet.contains(v.getBitsString())).forEach(v -> {
+    nextGeneration.stream().filter(v -> !ensureUnique || !dupeSet.contains(v)).forEach(v -> {
       queue.add(v);
-      dupeSet.add(v.getBitsString());
+      dupeSet.add(v);
     });
     checkConsistency();
   }
@@ -75,23 +76,32 @@ public class UniquePriorityQueue {
   }
 
   public void removeLast() {
-    dupeSet.remove(queue.removeLast().getBitsString());
+//    dupeSet.remove(queue.removeLast());
+    Genotype v = queue.stream().sorted(Comparator.<Genotype>reverseOrder()).findFirst().get();
+    queue.remove(v);
+    dupeSet.remove(v);
     checkConsistency();
   }
 
   public boolean removeIf(Predicate<Genotype> filter) {
-    queue.stream().filter(filter).forEach(v -> dupeSet.remove(v.getBitsString()));
-    boolean b = queue.removeIf(filter);
     checkConsistency();
+    dupeSet.removeIf(filter);
+    boolean b = queue.removeIf(filter);
+    try {
+      checkConsistency();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     return b;
   }
 
-  public Genotype peekLast() {
-    return queue.peekLast();
+  public Genotype peekWorst() {
+    return queue.stream().sorted(Comparator.<Genotype>reverseOrder()).findFirst().get();
   }
 
-  public Genotype peekFirst() {
-    return queue.peekFirst();
+  public Genotype peekBest() {
+//    return queue.peekFirst();
+    return queue.peek();
   }
 
   public Collection<Genotype> get() {

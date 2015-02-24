@@ -59,9 +59,9 @@ public class Main {
 //        buildFrame(panel, null, null);
 
 //        broid();
-//        oneMax();
+        oneMax();
 //        lolz();
-        surprisingSequence();
+//        surprisingSequence();
       }
 
 
@@ -84,26 +84,26 @@ public class Main {
 
   private static void lolz() {
 //    double crossOverRate = .5;
-    double genotypeMutationRate = .02;
-    double populationMutationRate = .0002;
+    double genotypeMutationRate = .000001;
+    double populationMutationRate = 0.2;
     double crossOverRate = 1;
-    boolean ensureUnique = true;
+    boolean ensureUnique = false;
     Log.v(TAG, GeneticEngine.solve(new Lolz(20, 100, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                            AdultSelection.OVER_PRODUCTION, MateSelection.TOURNAMENT,ensureUnique), true));
+                                            AdultSelection.MIXING, MateSelection.SIGMA_SCALING,ensureUnique), true));
 
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
   }
 
   private static void oneMax() {
 //    double crossOverRate = .5;
-    double genotypeMutationRate = .00001;
+    double genotypeMutationRate = .02;
     double populationMutationRate = .9;
     double crossOverRate = 1;
     boolean ensureUnique = true;
     GeneticRun run = new GeneticRun();
     IntStream.range(0, 100).forEach(i -> run
-        .add(GeneticEngine.solve(new OneMax(20, 40, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                            AdultSelection.FULL_TURNOVER, MateSelection.TOURNAMENT,ensureUnique), false)));
+        .add(GeneticEngine.solve(new OneMax(25, 40, crossOverRate, populationMutationRate, genotypeMutationRate,//
+                                            AdultSelection.FULL_TURNOVER, MateSelection.FITNESS_PROPORTIONATE,ensureUnique), true)));
 
     Log.v(TAG, run.getBest());
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
@@ -118,9 +118,9 @@ public class Main {
 
   private static void profileSingleSurprisingSequence() {
     double crossOverRate = 1;
-    double genomeMutationRate = .00004;
-    double populationMutationRate = .8;
-    AdultSelection adultSelectionMode = AdultSelection.MIXING;
+    double genomeMutationRate = .0001;
+    double populationMutationRate = 1;
+    AdultSelection adultSelectionMode = AdultSelection.OVER_PRODUCTION;
     MateSelection mateSelectionMode = MateSelection.TOURNAMENT;
     int alphabetSize = 10;
     int populationSize = 40;

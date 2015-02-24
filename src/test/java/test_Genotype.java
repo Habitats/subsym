@@ -120,12 +120,22 @@ public class test_Genotype {
 
   @Test
   public void test_lolzGenotypeToPhenotype() {
+    Population p = new Population(10, true);
+    Genotype i = new LolzGenotype().fromString("1011000000");
+    assertEquals((int) i.getPhenotype().fitness(), 1);
     Genotype v = new LolzGenotype().fromString("1111000000");
     assertEquals((int) v.getPhenotype().fitness(), 4);
     Genotype u = new LolzGenotype().fromString("0011110000");
     assertEquals((int) u.getPhenotype().fitness(), 2);
     Genotype w = new LolzGenotype().fromString("1111111111");
     assertEquals((int) w.getPhenotype().fitness(), 10);
+
+    p.add(v);
+    p.add(u);
+    p.add(w);
+    p.add(i);
+    assertEquals(p.getBestGenotype(), w);
+    assertEquals(p.getWorstGenotype(), i);
   }
 
   @Test
@@ -243,7 +253,7 @@ public class test_Genotype {
   }
 
   public Population getPopulation(int size) {
-    Population p = new Population(size,false);
+    Population p = new Population(size, false);
     while (p.size() < size) {
       p.add(new OneMaxGenotype().setRandom(10));
     }

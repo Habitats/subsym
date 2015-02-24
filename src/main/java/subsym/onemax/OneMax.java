@@ -20,7 +20,7 @@ public class OneMax extends GeneticProblem {
 
   @Override
   public boolean solution() {
-    return getPopulation().getBestGenotype().fitness() == bitVectorSize;
+    return getPopulation().getBestGenotype().fitness() == 1;
   }
 
   @Override

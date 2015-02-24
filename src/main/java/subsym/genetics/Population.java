@@ -95,7 +95,6 @@ public class Population {
 
     addToNextGeneration(c1);
     addToNextGeneration(c2);
-
   }
 
   private void addToNextGeneration(Genotype child) {
@@ -150,15 +149,15 @@ public class Population {
   public void mutate(double populationMutationRate, double genotypeMutationRate) {
     List<Genotype> children = new ArrayList<>(currentPopulation.get());
 
-    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peekFirst().size());
-    int genotypesToMutate = (int) Math.ceil(populationMutationRate * (children.size() - 1));
+    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peekBest().size());
+    int numIndividualsToMutate = (int) Math.ceil(populationMutationRate * (children.size()));
     Random r = new Random();
-    for (int i = 0; i < (genotypesToMutate); i++) {
+    for (int i = 0; i < (numIndividualsToMutate); i++) {
       Collections.swap(children, i, r.nextInt(children.size() - i));
     }
     children.stream() //
-//        .filter(v -> !v.shouldDie()) //
-        .limit(genotypesToMutate) //
+        .filter(v -> !v.shouldDie()) //
+        .limit(numIndividualsToMutate) //
         .forEach(v -> v.mutate(numBitsToMutate));
   }
 
@@ -224,11 +223,11 @@ public class Population {
   }
 
   public Genotype getWorstGenotype() {
-    return currentPopulation.peekLast();
+    return currentPopulation.peekWorst();
   }
 
   public Genotype getBestGenotype() {
-    return currentPopulation.peekFirst();
+    return currentPopulation.peekBest();
   }
 
   public int size() {
@@ -249,6 +248,6 @@ public class Population {
                          currentGeneration,
                          currentPopulation.stream().mapToDouble(v -> v.fitness()).max().getAsDouble(),
                          currentPopulation.stream().mapToDouble(v -> v.fitness()).average().getAsDouble(),
-                         standardDeviation(currentPopulation.get()), currentPopulation.peekFirst());
+                         standardDeviation(currentPopulation.get()), currentPopulation.peekBest());
   }
 }

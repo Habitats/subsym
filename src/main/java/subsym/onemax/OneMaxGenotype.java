@@ -19,12 +19,16 @@ public class OneMaxGenotype extends Genotype implements Phenotype {
 
   @Override
   public double fitness() {
-    return getBits().cardinality();
+    return getBits().cardinality() / (double) size();
   }
 
   @Override
   public void copy(Genotype copy) {
+  }
 
+  @Override
+  public String toString() {
+    return super.toString() + " - Fitness: " + fitness();
   }
 
   @Override
