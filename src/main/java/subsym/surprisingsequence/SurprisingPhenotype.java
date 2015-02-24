@@ -26,7 +26,12 @@ public class SurprisingPhenotype implements Phenotype {
   @Override
   public double fitness() {
 //    return getLocalSurprisingSequenceFitness(surprisingGenotype.toList());
-    return getGlobalSurprisingSequenceFitness(surprisingGenotype.toList());
+    return isValidGenotype() ? getGlobalSurprisingSequenceFitness(surprisingGenotype.toList()) : 0;
+  }
+
+  public boolean isValidGenotype() {
+    return !surprisingGenotype.toList().stream() //
+        .filter(v -> !surprisingGenotype.getAlphabet().contains(v)).findFirst().isPresent();
   }
 
   public static double getLocalSurprisingSequenceFitness(List<Integer> ints) {

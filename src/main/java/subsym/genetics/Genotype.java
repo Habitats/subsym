@@ -197,7 +197,7 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   @Override
   public int compareTo(Genotype o) {
-    return (int) (o.fitness() - fitness());
+    return Double.compare(o.fitness(), fitness());
   }
 
 }

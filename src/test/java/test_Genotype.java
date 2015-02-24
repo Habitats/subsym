@@ -1,10 +1,12 @@
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import subsym.UniquePriorityQueue;
 import subsym.genetics.GeneticProblem;
 import subsym.genetics.Genotype;
 import subsym.genetics.Population;
@@ -58,7 +60,7 @@ public class test_Genotype {
 
   @Test
   public void test_populationMutate() {
-    Population p = getPopulation(10);
+    Population p = getPopulation(1000);
     Genotype v = new OneMaxGenotype().fromString("1111111111");
     Genotype u = new OneMaxGenotype().fromString("0000000000");
     p.add(v);
@@ -71,9 +73,12 @@ public class test_Genotype {
 
   @Test
   public void test_populationMisc() {
-    Population p = getPopulation(10);
+    Population p = getPopulation(0);
     Genotype v = new OneMaxGenotype().fromString("1111111111");
     Genotype u = new OneMaxGenotype().fromString("0000000000");
+    while (p.size() < 10) {
+      p.add(new OneMaxGenotype().setRandom(10));
+    }
     p.add(v);
     p.add(u);
 
@@ -206,9 +211,42 @@ public class test_Genotype {
     assertEquals(fl5, 1., 0);
   }
 
+  @Test
+  public void test_uniquePopulationQueue() {
+    UniquePriorityQueue q = new UniquePriorityQueue(true);
+    IntStream.range(0, 1000).forEach(v -> q.add(new OneMaxGenotype().setRandom(10)));
+
+    assertEquals(q.size(), q.unique());
+
+    List<Genotype> lst = new ArrayList<>();
+    IntStream.range(0, 1000).forEach(v -> {
+      Genotype e = new OneMaxGenotype().setRandom(10);
+      q.add(e);
+      lst.add(e);
+    });
+
+    q.addAll(lst);
+    assertEquals(q.size(), q.unique());
+
+    q.removeIf(v -> q.contains(v) && lst.contains(v));
+    assertEquals(q.size(), q.unique());
+  }
+
+  @Test
+  public void test_remove() {
+    UniquePriorityQueue q = new UniquePriorityQueue(false);
+    int size = 1000;
+    IntStream.range(0, size).forEach(v -> q.add(new OneMaxGenotype().setRandom(10)));
+    assertEquals(q.size(), size);
+    IntStream.range(0, 200).forEach(v -> q.removeLast());
+    assertEquals(q.size(), size - 200);
+  }
+
   public Population getPopulation(int size) {
-    Population p = new Population(size);
-    IntStream.range(0, size).forEach(i -> p.add(new OneMaxGenotype().setRandom(size)));
+    Population p = new Population(size,false);
+    while (p.size() < size) {
+      p.add(new OneMaxGenotype().setRandom(10));
+    }
     return p;
   }
 }

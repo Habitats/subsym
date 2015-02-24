@@ -13,8 +13,8 @@ public class OneMax extends GeneticProblem {
   private int bitVectorSize;
 
   public OneMax(int populationSize, int bitVectorSize, double crossOverRate, double populationMutationRate,
-                double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode) {
-    super(populationSize, crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode);
+                double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode,boolean ensureUnique) {
+    super(populationSize, crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode,ensureUnique);
     this.bitVectorSize = bitVectorSize;
   }
 

@@ -1,15 +1,14 @@
 package subsym.genetics;
 
-import com.google.common.collect.MinMaxPriorityQueue;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import subsym.UniquePriorityQueue;
 
 /**
  * Created by anon on 21.02.2015.
@@ -17,25 +16,26 @@ import java.util.stream.Collectors;
 public class Population {
 
   private final int maxPopulationSize;
-
-  private MinMaxPriorityQueue<Genotype> currentPopulation;
-  private List<Genotype> nextGeneration;
+  private final boolean ensureUnique;
+  private final UniquePriorityQueue currentPopulation;
+  private UniquePriorityQueue nextGeneration;
 
   private GeneticProblem.AdultSelection selectionMode;
 
-  public static double mixingRate = 0.4;
+  public static double mixingRate = 0.2;
   public static double overProductionRate = 2;
-  public static double tornamentLimit = .2;
+  public static double tournamentLimit = .2;
   private int freeSpots = 0;
   private int currentGeneration = 0;
 
-  public Population(int maxPopulationSize) {
+  public Population(int maxPopulationSize, boolean ensureUnique) {
     this.maxPopulationSize = maxPopulationSize;
-    currentPopulation = MinMaxPriorityQueue.create();
+    this.ensureUnique = ensureUnique;
+    currentPopulation = new UniquePriorityQueue(ensureUnique);
   }
 
   public void selectAdults(GeneticProblem.AdultSelection selectionMode) {
-    nextGeneration = new ArrayList<>();
+    nextGeneration = new UniquePriorityQueue(ensureUnique);
     this.selectionMode = selectionMode;
     switch (selectionMode) {
       case FULL_TURNOVER:
@@ -57,6 +57,12 @@ public class Population {
   public void crossOver(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
     while (getFreeSpots() > 0) {
       crossOverSingle(crossOverRate, cut, matingMode);
+    }
+  }
+
+  public void crossOver(double crossOverRate, GeneticProblem.MateSelection matingMode) {
+    while (getFreeSpots() > 0) {
+      crossOverSingle(crossOverRate, Math.random(), matingMode);
     }
   }
 
@@ -82,19 +88,25 @@ public class Population {
         break;
     }
 
-    Genotype c1 = Genotype.crossOver(p1, p1, cut);
-    Genotype c2 = Genotype.crossOver(p2, p2, cut);
+    Genotype c1 = Genotype.crossOver(p1, p2, cut);
+    Genotype c2 = Genotype.crossOver(p2, p1, cut);
     c1.setGeneration(currentGeneration + 1);
     c2.setGeneration(currentGeneration + 1);
-    nextGeneration.add(c1);
-    nextGeneration.add(c2);
 
-    freeSpots -= 2;
+    addToNextGeneration(c1);
+    addToNextGeneration(c2);
+
+  }
+
+  private void addToNextGeneration(Genotype child) {
+    if (freeSpots > 0 && nextGeneration.add(child)) {
+      freeSpots -= 1;
+    }
   }
 
   private Genotype getTournamentParent(List<Genotype> populationList) {
     Random r = new Random();
-    int limit = (int) (tornamentLimit * populationList.size());
+    int limit = (int) (tournamentLimit * populationList.size());
     for (int i = 0; i < limit; i++) {
       Collections.swap(populationList, i, i + r.nextInt(populationList.size() - i));
     }
@@ -136,16 +148,16 @@ public class Population {
   }
 
   public void mutate(double populationMutationRate, double genotypeMutationRate) {
-    List<Genotype> children = new ArrayList<>(currentPopulation);
+    List<Genotype> children = new ArrayList<>(currentPopulation.get());
 
-    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peek().size());
-    int genotypesToMutate = (int) Math.ceil(populationMutationRate * children.size() - 1);
+    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peekFirst().size());
+    int genotypesToMutate = (int) Math.ceil(populationMutationRate * (children.size() - 1));
     Random r = new Random();
     for (int i = 0; i < (genotypesToMutate); i++) {
       Collections.swap(children, i, r.nextInt(children.size() - i));
     }
     children.stream() //
-        .filter(v -> !v.shouldDie()) //
+//        .filter(v -> !v.shouldDie()) //
         .limit(genotypesToMutate) //
         .forEach(v -> v.mutate(numBitsToMutate));
   }
@@ -178,14 +190,21 @@ public class Population {
     }
   }
 
-  public void mixingSelection() {
-    currentPopulation.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
-    Predicate<Genotype> filter = v -> v.shouldDie();
-    currentPopulation.removeIf(filter);
+  private void mixingSelection() {
+    removeBadAdults();
+    addNextGeneration();
+  }
+
+  private void addNextGeneration() {
     currentPopulation.addAll(nextGeneration);
     while (currentPopulation.size() > maxPopulationSize) {
       currentPopulation.removeLast();
     }
+  }
+
+  private void removeBadAdults() {
+    currentPopulation.stream().sorted().limit(getAdultLimit()).forEach(v -> v.tagForRevival());
+    currentPopulation.removeIf(v -> v.shouldDie());
   }
 
   public void add(Genotype genotype) {
@@ -230,6 +249,6 @@ public class Population {
                          currentGeneration,
                          currentPopulation.stream().mapToDouble(v -> v.fitness()).max().getAsDouble(),
                          currentPopulation.stream().mapToDouble(v -> v.fitness()).average().getAsDouble(),
-                         standardDeviation(currentPopulation), currentPopulation.peek());
+                         standardDeviation(currentPopulation.get()), currentPopulation.peekFirst());
   }
 }

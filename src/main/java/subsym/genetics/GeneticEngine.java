@@ -19,8 +19,8 @@ public class GeneticEngine {
     while (!problem.solution()) {
       problem.select();
       problem.crossOver();
-      problem.cleanUp();
       problem.mutate();
+      problem.cleanUp();
       if (loggingEnabled) {
         problem.log();
       }

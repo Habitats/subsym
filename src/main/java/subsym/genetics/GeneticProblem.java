@@ -26,13 +26,14 @@ public abstract class GeneticProblem {
   protected AdultSelection adultSelectMode = AdultSelection.OVER_PRODUCTION;
 
   public GeneticProblem(int populationSize, double crossOverRate, double populationMutationRate,
-                        double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode) {
+                        double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode,
+                        boolean ensureUnique) {
     this.genotypeMutationRate = genotypeMutationRate;
     this.crossOverRate = crossOverRate;
     this.populationMutationRate = populationMutationRate;
     this.adultSelectMode = adultSelectMode;
     this.populationSize = populationSize;
-    population = new Population(populationSize);
+    population = new Population(populationSize, ensureUnique);
     this.matingMode = matingMode;
   }
 
@@ -57,7 +58,7 @@ public abstract class GeneticProblem {
   }
 
   public void crossOver() {
-    population.crossOver(crossOverRate, getCrossoverCut(), matingMode);
+    population.crossOver(crossOverRate, matingMode);
   }
 
   protected abstract double getCrossoverCut();
