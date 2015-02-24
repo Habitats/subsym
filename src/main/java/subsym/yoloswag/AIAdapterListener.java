@@ -1,4 +1,4 @@
-package subsym.MODELS;
+package subsym.yoloswag;
 
 /**
  * Created by Patrick on 24.08.2014.
