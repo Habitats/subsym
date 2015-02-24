@@ -1,4 +1,4 @@
-package subsym.models;
+package subsym.MODELS;
 
 /**
  * Created by Patrick on 24.08.2014.

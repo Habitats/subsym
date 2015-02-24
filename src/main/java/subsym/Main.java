@@ -114,12 +114,12 @@ public class Main {
 
   private static void profileSingleSurprisingSequence() {
     double crossOverRate = .5;
-    double genotypeMutationRate = .02;
-    double genomeMutationRate = .01;
-    AdultSelection adultSelectionMode = AdultSelection.FULL_TURNOVER;
-    MateSelection mateSelectionMode = MateSelection.FITNESS_PROPORTIONATE;
+    double genotypeMutationRate = .10;
+    double genomeMutationRate = .30;
+    AdultSelection adultSelectionMode = AdultSelection.MIXING;
+    MateSelection mateSelectionMode = MateSelection.TOURNAMENT;
     int alphabetSize = 40;
-    int populationSize = 20;
+    int populationSize = 40;
     for (int length = 2; length < alphabetSize * 3; length++) {
       SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, //
                                                             length, crossOverRate, genomeMutationRate,

@@ -7,7 +7,7 @@ import subsym.boids.BoidAdapter;
 import subsym.boids.entities.Entity;
 import subsym.boids.entities.Obstacle;
 import subsym.gui.AICanvas;
-import subsym.models.Vec;
+import subsym.MODELS.Vec;
 
 /**
  * Created by anon on 28.01.2015.

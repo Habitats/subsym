@@ -2,7 +2,7 @@ package subsym.boids.entities;
 
 import java.awt.*;
 
-import subsym.models.Vec;
+import subsym.MODELS.Vec;
 
 /**
  * Created by Patrick on 08.09.2014.

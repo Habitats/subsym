@@ -6,9 +6,9 @@ import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
 import subsym.boids.entities.Entity;
-import subsym.models.AIAdapter;
-import subsym.models.AIAdapterListener;
-import subsym.models.Vec;
+import subsym.MODELS.AIAdapter;
+import subsym.MODELS.AIAdapterListener;
+import subsym.MODELS.Vec;
 
 /**
  * Created by Patrick on 24.08.2014.

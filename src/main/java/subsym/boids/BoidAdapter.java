@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import subsym.boids.entities.Entity;
 import subsym.boids.entities.Predator;
 import subsym.gui.ColorUtils;
-import subsym.models.AIAdapter;
-import subsym.models.Vec;
+import subsym.MODELS.AIAdapter;
+import subsym.MODELS.Vec;
 
 /**
  * Created by Patrick on 30.01.2015.

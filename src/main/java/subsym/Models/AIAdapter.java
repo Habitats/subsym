@@ -1,4 +1,4 @@
-package subsym.models;
+package subsym.MODELS;
 
 import java.util.ArrayList;
 import java.util.Collection;

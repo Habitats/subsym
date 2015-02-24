@@ -1,7 +1,7 @@
 import org.junit.Test;
 
 
-import subsym.models.Vec;
+import subsym.MODELS.Vec;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
