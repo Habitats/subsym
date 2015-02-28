@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -194,10 +195,8 @@ public class Main {
               .mapToDouble(p2 -> p2.generations()) //
               .average().getAsDouble()));
       Double bestAvg = avgMap.values().stream().min(Comparator.<Double>naturalOrder()).get();
-      String
-          best =
-          "Best Average: " + bestAvg + " - " + avgMap.keySet().stream().filter(p -> avgMap.get(p) == bestAvg)
-              .findFirst().get();
+      Predicate<String> isBest = p -> avgMap.get(p) == bestAvg;
+      String best = "Best Average: " + bestAvg + " - " + avgMap.keySet().stream().filter(isBest).findFirst().get();
 
       return best;
     }

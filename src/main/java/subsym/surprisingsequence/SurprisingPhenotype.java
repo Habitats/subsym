@@ -3,6 +3,7 @@ package subsym.surprisingsequence;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,12 +45,12 @@ public class SurprisingPhenotype implements Phenotype {
 
   private static double getAverageDistinct(List<Integer> ints, int x) {
     List<Integer> shifted = new ArrayList<>(ints);
-    double unique = IntStream.range(0, x + 1).map(i -> {
+    IntUnaryOperator toDistinctCount = i -> {
       shifted.add(shifted.remove(0));
       int distinctCount = getDistinctCount(ints, shifted, i);
       return distinctCount + i; //
-    }).average().getAsDouble();
-
+    };
+    double unique = IntStream.range(0, x + 1).map(toDistinctCount).average().getAsDouble();
     return unique / (double) (ints.size() - 1);
   }
 

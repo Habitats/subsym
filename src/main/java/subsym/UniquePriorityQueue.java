@@ -56,7 +56,8 @@ public class UniquePriorityQueue {
   }
 
   public void addAll(Collection<Genotype> nextGeneration) {
-    nextGeneration.stream().filter(v -> !ensureUnique || !dupeSet.contains(v)).forEach(v -> {
+    Predicate<Genotype> shouldGet = v -> !ensureUnique || !dupeSet.contains(v);
+    nextGeneration.stream().filter(shouldGet).forEach(v -> {
       queue.add(v);
       dupeSet.add(v);
     });
