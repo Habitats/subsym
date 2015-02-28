@@ -89,7 +89,7 @@ public class Main {
     double crossOverRate = 1;
     boolean ensureUnique = false;
     Log.v(TAG, GeneticEngine.solve(new Lolz(20, 100, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                            AdultSelection.MIXING, MateSelection.SIGMA_SCALING,ensureUnique), true));
+                                            AdultSelection.MIXING, MateSelection.SIGMA_SCALING, ensureUnique), true));
 
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
   }
@@ -103,7 +103,8 @@ public class Main {
     GeneticRun run = new GeneticRun();
     IntStream.range(0, 100).forEach(i -> run
         .add(GeneticEngine.solve(new OneMax(25, 40, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                            AdultSelection.FULL_TURNOVER, MateSelection.FITNESS_PROPORTIONATE,ensureUnique), true)));
+                                            AdultSelection.FULL_TURNOVER, MateSelection.FITNESS_PROPORTIONATE,
+                                            ensureUnique), true)));
 
     Log.v(TAG, run.getBest());
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
@@ -129,7 +130,7 @@ public class Main {
       SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, //
                                                             length, crossOverRate, genomeMutationRate,
                                                             populationMutationRate, adultSelectionMode,
-                                                            mateSelectionMode,ensureUnique);
+                                                            mateSelectionMode, ensureUnique);
       GeneticProblem solution = GeneticEngine.solve(problem, true);
       Log.v(TAG, solution);
     }
@@ -159,7 +160,7 @@ public class Main {
             SurprisingSequences problem = new SurprisingSequences(populationSize, alphabetSize, //
                                                                   len, crossOverRate, populationMutationRate,
                                                                   genotypeMutationRate, adultSelectionMode,
-                                                                  mateSelectionMode,ensureUnique);
+                                                                  mateSelectionMode, ensureUnique);
             GeneticProblem solution = GeneticEngine.solve(problem, false);
             Log.v(TAG, solution);
             runs.add(solution);

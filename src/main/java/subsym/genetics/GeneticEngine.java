@@ -36,6 +36,6 @@ public class GeneticEngine {
   }
 
   public static double solve(OneMax oneMax, int rounds) {
-    return IntStream.range(0, rounds).map(i -> solve(oneMax,false).generations()).average().getAsDouble();
+    return IntStream.range(0, rounds).map(i -> solve(oneMax, false).generations()).average().getAsDouble();
   }
 }
