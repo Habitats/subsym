@@ -184,10 +184,12 @@ public abstract class Genotype implements Comparable<Genotype> {
     return generation;
   }
 
+  public String getPaddedBitString() {
+    return String.format("%" + size() + "s", getBitsString());
+  }
 
   public String toString() {
-    return String.format("%" + size() + "s - From Gen: %6d - Keep: %s", //
-                         getBitsString(), getGeneration(), !shouldDie);
+    return String.format("From Gen: %6d - Keep: %s", getGeneration(), !shouldDie);
   }
 
   @Override

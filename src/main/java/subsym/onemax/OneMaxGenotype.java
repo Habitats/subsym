@@ -28,7 +28,7 @@ public class OneMaxGenotype extends Genotype implements Phenotype {
 
   @Override
   public String toString() {
-    return super.toString() + " - Fitness: " + fitness();
+    return super.toString() + String.format(" - Fitness: %6.2f > Phenotype > %s", fitness(), getPaddedBitString());
   }
 
   @Override

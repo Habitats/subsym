@@ -54,6 +54,11 @@ public class LolzGenotype extends Genotype {
   }
 
   @Override
+  public String toString() {
+    return super.toString() + String.format(" - Fitness: %6.2f > Phenotype > %s", fitness(), getPaddedBitString());
+  }
+
+  @Override
   public BitSet getBits() {
     return super.getBits();
   }
