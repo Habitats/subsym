@@ -51,7 +51,10 @@ public class SurprisingPhenotype implements Phenotype {
       return distinctCount + i; //
     };
     double unique = IntStream.range(0, x + 1).map(toDistinctCount).average().getAsDouble();
-    return unique / (double) (ints.size() - 1);
+    double total = (double) (ints.size() - 1);
+//    double fitness = Math.exp(unique ) / Math.exp(total);
+    double fitness = 1 / (1 + ((total - unique) * ints.size()));
+    return fitness;
   }
 
   private static int getDistinctCount(List<Integer> ints, List<Integer> shifted, int startIndex) {
