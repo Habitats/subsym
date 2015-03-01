@@ -84,6 +84,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     return w;
   }
 
+  // mutate n randomly chosen bits
   public void mutate(int numBits) {
     List<Integer> randomSequence = IntStream.range(0, size).boxed().collect(Collectors.toList());
     Random r = new Random();
@@ -91,6 +92,11 @@ public abstract class Genotype implements Comparable<Genotype> {
       Collections.swap(randomSequence, i, i + r.nextInt(randomSequence.size() - i));
     }
     IntStream.range(0, numBits).forEach(i -> bits.flip(randomSequence.remove(0)));
+  }
+
+  // mutate each bit with a given probability
+  public void mutate(double mutationRate) {
+    IntStream.range(0, bits.length()).filter(i -> Math.random() < mutationRate).forEach(bits::flip);
   }
 
   public BitSet toBitSet(List<Integer> ints, int groupSize) {
@@ -190,6 +196,11 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   public String toString() {
     return String.format("From Gen: %6d - Keep: %s", getGeneration(), !shouldDie);
+  }
+
+  @Override
+  public int hashCode() {
+    return bits.hashCode();
   }
 
   @Override
