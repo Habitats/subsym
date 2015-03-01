@@ -25,8 +25,8 @@ public abstract class GeneticProblem {
   protected double populationMutationRate = .02;
   protected AdultSelection adultSelectMode = AdultSelection.OVER_PRODUCTION;
 
-  public GeneticProblem(int populationSize, double crossOverRate, double populationMutationRate,
-                        double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode,
+  public GeneticProblem(int populationSize, double crossOverRate, double genotypeMutationRate,
+                        double populationMutationRate, AdultSelection adultSelectMode, MateSelection matingMode,
                         boolean ensureUnique) {
     this.genotypeMutationRate = genotypeMutationRate;
     this.crossOverRate = crossOverRate;
