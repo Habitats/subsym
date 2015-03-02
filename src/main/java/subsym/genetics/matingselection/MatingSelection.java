@@ -10,4 +10,5 @@ import subsym.genetics.Genotype;
 public interface MatingSelection {
 
   Genotype selectNext(List<Genotype> populationList);
+
 }

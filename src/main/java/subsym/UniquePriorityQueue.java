@@ -105,6 +105,12 @@ public class UniquePriorityQueue {
     return queue;
   }
 
+  @Override
+  public String toString() {
+    return String
+        .format("Size: %d " + (ensureUnique ? " - Unique: %d" : ""),  queue.size(), dupeSet.size());
+  }
+
   public int unique() {
     return dupeSet.size();
   }

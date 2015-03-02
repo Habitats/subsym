@@ -45,7 +45,7 @@ public class Mixing implements AdultSelection {
 
   @Override
   public void cleanUp(Population population) {
-    removeBadAdults(population.getCurrent(), population.getMaxPopulationSize());
     addNextGeneration(population.getCurrent(), population.getNextGeneration(), population.getMaxPopulationSize());
+//    removeBadAdults(population.getCurrent(), population.getMaxPopulationSize());
   }
 }

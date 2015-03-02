@@ -26,11 +26,10 @@ public class Tournament implements MatingSelection {
       return populationList.remove(r.nextInt(populationList.size() - 1));
     }
 
-    int limit = tournamentLimit * populationList.size();
-    for (int i = 0; i < limit; i++) {
+    for (int i = 0; i < tournamentLimit; i++) {
       Collections.swap(populationList, i, i + r.nextInt(populationList.size() - i));
     }
-    Genotype best = populationList.stream().limit(limit).max(Comparator.<Genotype>reverseOrder()).get();
+    Genotype best = populationList.stream().limit(tournamentLimit).max(Comparator.<Genotype>reverseOrder()).get();
     populationList.remove(best);
     return best;
   }
