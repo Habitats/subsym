@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import subsym.UniquePriorityQueue;
+import subsym.PopulationList;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.matingselection.MatingSelection;
 
@@ -17,23 +17,21 @@ import subsym.genetics.matingselection.MatingSelection;
 public class Population {
 
   private final int maxPopulationSize;
-  private final boolean ensureUnique;
-  private final UniquePriorityQueue currentPopulation;
-  private UniquePriorityQueue nextGeneration;
+  private final PopulationList currentPopulation;
+  private PopulationList nextGeneration;
 
   private AdultSelection selectionMode;
 
   private int freeSpots = 0;
   private int currentGeneration = 0;
 
-  public Population(int maxPopulationSize, boolean ensureUnique) {
+  public Population(int maxPopulationSize) {
     this.maxPopulationSize = maxPopulationSize;
-    this.ensureUnique = ensureUnique;
-    currentPopulation = new UniquePriorityQueue(ensureUnique);
+    currentPopulation = new PopulationList();
   }
 
   public void selectAdults(AdultSelection selectionMode) {
-    nextGeneration = new UniquePriorityQueue(ensureUnique);
+    nextGeneration = new PopulationList();
     this.selectionMode = selectionMode;
     selectionMode.selectAdults(this);
   }
@@ -142,13 +140,23 @@ public class Population {
   @Override
   public String toString() {
     return String.format("Gen: %5d - Fitness (max/avg): %6.2f / %6.2f - SD: %6.2f > Genotype > %s",//
-                         currentGeneration,
-                         currentPopulation.stream().mapToDouble(Genotype::fitness).max().getAsDouble(),
-                         currentPopulation.stream().mapToDouble(Genotype::fitness).average().getAsDouble(),
-                         standardDeviation(currentPopulation.get()), currentPopulation.peekBest());
+                         currentGeneration, getCurrentMaxFitness(), getCurrentAverageFitness(),
+                         getCurrentStandardDeviation(), currentPopulation.peekBest());
   }
 
-  public UniquePriorityQueue getCurrent() {
+  public double getCurrentStandardDeviation() {
+    return standardDeviation(currentPopulation.get());
+  }
+
+  public double getCurrentAverageFitness() {
+    return currentPopulation.stream().mapToDouble(Genotype::fitness).average().getAsDouble();
+  }
+
+  public double getCurrentMaxFitness() {
+    return currentPopulation.stream().mapToDouble(Genotype::fitness).max().getAsDouble();
+  }
+
+  public PopulationList getCurrent() {
     return currentPopulation;
   }
 
@@ -160,7 +168,7 @@ public class Population {
     this.freeSpots = freeSpots;
   }
 
-  public UniquePriorityQueue getNextGeneration() {
+  public PopulationList getNextGeneration() {
     return nextGeneration;
   }
 }

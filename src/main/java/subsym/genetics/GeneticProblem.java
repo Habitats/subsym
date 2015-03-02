@@ -1,6 +1,7 @@
 package subsym.genetics;
 
 import subsym.Log;
+import subsym.Plot;
 
 /**
  * Created by anon on 21.02.2015.
@@ -14,7 +15,7 @@ public abstract class GeneticProblem {
 
   public GeneticProblem(GeneticPreferences prefs) {
     this.prefs = prefs;
-    population = new Population(prefs.getPopulationSize(), prefs.hasUniquePopulation());
+    population = new Population(prefs.getPopulationSize());
   }
 
   public int generations() {
@@ -49,6 +50,10 @@ public abstract class GeneticProblem {
 
   public void log() {
     Log.v(TAG, population);
+    Plot.addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
+    Plot.addValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
+    Plot.addValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
+
   }
 
   public abstract void initPopulation();

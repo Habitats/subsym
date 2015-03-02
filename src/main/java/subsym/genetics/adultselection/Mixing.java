@@ -1,6 +1,6 @@
 package subsym.genetics.adultselection;
 
-import subsym.UniquePriorityQueue;
+import subsym.PopulationList;
 import subsym.genetics.Genotype;
 import subsym.genetics.Population;
 
@@ -15,12 +15,12 @@ public class Mixing implements AdultSelection {
     this.mixingRate = mixingRate;
   }
 
-  private void removeBadAdults(UniquePriorityQueue currentPopulation, int maxPopulationSize) {
+  private void removeBadAdults(PopulationList currentPopulation, int maxPopulationSize) {
     currentPopulation.stream().sorted().limit(getAdultLimit(maxPopulationSize)).forEach(Genotype::tagForRevival);
     currentPopulation.removeIf(Genotype::shouldDie);
   }
 
-  private void addNextGeneration(UniquePriorityQueue currentPopulation, UniquePriorityQueue nextGeneration,
+  private void addNextGeneration(PopulationList currentPopulation, PopulationList nextGeneration,
                                  int maxPopulationSize) {
     currentPopulation.addAll(nextGeneration);
     while (currentPopulation.size() > maxPopulationSize) {

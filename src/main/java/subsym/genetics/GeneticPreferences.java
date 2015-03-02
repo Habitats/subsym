@@ -15,23 +15,16 @@ public class GeneticPreferences {
   private final double genomeMutationRate;
   private final AdultSelection adultSelectionMode;
   private final MatingSelection mateSelectionMode;
-  private final boolean ensureUnique;
-
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
                             double genomeMutationRate, AdultSelection adultSelectionMode,
-                            MatingSelection mateSelectionMode, boolean ensureUnique) {
+                            MatingSelection mateSelectionMode) {
     this.populationSize = populationSize;
     this.crossOverRate = crossOverRate;
     this.populationMutationRate = populationMutationRate;
     this.genomeMutationRate = genomeMutationRate;
     this.adultSelectionMode = adultSelectionMode;
     this.mateSelectionMode = mateSelectionMode;
-    this.ensureUnique = ensureUnique;
-  }
-
-  public boolean hasUniquePopulation() {
-    return ensureUnique;
   }
 
   public AdultSelection getAdultSelectionMode() {

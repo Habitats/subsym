@@ -3,6 +3,7 @@ package subsym.genetics;
 import java.util.stream.IntStream;
 
 import subsym.Log;
+import subsym.Plot;
 import subsym.onemax.OneMax;
 
 /**
@@ -13,6 +14,7 @@ public class GeneticEngine {
   private static final String TAG = GeneticEngine.class.getSimpleName();
 
   public static GeneticProblem solve(GeneticProblem problem, boolean loggingEnabled) {
+    Plot.clear();
     problem.initPopulation();
     int count = 0;
     long start = System.currentTimeMillis();
