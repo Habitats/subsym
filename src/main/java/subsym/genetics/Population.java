@@ -68,9 +68,6 @@ public class Population {
   }
 
   public void crossOverSingle(double crossOverRate, double cut, GeneticProblem.MateSelection matingMode) {
-    if (crossOverRate < Math.random()) {
-      return;
-    }
     List<Genotype> populationList = new ArrayList<>(currentPopulation.stream().collect(Collectors.toList()));
     Genotype p1 = null;
     Genotype p2 = null;
@@ -89,13 +86,18 @@ public class Population {
         break;
     }
 
-    Genotype c1 = Genotype.crossOver(p1, p2, cut);
-    Genotype c2 = Genotype.crossOver(p2, p1, cut);
-    c1.setGeneration(currentGeneration + 1);
-    c2.setGeneration(currentGeneration + 1);
+    if (crossOverRate < Math.random()) {
+      Genotype c1 = Genotype.crossOver(p1, p2, cut);
+      Genotype c2 = Genotype.crossOver(p2, p1, cut);
+      c1.setGeneration(currentGeneration + 1);
+      c2.setGeneration(currentGeneration + 1);
 
-    addToNextGeneration(c1);
-    addToNextGeneration(c2);
+      addToNextGeneration(c1);
+      addToNextGeneration(c2);
+    } else {
+      addToNextGeneration(p1.copy());
+      addToNextGeneration(p2.copy());
+    }
   }
 
   private void addToNextGeneration(Genotype child) {
@@ -140,11 +142,13 @@ public class Population {
     int k = 1;
     for (Genotype genotype : population) {
       double tmpM = M;
-      M += (genotype.fitness() - tmpM) / k;
-      S += (genotype.fitness() - tmpM) * (genotype.fitness() - M);
+      double fitness = genotype.fitness();
+      M += (fitness - tmpM) / k;
+      S += (fitness - tmpM) * (fitness - M);
       k++;
     }
-    return Math.sqrt(S / (k - 2));
+    double sd = Math.sqrt(S / (k - 2));
+    return sd;
   }
 
   public void mutate(double populationMutationRate, double genotypeMutationRate) {
