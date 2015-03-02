@@ -1,6 +1,8 @@
 package subsym.genetics;
 
 import subsym.Log;
+import subsym.genetics.adultselection.AdultSelection;
+import subsym.genetics.matingselection.MatingSelection;
 
 /**
  * Created by anon on 21.02.2015.
@@ -9,24 +11,16 @@ public abstract class GeneticProblem {
 
   private static final String TAG = GeneticProblem.class.getSimpleName();
 
-  public enum AdultSelection {
-    FULL_TURNOVER, OVER_PRODUCTION, MIXING
-  }
-
-  public enum MateSelection {
-    FITNESS_PROPORTIONATE, SIGMA_SCALING, TOURNAMENT
-  }
-
-  protected final MateSelection matingMode;
+  protected final MatingSelection matingMode;
   private final int populationSize;
+  private final AdultSelection adultSelectMode;
   private Population population;
   protected double crossOverRate = .8;
   protected double genotypeMutationRate = .02;
   protected double populationMutationRate = .02;
-  protected AdultSelection adultSelectMode = AdultSelection.OVER_PRODUCTION;
 
   public GeneticProblem(int populationSize, double crossOverRate, double genotypeMutationRate,
-                        double populationMutationRate, AdultSelection adultSelectMode, MateSelection matingMode,
+                        double populationMutationRate, AdultSelection adultSelectMode, MatingSelection matingMode,
                         boolean ensureUnique) {
     this.genotypeMutationRate = genotypeMutationRate;
     this.crossOverRate = crossOverRate;

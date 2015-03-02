@@ -88,11 +88,7 @@ public class UniquePriorityQueue {
     checkConsistency();
     dupeSet.removeIf(filter);
     boolean b = queue.removeIf(filter);
-    try {
-      checkConsistency();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    checkConsistency();
     return b;
   }
 

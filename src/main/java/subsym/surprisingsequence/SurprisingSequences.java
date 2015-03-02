@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import subsym.genetics.GeneticProblem;
+import subsym.genetics.adultselection.AdultSelection;
+import subsym.genetics.matingselection.MatingSelection;
 
 /**
  * Created by anon on 23.02.2015.
@@ -17,7 +19,7 @@ public class SurprisingSequences extends GeneticProblem {
 
   public SurprisingSequences(int populationSize, int alphabetSize, int length, double crossOverRate,
                              double populationMutationRate, double genotypeMutationRate, AdultSelection adultSelectMode,
-                             MateSelection matingMode, boolean ensureUnqiue) {
+                             MatingSelection matingMode, boolean ensureUnqiue) {
     super(populationSize, crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode,
           ensureUnqiue);
 

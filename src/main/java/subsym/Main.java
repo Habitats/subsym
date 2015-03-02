@@ -15,8 +15,12 @@ import javax.swing.*;
 import subsym.boids.Boids;
 import subsym.genetics.GeneticEngine;
 import subsym.genetics.GeneticProblem;
-import subsym.genetics.GeneticProblem.AdultSelection;
-import subsym.genetics.GeneticProblem.MateSelection;
+import subsym.genetics.adultselection.AdultSelection;
+import subsym.genetics.adultselection.FullTurnover;
+import subsym.genetics.adultselection.Mixing;
+import subsym.genetics.matingselection.FitnessProportiate;
+import subsym.genetics.matingselection.MatingSelection;
+import subsym.genetics.matingselection.SigmaScaled;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -90,7 +94,7 @@ public class Main {
     double crossOverRate = 1;
     boolean ensureUnique = false;
     Log.v(TAG, GeneticEngine.solve(new Lolz(20, 100, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                            AdultSelection.MIXING, MateSelection.SIGMA_SCALING, ensureUnique), true));
+                                            new Mixing(0.2), new SigmaScaled(), ensureUnique), true));
 
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
   }
@@ -104,8 +108,7 @@ public class Main {
     GeneticRun run = new GeneticRun();
     IntStream.range(0, 100).forEach(i -> run
         .add(GeneticEngine.solve(new OneMax(25, 40, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                            AdultSelection.FULL_TURNOVER, MateSelection.FITNESS_PROPORTIONATE,
-                                            ensureUnique), true)));
+                                            new Mixing(0.5), new FitnessProportiate(), ensureUnique), true)));
 
     Log.v(TAG, run.getBest());
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
@@ -122,8 +125,8 @@ public class Main {
     double crossOverRate = 1;
     double genomeMutationRate = .0001;
     double populationMutationRate = 1;
-    AdultSelection adultSelectionMode = AdultSelection.OVER_PRODUCTION;
-    MateSelection mateSelectionMode = MateSelection.TOURNAMENT;
+    AdultSelection adultSelectionMode = new FullTurnover();
+    MatingSelection mateSelectionMode = new SigmaScaled();
     int alphabetSize = 10;
     int populationSize = 40;
     boolean ensureUnique = true;
@@ -141,8 +144,8 @@ public class Main {
     //    double crossOverRate = .5;
 //    double genotypeMutationRate = .02;
 //    double populationMutationRate = .01;
-    AdultSelection adultSelectionMode = AdultSelection.FULL_TURNOVER;
-    MateSelection mateSelectionMode = MateSelection.FITNESS_PROPORTIONATE;
+    AdultSelection adultSelectionMode = new FullTurnover();
+    MatingSelection mateSelectionMode = new SigmaScaled();
     double crossOverRate = 1;
     int alphabetSize = 10;
     int populationSize = 20;

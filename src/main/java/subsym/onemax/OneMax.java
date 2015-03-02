@@ -3,6 +3,8 @@ package subsym.onemax;
 import java.util.stream.IntStream;
 
 import subsym.genetics.GeneticProblem;
+import subsym.genetics.adultselection.AdultSelection;
+import subsym.genetics.matingselection.MatingSelection;
 
 /**
  * Created by anon on 21.02.2015.
@@ -13,7 +15,7 @@ public class OneMax extends GeneticProblem {
   private int bitVectorSize;
 
   public OneMax(int populationSize, int bitVectorSize, double crossOverRate, double populationMutationRate,
-                double genotypeMutationRate, AdultSelection adultSelectMode, MateSelection matingMode,
+                double genotypeMutationRate, AdultSelection adultSelectMode, MatingSelection matingMode,
                 boolean ensureUnique) {
     super(populationSize, crossOverRate, populationMutationRate, genotypeMutationRate, adultSelectMode, matingMode,
           ensureUnique);

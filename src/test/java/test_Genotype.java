@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import subsym.UniquePriorityQueue;
-import subsym.genetics.GeneticProblem;
 import subsym.genetics.Genotype;
 import subsym.genetics.Population;
+import subsym.genetics.adultselection.FullTurnover;
+import subsym.genetics.adultselection.Mixing;
+import subsym.genetics.adultselection.OverProduction;
+import subsym.genetics.matingselection.FitnessProportiate;
 import subsym.lolz.LolzGenotype;
 import subsym.onemax.OneMaxGenotype;
 import subsym.surprisingsequence.SurprisingGenotype;
@@ -100,10 +103,11 @@ public class test_Genotype {
   public void test_populationOverProductionSelection() {
     int initialSize = 10;
     Population p = getPopulation(initialSize);
-    p.selectAdults(GeneticProblem.AdultSelection.OVER_PRODUCTION);
-    p.crossOver(1, Math.random(), GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
+    int overProductionRate = 2;
+    p.selectAdults(new OverProduction(overProductionRate));
+    p.crossOver(1, Math.random(), new FitnessProportiate());
     // adults + children * overProductionRate should be present
-    assertEquals(p.nextGenerationSize(), (int) (initialSize * Population.overProductionRate));
+    assertEquals(p.nextGenerationSize(), initialSize * overProductionRate);
     // only the initalSize amount should be retained
     p.cleanUp();
     assertEquals(p.size(), initialSize);
@@ -112,9 +116,10 @@ public class test_Genotype {
   @Test
   public void test_populationMixingSelection() {
     Population p = getPopulation(10);
-    p.selectAdults(GeneticProblem.AdultSelection.MIXING);
-    p.crossOver(1, Math.random(), GeneticProblem.MateSelection.FITNESS_PROPORTIONATE);
-    assertEquals(p.size() + p.nextGenerationSize(), 10 + p.getChildLimit());
+    double mixingRate = .5;
+    p.selectAdults(new Mixing(mixingRate));
+    p.crossOver(1, Math.random(), new FitnessProportiate());
+    assertEquals(p.size() + p.nextGenerationSize(), (int) (10 + p.getMaxPopulationSize() * (1 - mixingRate)));
     p.cleanUp();
     assertEquals(p.size(), 10);
   }
@@ -122,7 +127,7 @@ public class test_Genotype {
   @Test
   public void test_populationFullTurnoverSelection() {
     Population p = getPopulation(10);
-    p.selectAdults(GeneticProblem.AdultSelection.FULL_TURNOVER);
+    p.selectAdults(new FullTurnover());
     p.cleanUp();
     assertEquals(p.size(), 0);
   }
