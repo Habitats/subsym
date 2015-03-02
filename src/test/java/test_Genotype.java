@@ -33,6 +33,15 @@ public class test_Genotype {
   }
 
   @Test
+  public void test_mutate2() {
+    Genotype v = new OneMaxGenotype().setRandom(10);
+    Genotype u = v.copy();
+    v.mutate(1.);
+    u.invert();
+    assertEquals(v, u);
+  }
+
+  @Test
   public void test_equals() {
     Genotype v = new OneMaxGenotype().setEmpty(10);
     Genotype u = new OneMaxGenotype().setEmpty(10);
