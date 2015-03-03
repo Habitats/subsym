@@ -7,15 +7,15 @@ import java.awt.*;
  */
 public class Theme {
 
-  public static final Color BACKGROUND = new Color(208, 216, 231);
+  public static final Color BACKGROUND = new Color(165, 225, 46);
   public static final Color BACKGROUND_DARK = new Color(67, 70, 77);
-  public static final Color BACKGROUND_INTERACTIVE = new Color(253, 253, 254);
+  public static final Color BACKGROUND_INTERACTIVE = new Color(255, 128, 176);
 
   public static final Color TEXT = new Color(36, 36, 36);
 
-  public static final Color ITEM_HOVER = new Color(118, 143, 206);
-  public static final Color ITEM_BACKGROUND = new Color(72, 87, 125);
-  public static final Color TEXT_ITEM = new Color(245, 242, 231);
+  public static final Color ITEM_HOVER = new Color(128, 236, 255);
+  public static final Color ITEM_BACKGROUND = new Color(247, 38, 114);
+  public static final Color TEXT_ITEM = new Color(253, 253, 254);
 
   public static Color getBackground() {
     return BACKGROUND;

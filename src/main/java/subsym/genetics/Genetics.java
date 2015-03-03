@@ -84,7 +84,8 @@ public class Genetics implements GeneticGuiListener {
   @Override
   public void run(GeneticPreferences prefs) {
     gui.clear();
-    GeneticProblem problem = new SurprisingSequences(prefs, 10, 23);
+    GeneticProblem problem = new SurprisingSequences(prefs, 10, 22);
+//    GeneticProblem problem = new Lolz(prefs, 100);
     problem.setPlotter(gui.getPlot());
     GeneticEngine.solveInBackground(problem, true, this);
   }

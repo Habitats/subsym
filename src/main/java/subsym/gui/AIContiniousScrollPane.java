@@ -9,6 +9,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 
 import subsym.Log;
 
@@ -24,16 +26,28 @@ public class AIContiniousScrollPane extends JScrollPane {
   private final int maxLength = 1000;
 
   private final JTextPane pane;
+  private final SimpleAttributeSet set;
+  private Font font;
 
   public AIContiniousScrollPane() {
     super(new JTextPane());
     pane = (JTextPane) getViewport().getView();
     pane.setEditable(true);
+    pane.setFont(font);
     autoScroll(pane);
     pane.getDocument().addDocumentListener(new LimitLinesDocumentListener(maxLength));
 //    setMinimumSize(new Dimension(100, 0));
 //    setMaximumSize(new Dimension(300, 800));
+    set = new SimpleAttributeSet();
+    StyleConstants.setFontFamily(set, Font.MONOSPACED);
+    StyleConstants.setFontSize(set, 10);
+//    StyleConstants.setUnderline(set, true);
     setPreferredSize(new Dimension(0, 0));
+  }
+
+  @Override
+  public void setFont(Font font) {
+    this.font = font;
   }
 
   /**
@@ -43,7 +57,7 @@ public class AIContiniousScrollPane extends JScrollPane {
   public synchronized void append(String str) {
     try {
       Document doc = pane.getDocument();
-      doc.insertString(doc.getLength(), str, null);
+      doc.insertString(doc.getLength(), str, set);
     } catch (BadLocationException e) {
       Log.v("Unable to append to scrollpane", e);
     }

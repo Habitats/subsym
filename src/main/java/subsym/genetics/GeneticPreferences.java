@@ -85,12 +85,10 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getDefault() {
-    return new GeneticPreferences(40, 0.95, 0.9, 0.04, new Mixing(0.5), new Tournament(10, 0.05));
-
+    return new GeneticPreferences(40, 0.95, 0.9, 0.04, new Mixing(0.2), new Tournament(4, 0.05));
   }
 
   public static GeneticPreferences getTest() {
     return new GeneticPreferences(10, 1, 1, 1, new Mixing(1), new Tournament(10, 0.00));
-
   }
 }

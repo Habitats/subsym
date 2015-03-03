@@ -11,6 +11,5 @@ public class AITextField extends JTextField {
     setBackground(Theme.getBackgroundInteractive());
     setForeground(Theme.getForeground());
     setBorder(BorderFactory.createEmptyBorder());
-
   }
 }

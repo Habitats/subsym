@@ -88,6 +88,8 @@ public class GeneticGui extends AIGui {
     crossoverInput.addActionListener(e -> crossoverSlider.setValue(getSliderValue(e)));
     genomeMutationInput.addActionListener(e -> genomeMutationSlider.setValue(getSliderValue(e)));
     populationMutationInput.addActionListener(e -> populationMutationSlider.setValue(getSliderValue(e)));
+
+    logField.setFont(Font.decode(Font.MONOSPACED));
     buildFrame(mainPanel, logField, null);
 
     initDefaultPreferences();
