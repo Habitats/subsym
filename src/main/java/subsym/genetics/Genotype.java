@@ -143,7 +143,13 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public double fitness() {
-    return getPhenotype().fitness();
+    if (Population.fitnessCache.containsKey(bits)) {
+      return Population.fitnessCache.get(bits);
+    } else {
+      double fitness = getPhenotype().fitness();
+      Population.fitnessCache.put(bits.hashCode(), fitness);
+      return fitness;
+    }
   }
 
   public void invert() {

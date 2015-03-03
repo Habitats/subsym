@@ -1,7 +1,6 @@
 package subsym.genetics;
 
 import subsym.Log;
-import subsym.gui.Plot;
 
 /**
  * Created by anon on 21.02.2015.
@@ -19,7 +18,6 @@ public class GeneticEngine {
   }
 
   public static GeneticProblem solve(GeneticProblem problem, boolean loggingEnabled) {
-    Plot.clear();
     shouldRun = true;
     problem.initPopulation();
     int count = 0;

@@ -51,13 +51,13 @@ public class GeneticGui extends AIGui {
   private AILabel populationMutationField;
   private AILabel crossoverField;
   private AILabel genomeMutationField;
+  private AIButton stopButton;
   private AILabel genomeMutationValField;
   private AILabel populationMutationValField;
   private GeneticPreferences prefs;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
-    initDefaultPreferences();
 
     AdultSelection.values().forEach(adultSelection::addItem);
     MatingSelection.values().forEach(matingSelection::addItem);
@@ -81,16 +81,20 @@ public class GeneticGui extends AIGui {
     });
     populationField
         .addActionListener(e -> prefs.setPopulationSize(Integer.parseInt((((AITextField) e.getSource()).getText()))));
+
     runButton.addActionListener(e -> listener.run(prefs));
+    stopButton.addActionListener(e -> listener.stop());
 
     crossoverInput.addActionListener(e -> crossoverSlider.setValue(getSliderValue(e)));
     genomeMutationInput.addActionListener(e -> genomeMutationSlider.setValue(getSliderValue(e)));
     populationMutationInput.addActionListener(e -> populationMutationSlider.setValue(getSliderValue(e)));
     buildFrame(mainPanel, logField, null);
+
+    initDefaultPreferences();
   }
 
   private int getSliderValue(ActionEvent e) {
-    return (int) Double.parseDouble((((AITextField) e.getSource()).getText())) * 100;
+    return (int) Double.parseDouble((((JTextField) e.getSource()).getText())) * 100;
   }
 
   private void initDefaultPreferences() {
@@ -172,5 +176,9 @@ public class GeneticGui extends AIGui {
 
   public void clear() {
     plot.clear();
+  }
+
+  public Plot getPlot() {
+    return plot;
   }
 }

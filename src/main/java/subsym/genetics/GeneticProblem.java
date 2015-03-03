@@ -12,10 +12,15 @@ public abstract class GeneticProblem {
 
   private final GeneticPreferences prefs;
   private Population population;
+  private long delta;
+  private long avg;
+  private double count = 1;
+  private Plot plotter;
 
   public GeneticProblem(GeneticPreferences prefs) {
     this.prefs = prefs;
-    population = new Population(prefs.getPopulationSize());
+    population = new Population(prefs);
+    delta = System.currentTimeMillis();
   }
 
   public int generations() {
@@ -49,11 +54,21 @@ public abstract class GeneticProblem {
   }
 
   public void log() {
-    Log.i(TAG, population);
-    Plot.addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
-    Plot.addValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
-    Plot.addValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
+    delta = System.currentTimeMillis() - delta;
+    avg += delta;
+    Log.i(TAG, String.format("(%4d / %4d) ms - %s",//
+                             delta, (int) (avg / count), population));
+    addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
+    addValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
+    addValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
+    delta = System.currentTimeMillis();
+    count++;
+  }
 
+  private void addValue(String max, int currentGeneration, double currentMaxFitness) {
+    if (plotter != null) {
+      plotter.addValue(max, currentGeneration, currentMaxFitness);
+    }
   }
 
   public abstract void initPopulation();
@@ -71,5 +86,9 @@ public abstract class GeneticProblem {
     String l1 = "";
     String l2 = "";
     return String.format("%s > Population > %s", prefs, population);
+  }
+
+  public void setPlotter(Plot plotter) {
+    this.plotter = plotter;
   }
 }

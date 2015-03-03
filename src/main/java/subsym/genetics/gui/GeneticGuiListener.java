@@ -8,4 +8,6 @@ import subsym.genetics.GeneticPreferences;
 public interface GeneticGuiListener {
 
   void run(GeneticPreferences prefs);
+
+  void stop();
 }

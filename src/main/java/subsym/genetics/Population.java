@@ -3,7 +3,9 @@ package subsym.genetics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -16,17 +18,20 @@ import subsym.genetics.matingselection.MatingSelection;
  */
 public class Population {
 
-  private final int maxPopulationSize;
   private final PopulationList currentPopulation;
+  private final GeneticPreferences prefs;
   private PopulationList nextGeneration;
 
   private AdultSelection selectionMode;
 
+  public static Map<Integer, Double> fitnessCache = new HashMap<>();
+
   private int freeSpots = 0;
   private int currentGeneration = 0;
 
-  public Population(int maxPopulationSize) {
-    this.maxPopulationSize = maxPopulationSize;
+
+  public Population(GeneticPreferences prefs) {
+    this.prefs = prefs;
     currentPopulation = new PopulationList();
   }
 
@@ -161,7 +166,7 @@ public class Population {
   }
 
   public int getMaxPopulationSize() {
-    return maxPopulationSize;
+    return prefs.getPopulationSize();
   }
 
   public void setFreeSpots(int freeSpots) {

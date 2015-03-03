@@ -83,10 +83,15 @@ public class Genetics implements GeneticGuiListener {
 
   @Override
   public void run(GeneticPreferences prefs) {
-    GeneticEngine.kill();
     gui.clear();
-    SurprisingSequences problem = new SurprisingSequences(prefs, 10, 23);
+    GeneticProblem problem = new SurprisingSequences(prefs, 10, 23);
+    problem.setPlotter(gui.getPlot());
     GeneticEngine.solveInBackground(problem, true, this);
+  }
+
+  @Override
+  public void stop() {
+    GeneticEngine.kill();
   }
 
   public void onSolved(GeneticProblem solution) {

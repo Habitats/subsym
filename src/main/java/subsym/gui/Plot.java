@@ -19,10 +19,10 @@ import javax.swing.*;
  */
 public class Plot extends JPanel {
 
-  private static XYDataset dataset;
-  private static XYSeries average;
-  private static XYSeries max;
-  private static XYSeries sd;
+  private XYDataset dataset;
+  private XYSeries average;
+  private XYSeries max;
+  private XYSeries sd;
 
   public Plot() {
     dataset = createDataset();
@@ -56,7 +56,7 @@ public class Plot extends JPanel {
     return dataset;
   }
 
-  public static void addValue(String series, int x, double y) {
+  public void addValue(String series, int x, double y) {
     switch (series) {
       case "avg":
         average.add(x, y);
@@ -70,7 +70,7 @@ public class Plot extends JPanel {
     }
   }
 
-  public static void clear() {
+  public void clear() {
     average.clear();
     max.clear();
     sd.clear();

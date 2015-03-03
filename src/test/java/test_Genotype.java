@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import subsym.PopulationList;
+import subsym.genetics.GeneticPreferences;
 import subsym.genetics.Genotype;
 import subsym.genetics.Population;
 import subsym.genetics.adultselection.FullTurnover;
@@ -133,7 +134,7 @@ public class test_Genotype {
 
   @Test
   public void test_lolzGenotypeToPhenotype() {
-    Population p = new Population(10);
+    Population p = new Population(GeneticPreferences.getTest());
     Genotype i = new LolzGenotype().fromString("1011000000");
     assertEquals((int) i.getPhenotype().fitness(), 1);
     Genotype v = new LolzGenotype().fromString("1111000000");
@@ -245,7 +246,9 @@ public class test_Genotype {
   }
 
   public Population getPopulation(int size) {
-    Population p = new Population(size);
+    GeneticPreferences test = GeneticPreferences.getTest();
+    test.setPopulationSize(size);
+    Population p = new Population(test);
     while (p.size() < size) {
       p.add(new OneMaxGenotype().setRandom(10));
     }

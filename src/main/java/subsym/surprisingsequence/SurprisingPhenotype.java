@@ -2,7 +2,9 @@ package subsym.surprisingsequence;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -58,9 +60,13 @@ public class SurprisingPhenotype implements Phenotype {
   }
 
   private static int getDistinctCount(List<Integer> ints, List<Integer> shifted, int startIndex) {
-    return (int) IntStream.range(0, ints.size() - 1 - startIndex) //
-        .mapToObj(i -> Integer.toString(ints.get(i)) + ":" + Integer.toString(shifted.get(i))) //
-        .distinct().count();
+    Set distinct = new HashSet<>();
+    IntStream.range(0, ints.size() - 1 - startIndex).forEach(
+        i -> distinct.add(new StringBuilder().append(ints.get(i)).append(":").append(shifted.get(i)).toString())); //
+    return distinct.size();
+//    return (int) IntStream.range(0, ints.size() - 1 - startIndex)
+//        .mapToObj(i -> (new StringBuilder().append(ints.get(i)).append(":").append(shifted.get(i)).toString()))
+//        .distinct().count(); //
   }
 
   private double getMaxSumFitness() {
