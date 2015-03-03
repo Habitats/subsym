@@ -1,5 +1,8 @@
 package subsym.genetics.adultselection;
 
+import java.util.Arrays;
+import java.util.List;
+
 import subsym.genetics.Population;
 
 /**
@@ -11,4 +14,9 @@ public interface AdultSelection {
   void selectAdults(Population population);
 
   void cleanUp(Population population);
+
+static List<String> values() {
+    return Arrays
+        .asList(FullTurnover.class.getSimpleName(), Mixing.class.getSimpleName(), OverProduction.class.getSimpleName());
+  }
 }

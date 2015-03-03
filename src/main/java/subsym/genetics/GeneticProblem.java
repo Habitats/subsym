@@ -1,7 +1,7 @@
 package subsym.genetics;
 
 import subsym.Log;
-import subsym.Plot;
+import subsym.gui.Plot;
 
 /**
  * Created by anon on 21.02.2015.

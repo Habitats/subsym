@@ -1,4 +1,4 @@
-package subsym;
+package subsym.gui;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -9,38 +9,29 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 import java.awt.*;
+
+import javax.swing.*;
 
 /**
 
  */
-public class Plot extends ApplicationFrame {
+public class Plot extends JPanel {
 
   private static XYDataset dataset;
   private static XYSeries average;
   private static XYSeries max;
   private static XYSeries sd;
 
-  private static final Plot chart;
-
-  static {
-    chart = new Plot("Genetic Stats", "Oooooooooh yeah!");
-    chart.pack();
-    RefineryUtilities.centerFrameOnScreen(chart);
-    chart.setVisible(true);
-  }
-
-  public Plot(String applicationTitle, String chartTitle) {
-    super(applicationTitle);
+  public Plot() {
     dataset = createDataset();
-    JFreeChart xylineChart = ChartFactory.createXYLineChart(chartTitle, "Generations", "Fitness", dataset, //
+    JFreeChart xylineChart = ChartFactory.createXYLineChart(getName(), "Generations", "Fitness", dataset, //
                                                             PlotOrientation.VERTICAL, true, true, false);
 
+    setLayout(new GridBagLayout());
     ChartPanel chartPanel = new ChartPanel(xylineChart);
-    chartPanel.setPreferredSize(new Dimension(560, 367));
+    setLayout(new BorderLayout());
     final XYPlot plot = xylineChart.getXYPlot();
     XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
     renderer.setSeriesPaint(0, Color.RED);
@@ -50,7 +41,8 @@ public class Plot extends ApplicationFrame {
     renderer.setSeriesStroke(1, new BasicStroke(3.0f));
     renderer.setSeriesStroke(2, new BasicStroke(2.0f));
     plot.setRenderer(renderer);
-    setContentPane(chartPanel);
+
+    add(chartPanel, BorderLayout.CENTER);
   }
 
   private XYDataset createDataset() {

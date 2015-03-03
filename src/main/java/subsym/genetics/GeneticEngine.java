@@ -1,10 +1,7 @@
 package subsym.genetics;
 
-import java.util.stream.IntStream;
-
 import subsym.Log;
-import subsym.Plot;
-import subsym.onemax.OneMax;
+import subsym.gui.Plot;
 
 /**
  * Created by anon on 21.02.2015.
@@ -12,13 +9,22 @@ import subsym.onemax.OneMax;
 public class GeneticEngine {
 
   private static final String TAG = GeneticEngine.class.getSimpleName();
+  private static boolean shouldRun;
+
+  public static void solveInBackground(GeneticProblem problem, boolean loggingEnabled, Genetics genetics) {
+    new Thread(() -> {
+      solve(problem, loggingEnabled);
+      genetics.onSolved(problem);
+    }).start();
+  }
 
   public static GeneticProblem solve(GeneticProblem problem, boolean loggingEnabled) {
     Plot.clear();
+    shouldRun = true;
     problem.initPopulation();
     int count = 0;
     long start = System.currentTimeMillis();
-    while (!problem.solution()) {
+    while (shouldRun && !problem.solution()) {
       problem.select();
       problem.crossOver();
       problem.mutate();
@@ -37,7 +43,7 @@ public class GeneticEngine {
     return problem;
   }
 
-  public static double solve(OneMax oneMax, int rounds) {
-    return IntStream.range(0, rounds).map(i -> solve(oneMax, false).generations()).average().getAsDouble();
+  public static void kill() {
+    shouldRun = false;
   }
 }

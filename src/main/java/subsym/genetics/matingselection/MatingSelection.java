@@ -1,5 +1,6 @@
 package subsym.genetics.matingselection;
 
+import java.util.Arrays;
 import java.util.List;
 
 import subsym.genetics.Genotype;
@@ -11,4 +12,8 @@ public interface MatingSelection {
 
   Genotype selectNext(List<Genotype> populationList);
 
+  static List<String> values() {
+    return Arrays
+        .asList(FitnessProportiate.class.getSimpleName(), SigmaScaled.class.getSimpleName(), Tournament.class.getSimpleName());
+  }
 }
