@@ -31,24 +31,27 @@ public class Plot extends JPanel {
 
     setLayout(new GridBagLayout());
     ChartPanel chartPanel = new ChartPanel(xylineChart);
+    chartPanel.setBackground(Theme.getBackground());
+    chartPanel.setForeground(Theme.getForeground());
+    chartPanel.setFont(new Font("Consolas", Font.TRUETYPE_FONT, 15));
     setLayout(new BorderLayout());
     final XYPlot plot = xylineChart.getXYPlot();
     XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-    renderer.setSeriesPaint(0, Color.RED);
-    renderer.setSeriesPaint(1, Color.GREEN);
-    renderer.setSeriesPaint(2, Color.YELLOW);
+    renderer.setSeriesPaint(0, ColorUtils.toHsv(0.70, 1, 0.85));
+    renderer.setSeriesPaint(1, ColorUtils.toHsv(0.80,1, 0.85));
+    renderer.setSeriesPaint(2, ColorUtils.toHsv(0.90, 1, 0.85));
     renderer.setSeriesStroke(0, new BasicStroke(4.0f));
-    renderer.setSeriesStroke(1, new BasicStroke(3.0f));
-    renderer.setSeriesStroke(2, new BasicStroke(2.0f));
+    renderer.setSeriesStroke(1, new BasicStroke(4.0f));
+    renderer.setSeriesStroke(2, new BasicStroke(4.0f));
     plot.setRenderer(renderer);
 
     add(chartPanel, BorderLayout.CENTER);
   }
 
   private XYDataset createDataset() {
-    average = new XYSeries("avg");
-    max = new XYSeries("max");
-    sd = new XYSeries("sd");
+    average = new XYSeries("Average");
+    max = new XYSeries("Max");
+    sd = new XYSeries("Standard Deviation");
     final XYSeriesCollection dataset = new XYSeriesCollection();
     dataset.addSeries(average);
     dataset.addSeries(max);

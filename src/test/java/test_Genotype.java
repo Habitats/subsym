@@ -135,13 +135,13 @@ public class test_Genotype {
   @Test
   public void test_lolzGenotypeToPhenotype() {
     Population p = new Population(GeneticPreferences.getTest());
-    Genotype i = new LolzGenotype().fromString("1011000000");
+    Genotype i = new LolzGenotype(5).fromString("1011000000");
     assertEquals((int) i.getPhenotype().fitness(), 1);
-    Genotype v = new LolzGenotype().fromString("1111000000");
+    Genotype v = new LolzGenotype(5).fromString("1111000000");
     assertEquals((int) v.getPhenotype().fitness(), 4);
-    Genotype u = new LolzGenotype().fromString("0011110000");
+    Genotype u = new LolzGenotype(5).fromString("0011110000");
     assertEquals((int) u.getPhenotype().fitness(), 2);
-    Genotype w = new LolzGenotype().fromString("1111111111");
+    Genotype w = new LolzGenotype(5).fromString("1111111111");
     assertEquals((int) w.getPhenotype().fitness(), 10);
 
     p.add(v);

@@ -1,5 +1,7 @@
 package subsym.genetics;
 
+import java.awt.font.TextHitInfo;
+
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.matingselection.MatingSelection;
@@ -17,6 +19,12 @@ public class GeneticPreferences {
   private double genomeMutationRate;
   private AdultSelection adultSelectionMode;
   private MatingSelection mateSelectionMode;
+  private String puzzle;
+  private TextHitInfo selectedPuzzle;
+  private int bitVectorSize;
+  private int surprisingLength;
+  private int alphabetSize;
+  private int zeroThreashold;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
                             double genomeMutationRate, AdultSelection adultSelectionMode,
@@ -90,5 +98,45 @@ public class GeneticPreferences {
 
   public static GeneticPreferences getTest() {
     return new GeneticPreferences(10, 1, 1, 1, new Mixing(1), new Tournament(10, 0.00));
+  }
+
+  public void puzzleSelected(String puzzle) {
+    this.puzzle = puzzle;
+  }
+
+  public String getSelectedPuzzle() {
+    return puzzle;
+  }
+
+  public int getBitVectorSize() {
+    return bitVectorSize;
+  }
+
+  public void setBitVectorSize(int bitVectorSize) {
+    this.bitVectorSize = bitVectorSize;
+  }
+
+  public void setAlphabetSize(int alphabetSize) {
+    this.alphabetSize = alphabetSize;
+  }
+
+  public int getAlphabetSize() {
+    return alphabetSize;
+  }
+
+  public void setSurprisingLength(int surprisingLength) {
+    this.surprisingLength = surprisingLength;
+  }
+
+  public int getSurprisingLength() {
+    return surprisingLength;
+  }
+
+  public int getZeroThreashold() {
+    return zeroThreashold;
+  }
+
+  public void setZeroThreashold(int zeroThreashold) {
+    this.zeroThreashold = zeroThreashold;
   }
 }

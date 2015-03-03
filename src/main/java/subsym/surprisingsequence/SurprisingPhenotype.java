@@ -81,7 +81,7 @@ public class SurprisingPhenotype implements Phenotype {
   public String toString() {
     return surprisingGenotype.toList().stream() //
         .map(v -> String.format("%" + maxWidth + "d", v)) //
-        .collect(Collectors.joining(", ", String.format(" > Phenotype > S: %d - L: %d - Seq: ", //
+        .collect(Collectors.joining(", ", String.format(" > Pheno > S: %d - L: %d - Seq: ", //
                                                         surprisingGenotype.getAlphabet().size(),
                                                         surprisingGenotype.toList().size()), ""));
   }

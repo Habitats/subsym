@@ -10,7 +10,6 @@ import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 
 import subsym.Log;
 
@@ -39,8 +38,8 @@ public class AIContiniousScrollPane extends JScrollPane {
 //    setMinimumSize(new Dimension(100, 0));
 //    setMaximumSize(new Dimension(300, 800));
     set = new SimpleAttributeSet();
-    StyleConstants.setFontFamily(set, Font.MONOSPACED);
-    StyleConstants.setFontSize(set, 10);
+//    StyleConstants.setFontFamily(set, Font.MONOSPACED);
+//    StyleConstants.setFontSize(set, 10);
 //    StyleConstants.setUnderline(set, true);
     setPreferredSize(new Dimension(0, 0));
   }

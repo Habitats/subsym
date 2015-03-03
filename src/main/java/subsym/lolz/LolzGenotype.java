@@ -11,9 +11,11 @@ import subsym.genetics.Phenotype;
 public class LolzGenotype extends Genotype {
 
   private LolzPhenotype phenotype;
+  private int zeroThreshold;
 
-  public LolzGenotype() {
+  public LolzGenotype(int zeroThreshold) {
     super();
+    this.zeroThreshold = zeroThreshold;
   }
 
   @Override
@@ -55,7 +57,7 @@ public class LolzGenotype extends Genotype {
 
   @Override
   public String toString() {
-    return super.toString() + String.format(" - Fitness: %6.2f > Phenotype > %s", fitness(), getPaddedBitString());
+    return super.toString() + String.format(" - Fitness: %6.2f > Pheno > %s", fitness(), getPaddedBitString());
   }
 
   @Override
@@ -65,6 +67,10 @@ public class LolzGenotype extends Genotype {
 
   @Override
   protected Genotype newInstance() {
-    return new LolzGenotype();
+    return new LolzGenotype(10);
+  }
+
+  public int getZeroThreshold() {
+    return zeroThreshold;
   }
 }

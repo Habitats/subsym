@@ -10,11 +10,15 @@ import subsym.genetics.GeneticProblem;
  */
 public class Lolz extends GeneticProblem {
 
+  private final GeneticPreferences prefs;
   private final int bitVectorSize;
+  private final int zeroThreshold;
 
-  public Lolz(GeneticPreferences prefs, int bitVectorSize) {
+  public Lolz(GeneticPreferences prefs, int bitVectorSize, int zeroThreshold) {
     super(prefs);
+    this.prefs = prefs;
     this.bitVectorSize = bitVectorSize;
+    this.zeroThreshold = zeroThreshold;
   }
 
   @Override
@@ -30,6 +34,6 @@ public class Lolz extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize())
-        .forEach(v -> getPopulation().add(new LolzGenotype().setRandom(bitVectorSize)));
+        .forEach(v -> getPopulation().add(new LolzGenotype(zeroThreshold).setRandom(bitVectorSize)));
   }
 }

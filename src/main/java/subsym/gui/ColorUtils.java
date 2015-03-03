@@ -19,6 +19,15 @@ public class ColorUtils {
 
     return Color.getHSBColor(hue, sat, value);
   }
+  public static Color toHsv(double normalizedValue, double brightness, double saturation) {
+    // all values are in the range of [0, 1]
+    float hue = (float) normalizedValue;
+    float value = (float) (1f * brightness);
+    float sat = (float) saturation;
+//    Log.v(TAG, "H: " + hue + ", S: " + sat + ", V: " + value);
+
+    return Color.getHSBColor(hue, sat, value);
+  }
 
   public static Color toHsv(int value, int numberOfColors, double brightness) {
     float percentage = ((float) value) / numberOfColors;

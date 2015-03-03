@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 import subsym.genetics.GeneticPreferences;
+import subsym.genetics.Genetics;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
@@ -26,6 +27,9 @@ import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.AITextField;
 import subsym.gui.Plot;
+import subsym.lolz.Lolz;
+import subsym.onemax.OneMax;
+import subsym.surprisingsequence.SurprisingSequences;
 
 /**
  * Created by Patrick on 03.03.2015.
@@ -46,12 +50,21 @@ public class GeneticGui extends AIGui {
   private subsym.gui.AIComboBox adultSelection;
   private AIComboBox matingSelection;
   private AILabel populationSize;
-  private AITextField populationField;
+  private JTextField populationField;
   private AIButton runButton;
   private AILabel populationMutationField;
   private AILabel crossoverField;
   private AILabel genomeMutationField;
   private AIButton stopButton;
+  private AIComboBox puzzleSelect;
+  private AILabel bitVectorSizeLabel;
+  private JTextField bitVectorSizeInput;
+  private JTextField alphabetSizeInput;
+  private AILabel alphabetSizeLabel;
+  private AILabel surprisingLengthLabel;
+  private JTextField surprisingLengthInput;
+  private AILabel zeroThresholdLabel;
+  private JTextField zeroThresholdInput;
   private AILabel genomeMutationValField;
   private AILabel populationMutationValField;
   private GeneticPreferences prefs;
@@ -61,9 +74,11 @@ public class GeneticGui extends AIGui {
 
     AdultSelection.values().forEach(adultSelection::addItem);
     MatingSelection.values().forEach(matingSelection::addItem);
+    Genetics.values().forEach(puzzleSelect::addItem);
     matingSelection
         .addActionListener(e -> matingModeSelected(((JComboBox) e.getSource()).getSelectedItem().toString()));
     adultSelection.addActionListener(e -> adultModeSelected(((JComboBox) e.getSource()).getSelectedItem().toString()));
+    puzzleSelect.addActionListener(e -> puzzleSelected(((JComboBox) e.getSource()).getSelectedItem().toString()));
     crossoverSlider.addChangeListener(e -> {
       double value = ((AISlider) e.getSource()).getValue() / 100.;
       prefs.setCrossOverRate(value);
@@ -82,17 +97,79 @@ public class GeneticGui extends AIGui {
     populationField
         .addActionListener(e -> prefs.setPopulationSize(Integer.parseInt((((AITextField) e.getSource()).getText()))));
 
-    runButton.addActionListener(e -> listener.run(prefs));
+    runButton.addActionListener(e -> run());
     stopButton.addActionListener(e -> listener.stop());
 
     crossoverInput.addActionListener(e -> crossoverSlider.setValue(getSliderValue(e)));
     genomeMutationInput.addActionListener(e -> genomeMutationSlider.setValue(getSliderValue(e)));
     populationMutationInput.addActionListener(e -> populationMutationSlider.setValue(getSliderValue(e)));
+    bitVectorSizeInput
+        .addActionListener(e -> prefs.setBitVectorSize(Integer.parseInt(((JTextField) e.getSource()).getText())));
+
+    surprisingLengthInput
+        .addActionListener(e -> prefs.setSurprisingLength(Integer.parseInt(((JTextField) e.getSource()).getText())));
+    alphabetSizeInput
+        .addActionListener(e -> prefs.setAlphabetSize(Integer.parseInt(((JTextField) e.getSource()).getText())));
+
+    zeroThresholdInput
+        .addActionListener(e -> prefs.setZeroThreashold(Integer.parseInt(((JTextField) e.getSource()).getText())));
 
     logField.setFont(Font.decode(Font.MONOSPACED));
     buildFrame(mainPanel, logField, null);
 
     initDefaultPreferences();
+  }
+
+  private void run() {
+    prefs.setZeroThreashold(Integer.parseInt(zeroThresholdInput.getText()));
+    prefs.setBitVectorSize(Integer.parseInt(bitVectorSizeInput.getText()));
+    prefs.setPopulationSize(Integer.parseInt(populationField.getText()));
+    prefs.setAlphabetSize(Integer.parseInt(alphabetSizeInput.getText()));
+    listener.run(prefs);
+  }
+
+  private void puzzleSelected(String puzzle) {
+    prefs.puzzleSelected(puzzle);
+    if (puzzle.equals(SurprisingSequences.class.getSimpleName())) {
+      setVisibleSurprising(true);
+    } else if (puzzle.equals(Lolz.class.getSimpleName())) {
+      setVisibleLolz(true);
+    } else if (puzzle.equals(OneMax.class.getSimpleName())) {
+      setVisibleOneMax(true);
+    }
+  }
+
+  private void setVisibleLolz(boolean b) {
+    zeroThresholdLabel.setVisible(b);
+    zeroThresholdInput.setVisible(b);
+    bitVectorSizeInput.setVisible(b);
+    bitVectorSizeLabel.setVisible(b);
+    surprisingLengthInput.setVisible(!b);
+    surprisingLengthLabel.setVisible(!b);
+    alphabetSizeInput.setVisible(!b);
+    alphabetSizeLabel.setVisible(!b);
+  }
+
+  private void setVisibleOneMax(boolean b) {
+    zeroThresholdLabel.setVisible(!b);
+    zeroThresholdInput.setVisible(!b);
+    bitVectorSizeInput.setVisible(b);
+    bitVectorSizeLabel.setVisible(b);
+    surprisingLengthInput.setVisible(!b);
+    surprisingLengthLabel.setVisible(!b);
+    alphabetSizeInput.setVisible(!b);
+    alphabetSizeLabel.setVisible(!b);
+  }
+
+  private void setVisibleSurprising(boolean b) {
+    zeroThresholdLabel.setVisible(!b);
+    zeroThresholdInput.setVisible(!b);
+    bitVectorSizeInput.setVisible(!b);
+    bitVectorSizeLabel.setVisible(!b);
+    surprisingLengthInput.setVisible(b);
+    surprisingLengthLabel.setVisible(b);
+    alphabetSizeInput.setVisible(b);
+    alphabetSizeLabel.setVisible(b);
   }
 
   private int getSliderValue(ActionEvent e) {

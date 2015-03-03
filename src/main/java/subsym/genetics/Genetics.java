@@ -1,6 +1,7 @@
 package subsym.genetics;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public class Genetics implements GeneticGuiListener {
   private static String TAG = Genetics.class.getSimpleName();
   private final GeneticGui gui;
 
+
   public Genetics() {
     gui = new GeneticGui();
     gui.setListener(this);
@@ -40,7 +42,7 @@ public class Genetics implements GeneticGuiListener {
     double crossOverRate = 1;
     GeneticPreferences prefs = new GeneticPreferences(20, crossOverRate, populationMutationRate, genotypeMutationRate,//
                                                       new Mixing(0.2), new SigmaScaled());
-    Log.v(TAG, GeneticEngine.solve(new Lolz(prefs, 20), true));
+    Log.v(TAG, GeneticEngine.solve(new Lolz(prefs, prefs.getBitVectorSize(), prefs.getZeroThreashold()), true));
 
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
   }
@@ -84,10 +86,22 @@ public class Genetics implements GeneticGuiListener {
   @Override
   public void run(GeneticPreferences prefs) {
     gui.clear();
-    GeneticProblem problem = new SurprisingSequences(prefs, 10, 22);
+    GeneticProblem problem = getPuzzle(prefs);
+
 //    GeneticProblem problem = new Lolz(prefs, 100);
     problem.setPlotter(gui.getPlot());
     GeneticEngine.solveInBackground(problem, true, this);
+  }
+
+  private GeneticProblem getPuzzle(GeneticPreferences prefs) {
+    if (prefs.getSelectedPuzzle().equals(SurprisingSequences.class.getSimpleName())) {
+      return new SurprisingSequences(prefs, prefs.getAlphabetSize(), prefs.getSurprisingLength());
+    } else if (prefs.getSelectedPuzzle().equals(Lolz.class.getSimpleName())) {
+      return new Lolz(prefs, prefs.getBitVectorSize(), prefs.getZeroThreashold());
+    } else if (prefs.getSelectedPuzzle().equals(OneMax.class.getSimpleName())) {
+      return new OneMax(prefs, prefs.getBitVectorSize());
+    }
+    return null;
   }
 
   @Override
@@ -120,5 +134,10 @@ public class Genetics implements GeneticGuiListener {
 
       return best;
     }
+  }
+
+  public static List<String> values() {
+    return Arrays
+        .asList(SurprisingSequences.class.getSimpleName(), Lolz.class.getSimpleName(), OneMax.class.getSimpleName());
   }
 }

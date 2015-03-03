@@ -91,4 +91,6 @@ public abstract class GeneticProblem {
   public void setPlotter(Plot plotter) {
     this.plotter = plotter;
   }
+
+
 }
