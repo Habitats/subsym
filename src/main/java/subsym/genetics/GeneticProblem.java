@@ -49,7 +49,7 @@ public abstract class GeneticProblem {
   }
 
   public void log() {
-    Log.v(TAG, population);
+    Log.i(TAG, population);
     Plot.addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
     Plot.addValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
     Plot.addValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());

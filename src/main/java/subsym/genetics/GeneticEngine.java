@@ -34,7 +34,7 @@ public class GeneticEngine {
       }
       count++;
       if (count % 1000 == 0) {
-        Log.v(TAG, "Gen ... " + count);
+        Log.i(TAG, "Gen ... " + count);
       }
     }
     if (loggingEnabled) {
