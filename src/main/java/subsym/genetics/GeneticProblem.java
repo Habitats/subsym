@@ -62,7 +62,11 @@ public abstract class GeneticProblem {
     count++;
   }
 
-public void addPlots() {
+  public void addPlots() {
+    int currentGeneration = getPopulation().getCurrentGeneration();
+    if (currentGeneration > 1000 && currentGeneration % 10 == 0) {
+      return;
+    }
     addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
     addValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
     addValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());

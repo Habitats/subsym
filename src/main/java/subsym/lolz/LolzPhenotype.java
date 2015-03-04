@@ -24,7 +24,7 @@ public class LolzPhenotype implements Phenotype {
     List<Integer> arr = lolzGenotype.getOnBits();
     Iterator<Integer> iter = arr.iterator();
     Integer first = iter.next();
-    boolean firstIsZero = first != (lolzGenotype.size() - 1);
+    boolean firstIsZero = !lolzGenotype.getBits().get(lolzGenotype.size()-1);
     int count = 0;
     if (first == lolzGenotype.size() - 1) {
       int next;
@@ -32,7 +32,7 @@ public class LolzPhenotype implements Phenotype {
       while (iter.hasNext()) {
         if ((next = iter.next()) == first - 1) {
           count++;
-          if (firstIsZero && count >= lolzGenotype.getZeroThreshold()) {
+          if (firstIsZero && (count >= lolzGenotype.getZeroThreshold())) {
             return count;
           }
         } else {

@@ -94,19 +94,25 @@ public class GeneticGui extends AIGui {
     crossoverSlider.setMaximum((int) getSliderRes());
     crossoverSlider.addChangeListener(e -> {
       double value = ((AISlider) e.getSource()).getValue() / getSliderRes();
-      crossoverInput.setText(String.valueOf(value));
+      if (value > 0) {
+        crossoverInput.setText(String.valueOf(value));
+      }
       updatePreferences();
     });
     genomeMutationSlider.setMaximum((int) getSliderRes());
     genomeMutationSlider.addChangeListener(e -> {
       double value = ((AISlider) e.getSource()).getValue() / getSliderRes();
-      genomeMutationInput.setText(String.valueOf(value));
+      if (value > 0) {
+        genomeMutationInput.setText(String.valueOf(value));
+      }
       updatePreferences();
     });
     populationMutationSlider.setMaximum((int) getSliderRes());
     populationMutationSlider.addChangeListener(e -> {
       double value = ((AISlider) e.getSource()).getValue() / getSliderRes();
-      populationMutationInput.setText(String.valueOf(value));
+      if (value > 0) {
+        populationMutationInput.setText(String.valueOf(value));
+      }
       updatePreferences();
     });
 
@@ -331,7 +337,7 @@ public class GeneticGui extends AIGui {
   }
 
   private double getSliderRes() {
-    return 10000.;
+    return 1000.;
   }
 
 }

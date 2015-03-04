@@ -19,6 +19,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   private boolean shouldDie = false;
   private int generation = 0;
   private int size;
+  private Double fitness;
 
   // ###############################################################################
   // ### CONSTRUCTORS ##############################################################
@@ -52,6 +53,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
     copy.size = size;
+    copy.fitness = fitness;
     copy(copy);
     return copy;
   }
@@ -92,10 +94,13 @@ public abstract class Genotype implements Comparable<Genotype> {
       Collections.swap(randomSequence, i, i + r.nextInt(randomSequence.size() - i));
     }
     IntStream.range(0, numBits).forEach(i -> bits.flip(randomSequence.remove(0)));
+
+    fitness = null;
   }
 
   // mutate each bit with a given probability
   public void mutate(double mutationRate) {
+    fitness = null;
     IntStream.range(0, bits.length()).filter(i -> Math.random() < mutationRate).forEach(bits::flip);
   }
 
@@ -143,13 +148,10 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public double fitness() {
-    if (Population.fitnessCache.containsKey(bits)) {
-      return Population.fitnessCache.get(bits);
-    } else {
-      double fitness = getPhenotype().fitness();
-      Population.fitnessCache.put(bits.hashCode(), fitness);
-      return fitness;
+    if (fitness == null) {
+      return fitness = getPhenotype().fitness();
     }
+    return fitness;
   }
 
   public void invert() {
