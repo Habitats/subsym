@@ -90,17 +90,12 @@ public class Genetics implements GeneticGuiListener {
 
 //    GeneticProblem problem = new Lolz(prefs, 100);
     problem.setPlotter(gui.getPlot());
-    GeneticEngine.solveInBackground(problem, true, this);
+    GeneticEngine.solveInBackground(problem, prefs.isLoggingEnabled(), this);
   }
 
   @Override
   public void stop() {
     GeneticEngine.kill();
-  }
-
-  @Override
-  public void enableLogging(boolean enableLogging) {
-    GeneticEngine.enableLogging(enableLogging);
   }
 
   public void onSolved(GeneticProblem solution) {

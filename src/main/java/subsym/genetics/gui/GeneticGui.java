@@ -131,7 +131,7 @@ public class GeneticGui extends AIGui {
     matingSelection.setSelectedItem(Tournament.class.getSimpleName());
     puzzleSelect.setSelectedItem(SurprisingSequences.class.getSimpleName());
 
-    enableLoggingCheckbox.addActionListener(e -> listener.enableLogging(((JCheckBox) e.getSource()).isSelected()));
+    enableLoggingCheckbox.addActionListener(e -> updatePreferences());
 
     updatePreferences();
   }
@@ -231,6 +231,8 @@ public class GeneticGui extends AIGui {
       prefs.setPuzzle(getPuzzle());
       prefs.setMateSelectionMode(getMatingSelection());
       prefs.setAdultSelectionMode(getAdultSelection());
+
+      prefs.logginEnabled(enableLoggingCheckbox.isSelected());
     } catch (NumberFormatException e) {
       Log.i(TAG, "Invalid values in preferences!");
       return false;

@@ -22,6 +22,7 @@ public class GeneticPreferences {
   private int surprisingLength;
   private int alphabetSize;
   private int zeroThreashold;
+  private boolean loggingEnabled;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
                             double genomeMutationRate, AdultSelection adultSelectionMode,
@@ -136,5 +137,14 @@ public class GeneticPreferences {
 
   public GeneticProblem getPuzzle() {
     return puzzle;
+  }
+
+  public void logginEnabled(boolean loggingEnabled) {
+    GeneticEngine.enableLogging(loggingEnabled);
+    this.loggingEnabled = loggingEnabled;
+  }
+
+  public boolean isLoggingEnabled() {
+    return loggingEnabled;
   }
 }
