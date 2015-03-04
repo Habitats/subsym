@@ -1,7 +1,5 @@
 package subsym.genetics;
 
-import java.awt.font.TextHitInfo;
-
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.matingselection.MatingSelection;
@@ -19,8 +17,7 @@ public class GeneticPreferences {
   private double genomeMutationRate;
   private AdultSelection adultSelectionMode;
   private MatingSelection mateSelectionMode;
-  private String puzzle;
-  private TextHitInfo selectedPuzzle;
+  private GeneticProblem puzzle;
   private int bitVectorSize;
   private int surprisingLength;
   private int alphabetSize;
@@ -100,14 +97,6 @@ public class GeneticPreferences {
     return new GeneticPreferences(10, 1, 1, 1, new Mixing(1), new Tournament(10, 0.00));
   }
 
-  public void puzzleSelected(String puzzle) {
-    this.puzzle = puzzle;
-  }
-
-  public String getSelectedPuzzle() {
-    return puzzle;
-  }
-
   public int getBitVectorSize() {
     return bitVectorSize;
   }
@@ -138,5 +127,14 @@ public class GeneticPreferences {
 
   public void setZeroThreashold(int zeroThreashold) {
     this.zeroThreashold = zeroThreashold;
+  }
+
+
+  public void setPuzzle(GeneticProblem puzzle) {
+    this.puzzle = puzzle;
+  }
+
+  public GeneticProblem getPuzzle() {
+    return puzzle;
   }
 }

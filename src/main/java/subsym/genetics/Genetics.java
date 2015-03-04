@@ -86,22 +86,11 @@ public class Genetics implements GeneticGuiListener {
   @Override
   public void run(GeneticPreferences prefs) {
     gui.clear();
-    GeneticProblem problem = getPuzzle(prefs);
+    GeneticProblem problem = prefs.getPuzzle();
 
 //    GeneticProblem problem = new Lolz(prefs, 100);
     problem.setPlotter(gui.getPlot());
     GeneticEngine.solveInBackground(problem, true, this);
-  }
-
-  private GeneticProblem getPuzzle(GeneticPreferences prefs) {
-    if (prefs.getSelectedPuzzle().equals(SurprisingSequences.class.getSimpleName())) {
-      return new SurprisingSequences(prefs, prefs.getAlphabetSize(), prefs.getSurprisingLength());
-    } else if (prefs.getSelectedPuzzle().equals(Lolz.class.getSimpleName())) {
-      return new Lolz(prefs, prefs.getBitVectorSize(), prefs.getZeroThreashold());
-    } else if (prefs.getSelectedPuzzle().equals(OneMax.class.getSimpleName())) {
-      return new OneMax(prefs, prefs.getBitVectorSize());
-    }
-    return null;
   }
 
   @Override

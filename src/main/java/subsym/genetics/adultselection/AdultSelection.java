@@ -15,7 +15,7 @@ public interface AdultSelection {
 
   void cleanUp(Population population);
 
-static List<String> values() {
+  static List<String> values() {
     return Arrays
         .asList(FullTurnover.class.getSimpleName(), Mixing.class.getSimpleName(), OverProduction.class.getSimpleName());
   }

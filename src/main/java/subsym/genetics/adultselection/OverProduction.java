@@ -10,7 +10,7 @@ public class OverProduction implements AdultSelection {
 
   public double overProductionRate ;
 
-  public OverProduction(int overProductionRate) {
+  public OverProduction(double overProductionRate) {
     this.overProductionRate = overProductionRate;
   }
 

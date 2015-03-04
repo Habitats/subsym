@@ -3,11 +3,11 @@ package subsym.genetics.gui;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
 import subsym.genetics.GeneticPreferences;
+import subsym.genetics.GeneticProblem;
 import subsym.genetics.Genetics;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
@@ -25,7 +25,6 @@ import subsym.gui.AIGui;
 import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
-import subsym.gui.AITextField;
 import subsym.gui.Plot;
 import subsym.lolz.Lolz;
 import subsym.onemax.OneMax;
@@ -47,10 +46,10 @@ public class GeneticGui extends AIGui {
   private Plot plot;
   private AITextArea inputField;
   private AIContiniousScrollPane logField;
-  private subsym.gui.AIComboBox adultSelection;
+  private AIComboBox adultSelection;
   private AIComboBox matingSelection;
   private AILabel populationSize;
-  private JTextField populationField;
+  private JTextField populationSizeInput;
   private AIButton runButton;
   private AILabel populationMutationField;
   private AILabel crossoverField;
@@ -65,6 +64,12 @@ public class GeneticGui extends AIGui {
   private JTextField surprisingLengthInput;
   private AILabel zeroThresholdLabel;
   private JTextField zeroThresholdInput;
+  private JTextField mixingRateInput;
+  private AILabel mixingRateLabel;
+  private AILabel tournamentLabel;
+  private JTextField tournamentInput;
+  private AILabel overProductionLabel;
+  private JTextField overProductionInput;
   private AILabel genomeMutationValField;
   private AILabel populationMutationValField;
   private GeneticPreferences prefs;
@@ -72,71 +77,60 @@ public class GeneticGui extends AIGui {
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
 
+    Genetics.values().forEach(puzzleSelect::addItem);
     AdultSelection.values().forEach(adultSelection::addItem);
     MatingSelection.values().forEach(matingSelection::addItem);
-    Genetics.values().forEach(puzzleSelect::addItem);
-    matingSelection
-        .addActionListener(e -> matingModeSelected(((JComboBox) e.getSource()).getSelectedItem().toString()));
-    adultSelection.addActionListener(e -> adultModeSelected(((JComboBox) e.getSource()).getSelectedItem().toString()));
-    puzzleSelect.addActionListener(e -> puzzleSelected(((JComboBox) e.getSource()).getSelectedItem().toString()));
+
+    matingSelection.addActionListener(e -> updatePreferences());
+    adultSelection.addActionListener(e -> updatePreferences());
+    puzzleSelect.addActionListener(e -> updatePreferences());
+
+    crossoverSlider.setMaximum((int) getSliderRes());
     crossoverSlider.addChangeListener(e -> {
-      double value = ((AISlider) e.getSource()).getValue() / 100.;
-      prefs.setCrossOverRate(value);
+      double value = ((AISlider) e.getSource()).getValue() / getSliderRes();
       crossoverInput.setText(String.valueOf(value));
+      updatePreferences();
     });
+    genomeMutationSlider.setMaximum((int) getSliderRes());
     genomeMutationSlider.addChangeListener(e -> {
-      double value = ((AISlider) e.getSource()).getValue() / 100.;
-      prefs.setGenomeMutationRate(value);
+      double value = ((AISlider) e.getSource()).getValue() / getSliderRes();
       genomeMutationInput.setText(String.valueOf(value));
+      updatePreferences();
     });
+    populationMutationSlider.setMaximum((int) getSliderRes());
     populationMutationSlider.addChangeListener(e -> {
-      double value = ((AISlider) e.getSource()).getValue() / 100.;
-      prefs.setPopulationMutationRate(value);
+      double value = ((AISlider) e.getSource()).getValue() / getSliderRes();
       populationMutationInput.setText(String.valueOf(value));
+      updatePreferences();
     });
-    populationField
-        .addActionListener(e -> prefs.setPopulationSize(Integer.parseInt((((AITextField) e.getSource()).getText()))));
 
     runButton.addActionListener(e -> run());
     stopButton.addActionListener(e -> listener.stop());
 
-    crossoverInput.addActionListener(e -> crossoverSlider.setValue(getSliderValue(e)));
-    genomeMutationInput.addActionListener(e -> genomeMutationSlider.setValue(getSliderValue(e)));
-    populationMutationInput.addActionListener(e -> populationMutationSlider.setValue(getSliderValue(e)));
-    bitVectorSizeInput
-        .addActionListener(e -> prefs.setBitVectorSize(Integer.parseInt(((JTextField) e.getSource()).getText())));
-
-    surprisingLengthInput
-        .addActionListener(e -> prefs.setSurprisingLength(Integer.parseInt(((JTextField) e.getSource()).getText())));
-    alphabetSizeInput
-        .addActionListener(e -> prefs.setAlphabetSize(Integer.parseInt(((JTextField) e.getSource()).getText())));
-
-    zeroThresholdInput
-        .addActionListener(e -> prefs.setZeroThreashold(Integer.parseInt(((JTextField) e.getSource()).getText())));
+    crossoverInput.addActionListener(e -> updatePreferences());
+    mixingRateInput.addActionListener(e -> updatePreferences());
+    tournamentInput.addActionListener(e -> updatePreferences());
+    alphabetSizeInput.addActionListener(e -> updatePreferences());
+    bitVectorSizeInput.addActionListener(e -> updatePreferences());
+    zeroThresholdInput.addActionListener(e -> updatePreferences());
+    populationSizeInput.addActionListener(e -> updatePreferences());
+    genomeMutationInput.addActionListener(e -> updatePreferences());
+    surprisingLengthInput.addActionListener(e -> updatePreferences());
+    populationMutationInput.addActionListener(e -> updatePreferences());
 
     logField.setFont(Font.decode(Font.MONOSPACED));
     buildFrame(mainPanel, logField, null);
 
-    initDefaultPreferences();
+    adultSelection.setSelectedItem(Mixing.class.getSimpleName());
+    matingSelection.setSelectedItem(Tournament.class.getSimpleName());
+    puzzleSelect.setSelectedItem(SurprisingSequences.class.getSimpleName());
+
+    updatePreferences();
   }
 
   private void run() {
-    prefs.setZeroThreashold(Integer.parseInt(zeroThresholdInput.getText()));
-    prefs.setBitVectorSize(Integer.parseInt(bitVectorSizeInput.getText()));
-    prefs.setPopulationSize(Integer.parseInt(populationField.getText()));
-    prefs.setAlphabetSize(Integer.parseInt(alphabetSizeInput.getText()));
+    updatePreferences();
     listener.run(prefs);
-  }
-
-  private void puzzleSelected(String puzzle) {
-    prefs.puzzleSelected(puzzle);
-    if (puzzle.equals(SurprisingSequences.class.getSimpleName())) {
-      setVisibleSurprising(true);
-    } else if (puzzle.equals(Lolz.class.getSimpleName())) {
-      setVisibleLolz(true);
-    } else if (puzzle.equals(OneMax.class.getSimpleName())) {
-      setVisibleOneMax(true);
-    }
   }
 
   private void setVisibleLolz(boolean b) {
@@ -172,60 +166,111 @@ public class GeneticGui extends AIGui {
     alphabetSizeLabel.setVisible(b);
   }
 
-  private int getSliderValue(ActionEvent e) {
-    return (int) Double.parseDouble((((JTextField) e.getSource()).getText())) * 100;
-  }
-
   private void initDefaultPreferences() {
     adultSelection.setSelectedItem(prefs.getAdultSelectionMode().getClass().getSimpleName());
     matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
-    crossoverSlider.setValue((int) (prefs.getCrossOverRate() * 100));
+    crossoverSlider.setValue((int) (prefs.getCrossOverRate() * getSliderRes()));
     crossoverInput.setText(String.valueOf(prefs.getCrossOverRate()));
-    genomeMutationSlider.setValue((int) (prefs.getGenomeMutationRate() * 100));
+    genomeMutationSlider.setValue((int) (prefs.getGenomeMutationRate() * getSliderRes()));
     genomeMutationInput.setText(String.valueOf(prefs.getGenomeMutationRate()));
-    populationMutationSlider.setValue((int) (prefs.getPopulationMutationRate() * 100));
+    populationMutationSlider.setValue((int) (prefs.getPopulationMutationRate() * getSliderRes()));
     populationMutationInput.setText(String.valueOf(prefs.getPopulationMutationRate()));
-    populationField.setText(String.valueOf(prefs.getPopulationSize()));
+    populationSizeInput.setText(String.valueOf(prefs.getPopulationSize()));
   }
 
   public void setListener(GeneticGuiListener listener) {
     this.listener = listener;
   }
 
-  public void matingModeSelected(String mode) {
-    if (mode.equals(FitnessProportiate.class.getSimpleName())) {
-      prefs.setMateSelectionMode(new FitnessProportiate());
-    } else if (mode.equals(SigmaScaled.class.getSimpleName())) {
-      prefs.setMateSelectionMode(new SigmaScaled());
-    } else if (mode.equals(Tournament.class.getSimpleName())) {
-      prefs.setMateSelectionMode(new Tournament(getTournamentK(), getTournamentE()));
+  private void setTournamentVisible(boolean b) {
+    tournamentInput.setVisible(b);
+    tournamentLabel.setVisible(b);
+  }
+
+  private void setMixingVisible(boolean b) {
+    mixingRateInput.setVisible(b);
+    mixingRateLabel.setVisible(b);
+  }
+
+  private void setOverProductionVisible(boolean b) {
+    overProductionInput.setVisible(b);
+    overProductionLabel.setVisible(b);
+  }
+
+  public void updatePreferences() {
+    prefs.setCrossOverRate(Double.parseDouble(crossoverInput.getText()));
+    prefs.setGenomeMutationRate(Double.parseDouble(genomeMutationInput.getText()));
+    prefs.setPopulationMutationRate(Double.parseDouble(populationMutationInput.getText()));
+
+    crossoverSlider.setValue((int) (Double.parseDouble(crossoverInput.getText()) * getSliderRes()));
+    genomeMutationSlider.setValue((int) (Double.parseDouble(genomeMutationInput.getText()) * getSliderRes()));
+    populationMutationSlider.setValue((int) (Double.parseDouble(populationMutationInput.getText()) * getSliderRes()));
+
+    prefs.setAlphabetSize(Integer.parseInt(alphabetSizeInput.getText()));
+    prefs.setBitVectorSize(Integer.parseInt(bitVectorSizeInput.getText()));
+    prefs.setPopulationSize(Integer.parseInt(populationSizeInput.getText()));
+    prefs.setSurprisingLength(Integer.parseInt(surprisingLengthInput.getText()));
+
+    prefs.setPuzzle(getPuzzle());
+    prefs.setMateSelectionMode(getMatingSelection());
+    prefs.setAdultSelectionMode(getAdultSelection());
+  }
+
+  private GeneticProblem getPuzzle() {
+    String puzzle = String.valueOf(puzzleSelect.getSelectedItem());
+    if (puzzle.equals(SurprisingSequences.class.getSimpleName())) {
+      setVisibleLolz(false);
+      setVisibleOneMax(false);
+      setVisibleSurprising(true);
+      return new SurprisingSequences(prefs, Integer.parseInt(alphabetSizeInput.getText()),
+                                     Integer.parseInt(surprisingLengthInput.getText()));
+    } else if (puzzle.equals(Lolz.class.getSimpleName())) {
+      setVisibleLolz(true);
+      setVisibleOneMax(false);
+      setVisibleSurprising(false);
+      return new Lolz(prefs, Integer.parseInt(bitVectorSizeInput.getText()),
+                      Integer.parseInt(zeroThresholdInput.getText()));
+    } else if (puzzle.equals(OneMax.class.getSimpleName())) {
+      setVisibleLolz(false);
+      setVisibleOneMax(true);
+      setVisibleSurprising(false);
+      return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
     }
+    throw new IllegalStateException("No puzzle selected!");
   }
 
-  private double getTournamentE() {
-    return 0.05;
-  }
-
-  private int getTournamentK() {
-    return 10;
-  }
-
-  public void adultModeSelected(String mode) {
+  private AdultSelection getAdultSelection() {
+    String mode = String.valueOf(adultSelection.getSelectedItem());
     if (mode.equals(FullTurnover.class.getSimpleName())) {
-      prefs.setAdultSelectionMode(new FullTurnover());
+      setMixingVisible(false);
+      setOverProductionVisible(false);
+      return new FullTurnover();
     } else if (mode.equals(Mixing.class.getSimpleName())) {
-      prefs.setAdultSelectionMode(new Mixing(getMixingRate()));
+      setMixingVisible(true);
+      setOverProductionVisible(false);
+      return new Mixing(Double.parseDouble(mixingRateInput.getText()));
     } else if (mode.equals(OverProduction.class.getSimpleName())) {
-      prefs.setAdultSelectionMode(new OverProduction(getOverProductionRate()));
+      setMixingVisible(false);
+      setOverProductionVisible(true);
+      return new OverProduction(Double.parseDouble(overProductionInput.getText()));
     }
+    throw new IllegalStateException("No AdultSelection");
   }
 
-  private int getOverProductionRate() {
-    return 2;
-  }
-
-  private double getMixingRate() {
-    return 0.5;
+  private MatingSelection getMatingSelection() {
+    String mode = String.valueOf(matingSelection.getSelectedItem());
+    if (mode.equals(FitnessProportiate.class.getSimpleName())) {
+      setTournamentVisible(false);
+      return new FitnessProportiate();
+    } else if (mode.equals(SigmaScaled.class.getSimpleName())) {
+      setTournamentVisible(false);
+      return new SigmaScaled();
+    } else if (mode.equals(Tournament.class.getSimpleName())) {
+      setTournamentVisible(true);
+      String[] split = tournamentInput.getText().split("/");
+      return new Tournament(Integer.parseInt(split[0]), Double.parseDouble(split[1]));
+    }
+    throw new IllegalStateException("No MatingSelection");
   }
 
   @Override
@@ -260,4 +305,9 @@ public class GeneticGui extends AIGui {
   public Plot getPlot() {
     return plot;
   }
+
+  private double getSliderRes() {
+    return 100.;
+  }
+
 }
