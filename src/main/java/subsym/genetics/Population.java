@@ -22,8 +22,6 @@ public class Population {
   private final GeneticPreferences prefs;
   private PopulationList nextGeneration;
 
-  private AdultSelection selectionMode;
-
   public static Map<Integer, Double> fitnessCache = new HashMap<>();
 
   private int freeSpots = 0;
@@ -37,7 +35,6 @@ public class Population {
 
   public void selectAdults(AdultSelection selectionMode) {
     nextGeneration = new PopulationList();
-    this.selectionMode = selectionMode;
     selectionMode.selectAdults(this);
   }
 
@@ -110,7 +107,7 @@ public class Population {
   }
 
   public void cleanUp() {
-    selectionMode.cleanUp(this);
+    prefs.getAdultSelectionMode().cleanUp(this);
     currentGeneration++;
   }
 

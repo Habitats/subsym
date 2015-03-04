@@ -77,7 +77,7 @@ public class Genetics implements GeneticGuiListener {
     GeneticPreferences prefs = new GeneticPreferences(populationSize, crossOverRate, populationMutationRate, //
                                                       genomeMutationRate, adultSelectionMode, mateSelectionMode);
     for (int length = 90; length < alphabetSize * 3; length++) {
-      SurprisingSequences problem = new SurprisingSequences(prefs, alphabetSize, length);
+      SurprisingSequences problem = new SurprisingSequences(prefs, alphabetSize, length, true);
       GeneticProblem solution = GeneticEngine.solve(problem, true);
       Log.v(TAG, solution);
     }
@@ -96,6 +96,11 @@ public class Genetics implements GeneticGuiListener {
   @Override
   public void stop() {
     GeneticEngine.kill();
+  }
+
+  @Override
+  public void enableLogging(boolean enableLogging) {
+    GeneticEngine.enableLogging(enableLogging);
   }
 
   public void onSolved(GeneticProblem solution) {

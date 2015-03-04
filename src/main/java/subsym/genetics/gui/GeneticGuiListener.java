@@ -10,4 +10,6 @@ public interface GeneticGuiListener {
   void run(GeneticPreferences prefs);
 
   void stop();
+
+  void enableLogging(boolean selected);
 }

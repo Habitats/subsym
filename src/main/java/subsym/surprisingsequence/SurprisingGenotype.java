@@ -12,6 +12,7 @@ import subsym.genetics.Phenotype;
 public class SurprisingGenotype extends Genotype {
 
   private static final String TAG = SurprisingGenotype.class.getSimpleName();
+  private boolean global;
   private List<Integer> alphabet;
   private SurprisingPhenotype phenotype;
   private int groupSize;
@@ -30,10 +31,12 @@ public class SurprisingGenotype extends Genotype {
     surpriseCopy.alphabet = alphabet;
     surpriseCopy.phenotype = new SurprisingPhenotype(surpriseCopy);
     surpriseCopy.groupSize = groupSize;
+    surpriseCopy.global = global;
   }
 
-  public SurprisingGenotype(List<Integer> permutation, List<Integer> alphabet) {
+  public SurprisingGenotype(List<Integer> permutation, List<Integer> alphabet, boolean global) {
     this.alphabet = alphabet;
+    this.global = global;
     groupSize = getBitGroupSize(alphabet);
     setSize(groupSize * permutation.size());
     bits = toBitSet(permutation, groupSize);
@@ -68,5 +71,9 @@ public class SurprisingGenotype extends Genotype {
   @Override
   public String toString() {
     return super.toString() + phenotype.toString();
+  }
+
+  public boolean global() {
+    return global;
   }
 }

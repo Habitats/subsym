@@ -13,7 +13,9 @@ import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.adultselection.OverProduction;
 import subsym.genetics.matingselection.FitnessProportiate;
+import subsym.genetics.matingselection.Rank;
 import subsym.lolz.LolzGenotype;
+import subsym.onemax.OneMax;
 import subsym.onemax.OneMaxGenotype;
 import subsym.surprisingsequence.SurprisingGenotype;
 import subsym.surprisingsequence.SurprisingPhenotype;
@@ -155,12 +157,12 @@ public class test_Genotype {
   @Test
   public void test_intToBit() {
     List<Integer> permutation = Arrays.asList(1, 2, 3, 4);
-    SurprisingGenotype v = new SurprisingGenotype(permutation, permutation);
+    SurprisingGenotype v = new SurprisingGenotype(permutation, permutation, true);
     BitSet bits = v.toBitSet(permutation, v.getBitGroupSize());
     v.setBits(bits);
     SurprisingGenotype
         w =
-        (SurprisingGenotype) new SurprisingGenotype(permutation, permutation).fromString("100011010001");
+        (SurprisingGenotype) new SurprisingGenotype(permutation, permutation, true).fromString("100011010001");
     assertEquals(v.getOnBits(), w.getOnBits());
   }
 
@@ -176,8 +178,8 @@ public class test_Genotype {
   @Test
   public void test_bitBlockCrossOver() {
     List<Integer> alphabet = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
-    Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet);
-    Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet);
+    Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet, true);
+    Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true);
 
     Genotype w;
     w = Genotype.crossOver(v, u, 0);
@@ -253,5 +255,17 @@ public class test_Genotype {
       p.add(new OneMaxGenotype().setRandom(10));
     }
     return p;
+  }
+
+  @Test
+  public void test_rank() {
+    Population p = getPopulation(10);
+    Rank rank = new Rank();
+    GeneticPreferences prefs = GeneticPreferences.getTest();
+    prefs.setMateSelectionMode(rank);
+
+    OneMax om = new OneMax(prefs, 10);
+    om.cleanUp();
+    om.crossOver();
   }
 }

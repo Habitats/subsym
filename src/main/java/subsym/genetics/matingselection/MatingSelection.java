@@ -14,6 +14,6 @@ public interface MatingSelection {
 
   static List<String> values() {
     return Arrays
-        .asList(FitnessProportiate.class.getSimpleName(), SigmaScaled.class.getSimpleName(), Tournament.class.getSimpleName());
+        .asList(FitnessProportiate.class.getSimpleName(), SigmaScaled.class.getSimpleName(), Tournament.class.getSimpleName(), Boltzman.class.getSimpleName(), Rank.class.getSimpleName());
   }
 }

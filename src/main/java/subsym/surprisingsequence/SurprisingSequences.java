@@ -15,10 +15,12 @@ public class SurprisingSequences extends GeneticProblem {
 
   private final List<Integer> alphabet;
   private final int length;
+  private final boolean global;
 
-  public SurprisingSequences(GeneticPreferences prefs, int alphabetSize, int length) {
+  public SurprisingSequences(GeneticPreferences prefs, int alphabetSize, int length, boolean global) {
     super(prefs);
 
+    this.global = global;
     this.length = length;
     alphabet = IntStream.range(0, alphabetSize).boxed().collect(Collectors.toList());
   }
@@ -38,7 +40,7 @@ public class SurprisingSequences extends GeneticProblem {
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
       List<Integer> permutation = createPermutation(alphabet, length);
-      getPopulation().add(new SurprisingGenotype(permutation, alphabet));
+      getPopulation().add(new SurprisingGenotype(permutation, alphabet, global));
     });
   }
 

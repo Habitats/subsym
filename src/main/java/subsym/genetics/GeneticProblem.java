@@ -58,11 +58,14 @@ public abstract class GeneticProblem {
     avg += delta;
     Log.i(TAG, String.format("(%4d / %4d) ms - %s",//
                              delta, (int) (avg / count), population));
+    delta = System.currentTimeMillis();
+    count++;
+  }
+
+public void addPlots() {
     addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
     addValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
     addValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
-    delta = System.currentTimeMillis();
-    count++;
   }
 
   private void addValue(String max, int currentGeneration, double currentMaxFitness) {

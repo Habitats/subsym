@@ -28,8 +28,11 @@ public class SurprisingPhenotype implements Phenotype {
 
   @Override
   public double fitness() {
-//    return getLocalSurprisingSequenceFitness(surprisingGenotype.toList());
-    return isValidGenotype() ? getGlobalSurprisingSequenceFitness(surprisingGenotype.toList()) : 0;
+    if (!surprisingGenotype.global()) {
+      return isValidGenotype() ?  getLocalSurprisingSequenceFitness(surprisingGenotype.toList()) : 0;
+    } else {
+      return isValidGenotype() ? getGlobalSurprisingSequenceFitness(surprisingGenotype.toList()) : 0;
+    }
   }
 
   public boolean isValidGenotype() {

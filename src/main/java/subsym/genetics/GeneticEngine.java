@@ -9,6 +9,7 @@ public class GeneticEngine {
 
   private static final String TAG = GeneticEngine.class.getSimpleName();
   private static boolean shouldRun;
+  private static boolean enableLogging;
 
   public static void solveInBackground(GeneticProblem problem, boolean loggingEnabled, Genetics genetics) {
     new Thread(() -> {
@@ -18,6 +19,7 @@ public class GeneticEngine {
   }
 
   public static GeneticProblem solve(GeneticProblem problem, boolean loggingEnabled) {
+    GeneticEngine.enableLogging = loggingEnabled;
     shouldRun = true;
     problem.initPopulation();
     int count = 0;
@@ -27,7 +29,8 @@ public class GeneticEngine {
       problem.crossOver();
       problem.mutate();
       problem.cleanUp();
-      if (loggingEnabled) {
+      problem.addPlots();
+      if (enableLogging) {
         problem.log();
       }
       count++;
@@ -43,5 +46,9 @@ public class GeneticEngine {
 
   public static void kill() {
     shouldRun = false;
+  }
+
+  public static void enableLogging(boolean enableLogging) {
+    GeneticEngine.enableLogging = enableLogging;
   }
 }
