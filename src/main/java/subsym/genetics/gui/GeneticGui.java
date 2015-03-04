@@ -169,12 +169,15 @@ public class GeneticGui extends AIGui {
   private void initDefaultPreferences() {
     adultSelection.setSelectedItem(prefs.getAdultSelectionMode().getClass().getSimpleName());
     matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
-    crossoverSlider.setValue((int) (prefs.getCrossOverRate() * getSliderRes()));
+
     crossoverInput.setText(String.valueOf(prefs.getCrossOverRate()));
-    genomeMutationSlider.setValue((int) (prefs.getGenomeMutationRate() * getSliderRes()));
     genomeMutationInput.setText(String.valueOf(prefs.getGenomeMutationRate()));
-    populationMutationSlider.setValue((int) (prefs.getPopulationMutationRate() * getSliderRes()));
     populationMutationInput.setText(String.valueOf(prefs.getPopulationMutationRate()));
+
+    crossoverSlider.setValue((int) (prefs.getCrossOverRate() * getSliderRes()));
+    genomeMutationSlider.setValue((int) (prefs.getGenomeMutationRate() * getSliderRes()));
+    populationMutationSlider.setValue((int) (prefs.getPopulationMutationRate() * getSliderRes()));
+
     populationSizeInput.setText(String.valueOf(prefs.getPopulationSize()));
   }
 
