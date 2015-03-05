@@ -40,7 +40,7 @@ public abstract class GeneticProblem {
   }
 
   public void select() {
-    population.selectAdults(prefs.getAdultSelectionMode());
+    population.selectAdults();
   }
 
   public void crossOver() {

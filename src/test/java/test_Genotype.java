@@ -128,7 +128,8 @@ public class test_Genotype {
 
   @Test
   public void test_populationFullTurnoverSelection() {
-    Population p = getPopulation(10);
+    GeneticPreferences test = GeneticPreferences.getTest();
+    Population p = new Population(test);
     p.selectAdults(new FullTurnover());
     p.cleanUp();
     assertEquals(p.size(), 0);
@@ -265,7 +266,7 @@ public class test_Genotype {
     prefs.setMateSelectionMode(rank);
 
     OneMax om = new OneMax(prefs, 10);
-    om.cleanUp();
-    om.crossOver();
+//    om.cleanUp();
+//    om.crossOver();
   }
 }

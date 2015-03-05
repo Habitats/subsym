@@ -29,9 +29,9 @@ public class Population {
     currentPopulation = new PopulationList();
   }
 
-  public void selectAdults(AdultSelection selectionMode) {
+  public void selectAdults() {
     nextGeneration = new PopulationList();
-    selectionMode.selectAdults(this);
+    prefs.getAdultSelectionMode().selectAdults(this);
   }
 
   public void crossOver(double crossOverRate, double cut, MatingSelection matingMode) {
@@ -88,7 +88,7 @@ public class Population {
   }
 
   public void mutate(double populationMutationRate, double genotypeMutationRate) {
-    List<Genotype> children = new ArrayList<>(currentPopulation.get());
+    List<Genotype> children = new ArrayList<>(nextGeneration.get());
 
     int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peekBest().size());
     int numIndividualsToMutate = (int) Math.ceil(populationMutationRate * (children.size()));
@@ -97,9 +97,8 @@ public class Population {
       Collections.swap(children, i, r.nextInt(children.size() - i));
     }
     children.stream() //
-        .filter(v -> !v.shouldDie()) //
         .limit(numIndividualsToMutate) //
-        .forEach(v -> v.mutate(numBitsToMutate));
+        .forEach(v -> v.mutate(genotypeMutationRate));
   }
 
   public void cleanUp() {
@@ -168,5 +167,10 @@ public class Population {
 
   public PopulationList getNextGeneration() {
     return nextGeneration;
+  }
+
+  public void selectAdults(AdultSelection overProduction) {
+    prefs.setAdultSelectionMode(overProduction);
+    selectAdults();
   }
 }
