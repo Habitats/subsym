@@ -83,6 +83,8 @@ public abstract class Genotype implements Comparable<Genotype> {
       boolean value = cutAtBit <= i ? v.bits.get(i) : u.bits.get(i);
       w.bits.set(i, value);
     }
+
+    w.fitness = null;
     return w;
   }
 
@@ -94,14 +96,13 @@ public abstract class Genotype implements Comparable<Genotype> {
       Collections.swap(randomSequence, i, i + r.nextInt(randomSequence.size() - i));
     }
     IntStream.range(0, numBits).forEach(i -> bits.flip(randomSequence.remove(0)));
-
     fitness = null;
   }
 
   // mutate each bit with a given probability
   public void mutate(double mutationRate) {
-    fitness = null;
     IntStream.range(0, bits.length()).filter(i -> Math.random() < mutationRate).forEach(bits::flip);
+    fitness = null;
   }
 
   public BitSet toBitSet(List<Integer> ints, int groupSize) {
@@ -156,6 +157,7 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   public void invert() {
     bits.flip(0, size);
+    fitness = null;
   }
 
   public boolean shouldDie() {
