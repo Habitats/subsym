@@ -1,5 +1,8 @@
 package subsym.genetics;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
@@ -7,6 +10,7 @@ import subsym.genetics.matingselection.FitnessProportiate;
 import subsym.genetics.matingselection.MatingSelection;
 import subsym.genetics.matingselection.Tournament;
 import subsym.onemax.OneMax;
+import subsym.surprisingsequence.SurprisingSequences;
 
 /**
  * Created by anon on 02.03.2015.
@@ -106,6 +110,20 @@ public class GeneticPreferences {
     OneMax oneMax = new OneMax(prefs, 5);
     prefs.setPuzzle(oneMax);
     return prefs;
+  }
+
+  public static GeneticPreferences getSurprisingSequences() {
+    GeneticPreferences prefs = new GeneticPreferences(40, 0.1, 0.9, 0.0017, new Mixing(0.5), new Tournament(10, 0.05));
+    GeneticProblem problem = new SurprisingSequences(prefs, 40, 90, true);
+    prefs.setPuzzle(problem);
+    return prefs;
+  }
+
+  public static Map<String, GeneticPreferences> getPresets() {
+    Map<String, GeneticPreferences> presets = new HashMap<>();
+    presets.put("Surprising 90-40", getSurprisingSequences());
+    presets.put("OneMax 3-5", getOneMaxTest());
+    return presets;
   }
 
   public int getBitVectorSize() {

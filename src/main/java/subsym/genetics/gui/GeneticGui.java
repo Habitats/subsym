@@ -89,6 +89,8 @@ public class GeneticGui extends AIGui {
   private AIComboBox puzzleSelect;
   private AIComboBox adultSelection;
   private AIComboBox matingSelection;
+  private AILabel presetsLabel;
+  private AIComboBox presetsComboBox;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -96,6 +98,10 @@ public class GeneticGui extends AIGui {
     Genetics.values().forEach(puzzleSelect::addItem);
     AdultSelection.values().forEach(adultSelection::addItem);
     MatingSelection.values().forEach(matingSelection::addItem);
+    GeneticPreferences.getPresets().keySet().forEach(presetsComboBox::addItem);
+
+    presetsComboBox.addActionListener(
+        e -> setPreferences(GeneticPreferences.getPresets().get(((JComboBox) e.getSource()).getSelectedItem())));
 
     matingSelection.addActionListener(e -> updatePreferences());
     adultSelection.addActionListener(e -> updatePreferences());
@@ -155,8 +161,9 @@ public class GeneticGui extends AIGui {
     logField.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
           logField.transferFocus();
+        }
       }
     });
 

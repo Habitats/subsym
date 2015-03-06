@@ -28,7 +28,7 @@ public class GeneticEngine {
       problem.crossOver();
       problem.mutate();
       problem.select();
-      problem.addPlots();
+      problem.addSomePlots();
       if (enableLogging) {
         problem.log();
       }
@@ -37,6 +37,7 @@ public class GeneticEngine {
         Log.i(TAG, "Gen ... " + count);
       }
     }
+    problem.addPlots();
     if (loggingEnabled) {
       Log.v(TAG, "Search took: " + (System.currentTimeMillis() - start) / 1000. + " s");
     }
