@@ -189,7 +189,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public String getPaddedBitString() {
-    return String.format("%" + size() + "s", getBitsString());
+    return String.format("%" + size() + "s", getBitsString()).replaceAll(" ", "0");
   }
 
   public String toString() {
