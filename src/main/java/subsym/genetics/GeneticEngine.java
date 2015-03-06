@@ -11,10 +11,15 @@ public class GeneticEngine {
   private static boolean shouldRun;
   private static boolean enableLogging;
 
-  public static void solveInBackground(GeneticProblem problem, boolean loggingEnabled, Genetics genetics) {
+  public static void solveInBackground(Genetics.GeneticRun runs, boolean loggingEnabled, Genetics genetics) {
     new Thread(() -> {
-      solve(problem, loggingEnabled);
-      genetics.onSolved(problem);
+      runs.stream().forEach(p -> {
+        genetics.clear();
+        solve(p, runs.size() > 1 && loggingEnabled ? false : loggingEnabled);
+        genetics.onSolved(p);
+      });
+      genetics.onSolved(runs);
+
     }).start();
   }
 
@@ -28,8 +33,8 @@ public class GeneticEngine {
       problem.crossOver();
       problem.mutate();
       problem.select();
-      problem.addSomePlots();
       if (enableLogging) {
+        problem.addSomePlots();
         problem.log();
       }
       count++;

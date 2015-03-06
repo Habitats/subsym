@@ -23,7 +23,7 @@ public class Lolz extends GeneticProblem {
 
   @Override
   public boolean solution() {
-    return getPopulation().getBestGenotype().fitness() == bitVectorSize;
+    return getPopulation().getBestGenotype().fitness() == 1;
   }
 
   @Override
@@ -43,5 +43,10 @@ public class Lolz extends GeneticProblem {
 
   public int getBitVecotorSize() {
     return bitVectorSize;
+  }
+
+  @Override
+  public GeneticProblem newInstance() {
+    return new Lolz(getPreferences(),bitVectorSize,zeroThreshold);
   }
 }

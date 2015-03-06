@@ -56,4 +56,9 @@ public class SurprisingSequences extends GeneticProblem {
   public int getAlphabetSize() {
     return alphabet.size();
   }
+
+  @Override
+  public GeneticProblem newInstance() {
+    return new SurprisingSequences(getPreferences(), alphabet.size(), length, global);
+  }
 }

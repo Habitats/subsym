@@ -23,6 +23,10 @@ public abstract class GeneticProblem {
     delta = System.currentTimeMillis();
   }
 
+  public GeneticPreferences getPreferences() {
+    return prefs;
+  }
+
   public int generations() {
     return population.getCurrentGeneration();
   }
@@ -109,5 +113,7 @@ public abstract class GeneticProblem {
     this.plotter = plotter;
   }
 
+
+  public abstract GeneticProblem newInstance();
 
 }

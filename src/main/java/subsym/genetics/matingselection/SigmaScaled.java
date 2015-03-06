@@ -15,7 +15,8 @@ public class SigmaScaled implements MatingSelection {
 
   public Genotype selectNext(List<Genotype> populationList) {
     double averageFitness = populationList.stream().mapToDouble(Genotype::fitness).average().getAsDouble();
-    double standardDeviation = Population.standardDeviation(populationList);
+    double standardDeviation = //
+        Population.standardDeviation(populationList.stream().map(i -> i.fitness()).collect(Collectors.toList()));
     Function<Genotype, Double> toSigmaScale = v -> //
         Math.random() * (1 + (v.fitness() - averageFitness) / 2 * standardDeviation);
     List<Double> weights = populationList.stream().map(toSigmaScale).collect(Collectors.toList());

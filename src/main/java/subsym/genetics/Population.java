@@ -1,7 +1,6 @@
 package subsym.genetics;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -75,18 +74,10 @@ public class Population {
   }
 
 
-  public static double standardDeviation(Collection<Genotype> population) {
-    double M = 0.0;
-    double S = 0.0;
-    int k = 1;
-    for (Genotype genotype : population) {
-      double tmpM = M;
-      double fitness = genotype.fitness();
-      M += (fitness - tmpM) / k;
-      S += (fitness - tmpM) * (fitness - M);
-      k++;
-    }
-    double sd = Math.sqrt(S / (k - 2));
+  public static double standardDeviation(List<Double> numbers) {
+    double mean = numbers.stream().mapToDouble(i -> i).average().getAsDouble();
+    double averagePowerMeans = numbers.stream().mapToDouble(i -> Math.pow(i - mean, 2)).average().getAsDouble();
+    double sd = Math.sqrt(averagePowerMeans);
     return sd;
   }
 
@@ -136,7 +127,7 @@ public class Population {
   }
 
   public double getCurrentStandardDeviation() {
-    return standardDeviation(currentPopulation.get());
+    return standardDeviation(currentPopulation.get().stream().map(i -> i.fitness()).collect(Collectors.toList()));
   }
 
   public double getCurrentAverageFitness() {
