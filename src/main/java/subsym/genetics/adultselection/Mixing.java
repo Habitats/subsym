@@ -1,7 +1,7 @@
 package subsym.genetics.adultselection;
 
-import subsym.PopulationList;
-import subsym.genetics.Genotype;
+import java.util.stream.IntStream;
+
 import subsym.genetics.Population;
 
 /**
@@ -9,43 +9,31 @@ import subsym.genetics.Population;
  */
 public class Mixing implements AdultSelection {
 
-  public double mixingRate;
+  private double mixingRate;
 
   public Mixing(double mixingRate) {
     this.mixingRate = mixingRate;
   }
 
-  private void removeBadAdults(PopulationList currentPopulation, int maxPopulationSize) {
-    currentPopulation.stream().sorted().limit(getAdultLimit(maxPopulationSize)).forEach(Genotype::tagForRevival);
-    currentPopulation.removeIf(Genotype::shouldDie);
-  }
-
-  private void addNextGeneration(PopulationList currentPopulation, PopulationList nextGeneration,
-                                 int maxPopulationSize) {
-    currentPopulation.addAll(nextGeneration);
-    while (currentPopulation.size() > maxPopulationSize) {
-      currentPopulation.removeLast();
+  @Override
+  public void selectAdults(Population population) {
+    int adultLimit = (int) (mixingRate * population.getMaxPopulationSize());
+    IntStream.range(0, adultLimit)
+        .forEach(i -> population.getNextGeneration().add(population.getCurrent().removeBest()));
+    population.getCurrent().clear();
+    population.getCurrent().addAll(population.getNextGeneration());
+    while (population.getCurrent().size() > population.getMaxPopulationSize()) {
+      population.getCurrent().removeWorst();
     }
   }
 
-  private int getAdultLimit(int maxPopulationSize) {
-    return (int) (mixingRate * maxPopulationSize);
+  @Override
+  public int getFreeSpots(Population population) {
+    int max = (int) (population.getMaxPopulationSize() * mixingRate);
+    return max - population.getNextGeneration().size();
   }
 
-  @Override
-  public void selectAdults(Population population) {
-    int adultLimit = getAdultLimit(population.getMaxPopulationSize());
-    population.getCurrent().stream().forEach(Genotype::tagForRemoval);
-    population.getCurrent().stream().sorted().limit(adultLimit).forEach(Genotype::tagForRevival);
-
-    int toKeepCount = (int) population.getCurrent().stream().filter(v -> !v.shouldDie()).count();
-    int freeSpots = population.getMaxPopulationSize() - toKeepCount;
-    population.setFreeSpots(freeSpots);
-  }
-
-  @Override
-  public void cleanUp(Population population) {
-    addNextGeneration(population.getCurrent(), population.getNextGeneration(), population.getMaxPopulationSize());
-//    removeBadAdults(population.getCurrent(), population.getMaxPopulationSize());
+  public double getMixingRate() {
+    return mixingRate;
   }
 }

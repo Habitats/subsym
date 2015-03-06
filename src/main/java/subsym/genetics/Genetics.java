@@ -33,6 +33,7 @@ public class Genetics implements GeneticGuiListener {
   public Genetics() {
     gui = new GeneticGui();
     gui.setListener(this);
+    gui.setPreferences(GeneticPreferences.getOneMaxTest());
   }
 
   private static void lolz() {

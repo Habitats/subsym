@@ -3,6 +3,8 @@ package subsym.genetics.gui;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
@@ -39,46 +41,54 @@ import subsym.surprisingsequence.SurprisingSequences;
 public class GeneticGui extends AIGui {
 
   private static final String TAG = GeneticGui.class.getSimpleName();
-  private GeneticGuiListener listener;
+
+  private Plot plot;
   private JPanel mainPanel;
+  private AITextArea inputField;
+  private GeneticPreferences prefs;
+  private GeneticGuiListener listener;
+  private AIContiniousScrollPane logField;
+
+  private AISlider crossoverSlider;
   private AISlider genomeMutationSlider;
   private AISlider populationMutationSlider;
-  private AISlider crossoverSlider;
-  private JTextField genomeMutationInput;
-  private JTextField populationMutationInput;
-  private JTextField crossoverInput;
-  private Plot plot;
-  private AITextArea inputField;
-  private AIContiniousScrollPane logField;
-  private AIComboBox adultSelection;
-  private AIComboBox matingSelection;
-  private AILabel populationSize;
-  private JTextField populationSizeInput;
-  private AIButton runButton;
+
   private AILabel populationMutationField;
   private AILabel crossoverField;
   private AILabel genomeMutationField;
-  private AIButton stopButton;
-  private AIComboBox puzzleSelect;
   private AILabel bitVectorSizeLabel;
-  private JTextField bitVectorSizeInput;
-  private JTextField alphabetSizeInput;
   private AILabel alphabetSizeLabel;
   private AILabel surprisingLengthLabel;
-  private JTextField surprisingLengthInput;
   private AILabel zeroThresholdLabel;
-  private JTextField zeroThresholdInput;
-  private JTextField mixingRateInput;
   private AILabel mixingRateLabel;
   private AILabel tournamentLabel;
-  private JTextField tournamentInput;
   private AILabel overProductionLabel;
-  private JTextField overProductionInput;
-  private JCheckBox globalCheckBox;
-  private JCheckBox enableLoggingCheckbox;
   private AILabel genomeMutationValField;
   private AILabel populationMutationValField;
-  private GeneticPreferences prefs;
+  private AILabel populationSize;
+
+  private AIButton runButton;
+  private AIButton stopButton;
+
+  private JCheckBox globalCheckBox;
+  private JCheckBox enableLoggingCheckbox;
+
+
+  private JTextField crossoverInput;
+  private JTextField tournamentInput;
+  private JTextField mixingRateInput;
+  private JTextField alphabetSizeInput;
+  private JTextField bitVectorSizeInput;
+  private JTextField zeroThresholdInput;
+  private JTextField populationSizeInput;
+  private JTextField overProductionInput;
+  private JTextField genomeMutationInput;
+  private JTextField surprisingLengthInput;
+  private JTextField populationMutationInput;
+
+  private AIComboBox puzzleSelect;
+  private AIComboBox adultSelection;
+  private AIComboBox matingSelection;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -131,7 +141,24 @@ public class GeneticGui extends AIGui {
     populationMutationInput.addActionListener(e -> updatePreferences());
 
     logField.setFont(Font.decode(Font.MONOSPACED));
+
     buildFrame(mainPanel, logField, null);
+    mainPanel.requestFocus();
+    mainPanel.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_R) {
+          run();
+        }
+      }
+    });
+    logField.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+          logField.transferFocus();
+      }
+    });
 
     adultSelection.setSelectedItem(Mixing.class.getSimpleName());
     matingSelection.setSelectedItem(Tournament.class.getSimpleName());
@@ -340,4 +367,38 @@ public class GeneticGui extends AIGui {
     return 1000.;
   }
 
+  public void setPreferences(GeneticPreferences prefs) {
+    crossoverInput.setText(String.valueOf(prefs.getCrossOverRate()));
+    populationSizeInput.setText(String.valueOf(prefs.getPopulationSize()));
+    genomeMutationInput.setText(String.valueOf(prefs.getGenomeMutationRate()));
+    populationMutationInput.setText(String.valueOf(prefs.getPopulationMutationRate()));
+
+    puzzleSelect.setSelectedItem(prefs.getPuzzle().getClass().getSimpleName());
+    adultSelection.setSelectedItem(prefs.getAdultSelectionMode().getClass().getSimpleName());
+    matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
+
+    if (prefs.getAdultSelectionMode() instanceof OverProduction) {
+      overProductionInput
+          .setText(String.valueOf(((OverProduction) prefs.getAdultSelectionMode()).getOverProductionRate()));
+    } else if (prefs.getAdultSelectionMode() instanceof Mixing) {
+      mixingRateInput.setText(String.valueOf(((Mixing) prefs.getAdultSelectionMode()).getMixingRate()));
+    }
+
+    if (prefs.getPuzzle() instanceof SurprisingSequences) {
+      SurprisingSequences puzzle = (SurprisingSequences) prefs.getPuzzle();
+      surprisingLengthInput.setText(String.valueOf(puzzle.getSurprisingLength()));
+      alphabetSizeInput.setText(String.valueOf(puzzle.getAlphabetSize()));
+    } else if (prefs.getPuzzle() instanceof OneMax) {
+      bitVectorSizeInput.setText(String.valueOf(((OneMax) prefs.getPuzzle()).getBitVecotorSize()));
+    } else if (prefs.getPuzzle() instanceof Lolz) {
+      Lolz puzzle = (Lolz) prefs.getPuzzle();
+      zeroThresholdInput.setText(String.valueOf(puzzle.getZeroThreshold()));
+      bitVectorSizeInput.setText(String.valueOf(puzzle.getBitVecotorSize()));
+    }
+
+    if (prefs.getMateSelectionMode() instanceof Tournament) {
+      Tournament mateSelectionMode = (Tournament) prefs.getMateSelectionMode();
+      tournamentInput.setText(mateSelectionMode.getTournamentK() + "/" + mateSelectionMode.getTournamentE());
+    }
+  }
 }

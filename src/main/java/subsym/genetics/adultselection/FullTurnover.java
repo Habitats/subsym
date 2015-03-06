@@ -1,6 +1,5 @@
 package subsym.genetics.adultselection;
 
-import subsym.genetics.Genotype;
 import subsym.genetics.Population;
 
 /**
@@ -10,13 +9,15 @@ public class FullTurnover implements AdultSelection {
 
   @Override
   public void selectAdults(Population population) {
-    population.getCurrent().stream().forEach(Genotype::tagForRemoval);
-    population.setFreeSpots(population.getMaxPopulationSize());
+    population.getCurrent().clear();
+    population.getCurrent().addAll(population.getNextGeneration());
+    while (population.getCurrent().size() > population.getMaxPopulationSize()) {
+      population.getCurrent().removeWorst();
+    }
   }
 
   @Override
-  public void cleanUp(Population population) {
-    population.getCurrent().clear();
-    population.getCurrent().addAll(population.getNextGeneration());
+  public int getFreeSpots(Population population){
+    return population.getMaxPopulationSize() - population.nextGenerationSize();
   }
 }

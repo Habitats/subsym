@@ -48,4 +48,12 @@ public class SurprisingSequences extends GeneticProblem {
   public boolean solution() {
     return getPopulation().getBestGenotype().fitness() == 1;
   }
+
+  public int getSurprisingLength() {
+    return length;
+  }
+
+  public int getAlphabetSize() {
+    return alphabet.size();
+  }
 }

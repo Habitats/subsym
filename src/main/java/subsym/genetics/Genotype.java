@@ -160,18 +160,6 @@ public abstract class Genotype implements Comparable<Genotype> {
     fitness = null;
   }
 
-  public boolean shouldDie() {
-    return shouldDie;
-  }
-
-  public void tagForRemoval() {
-    shouldDie = true;
-  }
-
-  public void tagForRevival() {
-    shouldDie = false;
-  }
-
   public void setGeneration(int generation) {
     this.generation = generation;
   }

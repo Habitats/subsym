@@ -106,12 +106,11 @@ public class test_Genotype {
     int initialSize = 10;
     Population p = getPopulation(initialSize);
     int overProductionRate = 2;
-    p.selectAdults(new OverProduction(overProductionRate));
     p.crossOver(1, Math.random(), new FitnessProportiate());
     // adults + children * overProductionRate should be present
     assertEquals(p.nextGenerationSize(), initialSize * overProductionRate);
     // only the initalSize amount should be retained
-    p.cleanUp();
+    p.selectAdults(new OverProduction(overProductionRate));
     assertEquals(p.size(), initialSize);
   }
 
@@ -119,10 +118,9 @@ public class test_Genotype {
   public void test_populationMixingSelection() {
     Population p = getPopulation(10);
     double mixingRate = .5;
-    p.selectAdults(new Mixing(mixingRate));
     p.crossOver(1, Math.random(), new FitnessProportiate());
     assertEquals(p.size() + p.nextGenerationSize(), (int) (10 + p.getMaxPopulationSize() * (1 - mixingRate)));
-    p.cleanUp();
+    p.selectAdults(new Mixing(mixingRate));
     assertEquals(p.size(), 10);
   }
 
@@ -131,7 +129,6 @@ public class test_Genotype {
     GeneticPreferences test = GeneticPreferences.getTest();
     Population p = new Population(test);
     p.selectAdults(new FullTurnover());
-    p.cleanUp();
     assertEquals(p.size(), 0);
   }
 
@@ -244,7 +241,7 @@ public class test_Genotype {
     int size = 1000;
     IntStream.range(0, size).forEach(v -> q.add(new OneMaxGenotype().setRandom(10)));
     assertEquals(q.size(), size);
-    IntStream.range(0, 200).forEach(v -> q.removeLast());
+    IntStream.range(0, 200).forEach(v -> q.removeWorst());
     assertEquals(q.size(), size - 200);
   }
 

@@ -20,18 +20,19 @@ public class Population {
   private final GeneticPreferences prefs;
   private PopulationList nextGeneration;
 
-  private int freeSpots = 0;
   private int currentGeneration = 0;
 
 
   public Population(GeneticPreferences prefs) {
     this.prefs = prefs;
     currentPopulation = new PopulationList();
+    nextGeneration = new PopulationList();
   }
 
   public void selectAdults() {
-    nextGeneration = new PopulationList();
     prefs.getAdultSelectionMode().selectAdults(this);
+    currentGeneration++;
+    nextGeneration = new PopulationList();
   }
 
   public void crossOver(double crossOverRate, double cut, MatingSelection matingMode) {
@@ -44,6 +45,10 @@ public class Population {
     while (getFreeSpots() > 0) {
       crossOverSingle(crossOverRate, Math.random(), matingMode);
     }
+  }
+
+  private int getFreeSpots() {
+    return prefs.getAdultSelectionMode().getFreeSpots(this);
   }
 
   public void crossOverSingle(double crossOverRate, double cut, MatingSelection matingMode) {
@@ -66,9 +71,7 @@ public class Population {
   }
 
   private void addToNextGeneration(Genotype child) {
-    if (freeSpots > 0 && nextGeneration.add(child)) {
-      freeSpots -= 1;
-    }
+    nextGeneration.add(child);
   }
 
 
@@ -101,17 +104,8 @@ public class Population {
         .forEach(v -> v.mutate(genotypeMutationRate));
   }
 
-  public void cleanUp() {
-    prefs.getAdultSelectionMode().cleanUp(this);
-    currentGeneration++;
-  }
-
   public void add(Genotype genotype) {
     currentPopulation.add(genotype);
-  }
-
-  public int getFreeSpots() {
-    return freeSpots;
   }
 
   public Genotype getWorstGenotype() {
@@ -159,10 +153,6 @@ public class Population {
 
   public int getMaxPopulationSize() {
     return prefs.getPopulationSize();
-  }
-
-  public void setFreeSpots(int freeSpots) {
-    this.freeSpots = freeSpots;
   }
 
   public PopulationList getNextGeneration() {

@@ -13,10 +13,10 @@ public interface AdultSelection {
 
   void selectAdults(Population population);
 
-  void cleanUp(Population population);
-
   static List<String> values() {
     return Arrays
         .asList(FullTurnover.class.getSimpleName(), Mixing.class.getSimpleName(), OverProduction.class.getSimpleName());
   }
+
+  int getFreeSpots(Population population);
 }

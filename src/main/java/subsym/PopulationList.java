@@ -44,7 +44,7 @@ public class PopulationList {
     return c.size();
   }
 
-  public void removeLast() {
+  public void removeWorst() {
     Genotype v = c.stream().sorted(Comparator.<Genotype>reverseOrder()).findFirst().get();
     c.remove(v);
   }
@@ -73,5 +73,9 @@ public class PopulationList {
 
   public boolean contains(Genotype v) {
     return c.contains(v);
+  }
+
+  public Genotype removeBest() {
+    return c.poll();
   }
 }

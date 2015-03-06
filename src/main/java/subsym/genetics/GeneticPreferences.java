@@ -1,9 +1,12 @@
 package subsym.genetics;
 
 import subsym.genetics.adultselection.AdultSelection;
+import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
+import subsym.genetics.matingselection.FitnessProportiate;
 import subsym.genetics.matingselection.MatingSelection;
 import subsym.genetics.matingselection.Tournament;
+import subsym.onemax.OneMax;
 
 /**
  * Created by anon on 02.03.2015.
@@ -96,6 +99,13 @@ public class GeneticPreferences {
 
   public static GeneticPreferences getTest() {
     return new GeneticPreferences(10, 1, 1, 1, new Mixing(1), new Tournament(10, 0.00));
+  }
+
+  public static GeneticPreferences getOneMaxTest() {
+    GeneticPreferences prefs = new GeneticPreferences(3, 1, 1, 0.5, new FullTurnover(), new FitnessProportiate());
+    OneMax oneMax = new OneMax(prefs, 5);
+    prefs.setPuzzle(oneMax);
+    return prefs;
   }
 
   public int getBitVectorSize() {

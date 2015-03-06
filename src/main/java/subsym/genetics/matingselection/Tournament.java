@@ -33,4 +33,12 @@ public class Tournament implements MatingSelection {
     populationList.remove(best);
     return best;
   }
+
+  public int getTournamentK() {
+    return tournamentLimit;
+  }
+
+  public double getTournamentE() {
+    return chooseRandom;
+  }
 }

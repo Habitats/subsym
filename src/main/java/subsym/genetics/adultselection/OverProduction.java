@@ -1,6 +1,5 @@
 package subsym.genetics.adultselection;
 
-import subsym.genetics.Genotype;
 import subsym.genetics.Population;
 
 /**
@@ -8,24 +7,28 @@ import subsym.genetics.Population;
  */
 public class OverProduction implements AdultSelection {
 
-  public double overProductionRate ;
+  public double overProductionRate;
 
   public OverProduction(double overProductionRate) {
     this.overProductionRate = overProductionRate;
   }
 
   @Override
-  public void cleanUp(Population population) {
+  public void selectAdults(Population population) {
     population.getCurrent().clear();
     population.getCurrent().addAll(population.getNextGeneration());
     while (population.getCurrent().size() > population.getMaxPopulationSize()) {
-      population.getCurrent().removeLast();
+      population.getCurrent().removeWorst();
     }
   }
 
   @Override
-  public void selectAdults(Population population) {
-    population.getCurrent().stream().forEach(Genotype::tagForRemoval);
-    population.setFreeSpots((int) (population.getMaxPopulationSize() * overProductionRate));
+  public int getFreeSpots(Population population) {
+    int max = (int) (population.getMaxPopulationSize() * overProductionRate);
+    return max - population.getNextGeneration().size();
+  }
+
+  public double getOverProductionRate() {
+    return overProductionRate;
   }
 }

@@ -31,10 +31,6 @@ public abstract class GeneticProblem {
     return prefs.getPopulationSize();
   }
 
-  public void cleanUp() {
-    getPopulation().cleanUp();
-  }
-
   protected Population getPopulation() {
     return population;
   }
@@ -64,7 +60,7 @@ public abstract class GeneticProblem {
 
   public void addPlots() {
     int currentGeneration = getPopulation().getCurrentGeneration();
-    if (currentGeneration > 1000 && currentGeneration % 10 == 0) {
+    if (currentGeneration > 1000 && currentGeneration % 100 == 0) {
       return;
     }
     addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());

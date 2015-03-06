@@ -36,4 +36,12 @@ public class Lolz extends GeneticProblem {
     IntStream.range(0, getPopulationSize())
         .forEach(v -> getPopulation().add(new LolzGenotype(zeroThreshold).setRandom(bitVectorSize)));
   }
+
+  public int getZeroThreshold() {
+    return zeroThreshold;
+  }
+
+  public int getBitVecotorSize() {
+    return bitVectorSize;
+  }
 }

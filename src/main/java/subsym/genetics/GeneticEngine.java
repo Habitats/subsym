@@ -25,10 +25,9 @@ public class GeneticEngine {
     int count = 0;
     long start = System.currentTimeMillis();
     while (shouldRun && !problem.solution()) {
-      problem.select();
       problem.crossOver();
       problem.mutate();
-      problem.cleanUp();
+      problem.select();
       problem.addPlots();
       if (enableLogging) {
         problem.log();
