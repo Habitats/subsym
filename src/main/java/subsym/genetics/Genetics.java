@@ -88,10 +88,17 @@ public class Genetics implements GeneticGuiListener {
   public void run(GeneticPreferences prefs) {
     int runCount = prefs.getRunCount();
     GeneticRun runs = new GeneticRun();
+    prefs.reset();
 
     IntStream.range(0, runCount).forEach(i -> {
-      prefs.setSurprisingLength(prefs.getSurprisingLength()+1);
+      int surprisingLength = prefs.getSurprisingLength() + 1;
+
+      prefs.setSurprisingLength(surprisingLength);
       GeneticProblem problem = prefs.getPuzzle();
+      if (prefs.shouldIncrement()) {
+        prefs.increment();
+        problem.increment(prefs.getIncrement());
+      }
       problem.setPlotter(gui.getPlot());
       runs.add(problem);
     });

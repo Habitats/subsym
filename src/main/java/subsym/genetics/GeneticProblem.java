@@ -116,4 +116,5 @@ public abstract class GeneticProblem {
 
   public abstract GeneticProblem newInstance();
 
+  public abstract void increment(int increment);
 }

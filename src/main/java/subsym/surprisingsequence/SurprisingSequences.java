@@ -14,7 +14,7 @@ import subsym.genetics.GeneticProblem;
 public class SurprisingSequences extends GeneticProblem {
 
   private final List<Integer> alphabet;
-  private final int length;
+  private int length;
   private final boolean global;
 
   public SurprisingSequences(GeneticPreferences prefs, int alphabetSize, int length, boolean global) {
@@ -60,5 +60,10 @@ public class SurprisingSequences extends GeneticProblem {
   @Override
   public GeneticProblem newInstance() {
     return new SurprisingSequences(getPreferences(), alphabet.size(), getPreferences().getSurprisingLength(), global);
+  }
+
+  @Override
+  public void increment(int increment) {
+    length += increment;
   }
 }

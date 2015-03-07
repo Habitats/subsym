@@ -10,13 +10,11 @@ import subsym.genetics.GeneticProblem;
  */
 public class Lolz extends GeneticProblem {
 
-  private final GeneticPreferences prefs;
-  private final int bitVectorSize;
+  private int bitVectorSize;
   private final int zeroThreshold;
 
   public Lolz(GeneticPreferences prefs, int bitVectorSize, int zeroThreshold) {
     super(prefs);
-    this.prefs = prefs;
     this.bitVectorSize = bitVectorSize;
     this.zeroThreshold = zeroThreshold;
   }
@@ -47,6 +45,11 @@ public class Lolz extends GeneticProblem {
 
   @Override
   public GeneticProblem newInstance() {
-    return new Lolz(getPreferences(),bitVectorSize,zeroThreshold);
+    return new Lolz(getPreferences(), bitVectorSize, zeroThreshold);
+  }
+
+  @Override
+  public void increment(int increment) {
+    bitVectorSize += increment;
   }
 }

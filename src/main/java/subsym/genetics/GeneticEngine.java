@@ -12,11 +12,14 @@ public class GeneticEngine {
   private static boolean enableLogging;
 
   public static void solveInBackground(Genetics.GeneticRun runs, boolean loggingEnabled, Genetics genetics) {
+    shouldRun = true;
     new Thread(() -> {
       runs.stream().forEach(p -> {
-        genetics.clear();
-        solve(p, runs.size() > 1 && loggingEnabled ? false : loggingEnabled);
-        genetics.onSolved(p);
+        if (shouldRun) {
+          genetics.clear();
+          solve(p, runs.size() > 1 && loggingEnabled ? false : loggingEnabled);
+          genetics.onSolved(p);
+        }
       });
       genetics.onSolved(runs);
 

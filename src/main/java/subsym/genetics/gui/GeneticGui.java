@@ -93,6 +93,7 @@ public class GeneticGui extends AIGui {
   private AIComboBox presetsComboBox;
   private JTextField runCountInput;
   private AILabel runCountLabel;
+  private JCheckBox incrementingCheckBox;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -275,6 +276,7 @@ public class GeneticGui extends AIGui {
       prefs.setAdultSelectionMode(getAdultSelection());
 
       prefs.setRunCount(Integer.parseInt(runCountInput.getText()));
+      prefs.setShouldIncrement(incrementingCheckBox.isSelected());
 
       prefs.logginEnabled(enableLoggingCheckbox.isSelected());
     } catch (NumberFormatException e) {
@@ -387,6 +389,8 @@ public class GeneticGui extends AIGui {
     puzzleSelect.setSelectedItem(prefs.getPuzzle().getClass().getSimpleName());
     adultSelection.setSelectedItem(prefs.getAdultSelectionMode().getClass().getSimpleName());
     matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
+
+    incrementingCheckBox.setSelected(prefs.shouldIncrement());
 
     if (prefs.getAdultSelectionMode() instanceof OverProduction) {
       overProductionInput

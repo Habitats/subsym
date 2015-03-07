@@ -32,6 +32,8 @@ public class GeneticPreferences {
   private int zeroThreashold;
   private boolean loggingEnabled;
   private int runCount;
+  private boolean shouldIncrement;
+  private int increment;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
                             double genomeMutationRate, AdultSelection adultSelectionMode,
@@ -209,5 +211,25 @@ public class GeneticPreferences {
 
   public int getRunCount() {
     return runCount;
+  }
+
+  public void setShouldIncrement(boolean shouldIncrement) {
+    this.shouldIncrement = shouldIncrement;
+  }
+
+  public boolean shouldIncrement() {
+    return shouldIncrement;
+  }
+
+  public int getIncrement() {
+    return increment;
+  }
+
+  public void increment() {
+    increment++;
+  }
+
+  public void reset() {
+    increment = 0;
   }
 }
