@@ -41,7 +41,7 @@ public class GeneticEngine {
         problem.log();
       }
       count++;
-      if (count % 1000 == 0) {
+      if (count % 10000 == 0) {
         Log.i(TAG, "Gen ... " + count);
       }
     }

@@ -91,9 +91,6 @@ public class Genetics implements GeneticGuiListener {
     prefs.reset();
 
     IntStream.range(0, runCount).forEach(i -> {
-      int surprisingLength = prefs.getSurprisingLength() + 1;
-
-      prefs.setSurprisingLength(surprisingLength);
       GeneticProblem problem = prefs.getPuzzle();
       if (prefs.shouldIncrement()) {
         prefs.increment();
