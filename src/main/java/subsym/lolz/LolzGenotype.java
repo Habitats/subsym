@@ -53,6 +53,7 @@ public class LolzGenotype extends Genotype {
   public void copy(Genotype copy) {
     LolzGenotype lolzCopy = (LolzGenotype) copy;
     lolzCopy.phenotype = new LolzPhenotype(lolzCopy);
+    lolzCopy.zeroThreshold = zeroThreshold;
   }
 
   @Override
@@ -67,7 +68,7 @@ public class LolzGenotype extends Genotype {
 
   @Override
   protected Genotype newInstance() {
-    return new LolzGenotype(10);
+    return new LolzGenotype(zeroThreshold);
   }
 
   public int getZeroThreshold() {

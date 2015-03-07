@@ -9,6 +9,7 @@ import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.matingselection.FitnessProportiate;
 import subsym.genetics.matingselection.MatingSelection;
 import subsym.genetics.matingselection.Tournament;
+import subsym.lolz.Lolz;
 import subsym.onemax.OneMax;
 import subsym.surprisingsequence.SurprisingSequences;
 
@@ -30,6 +31,7 @@ public class GeneticPreferences {
   private int alphabetSize;
   private int zeroThreashold;
   private boolean loggingEnabled;
+  private int runCount;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
                             double genomeMutationRate, AdultSelection adultSelectionMode,
@@ -119,10 +121,35 @@ public class GeneticPreferences {
     return prefs;
   }
 
+  public static GeneticPreferences getLolzTest() {
+    GeneticPreferences prefs = new GeneticPreferences(3, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate());
+    GeneticProblem problem = new Lolz(prefs, 5, 2);
+    prefs.setPuzzle(problem);
+    return prefs;
+  }
+
+  public static GeneticPreferences getLolz2() {
+    GeneticPreferences prefs = new GeneticPreferences(40, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate());
+    GeneticProblem problem = new Lolz(prefs, 40, 21);
+    prefs.setPuzzle(problem);
+    return prefs;
+  }
+
+  public static GeneticPreferences getOneMaxBelow100() {
+    GeneticPreferences prefs = new GeneticPreferences(40, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate());
+    GeneticProblem problem = new OneMax(prefs, 40);
+    prefs.setPuzzle(problem);
+    return prefs;
+  }
+
+
   public static Map<String, GeneticPreferences> getPresets() {
     Map<String, GeneticPreferences> presets = new HashMap<>();
     presets.put("Surprising 90-40", getSurprisingSequences());
     presets.put("OneMax 3-5", getOneMaxTest());
+    presets.put("Lolz 3-5", getLolzTest());
+    presets.put("Lolz 40-21", getLolz2());
+    presets.put("OneMax 40-21 below 100", getOneMaxBelow100());
     return presets;
   }
 
@@ -164,7 +191,7 @@ public class GeneticPreferences {
   }
 
   public GeneticProblem getPuzzle() {
-    return puzzle;
+    return puzzle.newInstance();
   }
 
   public void logginEnabled(boolean loggingEnabled) {
@@ -174,5 +201,13 @@ public class GeneticPreferences {
 
   public boolean isLoggingEnabled() {
     return loggingEnabled;
+  }
+
+  public void setRunCount(int runCount) {
+    this.runCount = runCount;
+  }
+
+  public int getRunCount() {
+    return runCount;
   }
 }

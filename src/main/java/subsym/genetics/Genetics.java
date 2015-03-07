@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import subsym.Log;
 import subsym.genetics.adultselection.AdultSelection;
@@ -29,11 +30,10 @@ public class Genetics implements GeneticGuiListener {
   private static String TAG = Genetics.class.getSimpleName();
   private final GeneticGui gui;
 
-
   public Genetics() {
     gui = new GeneticGui();
     gui.setListener(this);
-    gui.setPreferences(GeneticPreferences.getSurprisingSequences());
+    gui.setPreferences(GeneticPreferences.getLolzTest());
   }
 
   private static void lolz() {
@@ -86,12 +86,16 @@ public class Genetics implements GeneticGuiListener {
 
   @Override
   public void run(GeneticPreferences prefs) {
-    gui.clear();
-    GeneticProblem problem = prefs.getPuzzle();
+    int runCount = prefs.getRunCount();
+    GeneticRun runs = new GeneticRun();
 
-//    GeneticProblem problem = new Lolz(prefs, 100);
-    problem.setPlotter(gui.getPlot());
-    GeneticEngine.solveInBackground(problem, prefs.isLoggingEnabled(), this);
+    IntStream.range(0, runCount).forEach(i -> {
+      prefs.setSurprisingLength(prefs.getSurprisingLength()+1);
+      GeneticProblem problem = prefs.getPuzzle();
+      problem.setPlotter(gui.getPlot());
+      runs.add(problem);
+    });
+    GeneticEngine.solveInBackground(runs, prefs.isLoggingEnabled(), this);
   }
 
   @Override
@@ -103,7 +107,17 @@ public class Genetics implements GeneticGuiListener {
     Log.i(TAG, solution);
   }
 
-  private static class GeneticRun {
+  public void clear() {
+    gui.clear();
+  }
+
+  public void onSolved(GeneticRun runs) {
+    if (runs.size() > 1) {
+      Log.i(TAG, runs.getAverage());
+    }
+  }
+
+  public static class GeneticRun {
 
     private List<GeneticProblem> runs = new ArrayList<>();
 
@@ -123,6 +137,23 @@ public class Genetics implements GeneticGuiListener {
       String best = "Best Average: " + bestAvg + " - " + avgMap.keySet().stream().filter(isBest).findFirst().get();
 
       return best;
+    }
+
+    public String getAverage() {
+      double avg = runs.stream().mapToInt(GeneticProblem::generations).average().getAsDouble();
+      List<Double> generations = runs.stream().map(i -> (double) i.generations()).collect(Collectors.toList());
+      double sd = Population.standardDeviation(generations);
+
+      return String.format("Average: %.2f - Standard Deviation: %.2f - Normalized Standard Deviation: %.2f", avg, sd,
+                           1 - Math.abs((avg - sd) / avg));
+    }
+
+    public int size() {
+      return runs.size();
+    }
+
+    public Stream<GeneticProblem> stream() {
+      return runs.stream();
     }
   }
 

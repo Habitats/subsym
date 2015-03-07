@@ -19,22 +19,18 @@ public class LolzPhenotype implements Phenotype {
   @Override
   public double fitness() {
     if (lolzGenotype.getBits().isEmpty()) {
-      return lolzGenotype.size();
+      return 0;
     }
     List<Integer> arr = lolzGenotype.getOnBits();
     Iterator<Integer> iter = arr.iterator();
     Integer first = iter.next();
-    boolean firstIsZero = !lolzGenotype.getBits().get(lolzGenotype.size()-1);
-    int count = 0;
+    double count = 0;
     if (first == lolzGenotype.size() - 1) {
       int next;
       count++;
       while (iter.hasNext()) {
         if ((next = iter.next()) == first - 1) {
           count++;
-          if (firstIsZero && (count >= lolzGenotype.getZeroThreshold())) {
-            return count;
-          }
         } else {
           break;
         }
@@ -42,8 +38,11 @@ public class LolzPhenotype implements Phenotype {
       }
     } else {
       count = lolzGenotype.size() - first - 1;
+      if (count >= lolzGenotype.getZeroThreshold()) {
+        count = lolzGenotype.getZeroThreshold();
+      }
     }
-    return count;
+    return count / lolzGenotype.size();
   }
 
   @Override

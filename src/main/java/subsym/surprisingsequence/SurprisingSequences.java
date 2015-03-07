@@ -59,6 +59,6 @@ public class SurprisingSequences extends GeneticProblem {
 
   @Override
   public GeneticProblem newInstance() {
-    return new SurprisingSequences(getPreferences(), alphabet.size(), length, global);
+    return new SurprisingSequences(getPreferences(), alphabet.size(), getPreferences().getSurprisingLength(), global);
   }
 }

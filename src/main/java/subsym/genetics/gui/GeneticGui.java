@@ -31,6 +31,7 @@ import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Plot;
+
 import subsym.lolz.Lolz;
 import subsym.onemax.OneMax;
 import subsym.surprisingsequence.SurprisingSequences;
@@ -66,13 +67,13 @@ public class GeneticGui extends AIGui {
   private AILabel genomeMutationValField;
   private AILabel populationMutationValField;
   private AILabel populationSize;
+  private AILabel presetsLabel;
 
   private AIButton runButton;
   private AIButton stopButton;
 
   private JCheckBox globalCheckBox;
   private JCheckBox enableLoggingCheckbox;
-
 
   private JTextField crossoverInput;
   private JTextField tournamentInput;
@@ -89,8 +90,9 @@ public class GeneticGui extends AIGui {
   private AIComboBox puzzleSelect;
   private AIComboBox adultSelection;
   private AIComboBox matingSelection;
-  private AILabel presetsLabel;
   private AIComboBox presetsComboBox;
+  private JTextField runCountInput;
+  private AILabel runCountLabel;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -271,6 +273,8 @@ public class GeneticGui extends AIGui {
       prefs.setPuzzle(getPuzzle());
       prefs.setMateSelectionMode(getMatingSelection());
       prefs.setAdultSelectionMode(getAdultSelection());
+
+      prefs.setRunCount(Integer.parseInt(runCountInput.getText()));
 
       prefs.logginEnabled(enableLoggingCheckbox.isSelected());
     } catch (NumberFormatException e) {
