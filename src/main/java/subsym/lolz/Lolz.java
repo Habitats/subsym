@@ -21,7 +21,8 @@ public class Lolz extends GeneticProblem {
 
   @Override
   public boolean solution() {
-    return getPopulation().getBestGenotype().fitness() == 1;
+    return getPopulation().getBestGenotype().fitness() == 1
+           || getPopulation().getCurrentGeneration() > bitVectorSize * 100;
   }
 
   @Override

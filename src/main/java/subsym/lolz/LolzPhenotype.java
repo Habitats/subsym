@@ -19,7 +19,7 @@ public class LolzPhenotype implements Phenotype {
   @Override
   public double fitness() {
     if (lolzGenotype.getBits().isEmpty()) {
-      return Math.min(lolzGenotype.getZeroThreshold(), lolzGenotype.size());
+      return Math.min(lolzGenotype.getZeroThreshold(), lolzGenotype.size()) / lolzGenotype.size();
     }
     List<Integer> arr = lolzGenotype.getOnBits();
     Iterator<Integer> iter = arr.iterator();
