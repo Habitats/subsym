@@ -14,14 +14,12 @@ import subsym.genetics.GeneticProblem;
 public class SurprisingSequences extends GeneticProblem {
 
   private final List<Integer> alphabet;
-  private int length;
   private final boolean global;
 
   public SurprisingSequences(GeneticPreferences prefs, int alphabetSize, int length, boolean global) {
     super(prefs);
-
     this.global = global;
-    this.length = length;
+    prefs.setSurprisingLength(length);
     alphabet = IntStream.range(0, alphabetSize).boxed().collect(Collectors.toList());
   }
 
@@ -39,7 +37,7 @@ public class SurprisingSequences extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
-      List<Integer> permutation = createPermutation(alphabet, length);
+      List<Integer> permutation = createPermutation(alphabet, getSurprisingLength());
       getPopulation().add(new SurprisingGenotype(permutation, alphabet, global));
     });
   }
@@ -50,7 +48,7 @@ public class SurprisingSequences extends GeneticProblem {
   }
 
   public int getSurprisingLength() {
-    return length;
+    return getPreferences().getSurprisingLength();
   }
 
   public int getAlphabetSize() {
@@ -64,6 +62,6 @@ public class SurprisingSequences extends GeneticProblem {
 
   @Override
   public void increment(int increment) {
-    length += increment;
+    getPreferences().setSurprisingLength(getSurprisingLength() + increment);
   }
 }

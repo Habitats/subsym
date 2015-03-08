@@ -138,7 +138,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getOneMaxBelow100() {
-    GeneticPreferences prefs = new GeneticPreferences(40, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate());
+    GeneticPreferences prefs = new GeneticPreferences(75, 1, 1, 0.001, new FullTurnover(), new FitnessProportiate());
     GeneticProblem problem = new OneMax(prefs, 40);
     prefs.setPuzzle(problem);
     return prefs;
@@ -151,7 +151,7 @@ public class GeneticPreferences {
     presets.put("OneMax 3-5", getOneMaxTest());
     presets.put("Lolz 3-5", getLolzTest());
     presets.put("Lolz 40-21", getLolz2());
-    presets.put("OneMax 40-21 below 100", getOneMaxBelow100());
+    presets.put("OneMax 40, below 100 gen", getOneMaxBelow100());
     return presets;
   }
 

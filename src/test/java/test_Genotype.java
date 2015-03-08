@@ -3,6 +3,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import subsym.PopulationList;
@@ -12,8 +13,11 @@ import subsym.genetics.Population;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.adultselection.OverProduction;
+import subsym.genetics.matingselection.Boltzman;
 import subsym.genetics.matingselection.FitnessProportiate;
+import subsym.genetics.matingselection.MatingSelection;
 import subsym.genetics.matingselection.Rank;
+import subsym.genetics.matingselection.SigmaScaled;
 import subsym.lolz.LolzGenotype;
 import subsym.onemax.OneMax;
 import subsym.onemax.OneMaxGenotype;
@@ -101,7 +105,7 @@ public class test_Genotype {
     assertEquals(u, p.getWorstGenotype());
   }
 
-//  @Test
+  //  @Test
   public void test_populationOverProductionSelection() {
     int initialSize = 10;
     Population p = getPopulation(initialSize);
@@ -114,7 +118,7 @@ public class test_Genotype {
     assertEquals(p.size(), initialSize);
   }
 
-//  @Test
+  //  @Test
   public void test_populationMixingSelection() {
     Population p = getPopulation(10);
     double mixingRate = .5;
@@ -141,7 +145,27 @@ public class test_Genotype {
     assertEquals(sd, 2.983, 0.01);
   }
 
-//  @Test
+  @Test
+  public void test_spin() {
+    GeneticPreferences test = GeneticPreferences.getTest();
+    test.setPopulationSize(10);
+    Population p = new Population(test);
+    while (p.size() < 10) {
+      p.add(new OneMaxGenotype().setRandom(4));
+    }
+    Genotype parent;
+    MatingSelection sigmaScaled = new SigmaScaled();
+    parent = sigmaScaled.selectNext(p.getCurrent().stream().collect(Collectors.toList()));
+    MatingSelection rank = new Rank();
+    parent = rank.selectNext(p.getCurrent().stream().collect(Collectors.toList()));
+    MatingSelection boltzman = new Boltzman();
+    parent = boltzman.selectNext(p.getCurrent().stream().collect(Collectors.toList()));
+    MatingSelection fitnessProportiate = new FitnessProportiate();
+    parent = fitnessProportiate.selectNext(p.getCurrent().stream().collect(Collectors.toList()));
+
+  }
+
+  //  @Test
   public void test_lolzGenotypeToPhenotype() {
     Population p = new Population(GeneticPreferences.getTest());
     Genotype i = new LolzGenotype(5).fromString("1011000000");
