@@ -15,11 +15,12 @@ public class SurprisingSequences extends GeneticProblem {
 
   private final List<Integer> alphabet;
   private final boolean global;
+  private int length;
 
   public SurprisingSequences(GeneticPreferences prefs, int alphabetSize, int length, boolean global) {
     super(prefs);
     this.global = global;
-    prefs.setSurprisingLength(length);
+    this.length = length;
     alphabet = IntStream.range(0, alphabetSize).boxed().collect(Collectors.toList());
   }
 
@@ -48,7 +49,7 @@ public class SurprisingSequences extends GeneticProblem {
   }
 
   public int getSurprisingLength() {
-    return getPreferences().getSurprisingLength();
+    return length;
   }
 
   public int getAlphabetSize() {
@@ -57,11 +58,11 @@ public class SurprisingSequences extends GeneticProblem {
 
   @Override
   public GeneticProblem newInstance() {
-    return new SurprisingSequences(getPreferences(), alphabet.size(), getPreferences().getSurprisingLength(), global);
+    return new SurprisingSequences(getPreferences(), alphabet.size(), getSurprisingLength(), global);
   }
 
   @Override
   public void increment(int increment) {
-    getPreferences().setSurprisingLength(getSurprisingLength() + increment);
+    length += increment;
   }
 }
