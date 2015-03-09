@@ -18,7 +18,6 @@ import subsym.surprisingsequence.SurprisingSequences;
  */
 public class GeneticPreferences {
 
-
   private int populationSize;
   private double crossOverRate;
   private double populationMutationRate;
@@ -131,7 +130,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getLolz2() {
-    GeneticPreferences prefs = new GeneticPreferences(40, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate());
+    GeneticPreferences prefs = new GeneticPreferences(75, 1, 1, 0.001, new FullTurnover(), new FitnessProportiate());
     GeneticProblem problem = new Lolz(prefs, 40, 21);
     prefs.setPuzzle(problem);
     return prefs;
@@ -224,7 +223,6 @@ public class GeneticPreferences {
   public int getIncrement() {
     return increment;
   }
-
   public void increment() {
     increment++;
   }

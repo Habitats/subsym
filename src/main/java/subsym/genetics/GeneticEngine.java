@@ -11,21 +11,6 @@ public class GeneticEngine {
   private static boolean shouldRun;
   private static boolean enableLogging;
 
-  public static void solveInBackground(Genetics.GeneticRun runs, boolean loggingEnabled, Genetics genetics) {
-    shouldRun = true;
-    new Thread(() -> {
-      runs.stream().forEach(p -> {
-        if (shouldRun) {
-          genetics.clear();
-          solve(p, runs.size() > 1 && loggingEnabled ? false : loggingEnabled);
-          genetics.onSolved(p);
-        }
-      });
-      genetics.onSolved(runs);
-
-    }).start();
-  }
-
   public static GeneticProblem solve(GeneticProblem problem, boolean loggingEnabled) {
     GeneticEngine.enableLogging = loggingEnabled;
     shouldRun = true;
@@ -50,6 +35,21 @@ public class GeneticEngine {
       Log.v(TAG, "Search took: " + (System.currentTimeMillis() - start) / 1000. + " s");
     }
     return problem;
+  }
+
+  public static void solveInBackground(Genetics.GeneticRun runs, boolean loggingEnabled, Genetics genetics) {
+    shouldRun = true;
+    new Thread(() -> {
+      runs.stream().forEach(p -> {
+        if (shouldRun) {
+          genetics.clear();
+          solve(p, runs.size() > 1 && loggingEnabled ? false : loggingEnabled);
+          genetics.onSolved(p);
+        }
+      });
+      genetics.onSolved(runs);
+
+    }).start();
   }
 
   public static void kill() {

@@ -16,7 +16,6 @@ import java.util.stream.IntStream;
 public abstract class Genotype implements Comparable<Genotype> {
 
   private static Random random = new Random();
-  private boolean shouldDie = false;
   private int generation = 0;
   private int size;
   private Double fitness;
@@ -193,7 +192,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public String toString() {
-    return String.format("From Gen: %6d - Keep: %s", getGeneration(), !shouldDie);
+    return String.format("From Gen: %6d", getGeneration());
   }
 
   @Override
