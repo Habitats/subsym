@@ -1,12 +1,10 @@
-package subsym;
+package subsym.genetics;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
-import subsym.genetics.Genotype;
 
 /**
  * Created by anon on 24.02.2015.
