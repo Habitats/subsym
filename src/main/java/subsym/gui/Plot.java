@@ -26,7 +26,7 @@ public class Plot extends JPanel {
 
   public Plot() {
     dataset = createDataset();
-    JFreeChart xylineChart = ChartFactory.createXYLineChart(getName(), "Generations", "Fitness", dataset, //
+    JFreeChart xylineChart = ChartFactory.createXYLineChart(getName(), "Generations            ", "Fitness", dataset, //
                                                             PlotOrientation.VERTICAL, true, true, false);
 
     setLayout(new GridBagLayout());
