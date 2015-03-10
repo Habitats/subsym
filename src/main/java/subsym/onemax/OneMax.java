@@ -13,7 +13,7 @@ public class OneMax extends GeneticProblem {
   private static final String TAG = GeneticProblem.class.getSimpleName();
   private int bitVectorSize;
 
-  public OneMax(GeneticPreferences prefs,  int bitVectorSize) {
+  public OneMax(GeneticPreferences prefs, int bitVectorSize) {
     super(prefs);
     this.bitVectorSize = bitVectorSize;
   }
@@ -40,7 +40,11 @@ public class OneMax extends GeneticProblem {
 
   @Override
   public GeneticProblem newInstance() {
-    return new OneMax(getPreferences(),bitVectorSize);
+    return new OneMax(getPreferences(), bitVectorSize);
+  }
+  @Override
+  public GeneticProblem newInstance(GeneticPreferences prefs){
+    return new OneMax(prefs, bitVectorSize);
   }
 
   @Override

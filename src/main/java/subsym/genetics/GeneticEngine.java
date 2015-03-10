@@ -30,7 +30,6 @@ public class GeneticEngine {
         Log.i(TAG, "Gen ... " + count);
       }
     }
-    problem.addPlots();
     if (loggingEnabled) {
       Log.v(TAG, "Search took: " + (System.currentTimeMillis() - start) / 1000. + " s");
     }
@@ -42,13 +41,17 @@ public class GeneticEngine {
     new Thread(() -> {
       runs.stream().forEach(p -> {
         if (shouldRun) {
-          genetics.clear();
+          if (runs.size() == 1) {
+            genetics.clear();
+          }
           solve(p, runs.size() > 1 && loggingEnabled ? false : loggingEnabled);
           genetics.onSolved(p);
+          if (runs.size() == 1) {
+            p.addPlots();
+          }
         }
       });
       genetics.onSolved(runs);
-
     }).start();
   }
 

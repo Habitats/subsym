@@ -31,7 +31,6 @@ import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Plot;
-
 import subsym.lolz.Lolz;
 import subsym.onemax.OneMax;
 import subsym.surprisingsequence.SurprisingSequences;
@@ -94,6 +93,8 @@ public class GeneticGui extends AIGui {
   private JTextField runCountInput;
   private AILabel runCountLabel;
   private JCheckBox incrementingCheckBox;
+  private JCheckBox plotMultipleCheckbox;
+  private AIButton benchMarkButton;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -137,6 +138,7 @@ public class GeneticGui extends AIGui {
 
     runButton.addActionListener(e -> run());
     stopButton.addActionListener(e -> listener.stop());
+    benchMarkButton.addActionListener(e -> benchmark());
 
     crossoverInput.addActionListener(e -> updatePreferences());
     mixingRateInput.addActionListener(e -> updatePreferences());
@@ -175,6 +177,10 @@ public class GeneticGui extends AIGui {
     puzzleSelect.setSelectedItem(SurprisingSequences.class.getSimpleName());
 
     enableLoggingCheckbox.addActionListener(e -> updatePreferences());
+    plotMultipleCheckbox.addActionListener(e -> {
+      updatePreferences();
+      listener.plotMultipleToggled(plotMultipleCheckbox.isSelected());
+    });
 
     updatePreferences();
   }
@@ -182,6 +188,11 @@ public class GeneticGui extends AIGui {
   private void run() {
     if (updatePreferences()) {
       listener.run(prefs);
+    }
+  }
+  private void benchmark(){
+    if (updatePreferences()) {
+      listener.runBenchmark(prefs);
     }
   }
 
@@ -277,6 +288,7 @@ public class GeneticGui extends AIGui {
 
       prefs.setRunCount(Integer.parseInt(runCountInput.getText()));
       prefs.setShouldIncrement(incrementingCheckBox.isSelected());
+      prefs.setPlotMultiple(plotMultipleCheckbox.isSelected());
 
       prefs.logginEnabled(enableLoggingCheckbox.isSelected());
     } catch (NumberFormatException e) {

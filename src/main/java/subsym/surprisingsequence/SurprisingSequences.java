@@ -62,6 +62,11 @@ public class SurprisingSequences extends GeneticProblem {
   }
 
   @Override
+  public GeneticProblem newInstance(GeneticPreferences prefs) {
+    return new SurprisingSequences(prefs, alphabet.size(), getSurprisingLength(), global);
+  }
+
+  @Override
   public void increment(int increment) {
     length += increment;
   }

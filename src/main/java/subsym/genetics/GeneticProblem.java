@@ -88,7 +88,7 @@ public abstract class GeneticProblem {
 
   private void addValue(String max, int currentGeneration, double currentMaxFitness) {
     if (plotter != null) {
-      plotter.addValue(max, currentGeneration, currentMaxFitness);
+      plotter.addSingleRunValue(max, currentGeneration, currentMaxFitness);
     }
   }
 
@@ -114,7 +114,15 @@ public abstract class GeneticProblem {
   }
 
 
+  public abstract GeneticProblem newInstance(GeneticPreferences prefs);
+
   public abstract GeneticProblem newInstance();
 
   public abstract void increment(int increment);
+
+  public void plotResult() {
+    plotter.addMultipleRunsValue("cr", prefs.getCrossOverRate(), getPopulation().getCurrentGeneration());
+    plotter.addMultipleRunsValue("pmr", prefs.getPopulationMutationRate(), getPopulation().getCurrentGeneration());
+    plotter.addMultipleRunsValue("mr", prefs.getGenomeMutationRate(), getPopulation().getCurrentGeneration());
+  }
 }

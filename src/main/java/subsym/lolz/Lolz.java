@@ -50,6 +50,11 @@ public class Lolz extends GeneticProblem {
   }
 
   @Override
+  public GeneticProblem newInstance(GeneticPreferences prefs) {
+    return new Lolz(prefs, bitVectorSize, zeroThreshold);
+  }
+
+  @Override
   public void increment(int increment) {
     bitVectorSize += increment;
   }

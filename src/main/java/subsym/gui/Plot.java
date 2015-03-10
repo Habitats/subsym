@@ -14,41 +14,79 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import subsym.Log;
+
 /**
 
  */
 public class Plot extends JPanel {
 
-  private XYDataset dataset;
+  private static final String TAG = Plot.class.getSimpleName();
+  private Component chartPanel;
+  private XYSeriesCollection dataset;
   private XYSeries average;
   private XYSeries max;
   private XYSeries sd;
+  private XYSeries cr;
+  private XYSeries mr;
+  private XYSeries pmr;
 
   public Plot() {
-    dataset = createDataset();
-    JFreeChart xylineChart = ChartFactory.createXYLineChart(getName(), "Generations            ", "Fitness", dataset, //
-                                                            PlotOrientation.VERTICAL, true, true, false);
+    setSingleRunDataset();
+  }
 
+  private void updateRenderer(XYLineAndShapeRenderer renderer, XYDataset dataset, String x, String y) {
+    if (chartPanel != null) {
+      remove(chartPanel);
+    }
+
+    JFreeChart chart = ChartFactory.createScatterPlot(getName(), x, y, dataset, //
+                                                      PlotOrientation.VERTICAL, true, true, false);
     setLayout(new GridBagLayout());
-    ChartPanel chartPanel = new ChartPanel(xylineChart);
+    ChartPanel chartPanel = new ChartPanel(chart);
     chartPanel.setBackground(Theme.getBackground());
     chartPanel.setForeground(Theme.getForeground());
     chartPanel.setFont(new Font("Consolas", Font.TRUETYPE_FONT, 15));
     setLayout(new BorderLayout());
-    final XYPlot plot = xylineChart.getXYPlot();
-    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-    renderer.setSeriesPaint(0, ColorUtils.toHsv(0.70, 1, 0.85));
-    renderer.setSeriesPaint(1, ColorUtils.toHsv(0.80,1, 0.85));
-    renderer.setSeriesPaint(2, ColorUtils.toHsv(0.90, 1, 0.85));
-    renderer.setSeriesStroke(0, new BasicStroke(4.0f));
-    renderer.setSeriesStroke(1, new BasicStroke(4.0f));
-    renderer.setSeriesStroke(2, new BasicStroke(4.0f));
+    final XYPlot plot = chart.getXYPlot();
     plot.setRenderer(renderer);
 
     add(chartPanel, BorderLayout.CENTER);
+    revalidate();
   }
 
-  private XYDataset createDataset() {
+  private XYLineAndShapeRenderer getLineRenderer() {
+    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+    renderer.setSeriesPaint(0, ColorUtils.toHsv(0.70, 1, 0.85));
+    renderer.setSeriesPaint(1, ColorUtils.toHsv(0.80, 1, 0.85));
+    renderer.setSeriesPaint(2, ColorUtils.toHsv(0.90, 1, 0.85));
+    renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+    renderer.setSeriesStroke(1, new BasicStroke(2.0f));
+    renderer.setSeriesStroke(2, new BasicStroke(2.0f));
+    renderer.setBaseShapesFilled(true);
+    return renderer;
+  }
+
+  private XYLineAndShapeRenderer getScatterRenderer() {
+    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+    renderer.setSeriesPaint(0, ColorUtils.toHsv(0.70, 1, 0.85));
+    renderer.setSeriesPaint(1, ColorUtils.toHsv(0.80, 1, 0.85));
+    renderer.setSeriesPaint(2, ColorUtils.toHsv(0.90, 1, 0.85));
+    renderer.setSeriesStroke(0, new BasicStroke(2.0f));
+    renderer.setSeriesStroke(1, new BasicStroke(2.0f));
+    renderer.setSeriesStroke(2, new BasicStroke(2.0f));
+    renderer.setBaseShapesFilled(true);
+    renderer.setLinesVisible(false);
+    return renderer;
+  }
+
+  public void setSingleRunDataset() {
+    Log.i(TAG, "Setting single dataset ...");
+    dataset = createSingleRunDataset();
+    updateRenderer(getLineRenderer(), dataset, "Generations            ", "Fitness");
+  }
+
+  private XYSeriesCollection createSingleRunDataset() {
     average = new XYSeries("Average");
     max = new XYSeries("Max");
     sd = new XYSeries("Standard Deviation");
@@ -59,7 +97,7 @@ public class Plot extends JPanel {
     return dataset;
   }
 
-  public void addValue(String series, int x, double y) {
+  public void addSingleRunValue(String series, int x, double y) {
     switch (series) {
       case "avg":
         average.add(x, y);
@@ -73,9 +111,39 @@ public class Plot extends JPanel {
     }
   }
 
+  public void addMultipleRunsValue(String series, double x, double y) {
+    switch (series) {
+      case "cr":
+        cr.add(x, y);
+        break;
+      case "mr":
+        mr.add(x, y);
+        break;
+      case "pmr":
+        pmr.add(x, y);
+        break;
+    }
+  }
+
   public void clear() {
-    average.clear();
-    max.clear();
-    sd.clear();
+    Log.i(TAG, "Clearing plots ...");
+    dataset.getSeries().forEach(v -> ((XYSeries) v).clear());
+  }
+
+  public void setMultipleRunsDataset() {
+    Log.i(TAG, "Setting multiple dataset ...");
+    dataset = createMultipleRunsDataset();
+    updateRenderer(getScatterRenderer(), dataset, "Generations            ", "Rate");
+  }
+
+  private XYSeriesCollection createMultipleRunsDataset() {
+    cr = new XYSeries("Crossover Rate");
+    mr = new XYSeries("Mutation Rate");
+    pmr = new XYSeries("Population Mutation Rate");
+    final XYSeriesCollection dataset = new XYSeriesCollection();
+    dataset.addSeries(cr);
+    dataset.addSeries(mr);
+    dataset.addSeries(pmr);
+    return dataset;
   }
 }

@@ -10,4 +10,8 @@ public interface GeneticGuiListener {
   void run(GeneticPreferences prefs);
 
   void stop();
+
+  void plotMultipleToggled(boolean selected);
+
+  void runBenchmark(GeneticPreferences prefs);
 }

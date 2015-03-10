@@ -18,21 +18,22 @@ import subsym.surprisingsequence.SurprisingSequences;
  */
 public class GeneticPreferences {
 
-  private int populationSize;
   private double crossOverRate;
   private double populationMutationRate;
   private double genomeMutationRate;
   private AdultSelection adultSelectionMode;
   private MatingSelection mateSelectionMode;
   private GeneticProblem puzzle;
+  private int populationSize;
   private int bitVectorSize;
   private int surprisingLength;
   private int alphabetSize;
   private int zeroThreashold;
-  private boolean loggingEnabled;
-  private int runCount;
-  private boolean shouldIncrement;
   private int increment;
+  private int runCount;
+  private boolean loggingEnabled;
+  private boolean shouldIncrement;
+  private boolean plotMultiple;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
                             double genomeMutationRate, AdultSelection adultSelectionMode,
@@ -223,11 +224,38 @@ public class GeneticPreferences {
   public int getIncrement() {
     return increment;
   }
+
   public void increment() {
     increment++;
   }
 
   public void reset() {
     increment = 0;
+  }
+
+  public void setPlotMultiple(boolean plotMultiple) {
+    this.plotMultiple = plotMultiple;
+  }
+
+  public boolean shouldPlotMultiple() {
+    return plotMultiple;
+  }
+
+  public static GeneticPreferences copy(GeneticPreferences prefs) {
+    GeneticPreferences copy = new GeneticPreferences(prefs.getPopulationSize(), prefs.getCrossOverRate(),//
+                                                     prefs.getPopulationMutationRate(), prefs.getGenomeMutationRate(),
+                                                     prefs.getAdultSelectionMode(), prefs.getMateSelectionMode());
+    copy.puzzle = prefs.puzzle;
+    copy.bitVectorSize = prefs.bitVectorSize;
+    copy.surprisingLength = prefs.surprisingLength;
+    copy.alphabetSize = prefs.alphabetSize;
+    copy.zeroThreashold = prefs.zeroThreashold;
+    copy.increment = prefs.increment;
+    copy.loggingEnabled = prefs.loggingEnabled;
+    copy.shouldIncrement = prefs.shouldIncrement;
+    copy.plotMultiple = prefs.plotMultiple;
+    copy.runCount = prefs.runCount;
+    copy.puzzle = prefs.puzzle.newInstance(copy);
+    return copy;
   }
 }

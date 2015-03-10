@@ -85,7 +85,18 @@ public class Genetics implements GeneticGuiListener {
   }
 
   @Override
+  public void plotMultipleToggled(boolean selected) {
+    Log.i(TAG, "Multiple plot toggled: " + (selected ? "on" : "off"));
+    if (selected) {
+      gui.getPlot().setMultipleRunsDataset();
+    } else {
+      gui.getPlot().setSingleRunDataset();
+    }
+  }
+
+  @Override
   public void run(GeneticPreferences prefs) {
+    Log.i(TAG, "Running ...");
     int runCount = prefs.getRunCount();
     GeneticRun runs = new GeneticRun();
     prefs.reset();
@@ -99,11 +110,13 @@ public class Genetics implements GeneticGuiListener {
       problem.setPlotter(gui.getPlot());
       runs.add(problem);
     });
+
     GeneticEngine.solveInBackground(runs, prefs.isLoggingEnabled(), this);
   }
 
   @Override
   public void stop() {
+    Log.i(TAG, "Terminating ...");
     GeneticEngine.kill();
   }
 
@@ -118,6 +131,12 @@ public class Genetics implements GeneticGuiListener {
   public void onSolved(GeneticRun runs) {
     if (runs.size() > 1) {
       Log.i(TAG, runs.getAverage());
+    }
+    GeneticPreferences prefs = runs.getPreferences();
+    if (prefs.shouldPlotMultiple()) {
+      gui.getPlot().addMultipleRunsValue("cr", runs.getAverageGeneration(), prefs.getCrossOverRate());
+      gui.getPlot().addMultipleRunsValue("pmr", runs.getAverageGeneration(), prefs.getPopulationMutationRate());
+      gui.getPlot().addMultipleRunsValue("mr", runs.getAverageGeneration(), prefs.getGenomeMutationRate() * 100);
     }
   }
 
@@ -144,12 +163,16 @@ public class Genetics implements GeneticGuiListener {
     }
 
     public String getAverage() {
-      double avg = runs.stream().mapToInt(GeneticProblem::generations).average().getAsDouble();
+      double avg = getAverageGeneration();
       List<Double> generations = runs.stream().map(i -> (double) i.generations()).collect(Collectors.toList());
       double sd = Population.standardDeviation(generations);
 
       return String.format("Average: %.2f - Standard Deviation: %.2f - Normalized Standard Deviation: %.2f", avg, sd,
                            1 - Math.abs((avg - sd) / avg));
+    }
+
+    private double getAverageGeneration() {
+      return runs.stream().mapToInt(GeneticProblem::generations).average().getAsDouble();
     }
 
     public int size() {
@@ -159,10 +182,24 @@ public class Genetics implements GeneticGuiListener {
     public Stream<GeneticProblem> stream() {
       return runs.stream();
     }
+
+    public GeneticPreferences getPreferences() {
+      return runs.get(0).getPreferences();
+    }
   }
 
   public static List<String> values() {
     return Arrays
         .asList(SurprisingSequences.class.getSimpleName(), Lolz.class.getSimpleName(), OneMax.class.getSimpleName());
+  }
+
+  @Override
+  public void runBenchmark(GeneticPreferences prefs) {
+    double i = 0.001;
+    while (i < 0.02) {
+      prefs.setGenomeMutationRate(i);
+      run(GeneticPreferences.copy(prefs));
+      i += 0.001;
+    }
   }
 }
