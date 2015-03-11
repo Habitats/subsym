@@ -25,6 +25,7 @@ public class GeneticEngine {
         problem.addSomePlots();
         problem.log();
       }
+      problem.addPlotsForAveraging();
       count++;
       if (count % 10000 == 0) {
         Log.i(TAG, "Gen ... " + count);

@@ -11,6 +11,10 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -30,6 +34,7 @@ public class Plot extends JPanel {
   private XYSeries cr;
   private XYSeries mr;
   private XYSeries pmr;
+  private Map<String, Map<Number, List<Number>>> runs = new HashMap<>();
 
   public Plot() {
     setSingleRunDataset();
@@ -131,6 +136,7 @@ public class Plot extends JPanel {
   }
 
   public void setMultipleRunsDataset() {
+    runs = new HashMap<>();
     Log.i(TAG, "Setting multiple dataset ...");
     dataset = createMultipleRunsDataset();
     updateRenderer(getScatterRenderer(), dataset, "Generations            ", "Rate");
@@ -145,5 +151,33 @@ public class Plot extends JPanel {
     dataset.addSeries(mr);
     dataset.addSeries(pmr);
     return dataset;
+  }
+
+  public void addAverageRunValue(String series, int x, double y) {
+    if (!runs.containsKey(series)) {
+      runs.put(series, new HashMap<>());
+    }
+    Map<Number, List<Number>> values = runs.get(series);
+    if (!values.containsKey(x)) {
+      values.put(x, new ArrayList<>());
+    }
+    values.get(x).add(y);
+  }
+
+  public void plotAverage() {
+//    String key = runs.keySet().iterator().next();
+//    Stream<Number> seriesStream = runs.get(key).keySet().stream();
+//    int max = seriesStream.mapToInt(Number::intValue).max().getAsInt();
+//    runs.get("max").values().stream().forEach(list -> list.addAll(Collections.nCopies(max - list.size(), 1)));//
+
+    clear();
+
+    runs.keySet().stream().forEach(series -> {
+      runs.get(series).keySet().stream()//
+          .forEach(value -> addSingleRunValue(series, value.intValue(), runs.get(series).get(value).stream()//
+              .mapToDouble(Number::doubleValue) //
+              .average().getAsDouble()));
+    });
+    runs.clear();
   }
 }

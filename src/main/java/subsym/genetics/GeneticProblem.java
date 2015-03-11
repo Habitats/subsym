@@ -81,15 +81,15 @@ public abstract class GeneticProblem {
   }
 
   public void addPlots() {
-    addValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
-    addValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
-    addValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
+    if (plotter != null) {
+      plotter.addSingleRunValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
+      plotter.addSingleRunValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
+      plotter.addSingleRunValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
+    }
   }
 
   private void addValue(String max, int currentGeneration, double currentMaxFitness) {
-    if (plotter != null) {
-      plotter.addSingleRunValue(max, currentGeneration, currentMaxFitness);
-    }
+    plotter.addSingleRunValue(max, currentGeneration, currentMaxFitness);
   }
 
   public abstract void initPopulation();
@@ -124,5 +124,13 @@ public abstract class GeneticProblem {
     plotter.addMultipleRunsValue("cr", prefs.getCrossOverRate(), getPopulation().getCurrentGeneration());
     plotter.addMultipleRunsValue("pmr", prefs.getPopulationMutationRate(), getPopulation().getCurrentGeneration());
     plotter.addMultipleRunsValue("mr", prefs.getGenomeMutationRate(), getPopulation().getCurrentGeneration());
+  }
+
+  public void addPlotsForAveraging() {
+    if (plotter != null) {
+      plotter.addAverageRunValue("avg", population.getCurrentGeneration(), population.getCurrentAverageFitness());
+      plotter.addAverageRunValue("max", population.getCurrentGeneration(), population.getCurrentMaxFitness());
+      plotter.addAverageRunValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
+    }
   }
 }

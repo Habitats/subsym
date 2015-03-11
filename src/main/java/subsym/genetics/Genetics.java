@@ -137,6 +137,8 @@ public class Genetics implements GeneticGuiListener {
       gui.getPlot().addMultipleRunsValue("cr", runs.getAverageGeneration(), prefs.getCrossOverRate());
       gui.getPlot().addMultipleRunsValue("pmr", runs.getAverageGeneration(), prefs.getPopulationMutationRate());
       gui.getPlot().addMultipleRunsValue("mr", runs.getAverageGeneration(), prefs.getGenomeMutationRate() * 100);
+    } else {
+      gui.getPlot().plotAverage();
     }
   }
 
