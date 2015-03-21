@@ -5,6 +5,6 @@ package subsym.ann;
  */
 public interface ActivationFunction {
 
-  boolean evaluate(double inputSum);
+  double evaluate(double inputSum);
 
 }
