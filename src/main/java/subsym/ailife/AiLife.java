@@ -18,6 +18,11 @@ public class AiLife {
     ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(1, 4, inputs, outputs, new Sigmoid());
 
     Log.v(TAG, ann);
+    ann.updateInput(0.8,0.9,0.2);
+    ann.setRandomWeights();
+    ann.setRandomWeights();
+    Log.v(TAG, ann.getOutputs());
+    Log.v(TAG, ann);
     ann.setRandomWeights();
     Log.v(TAG, ann);
     ann.setRandomWeights();

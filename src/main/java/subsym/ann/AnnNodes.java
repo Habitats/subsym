@@ -21,6 +21,10 @@ public class AnnNodes {
     this.values = IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.create()).collect(Collectors.toList());
   }
 
+  public AnnNodes(List<Double> values) {
+    this.values = values.stream().map(AnnNode::create).collect(Collectors.toList());
+  }
+
   public static AnnNodes createOutput(int numberOfNodes) {
     return new AnnNodes(numberOfNodes);
   }
@@ -28,6 +32,11 @@ public class AnnNodes {
   public static AnnNodes createInput(Double... values) {
     return new AnnNodes(values);
   }
+
+  public static AnnNodes createInput(List<Double> values) {
+    return new AnnNodes(values);
+  }
+
   public static AnnNodes createEmpty() {
     return new AnnNodes();
   }
