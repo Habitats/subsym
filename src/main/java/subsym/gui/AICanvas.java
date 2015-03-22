@@ -5,15 +5,15 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import subsym.boids.entities.Entity;
 import subsym.models.AIAdapter;
 import subsym.models.AIAdapterListener;
+import subsym.models.Entity;
 import subsym.models.Vec;
 
 /**
  * Created by Patrick on 24.08.2014.
  */
-public abstract class AICanvas<T extends Entity> extends JPanel implements AIAdapterListener {
+public abstract class AICanvas<T> extends JPanel implements AIAdapterListener {
 
   private long delta = 0;
 
@@ -37,7 +37,7 @@ public abstract class AICanvas<T extends Entity> extends JPanel implements AIAda
 
   protected abstract void draw(Graphics2D g);
 
-  protected abstract void drawOutline(Entity broid, Graphics2D g, int x, int y, int thickness);
+  protected abstract void drawOutline(T broid, Graphics2D g, int x, int y, int thickness);
 
 
   protected void drawArrow(Graphics g, Vec p, Vec v) {

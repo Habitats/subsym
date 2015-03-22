@@ -9,11 +9,11 @@ import subsym.models.Vec;
 /**
  * Created by anon on 28.01.2015.
  */
-public class Boid extends Entity {
+public class Broid extends BroidEntity {
 
-  private static final String TAG = Boid.class.getSimpleName();
+  private static final String TAG = Broid.class.getSimpleName();
 
-  public Boid(int x, int y) {
+  public Broid(int x, int y) {
     super(x, 0, y);
     setColor(getOriginalColor());
     setVelocity(Math.random(), Math.random());
@@ -26,7 +26,7 @@ public class Boid extends Entity {
   @Override
   public void update(Vec newVelocity) {
     super.update(newVelocity);
-    p.add(v);
+    position.add(v);
 //    Log.v(TAG, toString());
   }
 
@@ -37,7 +37,7 @@ public class Boid extends Entity {
 
   @Override
   public String toString() {
-    return "P: " + p.toString() + " - V: " + v.toString();
+    return "P: " + position.toString() + " - V: " + v.toString();
   }
 
   public double getSepWeight() {
@@ -68,7 +68,7 @@ public class Boid extends Entity {
   }
 
   @Override
-  public boolean isEvil(Entity n) {
+  public boolean isEvil(BroidEntity n) {
     return n instanceof Predator;
   }
 

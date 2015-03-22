@@ -9,7 +9,7 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 30.01.2015.
  */
-public class Obstacle extends Entity {
+public class Obstacle extends BroidEntity {
 
   public Obstacle(int x, int y) {
     super(x, 0, y);
@@ -59,7 +59,7 @@ public class Obstacle extends Entity {
   }
 
   @Override
-  public boolean isEvil(Entity n) {
+  public boolean isEvil(BroidEntity n) {
     return false;
   }
 

@@ -9,7 +9,7 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 30.01.2015.
  */
-public class Predator extends Entity {
+public class Predator extends BroidEntity {
 
   private static final String TAG = Predator.class.getSimpleName();
 
@@ -26,7 +26,7 @@ public class Predator extends Entity {
   @Override
   public void update(Vec newVelocity) {
     super.update(newVelocity);
-    p.add(v);
+    position.add(v);
   }
 
   @Override
@@ -65,13 +65,13 @@ public class Predator extends Entity {
   }
 
   @Override
-  public boolean isEvil(Entity n) {
+  public boolean isEvil(BroidEntity n) {
     return n instanceof Predator || n instanceof Obstacle;
   }
 
   @Override
   public String toString() {
-    return "PREDATOR --> P: " + p.toString() + " - V: " + v.toString();
+    return "PREDATOR --> P: " + position.toString() + " - V: " + v.toString();
   }
 
   @Override

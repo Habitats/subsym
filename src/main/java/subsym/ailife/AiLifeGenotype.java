@@ -11,7 +11,7 @@ public class AiLifeGenotype extends Genotype {
   private AiLifePhenotype phenotype;
 
   private AiLifeGenotype() {
-    phenotype = new AiLifePhenotype();
+    phenotype = new AiLifePhenotype(this);
   }
 
   @Override
@@ -27,7 +27,7 @@ public class AiLifeGenotype extends Genotype {
   }
 
   @Override
-  public Phenotype getPhenotype() {
+  public Phenotype getPhenotype(){
     return phenotype;
   }
 

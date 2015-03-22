@@ -3,7 +3,7 @@ package subsym.boids;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import subsym.boids.entities.Entity;
+import subsym.boids.entities.BroidEntity;
 import subsym.boids.entities.Predator;
 import subsym.gui.ColorUtils;
 import subsym.models.AIAdapter;
@@ -12,7 +12,7 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 30.01.2015.
  */
-public class BoidAdapter extends AIAdapter<Entity> {
+public class BoidAdapter extends AIAdapter<BroidEntity> {
 
   private static final String TAG = BoidAdapter.class.getSimpleName();
   public static double SCALE = 2;
@@ -65,8 +65,8 @@ public class BoidAdapter extends AIAdapter<Entity> {
     return (int) (obsticleSepWeight * (multiplier / 10));
   }
 
-  private void updateDirection(Entity boid) {
-    List<Entity> neighbors = neighbors(boid);
+  private void updateDirection(BroidEntity boid) {
+    List<BroidEntity> neighbors = neighbors(boid);
 
 //    Vec sep = Vec.multiply(getSeperation(boid, neighbors), boid.getSepWeight());
     Vec sep = getSeperation(boid, neighbors);
@@ -93,21 +93,21 @@ public class BoidAdapter extends AIAdapter<Entity> {
   }
 
   // a boid will steer towards the average position of other boids close to it
-  private Vec getCohesion(Entity boid, List<Entity> neighbors) {
+  private Vec getCohesion(BroidEntity boid, List<BroidEntity> neighbors) {
     Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 1) {
       // find the center of mass
-      neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.p).forEach(p -> deltaVelocity.add(p));
+      neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.getPosition()).forEach(p -> deltaVelocity.add(p));
       deltaVelocity.divide(neighbors.size() - 1);
 
       // move with a magnitude of 1% towards the center of mass
-      deltaVelocity.subtract(boid.p).divide(100);
+      deltaVelocity.subtract(boid.getPosition()).divide(100);
     }
     return deltaVelocity;
   }
 
   // a boid will steer towards the average heading of other boids close to it
-  private Vec getAlignment(Entity boid, List<Entity> neighbors) {
+  private Vec getAlignment(BroidEntity boid, List<BroidEntity> neighbors) {
     Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 1) {
       neighbors.stream().filter(neighbor -> boid != neighbor).map(neighbor -> neighbor.v)
@@ -122,39 +122,38 @@ public class BoidAdapter extends AIAdapter<Entity> {
   }
 
   // a boid will steer to avoid crashing with other boids close to it
-  private Vec getSeperation(Entity boid, List<Entity> neighbors) {
+  private Vec getSeperation(BroidEntity boid, List<BroidEntity> neighbors) {
     Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid && distance(boid, neighbor) < neighbor.closeRadius())
-          .forEach(neighbor -> {
-            deltaVelocity.subtract(neighbor.p);
-            deltaVelocity.add(boid.p);
-            deltaVelocity.multiply(neighbor.getSepWeight());
-          });
+      neighbors.stream().filter(neighbor -> neighbor != boid && distance(boid, neighbor) < neighbor.closeRadius()).forEach(neighbor -> {
+        deltaVelocity.subtract(neighbor.getPosition());
+        deltaVelocity.add(boid.getPosition());
+        deltaVelocity.multiply(neighbor.getSepWeight());
+      });
     }
     return deltaVelocity;
   }
 
-  public double distance(Entity neighbor, Entity boid) {
+  public double distance(BroidEntity neighbor, BroidEntity boid) {
     int dx = neighbor.getX() - boid.getX();
     int dy = neighbor.getY() - boid.getY();
     double sqrt = pythagoras(dx, dy);
     return sqrt;
   }
 
-  public double distanceWithXWrap(Entity neighbor, Entity boid) {
+  public double distanceWithXWrap(BroidEntity neighbor, BroidEntity boid) {
     int dy = neighbor.getY() - boid.getY();
     int dx = delta(neighbor.getX(), boid.getX(), getWidth());
     return pythagoras(dx, dy);
   }
 
-  public double distanceWithYWrap(Entity neighbor, Entity boid) {
+  public double distanceWithYWrap(BroidEntity neighbor, BroidEntity boid) {
     int dy = delta(neighbor.getY(), boid.getY(), getHeight());
     int dx = neighbor.getX() - boid.getX();
     return pythagoras(dx, dy);
   }
 
-  public double distanceWithBothWrap(Entity neighbor, Entity boid) {
+  public double distanceWithBothWrap(BroidEntity neighbor, BroidEntity boid) {
     int dy = delta(neighbor.getY(), boid.getY(), getHeight());
     int dx = delta(neighbor.getX(), boid.getX(), getWidth());
     return pythagoras(dx, dy);
@@ -172,19 +171,17 @@ public class BoidAdapter extends AIAdapter<Entity> {
   public void update() {
     getItems().stream().forEach(boid -> updateDirection(boid));
     getItems().removeIf(
-        broid -> broid.isPurgable() && isOutOfBounds(broid) && getSize() > maxBroids && !broid.getColor()
-            .equals(ColorUtils.c(0)));
-    getItems().stream().filter(broid -> isOutOfBounds(broid))
-        .forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
+        broid -> broid.isPurgable() && isOutOfBounds(broid) && getSize() > maxBroids && !broid.getColor().equals(ColorUtils.c(0)));
+    getItems().stream().filter(broid -> isOutOfBounds(broid)).forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
     notifyDataChanged();
   }
 
-  private boolean isOutOfBounds(Entity broid) {
-    return (broid.getX() > dismissLimit + getWidth() || broid.getX() < -dismissLimit
-            || broid.getY() > dismissLimit + getHeight() || broid.getY() < -dismissLimit);
+  private boolean isOutOfBounds(BroidEntity broid) {
+    return (broid.getX() > dismissLimit + getWidth() || broid.getX() < -dismissLimit || broid.getY() > dismissLimit + getHeight()
+            || broid.getY() < -dismissLimit);
   }
 
-  public List<Entity> neighbors(Entity broid) {
+  public List<BroidEntity> neighbors(BroidEntity broid) {
     return getItems().stream() //
         .filter(neighbor -> broid != neighbor && (!(broid instanceof Predator) || !broid.isEvil(neighbor)) && //
                             (distance(neighbor, broid) < broid.getRadius() || (WRAP_AROUND_PHYSICS_ENABLED && (

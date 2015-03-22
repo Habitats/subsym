@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.Collection;
 
 import subsym.boids.BoidAdapter;
-import subsym.boids.entities.Entity;
+import subsym.boids.entities.BroidEntity;
 import subsym.boids.entities.Obstacle;
 import subsym.gui.AICanvas;
 import subsym.models.Vec;
@@ -12,7 +12,7 @@ import subsym.models.Vec;
 /**
  * Created by anon on 28.01.2015.
  */
-public class BoidCanvas extends AICanvas<Entity> {
+public class BoidCanvas extends AICanvas<BroidEntity> {
 
   private double horizontalScalingFactor;
   private double verticalScalingFactor;
@@ -25,7 +25,7 @@ public class BoidCanvas extends AICanvas<Entity> {
 
   private void drawNodes(Graphics2D g) {
 
-    Collection<Entity> items = getAdapter().getItems();
+    Collection<BroidEntity> items = getAdapter().getItems();
     synchronized (items) {
       // draw objects
       items.stream().forEach(broid -> {
@@ -46,7 +46,7 @@ public class BoidCanvas extends AICanvas<Entity> {
     }
   }
 
-  private void drawVectors(Graphics2D g, Collection<Entity> items) {
+  private void drawVectors(Graphics2D g, Collection<BroidEntity> items) {
     items.stream().filter(broid -> !(broid instanceof Obstacle)).forEach(broid -> {
       int x = getX(broid);
       int y = getY(broid);
@@ -56,17 +56,17 @@ public class BoidCanvas extends AICanvas<Entity> {
   }
 
   @Override
-  protected void drawOutline(Entity broid, Graphics2D g, int x, int y, int thickness) {
+  protected void drawOutline(BroidEntity broid, Graphics2D g, int x, int y, int thickness) {
     for (int i = 0; i < thickness; i++) {
       g.drawOval(x + i, y + i, broid.getItemWidth() - 2 * i, broid.getItemHeight() - 2 * i);
     }
   }
 
-  private int getY(Entity item) {
+  private int getY(BroidEntity item) {
     return (int) (getHeight() - item.getY() * getVerticalScalingFactor()) - (padding + item.getItemHeight());
   }
 
-  private int getX(Entity item) {
+  private int getX(BroidEntity item) {
     return (int) (item.getX() * getHorizontalScalingFactor()) + padding;
   }
 

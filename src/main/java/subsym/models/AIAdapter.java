@@ -5,12 +5,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import subsym.boids.entities.Entity;
-
 /**
  * Created by Patrick on 08.09.2014.
  */
-public class AIAdapter<T extends Entity> {
+public class AIAdapter<T> {
 
   private int width;
   private int height;

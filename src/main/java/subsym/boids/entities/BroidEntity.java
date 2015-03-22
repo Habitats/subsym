@@ -2,26 +2,23 @@ package subsym.boids.entities;
 
 import java.awt.*;
 
+import subsym.models.Entity;
 import subsym.models.Vec;
 
 /**
  * Created by Patrick on 08.09.2014.
  */
-public abstract class Entity {
+public abstract class BroidEntity extends Entity {
 
 
-  private static final Color EMPTY = Color.WHITE;
   protected final int index;
-  public Vec p;
   public Vec v;
 
-  private Color color = EMPTY;
   private String desc = "";
-  private Color outlineColor = Color.black;
 
-  public Entity(int x, int index, int y) {
+  public BroidEntity(int x, int index, int y) {
+    super(x, y);
     this.index = index;
-    p = Vec.create(x, y);
   }
 
   public void setVelocity(double x, double y) {
@@ -30,30 +27,6 @@ public abstract class Entity {
 
   public void setVelocity(Vec v) {
     this.v = v;
-  }
-
-  public int getX() {
-    return (int) p.x;
-  }
-
-  public int getY() {
-    return (int) p.y;
-  }
-
-  public Color getColor() {
-    return color;
-  }
-
-  public void setColor(Color color) {
-    this.color = color;
-  }
-
-  public void setOutlineColor(Color outlineColor) {
-    this.outlineColor = outlineColor;
-  }
-
-  public Color getOutlineColor() {
-    return outlineColor;
   }
 
   public void update(Vec newVelocity) {
@@ -73,8 +46,8 @@ public abstract class Entity {
 
 
   public void wrapAround(int width, int height) {
-    p.x = (p.x + width) % width;
-    p.y = (p.y + height) % height;
+    position.x = (position.x + width) % width;
+    position.y = (position.y + height) % height;
   }
 
   protected abstract int getMaxSpeed();
@@ -93,9 +66,6 @@ public abstract class Entity {
 
   public abstract boolean isPurgable();
 
-  public abstract boolean isEvil(Entity n);
+  public abstract boolean isEvil(BroidEntity n);
 
-  public abstract int getItemWidth();
-
-  public abstract int getItemHeight();
 }

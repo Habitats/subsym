@@ -1,6 +1,6 @@
 package subsym.boids;
 
-import subsym.boids.entities.Boid;
+import subsym.boids.entities.Broid;
 import subsym.boids.entities.Obstacle;
 import subsym.boids.entities.Predator;
 import subsym.boids.gui.BoidGui;
@@ -33,7 +33,7 @@ public class Boids implements Runnable {
 
 //    adapter.add(new Obsticle(1400, 1200));
 //    adapter.add(new Predator(1200, 1400));
-    Boid specialBoid = new Boid(50, 50);
+    Broid specialBoid = new Broid(50, 50);
     specialBoid.setColor(ColorUtils.c(0));
     adapter.add(specialBoid);
 
@@ -42,7 +42,7 @@ public class Boids implements Runnable {
         try {
           Thread.sleep(updateFrequency);
           while (adapter.notFull()) {
-            Boid boid = new Boid((int) (Math.random() * width), (int) (Math.random() * height));
+            Broid boid = new Broid((int) (Math.random() * width), (int) (Math.random() * height));
             adapter.add(boid);
           }
 

@@ -9,14 +9,14 @@ import java.nio.file.Paths;
 import javax.swing.*;
 
 import subsym.Log;
-import subsym.boids.entities.Entity;
+import subsym.boids.entities.BroidEntity;
 import subsym.models.AIAdapter;
 
 
 /**
  * Created by Patrick on 08.09.2014.
  */
-public abstract class AIGui<T extends Entity> {
+public abstract class AIGui<T extends BroidEntity> {
 
   private static final String TAG = AIGui.class.getSimpleName();
   private JFrame frame;
