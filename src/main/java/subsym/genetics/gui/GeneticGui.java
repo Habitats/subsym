@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 import subsym.Log;
+import subsym.ailife.AiLife;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 import subsym.genetics.Genetics;
@@ -104,8 +105,8 @@ public class GeneticGui extends AIGui {
     MatingSelection.values().forEach(matingSelection::addItem);
     GeneticPreferences.getPresets().keySet().forEach(presetsComboBox::addItem);
 
-    presetsComboBox.addActionListener(
-        e -> setPreferences(GeneticPreferences.getPresets().get(((JComboBox) e.getSource()).getSelectedItem())));
+    presetsComboBox
+        .addActionListener(e -> setPreferences(GeneticPreferences.getPresets().get(((JComboBox) e.getSource()).getSelectedItem())));
 
     matingSelection.addActionListener(e -> updatePreferences());
     adultSelection.addActionListener(e -> updatePreferences());
@@ -190,7 +191,8 @@ public class GeneticGui extends AIGui {
       listener.run(prefs);
     }
   }
-  private void benchmark(){
+
+  private void benchmark() {
     if (updatePreferences()) {
       listener.runBenchmark(prefs);
     }
@@ -230,6 +232,19 @@ public class GeneticGui extends AIGui {
     alphabetSizeInput.setVisible(b);
     alphabetSizeLabel.setVisible(b);
     globalCheckBox.setVisible(b);
+  }
+
+  private void setVisibleAiLife(boolean b) {
+    zeroThresholdLabel.setVisible(!b);
+    zeroThresholdInput.setVisible(!b);
+    bitVectorSizeInput.setVisible(!b);
+    bitVectorSizeLabel.setVisible(!b);
+    surprisingLengthInput.setVisible(!b);
+    surprisingLengthLabel.setVisible(!b);
+    alphabetSizeInput.setVisible(!b);
+    alphabetSizeLabel.setVisible(!b);
+    globalCheckBox.setVisible(!b);
+
   }
 
   private void initDefaultPreferences() {
@@ -306,11 +321,13 @@ public class GeneticGui extends AIGui {
                                      Integer.parseInt(surprisingLengthInput.getText()), globalCheckBox.isSelected());
     } else if (puzzle.equals(Lolz.class.getSimpleName())) {
       setVisibleLolz(true);
-      return new Lolz(prefs, Integer.parseInt(bitVectorSizeInput.getText()),
-                      Integer.parseInt(zeroThresholdInput.getText()));
+      return new Lolz(prefs, Integer.parseInt(bitVectorSizeInput.getText()), Integer.parseInt(zeroThresholdInput.getText()));
     } else if (puzzle.equals(OneMax.class.getSimpleName())) {
       setVisibleOneMax(true);
       return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
+    } else if (puzzle.equals(AiLife.class.getSimpleName())) {
+      setVisibleAiLife(true);
+      return new AiLife(prefs);
     }
     throw new IllegalStateException("No puzzle selected!");
   }
@@ -405,8 +422,7 @@ public class GeneticGui extends AIGui {
     incrementingCheckBox.setSelected(prefs.shouldIncrement());
 
     if (prefs.getAdultSelectionMode() instanceof OverProduction) {
-      overProductionInput
-          .setText(String.valueOf(((OverProduction) prefs.getAdultSelectionMode()).getOverProductionRate()));
+      overProductionInput.setText(String.valueOf(((OverProduction) prefs.getAdultSelectionMode()).getOverProductionRate()));
     } else if (prefs.getAdultSelectionMode() instanceof Mixing) {
       mixingRateInput.setText(String.valueOf(((Mixing) prefs.getAdultSelectionMode()).getMixingRate()));
     }

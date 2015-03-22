@@ -16,7 +16,7 @@ public class AiLifeCanvas extends AICanvas<Entity> {
   }
 
   @Override
-  protected void drawOutline(Entity broid, Graphics2D g, int x, int y, int thickness) {
+  protected void drawOutline(Entity entity, Graphics2D g, int x, int y, int thickness) {
 
   }
 
