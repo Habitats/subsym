@@ -3,12 +3,12 @@ package subsym.gui;
 import java.awt.*;
 
 import subsym.models.Board;
-import subsym.models.Entity;
+import subsym.models.TileEntity;
 
 /**
  * Created by Patrick on 23.03.2015.
  */
-public class AIGridCanvas<T extends Entity> extends AICanvas<T> {
+public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
 
   public AIGridCanvas() {
     setBackground(Color.BLACK);
@@ -62,9 +62,9 @@ public class AIGridCanvas<T extends Entity> extends AICanvas<T> {
     if (getAdapter() == null) {
       return;
     }
-//
-//    int tileHeight = getHeight() / getAdapter().getHeight();
-//    int tileWidth = getWidth() / getAdapter().getWidth();
-//    getAdapter().getItems().stream().forEach(v -> v.updateMetrics(tileWidth, tileHeight));
+    int tileHeight = getHeight() / getAdapter().getHeight();
+    int tileWidth = getWidth() / getAdapter().getWidth();
+    getAdapter().setItemHeight(tileHeight);
+    getAdapter().setItemWidth(tileWidth);
   }
 }

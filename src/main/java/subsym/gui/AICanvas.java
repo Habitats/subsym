@@ -12,12 +12,12 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 24.08.2014.
  */
-public abstract class AICanvas<T> extends JPanel implements AIAdapterListener {
+public abstract class AICanvas<T, A extends AIAdapter<T>> extends JPanel implements AIAdapterListener {
 
   private long delta = 0;
 
   private static final String TAG = AICanvas.class.getSimpleName();
-  private AIAdapter adapter;
+  private A adapter;
   public boolean drawLabels;
 
   public AICanvas() {
@@ -89,12 +89,12 @@ public abstract class AICanvas<T> extends JPanel implements AIAdapterListener {
     }
   }
 
-  public void setAdapter(AIAdapter<T> adapter) {
+  public void setAdapter(A adapter) {
     this.adapter = adapter;
     adapter.setListener(this);
   }
 
-  public AIAdapter<T> getAdapter() {
+  public A getAdapter() {
     return adapter;
   }
 }

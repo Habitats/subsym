@@ -16,7 +16,7 @@ import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
 import subsym.gui.ColorUtils;
 import subsym.models.Board;
-import subsym.models.Entity;
+import subsym.models.TileEntity;
 
 /**
  * Created by anon on 20.03.2015.
@@ -89,9 +89,9 @@ public class AiLife extends GeneticProblem {
   @Override
   public void onSolved() {
     Log.v(TAG, this);
-    AIGridCanvas<Entity> canvas = new AIGridCanvas<>();
-    Board<Entity> board = new Board<>(10, 10);
-    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(createEntity(x, y))));
+    AIGridCanvas<TileEntity> canvas = new AIGridCanvas<>();
+    Board<TileEntity> board = new Board<>(10, 10);
+    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(new Empty(x, y, board))));
     canvas.setAdapter(board);
 //
     new AIGui() {
@@ -103,7 +103,7 @@ public class AiLife extends GeneticProblem {
 
       @Override
       protected Dimension getPreferredSize() {
-        return new Dimension(600, 400);
+        return new Dimension(500, 500);
       }
 
       @Override
@@ -128,26 +128,15 @@ public class AiLife extends GeneticProblem {
     }.init();
   }
 
-  private Entity createEntity(int x, int y) {
-    return new Entity(x, y) {
-      @Override
-      public void setColor(Color color) {
-      }
+  private class Empty extends TileEntity {
 
-      @Override
-      public Color getColor() {
-        return ColorUtils.c(ArtificialNeuralNetwork.random().nextInt(ColorUtils.NUM_COLORS));
-      }
+    private Empty(int x, int y, Board<TileEntity> board) {
+      super(x, y, board);
+    }
 
-      @Override
-      public int getItemWidth() {
-        return 50;
-      }
-
-      @Override
-      public int getItemHeight() {
-        return 50;
-      }
-    };
+    @Override
+    public Color getColor() {
+      return ColorUtils.c(ArtificialNeuralNetwork.random().nextInt(ColorUtils.NUM_COLORS));
+    }
   }
 }

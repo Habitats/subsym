@@ -27,14 +27,12 @@ import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIComboBox;
 import subsym.gui.AIContiniousScrollPane;
-import subsym.gui.AIGridCanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Plot;
 import subsym.lolz.Lolz;
-import subsym.models.Entity;
 import subsym.onemax.OneMax;
 import subsym.surprisingsequence.SurprisingSequences;
 
@@ -447,7 +445,4 @@ public class GeneticGui extends AIGui {
     }
   }
 
-  public void addCanvas(AIGridCanvas<Entity> canvas) {
-    mainPanel.add(canvas);
-  }
 }

@@ -7,12 +7,13 @@ import subsym.boids.BoidAdapter;
 import subsym.boids.entities.BroidEntity;
 import subsym.boids.entities.Obstacle;
 import subsym.gui.AICanvas;
+import subsym.models.AIAdapter;
 import subsym.models.Vec;
 
 /**
  * Created by anon on 28.01.2015.
  */
-public class BoidCanvas extends AICanvas<BroidEntity> {
+public class BoidCanvas extends AICanvas<BroidEntity, AIAdapter<BroidEntity>> {
 
   private double horizontalScalingFactor;
   private double verticalScalingFactor;
@@ -50,8 +51,7 @@ public class BoidCanvas extends AICanvas<BroidEntity> {
     items.stream().filter(broid -> !(broid instanceof Obstacle)).forEach(broid -> {
       int x = getX(broid);
       int y = getY(broid);
-      drawArrow(g, Vec.create(x + broid.getItemWidth() / 2, y + broid.getItemHeight() / 2),
-                Vec.create(broid.v.x, -broid.v.y));
+      drawArrow(g, Vec.create(x + broid.getItemWidth() / 2, y + broid.getItemHeight() / 2), Vec.create(broid.v.x, -broid.v.y));
     });
   }
 

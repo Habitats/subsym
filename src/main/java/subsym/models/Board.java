@@ -6,9 +6,11 @@ import java.util.List;
 /**
  * Created by Patrick on 24.08.2014.
  */
-public class Board<T extends Entity> extends AIAdapter<T> {
+public class Board<T extends TileEntity> extends AIAdapter<T> {
 
   private List<List<T>> tiles;
+  private int itemHeight;
+  private int itemWidth;
 
   public Board(int width, int height) {
     clear(width, height);
@@ -53,7 +55,6 @@ public class Board<T extends Entity> extends AIAdapter<T> {
     return items;
   }
 
-
   private boolean positionExist(int x, int y) {
     try {
       T colorTile = tiles.get(x).get(y);
@@ -87,5 +88,21 @@ public class Board<T extends Entity> extends AIAdapter<T> {
       }
     }
     return manhattanNeighbors;
+  }
+
+  public int getItemHeight() {
+    return itemHeight;
+  }
+
+  public int getItemWidth() {
+    return itemWidth;
+  }
+
+  public void setItemHeight(int itemHeight) {
+    this.itemHeight = itemHeight;
+  }
+
+  public void setItemWidth(int itemWidth) {
+    this.itemWidth = itemWidth;
   }
 }
