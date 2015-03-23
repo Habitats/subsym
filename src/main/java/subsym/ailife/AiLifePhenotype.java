@@ -1,7 +1,9 @@
 package subsym.ailife;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import subsym.ann.AnnNodes;
 import subsym.ann.ArtificialNeuralNetwork;
@@ -13,21 +15,37 @@ import subsym.genetics.Phenotype;
  */
 public class AiLifePhenotype implements Phenotype {
 
-
   private final AiLifeGenotype aiLifeGenotype;
+  private AiLifeRobot robot;
   private final ArtificialNeuralNetwork ann;
 
-  public AiLifePhenotype(AiLifeGenotype aiLifeGenotype) {
+  public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AiLifeRobot robot) {
     this.aiLifeGenotype = aiLifeGenotype;
-    List<Integer> values = aiLifeGenotype.toList();
-    AnnNodes inputs = AnnNodes.createInput(1., 0., 0., 0., 1., 0.);
+    this.robot = robot;
+
+    List<Integer> foodInput = robot.getFoodSensorInput();
+    List<Integer> poisonInput = robot.getPoisonSensorInput();
+
+    List<Double> sensoryInput = Stream.of(foodInput, poisonInput) //
+        .flatMap(List::stream).mapToDouble(Double::valueOf).boxed().collect(Collectors.toList());
+    AnnNodes inputs = AnnNodes.createInput(sensoryInput);
     AnnNodes outputs = AnnNodes.createOutput(3);
     ann = new ArtificialNeuralNetwork(1, 4, inputs, outputs, new Sigmoid());
-    this.aiLifeGenotype.setSize(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
+
+    this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
+
+    List<Double> weights = aiLifeGenotype.toList().stream()//
+        .mapToDouble(this::normalize).boxed().collect(Collectors.toList());
+    ann.setWeights(weights);
+
+  }
+
+  private double normalize(int v) {
+    return (v % 1000) / 1000.;
   }
 
   private List<Double> getNormalizedValues(List<Integer> values) {
-    return values.stream().mapToDouble(v -> v / 1000.).boxed().collect(Collectors.toList());
+    return values.stream().mapToDouble(this::normalize).boxed().collect(Collectors.toList());
   }
 
   private void updateArtificialNeuralNetwork(AiLifeGenotype aiLifeGenotype) {
@@ -37,9 +55,23 @@ public class AiLifePhenotype implements Phenotype {
   @Override
   public double fitness() {
     updateArtificialNeuralNetwork(aiLifeGenotype);
-    List<Double> inputs = ann.getInputs();
-    List<Double> outputs = ann.getOutputs();
 
-    return outputs.stream().mapToDouble(Double::doubleValue).sum();
+    double fitness = 0;
+    for (int i = 0; i < 1000; i++) {
+      List<Double> outputs = ann.getOutputs();
+      int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
+
+      int poisonScore = Math.abs(robot.getPoisonSensorInput().get(indexOfBest) - 1);
+      int foodScore = robot.getFoodSensorInput().get(indexOfBest);
+      fitness += foodScore + poisonScore;
+
+      List<Double> randomInput = Collections.nCopies(6, 0.).stream().collect(Collectors.toList());
+      randomInput.set(ArtificialNeuralNetwork.random().nextInt(3), 1.);
+      randomInput.set(3 + ArtificialNeuralNetwork.random().nextInt(3), 1.);
+      ann.updateInput(randomInput);
+    }
+
+    double v = fitness / 2000.;
+    return v;
   }
 }

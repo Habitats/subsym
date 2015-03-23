@@ -10,8 +10,8 @@ public class AiLifeGenotype extends Genotype {
 
   private AiLifePhenotype phenotype;
 
-  private AiLifeGenotype() {
-    phenotype = new AiLifePhenotype(this);
+  public AiLifeGenotype() {
+    phenotype = new AiLifePhenotype(this, new AiLifeRobot());
   }
 
   @Override
@@ -21,13 +21,12 @@ public class AiLifeGenotype extends Genotype {
 
   @Override
   public void copy(Genotype copy) {
-    super.copy();
     AiLifeGenotype aiCopy = (AiLifeGenotype) copy;
-    aiCopy.phenotype = new AiLifePhenotype(this);
+    aiCopy.phenotype = new AiLifePhenotype(this, new AiLifeRobot());
   }
 
   @Override
-  public Phenotype getPhenotype(){
+  public Phenotype getPhenotype() {
     return phenotype;
   }
 
