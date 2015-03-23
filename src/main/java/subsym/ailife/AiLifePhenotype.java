@@ -3,7 +3,6 @@ package subsym.ailife;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import subsym.ann.AnnNodes;
 import subsym.ann.ArtificialNeuralNetwork;
@@ -23,12 +22,7 @@ public class AiLifePhenotype implements Phenotype {
     this.aiLifeGenotype = aiLifeGenotype;
     this.robot = robot;
 
-    List<Integer> foodInput = robot.getFoodSensorInput();
-    List<Integer> poisonInput = robot.getPoisonSensorInput();
-
-    List<Double> sensoryInput = Stream.of(foodInput, poisonInput) //
-        .flatMap(List::stream).mapToDouble(Double::valueOf).boxed().collect(Collectors.toList());
-    AnnNodes inputs = AnnNodes.createInput(sensoryInput);
+    AnnNodes inputs = AnnNodes.createInput(robot.getSensoryInput());
     AnnNodes outputs = AnnNodes.createOutput(3);
     ann = new ArtificialNeuralNetwork(1, 4, inputs, outputs, new Sigmoid());
 
@@ -69,9 +63,15 @@ public class AiLifePhenotype implements Phenotype {
       randomInput.set(ArtificialNeuralNetwork.random().nextInt(3), 1.);
       randomInput.set(3 + ArtificialNeuralNetwork.random().nextInt(3), 1.);
       ann.updateInput(randomInput);
+
+      robot.move(indexOfBest);
     }
 
     double v = fitness / 2000.;
     return v;
+  }
+
+  public ArtificialNeuralNetwork getArtificialNeuralNetwork() {
+    return ann;
   }
 }

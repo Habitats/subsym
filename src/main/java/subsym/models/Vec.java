@@ -120,4 +120,8 @@ public class Vec {
     }
     return false;
   }
+
+  public Vec copy() {
+    return Vec.create(x, y);
+  }
 }

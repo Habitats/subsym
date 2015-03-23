@@ -49,4 +49,7 @@ public abstract class Entity {
   }
 
 
+  public void setPosition(double x, double y) {
+   position = Vec.create(x,y);
+  }
 }

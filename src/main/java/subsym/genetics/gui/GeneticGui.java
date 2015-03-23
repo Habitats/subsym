@@ -327,7 +327,7 @@ public class GeneticGui extends AIGui {
       return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
     } else if (puzzle.equals(AiLife.class.getSimpleName())) {
       setVisibleAiLife(true);
-      return new AiLife(prefs,this);
+      return new AiLife(prefs);
     }
     throw new IllegalStateException("No puzzle selected!");
   }

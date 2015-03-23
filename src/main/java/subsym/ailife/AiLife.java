@@ -1,6 +1,9 @@
 package subsym.ailife;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import javax.swing.*;
@@ -9,7 +12,6 @@ import subsym.Log;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
-import subsym.genetics.gui.GeneticGui;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
 import subsym.gui.AIGui;
@@ -24,9 +26,11 @@ import subsym.models.TileEntity;
 public class AiLife extends GeneticProblem {
 
   private static final String TAG = AiLife.class.getSimpleName();
-  private final GeneticGui geneticGui;
+  private final AIGridCanvas<TileEntity> canvas;
+  private final Board<TileEntity> board;
+  private AiLifeRobot robot;
 
-  public AiLife(GeneticPreferences prefs, GeneticGui geneticGui) {
+  public AiLife(GeneticPreferences prefs) {
     super(prefs);
 //    AnnNodes inputs = AnnNodes.createInput(0.3, 0.1, 0.7);
 //    AnnNodes outputs = AnnNodes.createOutput(2);
@@ -50,7 +54,27 @@ public class AiLife extends GeneticProblem {
 //    ann.setWeights(weights);
 //
 //    Log.v(TAG, ann);
-    this.geneticGui = geneticGui;
+    board = createAiLifeBoard();
+    canvas = new AIGridCanvas<>();
+    canvas.setAdapter(board);
+    canvas.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+          case KeyEvent.VK_A:
+            robot.move(0);
+            break;
+          case KeyEvent.VK_W:
+            robot.move(1);
+            break;
+          case KeyEvent.VK_D:
+            robot.move(2);
+            break;
+        }
+      }
+    });
+
+    canvas.requestFocus();
   }
 
   @Override
@@ -61,24 +85,25 @@ public class AiLife extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
-      AiLifeGenotype genotype = new AiLifeGenotype();
+      AiLifeGenotype genotype = new AiLifeGenotype(board);
       getPopulation().add(genotype);
     });
   }
 
   @Override
   public boolean solution() {
-    return getPopulation().getBestGenotype().fitness() == 1;
+//    return getPopulation().getBestGenotype().fitness() == 1;
+    return getPopulation().getCurrentGeneration() == 100;
   }
 
   @Override
   public GeneticProblem newInstance(GeneticPreferences prefs) {
-    return new AiLife(prefs, geneticGui);
+    return new AiLife(prefs);
   }
 
   @Override
   public GeneticProblem newInstance() {
-    return new AiLife(getPreferences(), geneticGui);
+    return new AiLife(getPreferences());
   }
 
   @Override
@@ -88,14 +113,26 @@ public class AiLife extends GeneticProblem {
 
   @Override
   public void onSolved() {
+    AiLifeGenotype best = (AiLifeGenotype) getPopulation().getBestGenotype();
+    AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
+    ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
+    canvas.setAdapter(createAiLifeBoard());
+    displayGui();
+    for (int i = 0; i < 60; i++) {
+      ann.updateInput(robot.getSensoryInput());
+      List<Double> outputs = ann.getOutputs();
+      int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
+      robot.move(indexOfBest);
+      try {
+        Thread.sleep(200);
+      } catch (InterruptedException e) {
+      }
+    }
     Log.v(TAG, this);
-    AIGridCanvas<TileEntity> canvas = new AIGridCanvas<>();
-    Board<TileEntity> board = new Board<>(10, 10);
-    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(new Empty(x, y, board))));
-    canvas.setAdapter(board);
-//
-    new AIGui() {
+  }
 
+  private void displayGui() {
+    new AIGui() {
       @Override
       protected int getDefaultCloseOperation() {
         return WindowConstants.EXIT_ON_CLOSE;
@@ -109,6 +146,7 @@ public class AiLife extends GeneticProblem {
       @Override
       protected void init() {
         buildFrame(canvas, null, null);
+        canvas.requestFocus();
       }
 
       @Override
@@ -128,15 +166,59 @@ public class AiLife extends GeneticProblem {
     }.init();
   }
 
-  private class Empty extends TileEntity {
+  private Board<TileEntity> createAiLifeBoard() {
+    Board<TileEntity> board = new Board<>(10, 10);
+    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y))));
+    robot = new AiLifeRobot(0, 0, board);
+    board.set(robot);
+    return board;
+  }
 
-    private Empty(int x, int y, Board<TileEntity> board) {
+  private TileEntity getRandomTile(Board<TileEntity> board, int x, int y) {
+    double random = ArtificialNeuralNetwork.random().nextDouble();
+    if (random < 1 / 3.) {
+      return new Empty(x, y, board);
+    } else if (random < 2 / 3.) {
+      return new Food(x, y, board);
+    } else {
+      return new Poison(x, y, board);
+    }
+  }
+
+  public static class Empty extends TileEntity {
+
+    public Empty(int x, int y, Board<TileEntity> board) {
       super(x, y, board);
     }
 
     @Override
     public Color getColor() {
-      return ColorUtils.c(ArtificialNeuralNetwork.random().nextInt(ColorUtils.NUM_COLORS));
+      return ColorUtils.c(2);
+    }
+  }
+
+  public static class Poison extends TileEntity {
+
+    public Poison(int x, int y, Board board) {
+      super(x, y, board);
+    }
+
+    @Override
+    public Color getColor() {
+      return ColorUtils.c(1);
+    }
+  }
+
+  public static class Food extends TileEntity {
+
+    public Food(int x, int y, Board board) {
+      super(x, y, board);
+    }
+
+    @Override
+    public Color getColor() {
+      return ColorUtils.c(0);
     }
   }
 }
+

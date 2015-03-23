@@ -105,4 +105,28 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
   public void setItemWidth(int itemWidth) {
     this.itemWidth = itemWidth;
   }
+
+  public List<T> getManhattanNeighborsWrapped(T tile) {
+    List<T> manhattanNeighbors = new ArrayList<>();
+    for (int x = tile.getX() - 1; x <= tile.getX() + 1; x++) {
+      for (int y = tile.getY() - 1; y <= tile.getY() + 1; y++) {
+        // do not put self to its own children
+        if (x == tile.getX() && y == tile.getY()) {
+          continue;
+        }
+        // disallow diagonal neighbors
+        if (tile.getX() != x && tile.getY() != y) {
+          continue;
+        }
+        manhattanNeighbors.add(get(x % getWidth(), y % getHeight()));
+      }
+    }
+    return manhattanNeighbors;
+  }
+
+  public void setWrapped(T tile) {
+    int x = (tile.getX() + getWidth()) % getWidth();
+    int y = (tile.getY() + getHeight()) % getHeight();
+    tiles.get(x).set(y, tile);
+  }
 }

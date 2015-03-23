@@ -21,4 +21,8 @@ public class TileEntity extends Entity {
   public int getItemHeight() {
     return board.getItemHeight();
   }
+
+protected Board<TileEntity> getBoard() {
+    return board;
+  }
 }
