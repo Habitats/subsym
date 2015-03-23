@@ -20,26 +20,26 @@ public class AiLifePhenotype implements Phenotype {
   public AiLifePhenotype(AiLifeGenotype aiLifeGenotype) {
     this.aiLifeGenotype = aiLifeGenotype;
     List<Integer> values = aiLifeGenotype.toList();
-    List<Double> normalizedValues = getNormalizedValues(values);
-    AnnNodes inputs = AnnNodes.createInput(normalizedValues);
+    AnnNodes inputs = AnnNodes.createInput(1., 0., 0., 0., 1., 0.);
     AnnNodes outputs = AnnNodes.createOutput(3);
     ann = new ArtificialNeuralNetwork(1, 4, inputs, outputs, new Sigmoid());
+    this.aiLifeGenotype.setSize(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
   }
 
   private List<Double> getNormalizedValues(List<Integer> values) {
-    return values.stream().mapToDouble(v -> v / values.size()).boxed().collect(Collectors.toList());
+    return values.stream().mapToDouble(v -> v / 1000.).boxed().collect(Collectors.toList());
   }
 
   private void updateArtificialNeuralNetwork(AiLifeGenotype aiLifeGenotype) {
-    ann.updateInput(getNormalizedValues(aiLifeGenotype.toList()));
+    ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }
 
   @Override
   public double fitness() {
     updateArtificialNeuralNetwork(aiLifeGenotype);
+    List<Double> inputs = ann.getInputs();
     List<Double> outputs = ann.getOutputs();
-    List<Double> weights = aiLifeGenotype.toList().stream().mapToDouble(v -> v / 1000.).boxed().collect(Collectors.toList());
-    ann.setWeights(weights);
-    return 0;
+
+    return outputs.stream().mapToDouble(Double::doubleValue).sum();
   }
 }

@@ -93,4 +93,8 @@ public class ArtificialNeuralNetwork {
   public int getNumNodes() {
     return layers.stream().mapToInt(layer -> layer.size()).sum();
   }
+
+  public List<Double> getInputs() {
+    return inputs.stream().mapToDouble(n -> n.getValue()).boxed().collect(Collectors.toList());
+  }
 }
