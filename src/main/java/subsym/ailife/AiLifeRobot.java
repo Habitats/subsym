@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import subsym.Log;
+import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.ColorUtils;
 import subsym.models.Board;
 import subsym.models.TileEntity;
@@ -24,6 +25,13 @@ public class AiLifeRobot extends TileEntity {
     List<Double> sensoryInput = Stream.of(getFoodSensorInput(), getPoisonSensorInput()) //
         .flatMap(List::stream).mapToDouble(Double::valueOf).boxed().collect(Collectors.toList());
     return sensoryInput;
+  }
+
+  public List<Double> getRandomSensoryInput() {
+    List<Double> randomInput = Collections.nCopies(6, 0.).stream().collect(Collectors.toList());
+    randomInput.set(ArtificialNeuralNetwork.random().nextInt(3), 1.);
+    randomInput.set(3 + ArtificialNeuralNetwork.random().nextInt(3), 1.);
+    return randomInput;
   }
 
   private enum Direction {

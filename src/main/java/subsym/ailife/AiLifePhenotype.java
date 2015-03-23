@@ -1,6 +1,5 @@
 package subsym.ailife;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +50,9 @@ public class AiLifePhenotype implements Phenotype {
     updateArtificialNeuralNetwork(aiLifeGenotype);
 
     double fitness = 0;
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 10; i++) {
+      List<Double> sensoryInput = robot.getRandomSensoryInput();
+      ann.updateInput(sensoryInput);
       List<Double> outputs = ann.getOutputs();
       int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
 
@@ -59,15 +60,11 @@ public class AiLifePhenotype implements Phenotype {
       int foodScore = robot.getFoodSensorInput().get(indexOfBest);
       fitness += foodScore + poisonScore;
 
-      List<Double> randomInput = Collections.nCopies(6, 0.).stream().collect(Collectors.toList());
-      randomInput.set(ArtificialNeuralNetwork.random().nextInt(3), 1.);
-      randomInput.set(3 + ArtificialNeuralNetwork.random().nextInt(3), 1.);
-      ann.updateInput(randomInput);
-
-      robot.move(indexOfBest);
+      ann.updateInput(robot.getRandomSensoryInput());
+//      robot.move(indexOfBest);
     }
 
-    double v = fitness / 2000.;
+    double v = fitness / 20.;
     return v;
   }
 
