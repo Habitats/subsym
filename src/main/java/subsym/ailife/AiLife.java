@@ -1,5 +1,9 @@
 package subsym.ailife;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import subsym.Log;
 import subsym.ann.AnnNodes;
 import subsym.ann.ArtificialNeuralNetwork;
@@ -21,16 +25,22 @@ public class AiLife extends GeneticProblem {
     ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(1, 4, inputs, outputs, new Sigmoid());
 
     Log.v(TAG, ann);
-    ann.updateInput(0.8, 0.9, 0.2);
+//    ann.updateInput(0.8, 0.9, 0.2);
+    Log.v(TAG, ann.getNumNodes());
+    Log.v(TAG, ann.getNumWeights());
     ann.setRandomWeights();
     ann.setRandomWeights();
-    Log.v(TAG, ann.getOutputs());
+
+    Log.v(TAG, "Setting random weights ...");
+    List<Double> weights = IntStream.range(0, ann.getNumWeights())//
+        .mapToDouble(i -> ArtificialNeuralNetwork.random().nextDouble()).boxed().collect(Collectors.toList());
+    ann.setWeights(weights);
     Log.v(TAG, ann);
-    ann.setRandomWeights();
-    Log.v(TAG, ann);
-    ann.setRandomWeights();
-    Log.v(TAG, ann);
-    ann.setRandomWeights();
+
+    Log.v(TAG, "Setting weights to 1 ...");
+    weights = IntStream.range(0, ann.getNumWeights()).mapToDouble(i -> 1).boxed().collect(Collectors.toList());
+    ann.setWeights(weights);
+
     Log.v(TAG, ann);
   }
 

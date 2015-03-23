@@ -5,8 +5,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import subsym.ailife.AiLife;
 import subsym.boids.Boids;
-import subsym.genetics.Genetics;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -48,9 +48,9 @@ public class Main {
 //        panel.add(broid);
 ////
 //        buildFrame(panel, null, null);
-        new Genetics();
+//        new Genetics();
 //
-//        new AiLife();
+        new AiLife(null);
       }
 
 

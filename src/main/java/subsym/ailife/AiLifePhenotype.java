@@ -38,7 +38,8 @@ public class AiLifePhenotype implements Phenotype {
   public double fitness() {
     updateArtificialNeuralNetwork(aiLifeGenotype);
     List<Double> outputs = ann.getOutputs();
-    List<Integer> inputs = aiLifeGenotype.toList();
+    List<Double> weights = aiLifeGenotype.toList().stream().mapToDouble(v -> v / 1000.).boxed().collect(Collectors.toList());
+    ann.setWeights(weights);
     return 0;
   }
 }

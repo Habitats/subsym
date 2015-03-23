@@ -4,6 +4,7 @@ package subsym.ann;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -85,5 +86,13 @@ public class AnnNode {
       weights = outputs.stream().map(n -> String.format("%.3f", outputWeights.get(n))).collect(Collectors.joining(", ", "- W: ", ""));
     }
     return String.format("V: %.3f %s - S: %.3f", getValue(), weights, getInputSum());
+  }
+
+  public Set<AnnNode> getOutputWeights() {
+    return outputWeights.keySet();
+  }
+
+  public void setWeight(AnnNode outputNode, Double weight) {
+    outputWeights.put(outputNode, weight);
   }
 }

@@ -33,6 +33,6 @@ public class AiLifeGenotype extends Genotype {
 
   @Override
   public int getBitGroupSize() {
-    return 3;
+    return 10;
   }
 }
