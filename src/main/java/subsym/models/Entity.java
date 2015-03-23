@@ -47,4 +47,6 @@ public abstract class Entity {
   public Vec getPosition() {
     return position;
   }
+
+
 }

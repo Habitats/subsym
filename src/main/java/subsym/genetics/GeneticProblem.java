@@ -133,4 +133,6 @@ public abstract class GeneticProblem {
       plotter.addAverageRunValue("sd", population.getCurrentGeneration(), population.getCurrentStandardDeviation());
     }
   }
+
+  public abstract void onSolved();
 }

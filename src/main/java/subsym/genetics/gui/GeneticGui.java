@@ -27,12 +27,14 @@ import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIComboBox;
 import subsym.gui.AIContiniousScrollPane;
+import subsym.gui.AIGridCanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Plot;
 import subsym.lolz.Lolz;
+import subsym.models.Entity;
 import subsym.onemax.OneMax;
 import subsym.surprisingsequence.SurprisingSequences;
 
@@ -327,7 +329,7 @@ public class GeneticGui extends AIGui {
       return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
     } else if (puzzle.equals(AiLife.class.getSimpleName())) {
       setVisibleAiLife(true);
-      return new AiLife(prefs);
+      return new AiLife(prefs,this);
     }
     throw new IllegalStateException("No puzzle selected!");
   }
@@ -443,5 +445,9 @@ public class GeneticGui extends AIGui {
       Tournament mateSelectionMode = (Tournament) prefs.getMateSelectionMode();
       tournamentInput.setText(mateSelectionMode.getTournamentK() + "/" + mateSelectionMode.getTournamentE());
     }
+  }
+
+  public void addCanvas(AIGridCanvas<Entity> canvas) {
+    mainPanel.add(canvas);
   }
 }

@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import subsym.Log;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 
@@ -13,6 +14,7 @@ import subsym.genetics.GeneticProblem;
  */
 public class SurprisingSequences extends GeneticProblem {
 
+  private static final String TAG = SurprisingSequences.class.getSimpleName();
   private final List<Integer> alphabet;
   private final boolean global;
   private int length;
@@ -69,5 +71,10 @@ public class SurprisingSequences extends GeneticProblem {
   @Override
   public void increment(int increment) {
     length += increment;
+  }
+
+  @Override
+  public void onSolved() {
+    Log.v(TAG, this);
   }
 }

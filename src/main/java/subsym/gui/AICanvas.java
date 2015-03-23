@@ -7,7 +7,6 @@ import javax.swing.*;
 
 import subsym.models.AIAdapter;
 import subsym.models.AIAdapterListener;
-import subsym.models.Entity;
 import subsym.models.Vec;
 
 /**
@@ -94,7 +93,6 @@ public abstract class AICanvas<T> extends JPanel implements AIAdapterListener {
     this.adapter = adapter;
     adapter.setListener(this);
   }
-
 
   public AIAdapter<T> getAdapter() {
     return adapter;

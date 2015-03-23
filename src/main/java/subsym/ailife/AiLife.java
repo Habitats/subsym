@@ -1,10 +1,22 @@
 package subsym.ailife;
 
+import java.awt.*;
 import java.util.stream.IntStream;
 
+import javax.swing.*;
+
+import subsym.Log;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
+import subsym.genetics.gui.GeneticGui;
+import subsym.gui.AICanvas;
+import subsym.gui.AIGridCanvas;
+import subsym.gui.AIGui;
+import subsym.gui.AITextArea;
+import subsym.gui.ColorUtils;
+import subsym.models.Board;
+import subsym.models.Entity;
 
 /**
  * Created by anon on 20.03.2015.
@@ -12,8 +24,9 @@ import subsym.genetics.GeneticProblem;
 public class AiLife extends GeneticProblem {
 
   private static final String TAG = AiLife.class.getSimpleName();
+  private final GeneticGui geneticGui;
 
-  public AiLife(GeneticPreferences prefs) {
+  public AiLife(GeneticPreferences prefs, GeneticGui geneticGui) {
     super(prefs);
 //    AnnNodes inputs = AnnNodes.createInput(0.3, 0.1, 0.7);
 //    AnnNodes outputs = AnnNodes.createOutput(2);
@@ -37,6 +50,7 @@ public class AiLife extends GeneticProblem {
 //    ann.setWeights(weights);
 //
 //    Log.v(TAG, ann);
+    this.geneticGui = geneticGui;
   }
 
   @Override
@@ -54,21 +68,86 @@ public class AiLife extends GeneticProblem {
 
   @Override
   public boolean solution() {
-    return getPopulation().getCurrentGeneration() == 60;
+    return getPopulation().getBestGenotype().fitness() == 1;
   }
 
   @Override
   public GeneticProblem newInstance(GeneticPreferences prefs) {
-    return new AiLife(prefs);
+    return new AiLife(prefs, geneticGui);
   }
 
   @Override
   public GeneticProblem newInstance() {
-    return new AiLife(getPreferences());
+    return new AiLife(getPreferences(), geneticGui);
   }
 
   @Override
   public void increment(int increment) {
 
+  }
+
+  @Override
+  public void onSolved() {
+    Log.v(TAG, this);
+    AIGridCanvas<Entity> canvas = new AIGridCanvas<>();
+    Board<Entity> board = new Board<>(10, 10);
+    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(createEntity(x, y))));
+    canvas.setAdapter(board);
+//
+    new AIGui() {
+
+      @Override
+      protected int getDefaultCloseOperation() {
+        return WindowConstants.EXIT_ON_CLOSE;
+      }
+
+      @Override
+      protected Dimension getPreferredSize() {
+        return new Dimension(600, 400);
+      }
+
+      @Override
+      protected void init() {
+        buildFrame(canvas, null, null);
+      }
+
+      @Override
+      public JPanel getMainPanel() {
+        return null;
+      }
+
+      @Override
+      public AICanvas getDrawingCanvas() {
+        return null;
+      }
+
+      @Override
+      public AITextArea getInputField() {
+        return null;
+      }
+    }.init();
+  }
+
+  private Entity createEntity(int x, int y) {
+    return new Entity(x, y) {
+      @Override
+      public void setColor(Color color) {
+      }
+
+      @Override
+      public Color getColor() {
+        return ColorUtils.c(ArtificialNeuralNetwork.random().nextInt(ColorUtils.NUM_COLORS));
+      }
+
+      @Override
+      public int getItemWidth() {
+        return 50;
+      }
+
+      @Override
+      public int getItemHeight() {
+        return 50;
+      }
+    };
   }
 }

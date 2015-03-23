@@ -62,15 +62,15 @@ public class AIAdapter<T> {
   }
 
 
-  public void addAll(List<T> broids) {
+  public void addAll(List<T> entities) {
     synchronized (items) {
-      items.addAll(broids);
+      items.addAll(entities);
     }
   }
 
-  public void add(T broid) {
+  public void add(T entity) {
     synchronized (items) {
-      items.add(broid);
+      items.add(entity);
     }
   }
 

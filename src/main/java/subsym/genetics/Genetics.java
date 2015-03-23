@@ -122,7 +122,7 @@ public class Genetics implements GeneticGuiListener {
   }
 
   public void onSolved(GeneticProblem solution) {
-    Log.i(TAG, solution);
+    solution.onSolved();
   }
 
   public void clear() {

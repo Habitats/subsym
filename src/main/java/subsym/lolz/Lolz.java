@@ -2,6 +2,7 @@ package subsym.lolz;
 
 import java.util.stream.IntStream;
 
+import subsym.Log;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 
@@ -10,6 +11,7 @@ import subsym.genetics.GeneticProblem;
  */
 public class Lolz extends GeneticProblem {
 
+  private static final String TAG = Lolz.class.getSimpleName();
   private int bitVectorSize;
   private final int zeroThreshold;
 
@@ -57,5 +59,10 @@ public class Lolz extends GeneticProblem {
   @Override
   public void increment(int increment) {
     bitVectorSize += increment;
+  }
+
+  @Override
+  public void onSolved() {
+    Log.i(TAG, this);
   }
 }

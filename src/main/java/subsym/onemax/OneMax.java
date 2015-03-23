@@ -2,6 +2,7 @@ package subsym.onemax;
 
 import java.util.stream.IntStream;
 
+import subsym.Log;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 
@@ -50,5 +51,10 @@ public class OneMax extends GeneticProblem {
   @Override
   public void increment(int increment) {
     bitVectorSize += increment;
+  }
+
+  @Override
+  public void onSolved() {
+    Log.i(TAG, this);
   }
 }

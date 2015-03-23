@@ -8,7 +8,7 @@ import java.awt.*;
 public class ColorUtils {
 
   private static final String TAG = ColorUtils.class.getSimpleName();
-  private static final int NUM_COLORS = 5;
+  public static final int NUM_COLORS = 5;
 
   public static Color toHsv(double normalizedValue, double brightness) {
     // all values are in the range of [0, 1]
