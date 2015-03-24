@@ -38,6 +38,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     for (int i = 0; i < size; i++) {
       bits.set(i, random.nextBoolean());
     }
+    fitness = null;
     return this;
   }
 
@@ -45,6 +46,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     this.size = size;
     bits = new BitSet();
     bits.set(0, size, false);
+    fitness = null;
     return this;
   }
 
