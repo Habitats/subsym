@@ -45,11 +45,8 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
     // put origin to be the left bottom corner
     int x = entity.getX() * entity.getItemWidth();
     int y = getHeight() - entity.getItemHeight() - entity.getY() * entity.getItemHeight();
-    if (entity.isModified()) {
       entity.draw(g, x, y);
       drawOutline(entity, (Graphics2D) g, x, y, 2);
-//      entity.reset();
-    }
   }
 
   @Override
@@ -61,8 +58,6 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
     int tileWidth = getWidth() / getAdapter().getWidth();
     getAdapter().setItemHeight(tileHeight);
     getAdapter().setItemWidth(tileWidth);
-    // this is resource heavy
-    getAdapter().getItems().stream().forEach(TileEntity::setModified);
     oldHeight = getHeight();
     oldWidth = getWidth();
   }

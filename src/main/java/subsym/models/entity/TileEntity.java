@@ -2,7 +2,6 @@ package subsym.models.entity;
 
 import java.awt.*;
 
-import subsym.Log;
 import subsym.gui.AICanvas;
 import subsym.gui.Direction;
 import subsym.gui.Theme;
@@ -49,7 +48,7 @@ public abstract class TileEntity extends Entity {
     g.setColor(Color.black);
     Point start = new Point();
     Point end = new Point();
-    int arrowLength = 40;
+    int arrowLength = getItemHeight() / 3;
     switch (direction) {
       case UP:
         start.setLocation(x + (getItemWidth() / 2), y + (getItemHeight() / 2) + (arrowLength / 2));
@@ -71,15 +70,9 @@ public abstract class TileEntity extends Entity {
     AICanvas.createArrowShape((Graphics2D) g, start, end);
   }
 
-  public void setModified() {
-    modified = true;
-    Log.v(TAG, "Modified ...");
-  }
-
   @Override
   public void setColor(Color color) {
     super.setColor(color);
-    setModified();
   }
 
   @Override
@@ -88,7 +81,6 @@ public abstract class TileEntity extends Entity {
       return;
     }
     super.setPosition(x, y);
-    setModified();
   }
 
   public void draw(Graphics g, int x, int y) {
@@ -102,13 +94,5 @@ public abstract class TileEntity extends Entity {
 
   public String getDescription() {
     return "";
-  }
-
-  public boolean isModified() {
-    return modified;
-  }
-
-  public void reset() {
-    modified = false;
   }
 }

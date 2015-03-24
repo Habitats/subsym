@@ -179,7 +179,7 @@ public class Robot extends TileEntity {
   @Override
   public void draw(Graphics g, int x, int y) {
     super.draw(g, x, y);
-//    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
+    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
     drawArrow(g, x, y, dir);
   }
 

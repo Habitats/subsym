@@ -35,6 +35,6 @@ public class Food extends ImageTileEntity {
 
   @Override
   public Color getColor() {
-    return ColorUtils.c(0);
+    return ColorUtils.c(1);
   }
 }

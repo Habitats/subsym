@@ -2,7 +2,6 @@ package subsym.ailife.entity;
 
 import java.awt.*;
 
-import subsym.gui.ColorUtils;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
@@ -18,7 +17,7 @@ public class Empty extends TileEntity {
 
   @Override
   public Color getColor() {
-    return ColorUtils.c(2);
+    return Color.lightGray;
   }
 
   @Override

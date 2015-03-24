@@ -33,7 +33,7 @@ public class Poison extends ImageTileEntity {
 
   @Override
   public Color getColor() {
-    return ColorUtils.c(1);
+    return ColorUtils.c(0);
   }
 }
 
