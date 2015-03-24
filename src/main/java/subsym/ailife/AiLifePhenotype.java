@@ -7,6 +7,8 @@ import subsym.ann.AnnNodes;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.Sigmoid;
 import subsym.genetics.Phenotype;
+import subsym.models.Board;
+import subsym.models.TileEntity;
 
 /**
  * Created by anon on 21.03.2015.
@@ -14,16 +16,14 @@ import subsym.genetics.Phenotype;
 public class AiLifePhenotype implements Phenotype {
 
   private final AiLifeGenotype aiLifeGenotype;
-  private AiLifeRobot robot;
   private final ArtificialNeuralNetwork ann;
 
-  public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AiLifeRobot robot) {
+  public AiLifePhenotype(AiLifeGenotype aiLifeGenotype) {
     this.aiLifeGenotype = aiLifeGenotype;
-    this.robot = robot;
 
-    AnnNodes inputs = AnnNodes.createInput(robot.getSensoryInput());
+    AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(3);
-    ann = new ArtificialNeuralNetwork(1, 4, inputs, outputs, new Sigmoid());
+    ann = new ArtificialNeuralNetwork(2, 4, inputs, outputs, new Sigmoid());
 
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
 
@@ -49,23 +49,17 @@ public class AiLifePhenotype implements Phenotype {
   public double fitness() {
     updateArtificialNeuralNetwork(aiLifeGenotype);
 
-    double fitness = 0;
-    for (int i = 0; i < 10; i++) {
-      List<Double> sensoryInput = robot.getRandomSensoryInput();
-      ann.updateInput(sensoryInput);
+    Board<TileEntity> board = AiLife.createAiLifeBoard();
+    AiLifeRobot robot = new AiLifeRobot(0, 0, board);
+    board.set(robot);
+    for (int i = 0; i < 60; i++) {
+      ann.updateInput(robot.getSensoryInput());
       List<Double> outputs = ann.getOutputs();
       int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
-
-      int poisonScore = Math.abs(robot.getPoisonSensorInput().get(indexOfBest) - 1);
-      int foodScore = robot.getFoodSensorInput().get(indexOfBest);
-      fitness += foodScore + poisonScore;
-
-      ann.updateInput(robot.getRandomSensoryInput());
-//      robot.move(indexOfBest);
+      robot.move(indexOfBest);
     }
 
-    double v = fitness / 20.;
-    return v;
+    return robot.fitness();
   }
 
   public ArtificialNeuralNetwork getArtificialNeuralNetwork() {

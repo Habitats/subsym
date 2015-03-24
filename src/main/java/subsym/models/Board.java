@@ -129,4 +129,8 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
     int y = (tile.getY() + getHeight()) % getHeight();
     tiles.get(x).set(y, tile);
   }
+
+  public T get(Vec oldPosition) {
+return    get((int) oldPosition.x, (int) oldPosition.y);
+  }
 }

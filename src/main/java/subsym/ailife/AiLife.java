@@ -27,8 +27,8 @@ public class AiLife extends GeneticProblem {
 
   private static final String TAG = AiLife.class.getSimpleName();
   private final AIGridCanvas<TileEntity> canvas;
-  private final Board<TileEntity> board;
   private AiLifeRobot robot;
+  private Board<TileEntity> board;
 
   public AiLife(GeneticPreferences prefs) {
     super(prefs);
@@ -54,9 +54,7 @@ public class AiLife extends GeneticProblem {
 //    ann.setWeights(weights);
 //
 //    Log.v(TAG, ann);
-    board = createAiLifeBoard();
     canvas = new AIGridCanvas<>();
-    canvas.setAdapter(board);
     canvas.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
@@ -93,7 +91,7 @@ public class AiLife extends GeneticProblem {
   @Override
   public boolean solution() {
 //    return getPopulation().getBestGenotype().fitness() == 1;
-    return getPopulation().getCurrentGeneration() == 100;
+    return getPopulation().getCurrentGeneration() == 2000;
   }
 
   @Override
@@ -116,8 +114,11 @@ public class AiLife extends GeneticProblem {
     AiLifeGenotype best = (AiLifeGenotype) getPopulation().getBestGenotype();
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
-    canvas.setAdapter(createAiLifeBoard());
-    displayGui();
+    Board<TileEntity> board = createAiLifeBoard();
+    canvas.setAdapter(board);
+    displayGui(canvas);
+    robot = new AiLifeRobot(0, 0, board);
+    board.set(robot);
     for (int i = 0; i < 60; i++) {
       ann.updateInput(robot.getSensoryInput());
       List<Double> outputs = ann.getOutputs();
@@ -131,7 +132,7 @@ public class AiLife extends GeneticProblem {
     Log.v(TAG, this);
   }
 
-  private void displayGui() {
+  public static void displayGui(AIGridCanvas<TileEntity> canvas) {
     new AIGui() {
       @Override
       protected int getDefaultCloseOperation() {
@@ -166,15 +167,13 @@ public class AiLife extends GeneticProblem {
     }.init();
   }
 
-  private Board<TileEntity> createAiLifeBoard() {
+  public static Board<TileEntity> createAiLifeBoard() {
     Board<TileEntity> board = new Board<>(10, 10);
     IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y))));
-    robot = new AiLifeRobot(0, 0, board);
-    board.set(robot);
     return board;
   }
 
-  private TileEntity getRandomTile(Board<TileEntity> board, int x, int y) {
+  private static TileEntity getRandomTile(Board<TileEntity> board, int x, int y) {
     double random = ArtificialNeuralNetwork.random().nextDouble();
     if (random < 1 / 3.) {
       return new Empty(x, y, board);

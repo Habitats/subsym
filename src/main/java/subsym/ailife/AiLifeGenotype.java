@@ -15,7 +15,7 @@ public class AiLifeGenotype extends Genotype {
 
   public AiLifeGenotype(Board<TileEntity> board) {
     this.board = board;
-    phenotype = new AiLifePhenotype(this, new AiLifeRobot(0, 0, board));
+    phenotype = new AiLifePhenotype(this);
   }
 
   @Override
@@ -26,7 +26,7 @@ public class AiLifeGenotype extends Genotype {
   @Override
   public void copy(Genotype copy) {
     AiLifeGenotype aiCopy = (AiLifeGenotype) copy;
-    aiCopy.phenotype = new AiLifePhenotype(this, new AiLifeRobot(0, 0, board));
+    aiCopy.phenotype = new AiLifePhenotype(this);
     aiCopy.board = board;
   }
 

@@ -20,6 +20,7 @@ import subsym.models.Vec;
 public class AiLifeRobot extends TileEntity {
 
   private static final String TAG = AiLifeRobot.class.getSimpleName();
+  private double fitness;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = Stream.of(getFoodSensorInput(), getPoisonSensorInput()) //
@@ -47,14 +48,12 @@ public class AiLifeRobot extends TileEntity {
 
   public List<Integer> getFoodSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();
-    List<Integer> sensorReadings = Collections.nCopies(3, 0);
-    return sensorReadings.stream().map(i -> neighbors.get(i) instanceof AiLife.Food ? 1 : 0).collect(Collectors.toList());
+    return neighbors.stream().mapToInt(i -> i instanceof AiLife.Food ? 1 : 0).boxed().collect(Collectors.toList());
   }
 
   public List<Integer> getPoisonSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();
-    List<Integer> sensorReadings = Collections.nCopies(3, 0);
-    return sensorReadings.stream().map(i -> neighbors.get(i) instanceof AiLife.Poison ? 1 : 0).collect(Collectors.toList());
+    return neighbors.stream().mapToInt(i -> i instanceof AiLife.Poison ? 1 : 0).boxed().collect(Collectors.toList());
   }
 
   private List<TileEntity> getSensorNeighbors() {
@@ -83,8 +82,13 @@ public class AiLifeRobot extends TileEntity {
                           (getY() + dy + getBoard().getHeight()) % getBoard().getHeight());
   }
 
+  public double fitness() {
+    return fitness;
+  }
+
   public void move(int index) {
     Vec oldPosition = getPosition().copy();
+
     TileEntity tile = new AiLife.Empty((int) oldPosition.x, (int) oldPosition.y, getBoard());
     getBoard().set(tile);
     switch (index) {
@@ -100,11 +104,15 @@ public class AiLifeRobot extends TileEntity {
       default:
         throw new IllegalStateException("Invalid index!");
     }
+    TileEntity oldTile = getBoard().get(getX(), getY());
+    fitness += oldTile instanceof AiLife.Poison ? -20 : oldTile instanceof AiLife.Food ? 10 : 0;
+    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
     getBoard().set(this);
     getBoard().notifyDataChanged();
   }
 
   private void setPositionWrapped(int x, int y) {
+
     int newX = (x + getBoard().getWidth()) % getBoard().getWidth();
     int newY = (y + getBoard().getHeight()) % getBoard().getHeight();
     setPosition(newX, newY);
@@ -172,7 +180,6 @@ public class AiLifeRobot extends TileEntity {
         break;
     }
   }
-
 
   @Override
   public Color getColor() {
