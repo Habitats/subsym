@@ -334,7 +334,7 @@ public class GeneticGui extends AIGui {
       prefs.setMaxGenerations(Integer.parseInt(maxGenerationsInput.getText()));
 
       prefs.getAnnPreferences().setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
-      prefs.getAnnPreferences().setHiddenLayerCount(Integer.parseInt(annHiddenNeuronInput.getText()));
+      prefs.getAnnPreferences().setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
     } catch (NumberFormatException e) {
       Log.i(TAG, "Invalid values in preferences!");
       return false;
@@ -476,7 +476,7 @@ public class GeneticGui extends AIGui {
 
     if (prefs.getPuzzle() instanceof AiLife) {
       annHiddenNeuronInput.setText(String.valueOf(prefs.getAnnPreferences().getHiddenNeuronCount()));
-      annHiddenLayerInput.setText(String.valueOf(prefs.getAnnPreferences().getHiddenNeuronCount()));
+      annHiddenLayerInput.setText(String.valueOf(prefs.getAnnPreferences().getHiddenLayerCount()));
     }
   }
 
