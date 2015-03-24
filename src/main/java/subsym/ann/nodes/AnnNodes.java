@@ -21,10 +21,6 @@ public class AnnNodes {
     return new AnnNodes(IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createOutput()).collect(Collectors.toList()));
   }
 
-  public static AnnNodes createHidden(int numberOfNodes) {
-    return new AnnNodes(IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createHidden()).collect(Collectors.toList()));
-  }
-
   public static AnnNodes createInput(Double... values) {
     return createInput(Arrays.asList(values));
   }

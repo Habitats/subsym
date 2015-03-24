@@ -35,10 +35,6 @@ public abstract class AnnNode {
     return new InputNode(value, ArtificialNeuralNetwork.random());
   }
 
-  public static AnnNode createHidden() {
-    return new HiddenNode(ArtificialNeuralNetwork.random());
-  }
-
   public void connect(AnnNodes outputs) {
     outputs.stream().forEach(this::connect);
     outputs.stream().forEach(n -> outputWeights.put(n, 1.));

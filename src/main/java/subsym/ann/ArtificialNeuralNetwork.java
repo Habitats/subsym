@@ -39,7 +39,7 @@ public class ArtificialNeuralNetwork {
     AnnNodes currentLayer = inputs;
     layers.add(inputs);
     for (int i = 0; i < hiddenLayerCount; i++) {
-      AnnNodes nextLayer = AnnNodes.createHidden(hiddenNeuronCount);
+      AnnNodes nextLayer = AnnNodes.createOutput(hiddenNeuronCount);
       layers.add(nextLayer);
       currentLayer.stream().forEach(v -> v.connect(nextLayer));
       currentLayer = nextLayer;
