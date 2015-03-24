@@ -5,11 +5,10 @@ package subsym.ann;
  */
 public class Sigmoid implements ActivationFunction {
 
-  private double fireThreshold = 0.6;
+  private double strenght = 10;
 
   @Override
   public double evaluate(double inputSum) {
-    double v = 1 / (1 + Math.exp(-inputSum));
-    return v > fireThreshold ? v : 0;
+    return 1 / (1 + Math.exp(-inputSum * strenght));
   }
 }
