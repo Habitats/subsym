@@ -707,7 +707,7 @@
               <font name="Consolas" style="0"/>
               <foreground color="-16777216"/>
               <margin top="0" left="5" bottom="0" right="0"/>
-              <text value="0"/>
+              <text value="500"/>
             </properties>
           </component>
           <component id="f540" class="subsym.gui.AILabel" binding="maxGenerationsLabel">

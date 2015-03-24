@@ -43,7 +43,7 @@ public class Genetics implements GeneticGuiListener {
     double populationMutationRate = 0.2;
     double crossOverRate = 1;
     GeneticPreferences prefs = new GeneticPreferences(20, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                                      new Mixing(0.2), new SigmaScaled());
+                                                      new Mixing(0.2), new SigmaScaled(), Integer.MAX_VALUE);
     Log.v(TAG, GeneticEngine.solve(new Lolz(prefs, prefs.getBitVectorSize(), prefs.getZeroThreashold()), true));
 
 //    averageOver(genotypeMutationRate, populationMutationRate, crossOverRate, 1000);
@@ -57,7 +57,7 @@ public class Genetics implements GeneticGuiListener {
     GeneticRun run = new GeneticRun();
     Tournament mateSelectionMode = new Tournament(10, 0.05);
     GeneticPreferences prefs = new GeneticPreferences(40, crossOverRate, populationMutationRate, genotypeMutationRate,//
-                                                      new Mixing(0.5), mateSelectionMode);
+                                                      new Mixing(0.5), mateSelectionMode, Integer.MAX_VALUE);
     IntStream.range(0, 1).forEach(i -> run.add(GeneticEngine.solve(new OneMax(prefs, 10000), true)));
 
     Log.v(TAG, run.getBest());
@@ -77,7 +77,7 @@ public class Genetics implements GeneticGuiListener {
     int alphabetSize = 40;
     int populationSize = 40;
     GeneticPreferences prefs = new GeneticPreferences(populationSize, crossOverRate, populationMutationRate, //
-                                                      genomeMutationRate, adultSelectionMode, mateSelectionMode);
+                                                      genomeMutationRate, adultSelectionMode, mateSelectionMode, Integer.MAX_VALUE);
     for (int length = 90; length < alphabetSize * 3; length++) {
       SurprisingSequences problem = new SurprisingSequences(prefs, alphabetSize, length, true);
       GeneticProblem solution = GeneticEngine.solve(problem, true);
