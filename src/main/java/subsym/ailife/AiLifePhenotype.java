@@ -24,12 +24,8 @@ public class AiLifePhenotype implements Phenotype {
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(3);
     ann = new ArtificialNeuralNetwork(1, 6, inputs, outputs, new Sigmoid());
-
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
-
-    List<Double> weights = aiLifeGenotype.toList().stream()//
-        .mapToDouble(this::normalize).boxed().collect(Collectors.toList());
-    ann.setWeights(weights);
+    ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }
 
   private double normalize(int v) {
@@ -40,13 +36,9 @@ public class AiLifePhenotype implements Phenotype {
     return values.stream().mapToDouble(this::normalize).boxed().collect(Collectors.toList());
   }
 
-  private void updateArtificialNeuralNetwork(AiLifeGenotype aiLifeGenotype) {
-    ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
-  }
-
   @Override
   public double fitness() {
-    updateArtificialNeuralNetwork(aiLifeGenotype);
+    ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
 
     Board<TileEntity> board = AiLife.createAiLifeBoard(0101);
     AiLifeRobot robot = new AiLifeRobot(0, 0, board);

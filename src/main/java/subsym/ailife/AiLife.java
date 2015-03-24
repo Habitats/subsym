@@ -29,7 +29,6 @@ public class AiLife extends GeneticProblem {
   private static final String TAG = AiLife.class.getSimpleName();
   private final AIGridCanvas<TileEntity> canvas;
   private AiLifeRobot robot;
-  private Board<TileEntity> board;
 
   public AiLife(GeneticPreferences prefs) {
     super(prefs);
@@ -63,7 +62,7 @@ public class AiLife extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
-      AiLifeGenotype genotype = new AiLifeGenotype(board);
+      AiLifeGenotype genotype = new AiLifeGenotype();
       getPopulation().add(genotype);
     });
   }
