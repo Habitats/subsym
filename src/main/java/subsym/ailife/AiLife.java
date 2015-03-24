@@ -70,7 +70,7 @@ public class AiLife extends GeneticProblem {
   @Override
   public boolean solution() {
 //    return getPopulation().getBestGenotype().fitness() == 1;
-    return getPopulation().getCurrentGeneration() == 2000;
+    return getPopulation().getCurrentGeneration() == 500;
   }
 
   @Override
@@ -91,6 +91,7 @@ public class AiLife extends GeneticProblem {
   @Override
   public void onSolved() {
     AiLifeGenotype best = (AiLifeGenotype) getPopulation().getBestGenotype();
+    Log.v(TAG, best.fitness());
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
     Log.v(TAG, pheno.fitness());
