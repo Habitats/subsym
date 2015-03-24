@@ -18,7 +18,6 @@ public abstract class AICanvas<T, A extends AIAdapter<T>> extends JPanel impleme
 
   private static final String TAG = AICanvas.class.getSimpleName();
   private A adapter;
-  public boolean drawLabels;
 
   public AICanvas() {
     super();
@@ -36,7 +35,7 @@ public abstract class AICanvas<T, A extends AIAdapter<T>> extends JPanel impleme
 
   protected abstract void draw(Graphics2D g);
 
-  protected abstract void drawOutline(T broid, Graphics2D g, int x, int y, int thickness);
+  protected abstract void drawOutline(T entity, Graphics2D g, int x, int y, int thickness);
 
 
   protected void drawArrow(Graphics g, Vec p, Vec v) {

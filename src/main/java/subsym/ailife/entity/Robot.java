@@ -1,4 +1,4 @@
-package subsym.ailife;
+package subsym.ailife.entity;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -16,9 +16,9 @@ import subsym.models.Vec;
 /**
  * Created by Patrick on 23.03.2015.
  */
-public class AiLifeRobot extends TileEntity {
+public class Robot extends TileEntity {
 
-  private static final String TAG = AiLifeRobot.class.getSimpleName();
+  private static final String TAG = Robot.class.getSimpleName();
   private double fitness;
 
   public List<Double> getSensoryInput() {
@@ -40,19 +40,19 @@ public class AiLifeRobot extends TileEntity {
 
   private Direction dir;
 
-  public AiLifeRobot(int x, int y, Board board) {
+  public Robot(int x, int y, Board board) {
     super(x, y, board);
     dir = Direction.NORTH;
   }
 
   public List<Integer> getFoodSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();
-    return neighbors.stream().mapToInt(i -> i instanceof AiLife.Food ? 1 : 0).boxed().collect(Collectors.toList());
+    return neighbors.stream().mapToInt(i -> i instanceof Food ? 1 : 0).boxed().collect(Collectors.toList());
   }
 
   public List<Integer> getPoisonSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();
-    return neighbors.stream().mapToInt(i -> i instanceof AiLife.Poison ? 1 : 0).boxed().collect(Collectors.toList());
+    return neighbors.stream().mapToInt(i -> i instanceof Poison ? 1 : 0).boxed().collect(Collectors.toList());
   }
 
   private List<TileEntity> getSensorNeighbors() {
@@ -88,7 +88,7 @@ public class AiLifeRobot extends TileEntity {
   public void move(int index) {
     Vec oldPosition = getPosition().copy();
 
-    TileEntity tile = new AiLife.Empty((int) oldPosition.x, (int) oldPosition.y, getBoard());
+    TileEntity tile = new Empty((int) oldPosition.x, (int) oldPosition.y, getBoard());
     getBoard().set(tile);
     switch (index) {
       case 0:
@@ -104,7 +104,7 @@ public class AiLifeRobot extends TileEntity {
         throw new IllegalStateException("Invalid index!");
     }
     TileEntity oldTile = getBoard().get(getX(), getY());
-    fitness += oldTile instanceof AiLife.Poison ? -20 : oldTile instanceof AiLife.Food ? 10 : 0;
+    fitness += oldTile instanceof Poison ? -20 : oldTile instanceof Food ? 10 : 0;
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
     getBoard().set(this);
     getBoard().notifyDataChanged();

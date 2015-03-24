@@ -9,10 +9,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import subsym.ailife.AiLife;
-import subsym.ailife.AiLifeRobot;
-import subsym.ann.nodes.AnnNodes;
+import subsym.ailife.entity.Empty;
+import subsym.ailife.entity.Food;
+import subsym.ailife.entity.Poison;
+import subsym.ailife.entity.Robot;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.Sigmoid;
+import subsym.ann.nodes.AnnNodes;
 import subsym.gui.AIGridCanvas;
 import subsym.models.Board;
 import subsym.models.TileEntity;
@@ -31,14 +34,14 @@ public class test_ailife {
   @Test
   public void test_board() {
     Board<TileEntity> board = new Board<>(5, 5);
-    IntStream.range(0, 5).forEach(x -> IntStream.range(0, 5).forEach(y -> board.set(new AiLife.Empty(x, y, board))));
-    board.set(new AiLife.Poison(1, 1, board));
-    board.set(new AiLife.Poison(2, 2, board));
-    board.set(new AiLife.Poison(2, 3, board));
-    board.set(new AiLife.Poison(1, 3, board));
-    board.set(new AiLife.Food(0, 2, board));
-    board.set(new AiLife.Food(1, 2, board));
-    AiLifeRobot robot = new AiLifeRobot(0, 0, board);
+    IntStream.range(0, 5).forEach(x -> IntStream.range(0, 5).forEach(y -> board.set(new Empty(x, y, board))));
+    board.set(new Poison(1, 1, board));
+    board.set(new Poison(2, 2, board));
+    board.set(new Poison(2, 3, board));
+    board.set(new Poison(1, 3, board));
+    board.set(new Food(0, 2, board));
+    board.set(new Food(1, 2, board));
+    Robot robot = new Robot(0, 0, board);
     board.set(robot);
 
     assertEquals(robot.getFoodSensorInput(), Arrays.asList(0, 0, 0));
@@ -94,7 +97,7 @@ public class test_ailife {
     assertEquals(Arrays.asList(out1, out2), ann.getOutputs());
   }
 
-  private void displayGui(Board<TileEntity> board, final AiLifeRobot robot) {
+  private void displayGui(Board<TileEntity> board, final Robot robot) {
     AIGridCanvas<TileEntity> canvas = new AIGridCanvas<>();
     canvas.setAdapter(board);
     canvas.addKeyListener(new KeyAdapter() {

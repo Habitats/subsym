@@ -10,6 +10,10 @@ import java.util.stream.IntStream;
 import javax.swing.*;
 
 import subsym.Log;
+import subsym.ailife.entity.Robot;
+import subsym.ailife.entity.Empty;
+import subsym.ailife.entity.Food;
+import subsym.ailife.entity.Poison;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
@@ -17,7 +21,6 @@ import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
-import subsym.gui.ColorUtils;
 import subsym.models.Board;
 import subsym.models.TileEntity;
 
@@ -28,7 +31,7 @@ public class AiLife extends GeneticProblem {
 
   private static final String TAG = AiLife.class.getSimpleName();
   private final AIGridCanvas<TileEntity> canvas;
-  private AiLifeRobot robot;
+  private Robot robot;
 
   public AiLife(GeneticPreferences prefs) {
     super(prefs);
@@ -98,7 +101,7 @@ public class AiLife extends GeneticProblem {
     Board<TileEntity> board = createAiLifeBoard(0101);
     canvas.setAdapter(board);
     displayGui(canvas);
-    robot = new AiLifeRobot(0, 0, board);
+    robot = new Robot(0, 0, board);
     board.set(robot);
     for (int i = 0; i < 60; i++) {
       ann.updateInput(robot.getSensoryInput());
@@ -163,42 +166,6 @@ public class AiLife extends GeneticProblem {
       return new Food(x, y, board);
     } else {
       return new Poison(x, y, board);
-    }
-  }
-
-  public static class Empty extends TileEntity {
-
-    public Empty(int x, int y, Board<TileEntity> board) {
-      super(x, y, board);
-    }
-
-    @Override
-    public Color getColor() {
-      return ColorUtils.c(2);
-    }
-  }
-
-  public static class Poison extends TileEntity {
-
-    public Poison(int x, int y, Board board) {
-      super(x, y, board);
-    }
-
-    @Override
-    public Color getColor() {
-      return ColorUtils.c(1);
-    }
-  }
-
-  public static class Food extends TileEntity {
-
-    public Food(int x, int y, Board board) {
-      super(x, y, board);
-    }
-
-    @Override
-    public Color getColor() {
-      return ColorUtils.c(0);
     }
   }
 }

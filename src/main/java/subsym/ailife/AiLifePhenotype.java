@@ -3,6 +3,7 @@ package subsym.ailife;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import subsym.ailife.entity.Robot;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
@@ -23,7 +24,7 @@ public class AiLifePhenotype implements Phenotype {
 
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(3);
-    ann = new ArtificialNeuralNetwork(1, 6, inputs, outputs, new Sigmoid());
+    ann = new ArtificialNeuralNetwork(1, 3, inputs, outputs, new Sigmoid());
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }
@@ -41,7 +42,7 @@ public class AiLifePhenotype implements Phenotype {
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
 
     Board<TileEntity> board = AiLife.createAiLifeBoard(0101);
-    AiLifeRobot robot = new AiLifeRobot(0, 0, board);
+    Robot robot = new Robot(0, 0, board);
     board.set(robot);
     for (int i = 0; i < 60; i++) {
       ann.updateInput(robot.getSensoryInput());
