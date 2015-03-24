@@ -5,7 +5,7 @@ package subsym.ann;
  */
 public class Sigmoid implements ActivationFunction {
 
-  private double strenght = 10;
+  private double strenght = 0.5;
 
   @Override
   public double evaluate(double inputSum) {

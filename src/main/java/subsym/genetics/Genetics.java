@@ -34,7 +34,7 @@ public class Genetics implements GeneticGuiListener {
   public Genetics() {
     gui = new GeneticGui();
     gui.setListener(this);
-    gui.setPreferences(GeneticPreferences.getLolzTest());
+    gui.setPreferences(GeneticPreferences.getAiLife());
   }
 
   private static void lolz() {

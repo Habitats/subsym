@@ -93,7 +93,7 @@ public class Robot extends TileEntity {
         break;
       case 1:
         moveForward();
-        fitness += 1;
+        fitness += 2;
         break;
       case 2:
         moveRight();
@@ -102,7 +102,7 @@ public class Robot extends TileEntity {
         throw new IllegalStateException("Invalid index!");
     }
     TileEntity oldTile = getBoard().get(getX(), getY());
-    fitness += oldTile instanceof Poison ? -40 : oldTile instanceof Food ? 20 : 0;
+    fitness += oldTile instanceof Poison ? -60 : oldTile instanceof Food ? 40 : 0;
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
     getBoard().set(this);
     getBoard().notifyDataChanged();

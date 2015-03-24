@@ -5,11 +5,13 @@ import java.util.Map;
 
 import subsym.ailife.AiLife;
 import subsym.ann.AnnPreferences;
+import subsym.ann.Sigmoid;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.matingselection.FitnessProportiate;
 import subsym.genetics.matingselection.MatingSelection;
+import subsym.genetics.matingselection.Rank;
 import subsym.genetics.matingselection.Tournament;
 import subsym.lolz.Lolz;
 import subsym.onemax.OneMax;
@@ -106,7 +108,8 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getDefault() {
-    return new GeneticPreferences(40, 0.95, 0.9, 0.04, new Mixing(0.2), new Tournament(4, 0.05), Integer.MAX_VALUE);
+//    return new GeneticPreferences(40, 0.95, 0.9, 0.04, new Mixing(0.2), new Tournament(4, 0.05), Integer.MAX_VALUE);
+    return getAiLife();
   }
 
   public static GeneticPreferences getTest() {
@@ -128,9 +131,10 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getAiLife() {
-    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Tournament(10, 0.05),500);
+    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(),500);
     GeneticProblem problem = new AiLife(prefs);
     prefs.setPuzzle(problem);
+    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
     return prefs;
   }
 

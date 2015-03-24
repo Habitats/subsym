@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import subsym.ailife.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
+import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
@@ -21,7 +22,9 @@ public class AiLifePhenotype implements Phenotype {
   public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AnnPreferences prefs) {
     this.aiLifeGenotype = aiLifeGenotype;
 
-    ann = new ArtificialNeuralNetwork(prefs);
+    AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
+    AnnNodes outputs = AnnNodes.createOutput(3);
+    ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }

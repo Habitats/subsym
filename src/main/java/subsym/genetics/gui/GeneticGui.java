@@ -69,6 +69,10 @@ public class GeneticGui extends AIGui {
   private AILabel genomeMutationValField;
   private AILabel populationMutationValField;
   private AILabel populationSize;
+  private AILabel maxGenerationsLabel;
+  private AILabel annHiddenLayerLabel;
+  private AILabel annHiddenNeuronLabel;
+  private AILabel runCountLabel;
   private AILabel presetsLabel;
 
   private AIButton runButton;
@@ -76,7 +80,6 @@ public class GeneticGui extends AIGui {
 
   private JCheckBox globalCheckBox;
   private JCheckBox enableLoggingCheckbox;
-
   private JTextField crossoverInput;
   private JTextField tournamentInput;
   private JTextField mixingRateInput;
@@ -86,7 +89,10 @@ public class GeneticGui extends AIGui {
   private JTextField populationSizeInput;
   private JTextField overProductionInput;
   private JTextField genomeMutationInput;
+  private JTextField maxGenerationsInput;
   private JTextField surprisingLengthInput;
+  private JTextField annHiddenLayerInput;
+  private JTextField annHiddenNeuronInput;
   private JTextField populationMutationInput;
 
   private AIComboBox puzzleSelect;
@@ -94,16 +100,9 @@ public class GeneticGui extends AIGui {
   private AIComboBox matingSelection;
   private AIComboBox presetsComboBox;
   private JTextField runCountInput;
-  private AILabel runCountLabel;
   private JCheckBox incrementingCheckBox;
   private JCheckBox plotMultipleCheckbox;
   private AIButton benchMarkButton;
-  private JTextField maxGenerationsInput;
-  private AILabel maxGenerationsLabel;
-  private JTextField annHiddenNeuronInput;
-  private AILabel annHiddenNeuronLabel;
-  private AILabel annHiddenLayerLabel;
-  private JTextField annHiddenLayerInput;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();

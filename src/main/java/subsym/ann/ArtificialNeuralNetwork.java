@@ -24,14 +24,14 @@ public class ArtificialNeuralNetwork {
   private final ActivationFunction activationFunction;
   private final List<AnnNodes> layers;
 
-  public ArtificialNeuralNetwork(AnnPreferences prefs) {
+  public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
     layers = new ArrayList<>();
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
 //    this.inputs = prefs.getInputs();
 //    this.outputs = prefs.getOutputs();
-    this.inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
-    this.outputs = AnnNodes.createOutput(3);
+    this.inputs = inputs;
+    this.outputs = outputs;
     this.activationFunction = prefs.getActivationFunction();
     createNetwork();
     setActivationFunction();
@@ -93,8 +93,7 @@ public class ArtificialNeuralNetwork {
   }
 
   public int getNumWeights() {
-    int sum = layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
-    return sum;
+ return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
   }
 
   public int getNumNodes() {
