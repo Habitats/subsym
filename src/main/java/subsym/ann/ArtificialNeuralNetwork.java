@@ -2,6 +2,7 @@ package subsym.ann;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,6 +34,7 @@ public class ArtificialNeuralNetwork {
     this.activationFunction = activationFunction;
     createNetwork();
     setActivationFunction();
+    setWeights(Collections.nCopies(getNumWeights(), .1));
   }
 
   private void createNetwork() {
@@ -65,7 +67,7 @@ public class ArtificialNeuralNetwork {
       throw new IllegalStateException("Inputs not equal size!");
     }
     AtomicInteger i = new AtomicInteger(0);
-    this.inputs.stream().forEach( n ->((InputNode) n).setValue(inputs.get(i.getAndIncrement())));
+    this.inputs.stream().forEach(n -> ((InputNode) n).setValue(inputs.get(i.getAndIncrement())));
   }
 
   public List<Double> getOutputs() {

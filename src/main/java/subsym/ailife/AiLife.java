@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import javax.swing.*;
@@ -93,7 +94,7 @@ public class AiLife extends GeneticProblem {
     AiLifeGenotype best = (AiLifeGenotype) getPopulation().getBestGenotype();
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
-    Board<TileEntity> board = createAiLifeBoard();
+    Board<TileEntity> board = createAiLifeBoard(0101);
     canvas.setAdapter(board);
     displayGui(canvas);
     robot = new AiLifeRobot(0, 0, board);
@@ -108,6 +109,7 @@ public class AiLife extends GeneticProblem {
       } catch (InterruptedException e) {
       }
     }
+    
     Log.v(TAG, this);
   }
 
@@ -115,7 +117,7 @@ public class AiLife extends GeneticProblem {
     new AIGui() {
       @Override
       protected int getDefaultCloseOperation() {
-        return WindowConstants.EXIT_ON_CLOSE;
+        return WindowConstants.DISPOSE_ON_CLOSE;
       }
 
       @Override
@@ -146,14 +148,14 @@ public class AiLife extends GeneticProblem {
     }.init();
   }
 
-  public static Board<TileEntity> createAiLifeBoard() {
+  public static Board<TileEntity> createAiLifeBoard(int seed) {
     Board<TileEntity> board = new Board<>(10, 10);
-    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y))));
+    Random random = new Random(seed);
+    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
     return board;
   }
 
-  private static TileEntity getRandomTile(Board<TileEntity> board, int x, int y) {
-    double random = ArtificialNeuralNetwork.random().nextDouble();
+  private static TileEntity getRandomTile(Board<TileEntity> board, int x, int y, double random) {
     if (random < 1 / 3.) {
       return new Empty(x, y, board);
     } else if (random < 2 / 3.) {

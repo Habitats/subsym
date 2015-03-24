@@ -39,4 +39,9 @@ public class AiLifeGenotype extends Genotype {
   public int getBitGroupSize() {
     return 10;
   }
+
+  @Override
+  public String toString() {
+    return super.toString() + getPhenotype().toString();
+  }
 }

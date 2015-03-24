@@ -3,9 +3,9 @@ package subsym.ailife;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import subsym.ann.nodes.AnnNodes;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.Sigmoid;
+import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 import subsym.models.Board;
 import subsym.models.TileEntity;
@@ -23,14 +23,13 @@ public class AiLifePhenotype implements Phenotype {
 
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(3);
-    ann = new ArtificialNeuralNetwork(2, 4, inputs, outputs, new Sigmoid());
+    ann = new ArtificialNeuralNetwork(1, 6, inputs, outputs, new Sigmoid());
 
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
 
     List<Double> weights = aiLifeGenotype.toList().stream()//
         .mapToDouble(this::normalize).boxed().collect(Collectors.toList());
     ann.setWeights(weights);
-
   }
 
   private double normalize(int v) {
@@ -49,7 +48,7 @@ public class AiLifePhenotype implements Phenotype {
   public double fitness() {
     updateArtificialNeuralNetwork(aiLifeGenotype);
 
-    Board<TileEntity> board = AiLife.createAiLifeBoard();
+    Board<TileEntity> board = AiLife.createAiLifeBoard(0101);
     AiLifeRobot robot = new AiLifeRobot(0, 0, board);
     board.set(robot);
     for (int i = 0; i < 60; i++) {
@@ -60,6 +59,12 @@ public class AiLifePhenotype implements Phenotype {
     }
 
     return robot.fitness();
+  }
+
+  @Override
+  public String toString() {
+    return getNormalizedValues(aiLifeGenotype.toList()).stream().map(i -> String.format("%.3f", i))
+        .collect(Collectors.joining(", ", " > Pheno > ", ""));
   }
 
   public ArtificialNeuralNetwork getArtificialNeuralNetwork() {
