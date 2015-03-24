@@ -28,8 +28,10 @@ public class ArtificialNeuralNetwork {
     layers = new ArrayList<>();
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
-    this.inputs = prefs.getInputs();
-    this.outputs = prefs.getOutputs();
+//    this.inputs = prefs.getInputs();
+//    this.outputs = prefs.getOutputs();
+    this.inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
+    this.outputs = AnnNodes.createOutput(3);
     this.activationFunction = prefs.getActivationFunction();
     createNetwork();
     setActivationFunction();
@@ -91,7 +93,8 @@ public class ArtificialNeuralNetwork {
   }
 
   public int getNumWeights() {
-    return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
+    int sum = layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
+    return sum;
   }
 
   public int getNumNodes() {

@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import subsym.Log;
 import subsym.ailife.AiLife;
+import subsym.ann.AnnPreferences;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 import subsym.genetics.Genetics;
@@ -42,6 +43,7 @@ import subsym.surprisingsequence.SurprisingSequences;
 public class GeneticGui extends AIGui {
 
   private static final String TAG = GeneticGui.class.getSimpleName();
+  private final AnnPreferences annPreferences;
 
   private Plot plot;
   private JPanel mainPanel;
@@ -105,6 +107,7 @@ public class GeneticGui extends AIGui {
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
+    annPreferences = AnnPreferences.getDefault();
 
     Genetics.values().forEach(puzzleSelect::addItem);
     AdultSelection.values().forEach(adultSelection::addItem);
@@ -333,8 +336,10 @@ public class GeneticGui extends AIGui {
       prefs.logginEnabled(enableLoggingCheckbox.isSelected());
       prefs.setMaxGenerations(Integer.parseInt(maxGenerationsInput.getText()));
 
-      prefs.getAnnPreferences().setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
-      prefs.getAnnPreferences().setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
+      annPreferences.setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
+      annPreferences.setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
+
+      prefs.setAnnPreferences(annPreferences);
     } catch (NumberFormatException e) {
       Log.i(TAG, "Invalid values in preferences!");
       return false;
@@ -475,9 +480,8 @@ public class GeneticGui extends AIGui {
     }
 
     if (prefs.getPuzzle() instanceof AiLife) {
-      annHiddenNeuronInput.setText(String.valueOf(prefs.getAnnPreferences().getHiddenNeuronCount()));
-      annHiddenLayerInput.setText(String.valueOf(prefs.getAnnPreferences().getHiddenLayerCount()));
+      annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
+      annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));
     }
   }
-
 }

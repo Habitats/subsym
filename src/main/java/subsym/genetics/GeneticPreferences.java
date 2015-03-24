@@ -48,7 +48,6 @@ public class GeneticPreferences {
     this.genomeMutationRate = genomeMutationRate;
     this.adultSelectionMode = adultSelectionMode;
     this.mateSelectionMode = mateSelectionMode;
-    annPreferences = AnnPreferences.getDefault();
   }
 
   public AdultSelection getAdultSelectionMode() {
