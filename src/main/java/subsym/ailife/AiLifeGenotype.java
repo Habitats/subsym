@@ -1,5 +1,6 @@
 package subsym.ailife;
 
+import subsym.ann.AnnPreferences;
 import subsym.genetics.Genotype;
 import subsym.genetics.Phenotype;
 
@@ -8,21 +9,23 @@ import subsym.genetics.Phenotype;
  */
 public class AiLifeGenotype extends Genotype {
 
+  private final AnnPreferences prefs;
   private AiLifePhenotype phenotype;
 
-  public AiLifeGenotype() {
-    phenotype = new AiLifePhenotype(this);
+  public AiLifeGenotype(AnnPreferences prefs) {
+    this.prefs = prefs;
+    phenotype = new AiLifePhenotype(this, prefs);
   }
 
   @Override
   protected Genotype newInstance() {
-    return new AiLifeGenotype();
+    return new AiLifeGenotype(prefs);
   }
 
   @Override
   public void copy(Genotype copy) {
     AiLifeGenotype aiCopy = (AiLifeGenotype) copy;
-    aiCopy.phenotype = new AiLifePhenotype(this);
+    aiCopy.phenotype = new AiLifePhenotype(this, prefs);
   }
 
   @Override

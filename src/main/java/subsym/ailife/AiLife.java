@@ -73,7 +73,7 @@ public class AiLife extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
-      AiLifeGenotype genotype = new AiLifeGenotype();
+      AiLifeGenotype genotype = new AiLifeGenotype(getPreferences().getAnnPreferences());
       getPopulation().add(genotype);
     });
   }
@@ -81,7 +81,7 @@ public class AiLife extends GeneticProblem {
   @Override
   public boolean solution() {
 //    return getPopulation().getBestGenotype().fitness() == 1;
-    return getPopulation().getCurrentGeneration() == 500;
+    return getPopulation().getCurrentGeneration() == getPreferences().getMaxGenerations();
   }
 
   @Override

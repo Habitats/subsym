@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import subsym.ailife.AiLife;
+import subsym.ann.AnnPreferences;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
@@ -35,6 +36,8 @@ public class GeneticPreferences {
   private boolean loggingEnabled;
   private boolean shouldIncrement;
   private boolean plotMultiple;
+  private AnnPreferences annPreferences;
+  private int maxGenerations;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
                             double genomeMutationRate, AdultSelection adultSelectionMode,
@@ -45,6 +48,7 @@ public class GeneticPreferences {
     this.genomeMutationRate = genomeMutationRate;
     this.adultSelectionMode = adultSelectionMode;
     this.mateSelectionMode = mateSelectionMode;
+    annPreferences = AnnPreferences.getDefault();
   }
 
   public AdultSelection getAdultSelectionMode() {
@@ -264,7 +268,25 @@ public class GeneticPreferences {
     copy.shouldIncrement = prefs.shouldIncrement;
     copy.plotMultiple = prefs.plotMultiple;
     copy.runCount = prefs.runCount;
+    copy.maxGenerations = prefs.maxGenerations;
+    copy.annPreferences = prefs.annPreferences;
     copy.puzzle = prefs.puzzle.newInstance(copy);
     return copy;
+  }
+
+  public AnnPreferences getAnnPreferences() {
+    return annPreferences;
+  }
+
+  public void setAnnPreferences(AnnPreferences annPreferences) {
+    this.annPreferences = annPreferences;
+  }
+
+  public int getMaxGenerations() {
+    return maxGenerations;
+  }
+
+  public void setMaxGenerations(int maxGenerations) {
+    this.maxGenerations = maxGenerations;
   }
 }

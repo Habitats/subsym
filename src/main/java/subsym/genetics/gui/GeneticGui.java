@@ -96,6 +96,12 @@ public class GeneticGui extends AIGui {
   private JCheckBox incrementingCheckBox;
   private JCheckBox plotMultipleCheckbox;
   private AIButton benchMarkButton;
+  private JTextField maxGenerationsInput;
+  private AILabel maxGenerationsLabel;
+  private JTextField annHiddenNeuronInput;
+  private AILabel annHiddenNeuronLabel;
+  private AILabel annHiddenLayerLabel;
+  private JTextField annHiddenLayerInput;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -208,6 +214,11 @@ public class GeneticGui extends AIGui {
     alphabetSizeInput.setVisible(!b);
     alphabetSizeLabel.setVisible(!b);
     globalCheckBox.setVisible(!b);
+
+    annHiddenLayerInput.setVisible(!b);
+    annHiddenLayerLabel.setVisible(!b);
+    annHiddenNeuronInput.setVisible(!b);
+    annHiddenNeuronLabel.setVisible(!b);
   }
 
   private void setVisibleOneMax(boolean b) {
@@ -220,6 +231,11 @@ public class GeneticGui extends AIGui {
     alphabetSizeInput.setVisible(!b);
     alphabetSizeLabel.setVisible(!b);
     globalCheckBox.setVisible(!b);
+
+    annHiddenLayerInput.setVisible(!b);
+    annHiddenLayerLabel.setVisible(!b);
+    annHiddenNeuronInput.setVisible(!b);
+    annHiddenNeuronLabel.setVisible(!b);
   }
 
   private void setVisibleSurprising(boolean b) {
@@ -232,6 +248,11 @@ public class GeneticGui extends AIGui {
     alphabetSizeInput.setVisible(b);
     alphabetSizeLabel.setVisible(b);
     globalCheckBox.setVisible(b);
+
+    annHiddenLayerInput.setVisible(!b);
+    annHiddenLayerLabel.setVisible(!b);
+    annHiddenNeuronInput.setVisible(!b);
+    annHiddenNeuronLabel.setVisible(!b);
   }
 
   private void setVisibleAiLife(boolean b) {
@@ -245,6 +266,10 @@ public class GeneticGui extends AIGui {
     alphabetSizeLabel.setVisible(!b);
     globalCheckBox.setVisible(!b);
 
+    annHiddenLayerInput.setVisible(b);
+    annHiddenLayerLabel.setVisible(b);
+    annHiddenNeuronInput.setVisible(b);
+    annHiddenNeuronLabel.setVisible(b);
   }
 
   private void initDefaultPreferences() {
@@ -306,6 +331,10 @@ public class GeneticGui extends AIGui {
       prefs.setPlotMultiple(plotMultipleCheckbox.isSelected());
 
       prefs.logginEnabled(enableLoggingCheckbox.isSelected());
+      prefs.setMaxGenerations(Integer.parseInt(maxGenerationsInput.getText()));
+
+      prefs.getAnnPreferences().setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
+      prefs.getAnnPreferences().setHiddenLayerCount(Integer.parseInt(annHiddenNeuronInput.getText()));
     } catch (NumberFormatException e) {
       Log.i(TAG, "Invalid values in preferences!");
       return false;
@@ -420,6 +449,7 @@ public class GeneticGui extends AIGui {
     matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
 
     incrementingCheckBox.setSelected(prefs.shouldIncrement());
+    maxGenerationsInput.setText(String.valueOf(prefs.getMaxGenerations()));
 
     if (prefs.getAdultSelectionMode() instanceof OverProduction) {
       overProductionInput.setText(String.valueOf(((OverProduction) prefs.getAdultSelectionMode()).getOverProductionRate()));
@@ -442,6 +472,11 @@ public class GeneticGui extends AIGui {
     if (prefs.getMateSelectionMode() instanceof Tournament) {
       Tournament mateSelectionMode = (Tournament) prefs.getMateSelectionMode();
       tournamentInput.setText(mateSelectionMode.getTournamentK() + "/" + mateSelectionMode.getTournamentE());
+    }
+
+    if (prefs.getPuzzle() instanceof AiLife) {
+      annHiddenNeuronInput.setText(String.valueOf(prefs.getAnnPreferences().getHiddenNeuronCount()));
+      annHiddenLayerInput.setText(String.valueOf(prefs.getAnnPreferences().getHiddenNeuronCount()));
     }
   }
 

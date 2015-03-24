@@ -13,6 +13,7 @@ import subsym.ailife.entity.Empty;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
+import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
@@ -72,7 +73,7 @@ public class test_ailife {
     AnnNodes inputs = AnnNodes.createInput(0.3, 0.1, 0.7);
     assertEquals(inputs.getValues(), Arrays.asList(0.3, 0.1, 0.7));
     AnnNodes outputs = AnnNodes.createOutput(2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(1, 2, inputs, outputs, new Sigmoid());
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, inputs, outputs, new Sigmoid()));
     ann.updateInput(0.8, 0.9, 0.2);
     assertEquals(inputs.getValues(), Arrays.asList(0.8, 0.9, 0.2));
     assertEquals(ann.getInputs(), Arrays.asList(0.8, 0.9, 0.2));

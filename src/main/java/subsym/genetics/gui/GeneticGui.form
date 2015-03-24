@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="831" height="1387"/>
+      <xy x="20" y="20" width="831" height="1557"/>
     </constraints>
     <properties>
       <alignmentX value="0.0"/>
@@ -88,7 +88,7 @@
           </grid>
         </children>
       </splitpane>
-      <grid id="143f2" layout-manager="GridLayoutManager" row-count="54" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="5">
+      <grid id="143f2" layout-manager="GridLayoutManager" row-count="61" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="5">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="2" col-span="1" vsize-policy="3" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -108,7 +108,7 @@
         <children>
           <component id="4f057" class="subsym.gui.AIButton" binding="runButton">
             <constraints>
-              <grid row="52" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="59" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-55690"/>
@@ -267,11 +267,6 @@
               <text value="40"/>
             </properties>
           </component>
-          <vspacer id="779ae">
-            <constraints>
-              <grid row="44" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
           <vspacer id="24d2b">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="1" fill="0" indent="0" use-parent-layout="false">
@@ -333,7 +328,7 @@
           </vspacer>
           <component id="decbc" class="subsym.gui.AIButton" binding="stopButton">
             <constraints>
-              <grid row="50" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="57" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-55690"/>
@@ -343,7 +338,7 @@
           </component>
           <vspacer id="55a2">
             <constraints>
-              <grid row="53" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="1" fill="0" indent="0" use-parent-layout="false">
+              <grid row="60" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="1" anchor="1" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="-1" height="10"/>
               </grid>
             </constraints>
@@ -602,7 +597,7 @@
           </component>
           <component id="1faf8" class="javax.swing.JCheckBox" binding="enableLoggingCheckbox">
             <constraints>
-              <grid row="46" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="51" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-131586"/>
@@ -643,7 +638,7 @@
           </vspacer>
           <component id="92c0b" class="javax.swing.JTextField" binding="runCountInput">
             <constraints>
-              <grid row="49" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+              <grid row="54" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="-1" height="20"/>
               </grid>
             </constraints>
@@ -657,7 +652,7 @@
           </component>
           <component id="de8e0" class="subsym.gui.AILabel" binding="runCountLabel">
             <constraints>
-              <grid row="48" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="53" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-131586"/>
@@ -668,7 +663,7 @@
           </component>
           <component id="41983" class="javax.swing.JCheckBox" binding="incrementingCheckBox">
             <constraints>
-              <grid row="47" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="52" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-131586"/>
@@ -680,7 +675,7 @@
           </component>
           <component id="32923" class="javax.swing.JCheckBox" binding="plotMultipleCheckbox">
             <constraints>
-              <grid row="45" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="50" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-131586"/>
@@ -693,7 +688,7 @@
           </component>
           <component id="53d90" class="subsym.gui.AIButton" binding="benchMarkButton">
             <constraints>
-              <grid row="51" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="58" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <background color="-55690"/>
@@ -701,6 +696,91 @@
               <text value="Benchmark"/>
             </properties>
           </component>
+          <component id="bdc51" class="javax.swing.JTextField" binding="maxGenerationsInput">
+            <constraints>
+              <grid row="56" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="20"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="0"/>
+              <foreground color="-16777216"/>
+              <margin top="0" left="5" bottom="0" right="0"/>
+              <text value="0"/>
+            </properties>
+          </component>
+          <component id="f540" class="subsym.gui.AILabel" binding="maxGenerationsLabel">
+            <constraints>
+              <grid row="55" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="1"/>
+              <foreground color="-16777216"/>
+              <text value="Max Generations"/>
+            </properties>
+          </component>
+          <component id="66923" class="javax.swing.JTextField" binding="annHiddenNeuronInput">
+            <constraints>
+              <grid row="46" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="20"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="0"/>
+              <foreground color="-16777216"/>
+              <margin top="0" left="5" bottom="0" right="0"/>
+              <text value="3"/>
+            </properties>
+          </component>
+          <component id="6c2ba" class="subsym.gui.AILabel" binding="annHiddenNeuronLabel">
+            <constraints>
+              <grid row="45" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="1"/>
+              <foreground color="-16777216"/>
+              <text value="Hidden Neuron Count"/>
+            </properties>
+          </component>
+          <component id="e8259" class="javax.swing.JTextField" binding="annHiddenLayerInput">
+            <constraints>
+              <grid row="48" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="20"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="0"/>
+              <foreground color="-16777216"/>
+              <margin top="0" left="5" bottom="0" right="0"/>
+              <text value="1"/>
+            </properties>
+          </component>
+          <component id="9ee7e" class="subsym.gui.AILabel" binding="annHiddenLayerLabel">
+            <constraints>
+              <grid row="47" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="1"/>
+              <foreground color="-16777216"/>
+              <text value="Hidden Layer Count"/>
+            </properties>
+          </component>
+          <vspacer id="779ae">
+            <constraints>
+              <grid row="49" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+          <vspacer id="3e741">
+            <constraints>
+              <grid row="44" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
         </children>
       </grid>
       <hspacer id="fd447">

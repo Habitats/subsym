@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import subsym.ailife.entity.Robot;
+import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
-import subsym.ann.Sigmoid;
-import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
@@ -19,12 +18,10 @@ public class AiLifePhenotype implements Phenotype {
   private final AiLifeGenotype aiLifeGenotype;
   private final ArtificialNeuralNetwork ann;
 
-  public AiLifePhenotype(AiLifeGenotype aiLifeGenotype) {
+  public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AnnPreferences prefs) {
     this.aiLifeGenotype = aiLifeGenotype;
 
-    AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
-    AnnNodes outputs = AnnNodes.createOutput(3);
-    ann = new ArtificialNeuralNetwork(1, 3, inputs, outputs, new Sigmoid());
+    ann = new ArtificialNeuralNetwork(prefs);
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }

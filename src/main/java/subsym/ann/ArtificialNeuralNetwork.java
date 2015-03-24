@@ -24,14 +24,13 @@ public class ArtificialNeuralNetwork {
   private final ActivationFunction activationFunction;
   private final List<AnnNodes> layers;
 
-  public ArtificialNeuralNetwork(int hiddenLayerCount, int hiddenNeuronCount, AnnNodes inputs, AnnNodes outputs,
-                                 ActivationFunction activationFunction) {
+  public ArtificialNeuralNetwork(AnnPreferences prefs) {
     layers = new ArrayList<>();
-    this.hiddenLayerCount = hiddenLayerCount;
-    this.hiddenNeuronCount = hiddenNeuronCount;
-    this.inputs = inputs;
-    this.outputs = outputs;
-    this.activationFunction = activationFunction;
+    this.hiddenLayerCount = prefs.getHiddenLayerCount();
+    this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
+    this.inputs = prefs.getInputs();
+    this.outputs = prefs.getOutputs();
+    this.activationFunction = prefs.getActivationFunction();
     createNetwork();
     setActivationFunction();
     setWeights(Collections.nCopies(getNumWeights(), .1));
