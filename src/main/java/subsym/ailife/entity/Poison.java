@@ -16,6 +16,11 @@ public class Poison extends TileEntity {
   }
 
   @Override
+  public String getDescription() {
+    return "Poison";
+  }
+
+  @Override
   public Color getColor() {
     return ColorUtils.c(1);
   }

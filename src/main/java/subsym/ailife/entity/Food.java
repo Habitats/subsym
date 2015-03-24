@@ -17,6 +17,11 @@ public class Food extends TileEntity {
   }
 
   @Override
+  public String getDescription() {
+    return "Food";
+  }
+
+  @Override
   public Color getColor() {
     return ColorUtils.c(0);
   }
