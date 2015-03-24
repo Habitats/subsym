@@ -3,6 +3,7 @@ package subsym.genetics;
 import java.util.HashMap;
 import java.util.Map;
 
+import subsym.ailife.AiLife;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
@@ -123,6 +124,13 @@ public class GeneticPreferences {
     return prefs;
   }
 
+  public static GeneticPreferences getAiLife() {
+    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Tournament(10, 0.05));
+    GeneticProblem problem = new AiLife(prefs);
+    prefs.setPuzzle(problem);
+    return prefs;
+  }
+
   public static GeneticPreferences getLolzTest() {
     GeneticPreferences prefs = new GeneticPreferences(3, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate());
     GeneticProblem problem = new Lolz(prefs, 5, 2);
@@ -147,6 +155,7 @@ public class GeneticPreferences {
 
   public static Map<String, GeneticPreferences> getPresets() {
     Map<String, GeneticPreferences> presets = new HashMap<>();
+    presets.put("AiLife", getAiLife());
     presets.put("Surprising 90-40", getSurprisingSequences());
     presets.put("OneMax 3-5", getOneMaxTest());
     presets.put("Lolz 3-5", getLolzTest());
