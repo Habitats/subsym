@@ -38,6 +38,18 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
     }
   }
 
+  protected void drawStringCenter(Graphics g, String s, int XPos, int YPos) {
+    Graphics2D g2d = (Graphics2D) g;
+    Font font = new Font("Consolas", Font.PLAIN, 14);
+    g.setFont(font);
+    g.setColor(Theme.getForeground());
+    int stringLen = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();
+    int stringHeight = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getHeight();
+    int offsetWidth = getAdapter().getItemWidth() / 2 - stringLen / 2;
+    int offsetHeight = getAdapter().getItemHeight() - stringHeight / 2;
+    g2d.drawString(s, offsetWidth + XPos, offsetHeight + YPos);
+  }
+
   protected void paintTile(Graphics g, T entity) {
     // put origin to be the left bottom corner
     int x = entity.getX() * entity.getItemWidth();
@@ -45,9 +57,7 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
 
     drawTile(g, entity, x, y);
 
-    if (drawLabels) {
-//      drawStringCenter(g, entity.getDescription(), x, y);
-    }
+    drawStringCenter(g, entity.getDescription(), x, y);
 
     drawOutline(entity, (Graphics2D) g, x, y, 2);
   }

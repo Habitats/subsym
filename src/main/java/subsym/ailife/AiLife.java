@@ -94,6 +94,7 @@ public class AiLife extends GeneticProblem {
     AiLifeGenotype best = (AiLifeGenotype) getPopulation().getBestGenotype();
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
+    Log.v(TAG, pheno.fitness());
     Board<TileEntity> board = createAiLifeBoard(0101);
     canvas.setAdapter(board);
     displayGui(canvas);
@@ -109,7 +110,7 @@ public class AiLife extends GeneticProblem {
       } catch (InterruptedException e) {
       }
     }
-    
+
     Log.v(TAG, this);
   }
 

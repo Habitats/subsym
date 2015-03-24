@@ -3,7 +3,7 @@ package subsym.models;
 /**
  * Created by anon on 23.03.2015.
  */
-public class TileEntity extends Entity {
+public abstract class TileEntity extends Entity {
 
   private final Board board;
 
@@ -22,7 +22,11 @@ public class TileEntity extends Entity {
     return board.getItemHeight();
   }
 
-protected Board<TileEntity> getBoard() {
+  protected Board<TileEntity> getBoard() {
     return board;
+  }
+
+  public String getDescription() {
+    return "";
   }
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import subsym.Log;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.ColorUtils;
 import subsym.models.Board;
@@ -106,7 +105,7 @@ public class AiLifeRobot extends TileEntity {
     }
     TileEntity oldTile = getBoard().get(getX(), getY());
     fitness += oldTile instanceof AiLife.Poison ? -20 : oldTile instanceof AiLife.Food ? 10 : 0;
-    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
+//    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
     getBoard().set(this);
     getBoard().notifyDataChanged();
   }
@@ -116,11 +115,11 @@ public class AiLifeRobot extends TileEntity {
     int newX = (x + getBoard().getWidth()) % getBoard().getWidth();
     int newY = (y + getBoard().getHeight()) % getBoard().getHeight();
     setPosition(newX, newY);
-    Log.v(TAG, "New position: " + newX + ", " + newY);
+//    Log.v(TAG, "New position: " + newX + ", " + newY);
   }
 
   private void moveForward() {
-    Log.v(TAG, "Moving forward ...");
+//    Log.v(TAG, "Moving forward ...");
     switch (dir) {
       case NORTH:
         setPositionWrapped(getX(), getY() + 1);
@@ -138,7 +137,7 @@ public class AiLifeRobot extends TileEntity {
   }
 
   private void moveRight() {
-    Log.v(TAG, "Moving right ...");
+//    Log.v(TAG, "Moving right ...");
     switch (dir) {
       case NORTH:
         setPositionWrapped(getX() + 1, getY());
@@ -160,7 +159,7 @@ public class AiLifeRobot extends TileEntity {
   }
 
   private void moveLeft() {
-    Log.v(TAG, "Moving left ...");
+//    Log.v(TAG, "Moving left ...");
     switch (dir) {
       case NORTH:
         setPositionWrapped(getX() - 1, getY());
@@ -179,6 +178,11 @@ public class AiLifeRobot extends TileEntity {
         dir = Direction.SOUTH;
         break;
     }
+  }
+
+  @Override
+  public String getDescription() {
+    return String.valueOf(fitness);
   }
 
   @Override
