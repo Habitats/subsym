@@ -1,4 +1,4 @@
-package subsym.ann;
+package subsym.ann.nodes;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,34 +11,30 @@ import java.util.stream.Stream;
  */
 public class AnnNodes {
 
-  private List<AnnNode> values;
+  private final List<AnnNode> values;
 
-  private AnnNodes(Double... values) {
-    this.values = Arrays.asList(values).stream().map(AnnNode::create).collect(Collectors.toList());
-  }
-
-  private AnnNodes(int numberOfNodes) {
-    this.values = IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.create()).collect(Collectors.toList());
-  }
-
-  public AnnNodes(List<Double> values) {
-    this.values = values.stream().map(AnnNode::create).collect(Collectors.toList());
+  public AnnNodes(List<AnnNode> values) {
+    this.values = values;
   }
 
   public static AnnNodes createOutput(int numberOfNodes) {
-    return new AnnNodes(numberOfNodes);
+    return new AnnNodes(IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createOutput()).collect(Collectors.toList()));
+  }
+
+  public static AnnNodes createHidden(int numberOfNodes) {
+    return new AnnNodes(IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createHidden()).collect(Collectors.toList()));
   }
 
   public static AnnNodes createInput(Double... values) {
-    return new AnnNodes(values);
+    return createInput(Arrays.asList(values));
   }
 
   public static AnnNodes createInput(List<Double> values) {
-    return new AnnNodes(values);
+    return new AnnNodes(values.stream().map(AnnNode::createInput).collect(Collectors.toList()));
   }
 
-  public static AnnNodes createEmpty() {
-    return new AnnNodes();
+  public List<Double> getValues() {
+    return values.stream().mapToDouble(v -> v.getValue()).boxed().collect(Collectors.toList());
   }
 
   public Stream<AnnNode> stream() {
@@ -61,7 +57,6 @@ public class AnnNodes {
   public String toString() {
     return values.stream().map(AnnNode::toString).collect(Collectors.joining(" --- ", "", ""));
   }
-
 
 
 }

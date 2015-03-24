@@ -3,7 +3,7 @@ package subsym.ailife;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import subsym.ann.AnnNodes;
+import subsym.ann.nodes.AnnNodes;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.Sigmoid;
 import subsym.genetics.Phenotype;

@@ -7,6 +7,9 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import subsym.ann.nodes.AnnNodes;
+import subsym.ann.nodes.InputNode;
+
 /**
  * Created by anon on 20.03.2015.
  */
@@ -36,7 +39,7 @@ public class ArtificialNeuralNetwork {
     AnnNodes currentLayer = inputs;
     layers.add(inputs);
     for (int i = 0; i < hiddenLayerCount; i++) {
-      AnnNodes nextLayer = AnnNodes.createOutput(hiddenNeuronCount);
+      AnnNodes nextLayer = AnnNodes.createHidden(hiddenNeuronCount);
       layers.add(nextLayer);
       currentLayer.stream().forEach(v -> v.connect(nextLayer));
       currentLayer = nextLayer;
@@ -62,7 +65,7 @@ public class ArtificialNeuralNetwork {
       throw new IllegalStateException("Inputs not equal size!");
     }
     AtomicInteger i = new AtomicInteger(0);
-    this.inputs.stream().forEach(n -> n.setValue(inputs.get(i.getAndIncrement())));
+    this.inputs.stream().forEach( n ->((InputNode) n).setValue(inputs.get(i.getAndIncrement())));
   }
 
   public List<Double> getOutputs() {
@@ -82,12 +85,12 @@ public class ArtificialNeuralNetwork {
     AtomicInteger i = new AtomicInteger();
     layers.stream()//
         .flatMap(layer -> layer.stream())//
-        .forEach(node -> node.getOutputWeights().stream()//
+        .forEach(node -> node.getOutputs().stream()//
             .forEach(outputNode -> node.setWeight(outputNode, weights.get(i.getAndIncrement()))));
   }
 
   public int getNumWeights() {
-    return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputWeights().size()).sum();
+    return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
   }
 
   public int getNumNodes() {
@@ -95,6 +98,6 @@ public class ArtificialNeuralNetwork {
   }
 
   public List<Double> getInputs() {
-    return inputs.stream().mapToDouble(n -> n.getValue()).boxed().collect(Collectors.toList());
+    return inputs.getValues();
   }
 }
