@@ -22,7 +22,7 @@ import subsym.gui.AIGridCanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
 import subsym.models.Board;
-import subsym.models.TileEntity;
+import subsym.models.entity.TileEntity;
 
 /**
  * Created by anon on 20.03.2015.
@@ -33,10 +33,11 @@ public class AiLife extends GeneticProblem {
   private final AIGridCanvas<TileEntity> canvas;
   private Robot robot;
 
-  public AiLife(GeneticPreferences prefs) {
-    super(prefs);
-
+  public AiLife(){
+    super(null);
+    Board<TileEntity> board = createAiLifeBoard(0101);
     canvas = new AIGridCanvas<>();
+    canvas.setAdapter(board);
     canvas.addKeyListener(new KeyAdapter() {
       @Override
       public void keyPressed(KeyEvent e) {
@@ -53,8 +54,15 @@ public class AiLife extends GeneticProblem {
         }
       }
     });
-
+    robot = new Robot(0, 0, board);
+    board.set(robot);
+    displayGui(canvas);
     canvas.requestFocus();
+  }
+
+  public AiLife(GeneticPreferences prefs) {
+    super(prefs);
+    canvas = new AIGridCanvas<>();
   }
 
   @Override

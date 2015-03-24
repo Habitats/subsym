@@ -9,7 +9,7 @@ import subsym.ann.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 import subsym.models.Board;
-import subsym.models.TileEntity;
+import subsym.models.entity.TileEntity;
 
 /**
  * Created by anon on 21.03.2015.

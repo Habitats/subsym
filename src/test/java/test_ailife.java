@@ -18,7 +18,7 @@ import subsym.ann.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.gui.AIGridCanvas;
 import subsym.models.Board;
-import subsym.models.TileEntity;
+import subsym.models.entity.TileEntity;
 import subsym.models.Vec;
 
 import static org.junit.Assert.assertEquals;

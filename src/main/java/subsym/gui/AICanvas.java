@@ -8,11 +8,12 @@ import javax.swing.*;
 import subsym.models.AIAdapter;
 import subsym.models.AIAdapterListener;
 import subsym.models.Vec;
+import subsym.models.entity.Entity;
 
 /**
  * Created by Patrick on 24.08.2014.
  */
-public abstract class AICanvas<T, A extends AIAdapter<T>> extends JPanel implements AIAdapterListener {
+public abstract class AICanvas<T extends Entity, A extends AIAdapter<T>> extends JPanel implements AIAdapterListener {
 
   private long delta = 0;
 
@@ -37,8 +38,7 @@ public abstract class AICanvas<T, A extends AIAdapter<T>> extends JPanel impleme
 
   protected abstract void drawOutline(T entity, Graphics2D g, int x, int y, int thickness);
 
-
-  protected void drawArrow(Graphics g, Vec p, Vec v) {
+  protected static void drawArrow(Graphics g, Vec p, Vec v) {
     Point start = new Point();
     Point end = new Point();
 
@@ -48,8 +48,7 @@ public abstract class AICanvas<T, A extends AIAdapter<T>> extends JPanel impleme
     createArrowShape((Graphics2D) g, start, end);
   }
 
-
-  public void createArrowShape(Graphics2D g, Point fromPt, Point toPt) {
+  public static void createArrowShape(Graphics2D g, Point fromPt, Point toPt) {
     Polygon arrowPolygon = new Polygon();
     arrowPolygon.addPoint(-6, 1);
     arrowPolygon.addPoint(3, 1);
@@ -74,7 +73,7 @@ public abstract class AICanvas<T, A extends AIAdapter<T>> extends JPanel impleme
     g.fill(shape);
   }
 
-  private Point midpoint(Point p1, Point p2) {
+  private static Point midpoint(Point p1, Point p2) {
     return new Point((int) ((p1.x + p2.x) / 2.0), (int) ((p1.y + p2.y) / 2.0));
   }
 

@@ -9,9 +9,10 @@ import java.util.stream.Stream;
 
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.ColorUtils;
+import subsym.gui.Direction;
 import subsym.models.Board;
-import subsym.models.TileEntity;
 import subsym.models.Vec;
+import subsym.models.entity.TileEntity;
 
 /**
  * Created by Patrick on 23.03.2015.
@@ -34,15 +35,11 @@ public class Robot extends TileEntity {
     return randomInput;
   }
 
-  private enum Direction {
-    NORTH, EAST, SOUTH, WEST;
-  }
-
   private Direction dir;
 
   public Robot(int x, int y, Board board) {
     super(x, y, board);
-    dir = Direction.NORTH;
+    dir = Direction.UP;
   }
 
   public List<Integer> getFoodSensorInput() {
@@ -58,16 +55,16 @@ public class Robot extends TileEntity {
   private List<TileEntity> getSensorNeighbors() {
     List<TileEntity> neighbors;
     switch (dir) {
-      case NORTH:
+      case UP:
         neighbors = Arrays.asList(getWrapped(-1, 0), getWrapped(0, 1), getWrapped(1, 0));
         break;
-      case EAST:
+      case RIGHT:
         neighbors = Arrays.asList(getWrapped(0, 1), getWrapped(1, 0), getWrapped(0, -1));
         break;
-      case SOUTH:
+      case DOWN:
         neighbors = Arrays.asList(getWrapped(1, 0), getWrapped(0, -1), getWrapped(-1, 0));
         break;
-      case WEST:
+      case LEFT:
         neighbors = Arrays.asList(getWrapped(0, -1), getWrapped(1, 0), getWrapped(0, 1));
         break;
       default:
@@ -111,7 +108,6 @@ public class Robot extends TileEntity {
   }
 
   private void setPositionWrapped(int x, int y) {
-
     int newX = (x + getBoard().getWidth()) % getBoard().getWidth();
     int newY = (y + getBoard().getHeight()) % getBoard().getHeight();
     setPosition(newX, newY);
@@ -121,16 +117,16 @@ public class Robot extends TileEntity {
   private void moveForward() {
 //    Log.v(TAG, "Moving forward ...");
     switch (dir) {
-      case NORTH:
+      case UP:
         setPositionWrapped(getX(), getY() + 1);
         break;
-      case EAST:
+      case RIGHT:
         setPositionWrapped(getX() + 1, getY());
         break;
-      case SOUTH:
+      case DOWN:
         setPositionWrapped(getX(), getY() - 1);
         break;
-      case WEST:
+      case LEFT:
         setPositionWrapped(getX() - 1, getY());
         break;
     }
@@ -139,21 +135,21 @@ public class Robot extends TileEntity {
   private void moveRight() {
 //    Log.v(TAG, "Moving right ...");
     switch (dir) {
-      case NORTH:
+      case UP:
         setPositionWrapped(getX() + 1, getY());
-        dir = Direction.EAST;
+        dir = Direction.RIGHT;
         break;
-      case EAST:
+      case RIGHT:
         setPositionWrapped(getX(), getY() - 1);
-        dir = Direction.SOUTH;
+        dir = Direction.DOWN;
         break;
-      case SOUTH:
+      case DOWN:
         setPositionWrapped(getX() - 1, getY());
-        dir = Direction.WEST;
+        dir = Direction.LEFT;
         break;
-      case WEST:
+      case LEFT:
         setPositionWrapped(getX(), getY() + 1);
-        dir = Direction.NORTH;
+        dir = Direction.UP;
         break;
     }
   }
@@ -161,23 +157,30 @@ public class Robot extends TileEntity {
   private void moveLeft() {
 //    Log.v(TAG, "Moving left ...");
     switch (dir) {
-      case NORTH:
+      case UP:
         setPositionWrapped(getX() - 1, getY());
-        dir = Direction.WEST;
+        dir = Direction.LEFT;
         break;
-      case EAST:
+      case RIGHT:
         setPositionWrapped(getX(), getY() + 1);
-        dir = Direction.NORTH;
+        dir = Direction.UP;
         break;
-      case SOUTH:
+      case DOWN:
         setPositionWrapped(getX() + 1, getY());
-        dir = Direction.EAST;
+        dir = Direction.RIGHT;
         break;
-      case WEST:
+      case LEFT:
         setPositionWrapped(getX(), getY() - 1);
-        dir = Direction.SOUTH;
+        dir = Direction.DOWN;
         break;
     }
+  }
+
+  @Override
+  public void draw(Graphics g, int x, int y) {
+    super.draw(g, x, y);
+//    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
+    drawArrow(g, x, y, dir);
   }
 
   @Override

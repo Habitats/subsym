@@ -3,6 +3,8 @@ package subsym.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import subsym.models.entity.TileEntity;
+
 /**
  * Created by Patrick on 24.08.2014.
  */
@@ -131,6 +133,6 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
   }
 
   public T get(Vec oldPosition) {
-return    get((int) oldPosition.x, (int) oldPosition.y);
+    return get((int) oldPosition.x, (int) oldPosition.y);
   }
 }

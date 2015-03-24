@@ -1,6 +1,8 @@
-package subsym.models;
+package subsym.models.entity;
 
 import java.awt.*;
+
+import subsym.models.Vec;
 
 /**
  * Created by Patrick on 22.03.2015.
@@ -47,7 +49,6 @@ public abstract class Entity {
   public Vec getPosition() {
     return position;
   }
-
 
   public void setPosition(double x, double y) {
    position = Vec.create(x,y);

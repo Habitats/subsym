@@ -3,12 +3,15 @@ package subsym.gui;
 import java.awt.*;
 
 import subsym.models.Board;
-import subsym.models.TileEntity;
+import subsym.models.entity.TileEntity;
 
 /**
  * Created by Patrick on 23.03.2015.
  */
 public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
+
+  private int oldHeight;
+  private int oldWidth;
 
   public AIGridCanvas() {
     setBackground(Color.BLACK);
@@ -38,43 +41,29 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
     }
   }
 
-  protected void drawStringCenter(Graphics g, String s, int XPos, int YPos) {
-    Graphics2D g2d = (Graphics2D) g;
-    Font font = new Font("Consolas", Font.PLAIN, 14);
-    g.setFont(font);
-    g.setColor(Theme.getForeground());
-    int stringLen = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();
-    int stringHeight = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getHeight();
-    int offsetWidth = getAdapter().getItemWidth() / 2 - stringLen / 2;
-    int offsetHeight = getAdapter().getItemHeight() - stringHeight / 2;
-    g2d.drawString(s, offsetWidth + XPos, offsetHeight + YPos);
-  }
-
   protected void paintTile(Graphics g, T entity) {
     // put origin to be the left bottom corner
     int x = entity.getX() * entity.getItemWidth();
     int y = getHeight() - entity.getItemHeight() - entity.getY() * entity.getItemHeight();
-
-    drawTile(g, entity, x, y);
-
-    drawStringCenter(g, entity.getDescription(), x, y);
-
-    drawOutline(entity, (Graphics2D) g, x, y, 2);
-  }
-
-  protected void drawTile(Graphics g, T entity, int x, int y) {
-    g.setColor(entity.getColor());
-    g.fillRect(x, y, entity.getItemWidth(), entity.getItemHeight());
+    if (entity.isModified()) {
+      entity.draw(g, x, y);
+      drawOutline(entity, (Graphics2D) g, x, y, 2);
+//      entity.reset();
+    }
   }
 
   @Override
   protected void updateMetrics() {
-    if (getAdapter() == null) {
+    if (getAdapter() == null || (oldHeight == getHeight() && oldWidth == getWidth())) {
       return;
     }
     int tileHeight = getHeight() / getAdapter().getHeight();
     int tileWidth = getWidth() / getAdapter().getWidth();
     getAdapter().setItemHeight(tileHeight);
     getAdapter().setItemWidth(tileWidth);
+    // this is resource heavy
+    getAdapter().getItems().stream().forEach(TileEntity::setModified);
+    oldHeight = getHeight();
+    oldWidth = getWidth();
   }
 }
