@@ -8,6 +8,8 @@ public class AnnPreferences {
   private int hiddenLayerCount;
   private int hiddenNeuronCount;
   private ActivationFunction activationFunction;
+  private boolean dynamic;
+  private boolean single;
 
   public AnnPreferences(int hiddenLayerCount, int hiddenNeuronCount, ActivationFunction activationFunction) {
     this.hiddenLayerCount = hiddenLayerCount;
@@ -41,5 +43,21 @@ public class AnnPreferences {
 
   public static AnnPreferences getDefault() {
     return new AnnPreferences(1, 6, new Sigmoid());
+  }
+
+  public boolean isSingle() {
+    return single;
+  }
+
+  public void setSingle(boolean single) {
+    this.single = single;
+  }
+
+  public boolean isDynamic() {
+    return dynamic;
+  }
+
+  public void setDynamic(boolean dynamic) {
+    this.dynamic = dynamic;
   }
 }

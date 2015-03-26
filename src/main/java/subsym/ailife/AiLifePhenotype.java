@@ -21,11 +21,13 @@ import subsym.models.entity.TileEntity;
  */
 public class AiLifePhenotype implements Phenotype {
 
-  private final AiLifeGenotype aiLifeGenotype;
+  private final AnnPreferences prefs;
   private final ArtificialNeuralNetwork ann;
+  private final AiLifeGenotype aiLifeGenotype;
 
   public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AnnPreferences prefs) {
     this.aiLifeGenotype = aiLifeGenotype;
+    this.prefs = prefs;
 
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(3);
@@ -52,8 +54,8 @@ public class AiLifePhenotype implements Phenotype {
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
 
     AtomicDouble fitness = new AtomicDouble();
-    IntStream.range(0, 5).forEach(run -> {
-      int seed = aiLifeGenotype.getGeneration() + run;
+    IntStream.range(0, prefs.isSingle() ? 1 : 5).forEach(run -> {
+      int seed = prefs.isDynamic() ? aiLifeGenotype.getGeneration() + run : run;
       Board<TileEntity> board = AiLife.createAiLifeBoard(seed);
       long numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
       long numFood = board.getItems().stream().filter(i -> i instanceof Food).count();

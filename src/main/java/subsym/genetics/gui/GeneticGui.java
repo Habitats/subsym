@@ -103,6 +103,8 @@ public class GeneticGui extends AIGui {
   private JCheckBox incrementingCheckBox;
   private JCheckBox plotMultipleCheckbox;
   private AIButton benchMarkButton;
+  private JCheckBox dynamicCheckbox;
+  private JCheckBox singleCheckbox;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -113,8 +115,8 @@ public class GeneticGui extends AIGui {
     MatingSelection.values().forEach(matingSelection::addItem);
     GeneticPreferences.getPresets().keySet().forEach(presetsComboBox::addItem);
 
-    presetsComboBox
-        .addActionListener(e -> setPreferences(GeneticPreferences.getPresets().get(((JComboBox) e.getSource()).getSelectedItem())));
+    presetsComboBox.addActionListener(
+        e -> setPreferences(GeneticPreferences.getPresets().get(((JComboBox) e.getSource()).getSelectedItem())));
 
     matingSelection.addActionListener(e -> updatePreferences());
     adultSelection.addActionListener(e -> updatePreferences());
@@ -335,6 +337,8 @@ public class GeneticGui extends AIGui {
       prefs.logginEnabled(enableLoggingCheckbox.isSelected());
       prefs.setMaxGenerations(Integer.parseInt(maxGenerationsInput.getText()));
 
+      annPreferences.setSingle(singleCheckbox.isSelected());
+      annPreferences.setDynamic(dynamicCheckbox.isSelected());
       annPreferences.setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
       annPreferences.setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
 
@@ -354,7 +358,8 @@ public class GeneticGui extends AIGui {
                                      Integer.parseInt(surprisingLengthInput.getText()), globalCheckBox.isSelected());
     } else if (puzzle.equals(Lolz.class.getSimpleName())) {
       setVisibleLolz(true);
-      return new Lolz(prefs, Integer.parseInt(bitVectorSizeInput.getText()), Integer.parseInt(zeroThresholdInput.getText()));
+      return new Lolz(prefs, Integer.parseInt(bitVectorSizeInput.getText()),
+                      Integer.parseInt(zeroThresholdInput.getText()));
     } else if (puzzle.equals(OneMax.class.getSimpleName())) {
       setVisibleOneMax(true);
       return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
@@ -456,7 +461,8 @@ public class GeneticGui extends AIGui {
     maxGenerationsInput.setText(String.valueOf(prefs.getMaxGenerations()));
 
     if (prefs.getAdultSelectionMode() instanceof OverProduction) {
-      overProductionInput.setText(String.valueOf(((OverProduction) prefs.getAdultSelectionMode()).getOverProductionRate()));
+      overProductionInput
+          .setText(String.valueOf(((OverProduction) prefs.getAdultSelectionMode()).getOverProductionRate()));
     } else if (prefs.getAdultSelectionMode() instanceof Mixing) {
       mixingRateInput.setText(String.valueOf(((Mixing) prefs.getAdultSelectionMode()).getMixingRate()));
     }
@@ -481,6 +487,8 @@ public class GeneticGui extends AIGui {
     if (prefs.getPuzzle() instanceof AiLife) {
       annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
       annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));
+      singleCheckbox.setSelected(annPreferences.isSingle());
+      dynamicCheckbox.setSelected(annPreferences.isDynamic());
     }
   }
 }
