@@ -40,49 +40,26 @@ public class AiLifeGui extends AIGui<TileEntity> {
     this.board = board;
     canvas.setAdapter(board);
     buildFrame(mainPanel, null, null);
-//    addKeyListener(new KeyAdapter() {
-//      @Override
-//      public void keyPressed(KeyEvent e) {
-//        switch (e.getKeyCode()) {
-//          case KeyEvent.VK_A:
-////            robot.move(0);
-//            break;
-//          case KeyEvent.VK_W:
-//            robot.move(1);
-//            break;
-//          case KeyEvent.VK_D:
-//            robot.move(2);
-//            break;
-//        }
-//      }
-//    });
 
     simulateButton.addActionListener(e -> simulate());
     generateButton.addActionListener(e -> generateRandomBoard());
 
-    Action doNothing = new AbstractAction() {
-      public void actionPerformed(ActionEvent e) {
-        robot.move(0);
-      }
-    };
-    mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), Direction.LEFT);
+    InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), Direction.LEFT);
     mainPanel.getActionMap().put(Direction.LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(0);
       }
     });
-    mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), Direction.UP);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), Direction.UP);
     mainPanel.getActionMap().put(Direction.UP, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(1);
       }
     });
-    mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
     mainPanel.getActionMap().put(Direction.RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -136,7 +113,6 @@ public class AiLifeGui extends AIGui<TileEntity> {
   @Override
   protected void init() {
     buildFrame(canvas, null, null);
-
   }
 
   @Override
