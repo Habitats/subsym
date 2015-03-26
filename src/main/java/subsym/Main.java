@@ -5,8 +5,8 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import subsym.ailife.AiLife;
 import subsym.boids.Boids;
-import subsym.genetics.Genetics;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -28,18 +28,17 @@ public class Main {
     new AIGui() {
 
       @Override
-      protected int getDefaultCloseOperation() {
+      public int getDefaultCloseOperation() {
         return WindowConstants.EXIT_ON_CLOSE;
       }
 
       @Override
-      protected Dimension getPreferredSize() {
+      public Dimension getPreferredSize() {
         return new Dimension(300, 200);
       }
 
       @Override
       protected void init() {
-
 //        AIPanel panel = new AIPanel();
 //        panel.setPreferredSize(new Dimension(300, 200));
 //        AIButton broid = new AIButton("Boids");
@@ -48,9 +47,9 @@ public class Main {
 //        panel.add(broid);
 ////
 //        buildFrame(panel, null, null);
-        new Genetics();
+//        new Genetics();
 //
-//        new AiLife();
+        new AiLife().demo();
       }
 
 

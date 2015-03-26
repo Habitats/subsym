@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.ailife.AiLife;
 import subsym.ailife.entity.Empty;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
@@ -119,6 +118,5 @@ public class test_ailife {
     });
 
     canvas.requestFocus();
-    AiLife.displayGui(canvas);
   }
 }

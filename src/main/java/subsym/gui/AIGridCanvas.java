@@ -51,9 +51,9 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
 
   @Override
   protected void updateMetrics() {
-    if (getAdapter() == null || (oldHeight == getHeight() && oldWidth == getWidth())) {
-      return;
-    }
+//    if (getAdapter() == null || (oldHeight == getHeight() && oldWidth == getWidth())) {
+//      return;
+//    }
     int tileHeight = getHeight() / getAdapter().getHeight();
     int tileWidth = getWidth() / getAdapter().getWidth();
     getAdapter().setItemHeight(tileHeight);

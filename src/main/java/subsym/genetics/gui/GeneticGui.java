@@ -411,12 +411,12 @@ public class GeneticGui extends AIGui {
   }
 
   @Override
-  protected int getDefaultCloseOperation() {
+  public int getDefaultCloseOperation() {
     return WindowConstants.EXIT_ON_CLOSE;
   }
 
   @Override
-  protected Dimension getPreferredSize() {
+  public Dimension getPreferredSize() {
     return new Dimension(1500, 1200);
   }
 

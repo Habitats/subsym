@@ -16,22 +16,25 @@ import subsym.models.entity.Entity;
 /**
  * Created by Patrick on 08.09.2014.
  */
-public abstract class AIGui<T extends Entity> {
+public abstract class AIGui<T extends Entity> extends JFrame{
 
   private static final String TAG = AIGui.class.getSimpleName();
-  private JFrame frame;
 
   protected void buildFrame(JPanel mainPanel, AIContiniousScrollPane log, AITextField statusField) {
-
-    frame = new JFrame();
     mainPanel.setPreferredSize(getPreferredSize());
     Log.setLogField(log);
     Log.setStatusField(statusField);
-    frame.add(mainPanel);
-    frame.setDefaultCloseOperation(getDefaultCloseOperation());
-    frame.pack();
-    frame.setLocationRelativeTo(frame.getRootPane());
-    frame.setVisible(true);
+    add(mainPanel);
+    setDefaultCloseOperation(getDefaultCloseOperation());
+    pack();
+    setLocationRelativeTo(getRootPane());
+    setVisible(true);
+  }
+
+  @Override
+  public void paint(Graphics g) {
+    super.paint(g);
+    requestFocus();
   }
 
   public void setAdapter(AIAdapter<T> adapter) {
@@ -45,9 +48,9 @@ public abstract class AIGui<T extends Entity> {
     return getInputField().getText().trim();
   }
 
-  protected abstract int getDefaultCloseOperation();
+  public abstract int getDefaultCloseOperation();
 
-  protected abstract Dimension getPreferredSize();
+  public abstract Dimension getPreferredSize();
 
   protected static String readFile(String path, Charset encoding) {
     byte[] encoded = new byte[0];
