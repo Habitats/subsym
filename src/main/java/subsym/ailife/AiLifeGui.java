@@ -5,6 +5,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -38,7 +39,6 @@ public class AiLifeGui extends AIGui<TileEntity> {
   public AiLifeGui(Board<TileEntity> board, ArtificialNeuralNetwork ann) {
     this.ann = ann;
     this.board = board;
-    canvas.setAdapter(board);
     buildFrame(mainPanel, null, null);
 
     simulateButton.addActionListener(e -> simulate());
@@ -66,38 +66,46 @@ public class AiLifeGui extends AIGui<TileEntity> {
         robot.move(2);
       }
     });
-    simulate();
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "simulate");
+    mainPanel.getActionMap().put("simulate", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        simulate();
+      }
+    });
   }
 
   private void generateRandomBoard() {
     board = AiLife.createAiLifeBoard(ArtificialNeuralNetwork.random().nextInt());
-    canvas.setAdapter(board);
-    robot = new Robot(0, 0, board);
-    board.set(robot);
-    board.notifyDataChanged();
+    initBoard(board);
   }
 
   public void simulate() {
-    if (ann == null) {
-      Log.v(TAG, "No Artificial Neural Network present! Simulation exiting ...");
-      return;
-    }
-    robot = new Robot(0, 0, board);
-    board.set(robot);
-    for (int i = 0; i < 60; i++) {
-      ann.updateInput(robot.getSensoryInput());
-      java.util.List<Double> outputs = ann.getOutputs();
-      int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
-      robot.move(indexOfBest);
-      try {
-        Thread.sleep(200);
-      } catch (InterruptedException e) {
+    new Thread(() -> {
+      if (ann == null) {
+        Log.v(TAG, "No Artificial Neural Network present! Simulation exiting ...");
+        return;
       }
-    }
+      initBoard(board);
+      for (int i = 0; i < 60; i++) {
+        ann.updateInput(robot.getSensoryInput());
+        List<Double> outputs = ann.getOutputs();
+        int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
+        robot.move(indexOfBest);
+        try {
+          Thread.sleep(100);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }).start();
   }
 
-  public void setBoard(Board<TileEntity> board) {
+  private void initBoard(Board<TileEntity> board) {
     canvas.setAdapter(board);
+    robot = new Robot(0, 0, board);
+    this.board.set(robot);
+    this.board.notifyDataChanged();
   }
 
   @Override
@@ -131,7 +139,8 @@ public class AiLifeGui extends AIGui<TileEntity> {
   }
 
   public static void show(Board<TileEntity> board, ArtificialNeuralNetwork ann) {
-    new AiLifeGui(board, ann);
+    AiLifeGui gui = new AiLifeGui(board, ann);
+    gui.simulate();
   }
 
   public static void demo() {

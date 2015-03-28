@@ -757,7 +757,7 @@
               <font name="Consolas" style="0"/>
               <foreground color="-16777216"/>
               <margin top="0" left="5" bottom="0" right="0"/>
-              <text value="1"/>
+              <text value="0"/>
             </properties>
           </component>
           <component id="9ee7e" class="subsym.gui.AILabel" binding="annHiddenLayerLabel">
@@ -801,7 +801,7 @@
               <background color="-131586"/>
               <font name="Consolas"/>
               <foreground color="-16777216"/>
-              <selected value="false"/>
+              <selected value="true"/>
               <text value="Single"/>
             </properties>
           </component>

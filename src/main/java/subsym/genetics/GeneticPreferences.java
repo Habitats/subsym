@@ -131,7 +131,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getAiLife() {
-    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(),500);
+    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(),200);
     GeneticProblem problem = new AiLife(prefs);
     prefs.setPuzzle(problem);
     prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
