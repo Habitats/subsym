@@ -82,7 +82,7 @@ public class AiLife extends GeneticProblem {
     Log.v(TAG, this);
   }
 
-  public void demo(){
+  public void demo() {
     AiLifeGui.demo();
   }
 

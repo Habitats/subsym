@@ -2,6 +2,8 @@ package subsym.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import subsym.models.entity.TileEntity;
 
@@ -41,7 +43,7 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
 
   @Override
   public String toString() {
-    return "Width: " + getWidth() + " Height: " + getHeight();
+    return "Width: " + getWidth() + " Height: " + getHeight() + " Hash: " + hashCode();
   }
 
 
@@ -134,5 +136,11 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
 
   public T get(Vec oldPosition) {
     return get((int) oldPosition.x, (int) oldPosition.y);
+  }
+
+  @Override
+  public int hashCode() {
+    Function<T, String> toId = o -> (o.getX() + ":" + o.getY() + o.getClass().getSimpleName());
+    return tiles.stream().flatMap(List::stream).map(toId).collect(Collectors.joining()).hashCode();
   }
 }

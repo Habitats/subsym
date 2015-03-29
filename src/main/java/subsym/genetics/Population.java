@@ -30,6 +30,7 @@ public class Population {
   public void selectAdults() {
     prefs.getAdultSelectionMode().selectAdults(this);
     currentGeneration++;
+    currentPopulation.stream().forEach(v -> v.setCurrentGeneration(currentGeneration));
     nextGeneration = new PopulationList();
   }
 
@@ -57,8 +58,8 @@ public class Population {
     if (Math.random() < crossOverRate) {
       Genotype c1 = Genotype.crossOver(p1, p2, cut);
       Genotype c2 = Genotype.crossOver(p2, p1, cut);
-      c1.setGeneration(currentGeneration + 1);
-      c2.setGeneration(currentGeneration + 1);
+      c1.setGenerationOrigin(currentGeneration + 1);
+      c2.setGenerationOrigin(currentGeneration + 1);
 
       addToNextGeneration(c1);
       addToNextGeneration(c2);

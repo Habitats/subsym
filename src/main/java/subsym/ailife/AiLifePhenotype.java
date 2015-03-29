@@ -55,7 +55,7 @@ public class AiLifePhenotype implements Phenotype {
 
     AtomicDouble fitness = new AtomicDouble();
     IntStream.range(0, prefs.isSingle() ? 1 : 5).forEach(run -> {
-      int seed = prefs.isDynamic() ? aiLifeGenotype.getGeneration() + run : run;
+      int seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : run;
       Board<TileEntity> board = AiLife.createAiLifeBoard(seed);
       long numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
       long numFood = board.getItems().stream().filter(i -> i instanceof Food).count();

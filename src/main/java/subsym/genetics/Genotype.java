@@ -16,9 +16,10 @@ import java.util.stream.IntStream;
 public abstract class Genotype implements Comparable<Genotype> {
 
   private static Random random = new Random();
-  private int generation = 0;
+  private int generationOrigin = 0;
   private int size;
   private Double fitness;
+  private int currentGeneration;
 
   // ###############################################################################
   // ### CONSTRUCTORS ##############################################################
@@ -161,8 +162,8 @@ public abstract class Genotype implements Comparable<Genotype> {
     fitness = null;
   }
 
-  public void setGeneration(int generation) {
-    this.generation = generation;
+  public void setGenerationOrigin(int generationOrigin) {
+    this.generationOrigin = generationOrigin;
   }
 
   public void setSize(int size) {
@@ -185,8 +186,8 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   public abstract int getBitGroupSize();
 
-  public int getGeneration() {
-    return generation;
+  public int getGenerationOrigin() {
+    return generationOrigin;
   }
 
   public String getPaddedBitString() {
@@ -194,7 +195,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   }
 
   public String toString() {
-    return String.format("From Gen: %6d", getGeneration());
+    return String.format("From Gen: %6d", getGenerationOrigin());
   }
 
   @Override
@@ -212,4 +213,11 @@ public abstract class Genotype implements Comparable<Genotype> {
     return Double.compare(o.fitness(), fitness());
   }
 
+  public void setCurrentGeneration(int currentGeneration) {
+    this.currentGeneration = currentGeneration;
+  }
+
+  public int getCurrentGeneration() {
+    return currentGeneration;
+  }
 }

@@ -45,32 +45,41 @@ public class AiLifeGui extends AIGui<TileEntity> {
     generateButton.addActionListener(e -> generateRandomBoard());
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    ActionMap actionMap = mainPanel.getActionMap();
+
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), Direction.LEFT);
-    mainPanel.getActionMap().put(Direction.LEFT, new AbstractAction() {
+    actionMap.put(Direction.LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(0);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), Direction.UP);
-    mainPanel.getActionMap().put(Direction.UP, new AbstractAction() {
+    actionMap.put(Direction.UP, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(1);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
-    mainPanel.getActionMap().put(Direction.RIGHT, new AbstractAction() {
+    actionMap.put(Direction.RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(2);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "simulate");
-    mainPanel.getActionMap().put("simulate", new AbstractAction() {
+    actionMap.put("simulate", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         simulate();
+      }
+    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "generate");
+    actionMap.put("generate", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        generateRandomBoard();
       }
     });
   }
