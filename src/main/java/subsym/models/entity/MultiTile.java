@@ -86,7 +86,8 @@ public abstract class MultiTile {
   }
 
   private boolean isCollisionY(Function<Integer, Integer> padY) {
-    return !pieces.stream().allMatch(p -> board.get(p.getX(), padY.apply(p.getY())) instanceof Empty);
+    return !pieces.stream().allMatch(p -> board.positionExist(p.getX(), padY.apply(p.getY())) && //
+                                          board.get(p.getX(), padY.apply(p.getY())) instanceof Empty);
   }
 
   private boolean swap(int fromX, int toX, int fromY, int toY) {
@@ -112,6 +113,10 @@ public abstract class MultiTile {
   }
 
   protected abstract Color getColor();
+
+  public int getWidth() {
+    return width;
+  }
 
   protected class TilePart extends TileEntity {
 

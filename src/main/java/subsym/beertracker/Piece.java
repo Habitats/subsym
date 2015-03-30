@@ -28,6 +28,6 @@ public class Piece extends MultiTile {
 
   @Override
   protected Color getColor() {
-    return ColorUtils.c(2);
+    return ColorUtils.toHsv(width / 10., 1);
   }
 }

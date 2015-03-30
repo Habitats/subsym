@@ -1,5 +1,6 @@
 package subsym.beertracker;
 
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import subsym.ailife.entity.Empty;
@@ -21,9 +22,26 @@ public class BeerTracker extends GeneticProblem {
         .forEach(y -> board.set(new Empty(x, y, board))));
 
     Tracker tracker = new Tracker(board);
-    Piece piece = new Piece(board, 3);
-    BeerGui gui = new BeerGui(tracker, piece);
+
+    Random r = new Random();
+    BeerGui gui = new BeerGui(tracker);
     gui.setAdapter(board);
+    simulateFallingPieces(board, r);
+  }
+
+  private void simulateFallingPieces(Board<TileEntity> board, Random r) {
+    IntStream.range(0, 100).forEach(i -> {
+      Piece piece = new Piece(board, 1 + r.nextInt(8));
+      int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
+      IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
+      while (piece.moveDown(true)) {
+        try {
+          Thread.sleep(10);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
   @Override
