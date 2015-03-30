@@ -23,7 +23,7 @@ public class BeerGui extends AIGui<TileEntity> {
   private JPanel mainPanel;
   private AIGridCanvas canvas;
 
-  public BeerGui(Tracker tracker) {
+  public BeerGui(Tracker tracker, Piece piece) {
     buildFrame(mainPanel, null, null);
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -41,6 +41,34 @@ public class BeerGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         tracker.moveRight();
+      }
+    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), Direction.DOWN);
+    actionMap.put(Direction.DOWN, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        piece.moveDown();
+      }
+    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), Direction.UP);
+    actionMap.put(Direction.UP, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        piece.moveUp();
+      }
+    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), KeyEvent.VK_RIGHT);
+    actionMap.put( KeyEvent.VK_RIGHT, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        piece.moveRight();
+      }
+    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), KeyEvent.VK_LEFT);
+    actionMap.put( KeyEvent.VK_LEFT, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        piece.moveLeft();
       }
     });
   }

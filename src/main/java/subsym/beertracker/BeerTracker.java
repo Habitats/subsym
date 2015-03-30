@@ -21,7 +21,8 @@ public class BeerTracker extends GeneticProblem {
         .forEach(y -> board.set(new Empty(x, y, board))));
 
     Tracker tracker = new Tracker(board);
-    BeerGui gui = new BeerGui(tracker);
+    Piece piece = new Piece(board, 3);
+    BeerGui gui = new BeerGui(tracker, piece);
     gui.setAdapter(board);
   }
 

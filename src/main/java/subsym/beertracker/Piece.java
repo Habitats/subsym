@@ -10,24 +10,24 @@ import subsym.models.entity.TileEntity;
 /**
  * Created by Patrick on 30.03.2015.
  */
-public class Tracker extends MultiTile {
+public class Piece extends MultiTile {
 
-  public Tracker(Board<TileEntity> board) {
-    super(5, board);
+  public Piece(Board<TileEntity> board, int width) {
+    super(width, board);
   }
 
   @Override
   protected int getStartY() {
-    return 0;
+    return board.getHeight() - 1;
   }
 
   @Override
   protected int getStartX() {
-    return board.getWidth() / 2 - 3;
+    return 0;
   }
 
   @Override
   protected Color getColor() {
-    return ColorUtils.c(4);
+    return ColorUtils.c(2);
   }
 }
