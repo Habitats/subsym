@@ -2,9 +2,13 @@ package subsym.models.entity;
 
 import java.awt.*;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import subsym.Log;
+import subsym.ailife.entity.Empty;
+import subsym.gui.Direction;
 import subsym.models.Board;
 
 /**
@@ -12,6 +16,7 @@ import subsym.models.Board;
  */
 public abstract class MultiTile {
 
+  private static final String TAG = MultiTile.class.getSimpleName();
   protected final List<TilePart> pieces;
   protected Board<TileEntity> board;
   protected int width;
@@ -22,7 +27,7 @@ public abstract class MultiTile {
     this.board = board;
     x = getStartX();
     pieces = IntStream.range(getStartX(), getStartX() + width)//
-        .mapToObj(x -> new TilePart(x, getStartY(), x == getStartX())).collect(Collectors.toList());
+        .mapToObj(x -> new TilePart(x, getStartY())).collect(Collectors.toList());
     pieces.forEach(board::set);
   }
 
@@ -30,26 +35,58 @@ public abstract class MultiTile {
 
   protected abstract int getStartX();
 
-  public void moveLeft(boolean shouldWrap) {
+  public boolean moveLeft(boolean shouldWrap) {
     int fromX = shouldWrap ? (getX() + width - 1 + board.getWidth()) % board.getWidth() : getX() + width - 1;
     int toX = shouldWrap ? (getX() + board.getWidth() - 1) % board.getWidth() : getX() - 1;
-    x = swap(fromX, toX, getY(), getY()) ? (x - 1 + board.getWidth()) % board.getWidth() : x;
+    if ((board.get(toX, getY()) instanceof Empty)) {
+      x = swap(fromX, toX, getY(), getY()) ? (x - 1 + board.getWidth()) % board.getWidth() : x;
+      return true;
+    } else {
+      collision(Direction.LEFT);
+      return false;
+    }
   }
 
-  public void moveRight(boolean shouldWrap) {
+  public boolean moveRight(boolean shouldWrap) {
     int fromX = shouldWrap ? getX() % board.getWidth() : getX();
     int toX = shouldWrap ? (getX() + width) % board.getWidth() : getX() + width;
-    x = swap(fromX, toX, getY(), getY()) ? (x + 1) % board.getWidth() : x;
+    if ((board.get(toX, getY()) instanceof Empty)) {
+      x = swap(fromX, toX, getY(), getY()) ? (x + 1) % board.getWidth() : x;
+      return true;
+    } else {
+      collision(Direction.RIGHT);
+      return false;
+    }
   }
 
-  public void moveDown(boolean shouldWrap) {
-    pieces.stream().forEach(
-        p -> swap(p.getX(), p.getX(), p.getY(), shouldWrap ? (p.getY() - 1 + board.getHeight()) % board.getHeight() : (p.getY() - 1)));
+  private void collision(Direction dir) {
+    Log.v(TAG, "Collision: " + dir.name());
   }
 
-  public void moveUp(boolean shouldWrap) {
-    pieces.stream().forEach(
-        p -> swap(p.getX(), p.getX(), p.getY(), shouldWrap ? (p.getY() + 1) % board.getHeight() : p.getY() + 1));
+  public boolean moveDown(boolean shouldWrap) {
+    Function<Integer, Integer> padY = y -> shouldWrap ? (y - 1 + board.getHeight()) % board.getHeight() : (y - 1);
+    if (!isCollisionY(padY)) {
+      pieces.stream().forEach(p -> swap(p.getX(), p.getX(), p.getY(), padY.apply(p.getY())));
+      return true;
+    } else {
+      collision(Direction.DOWN);
+      return false;
+    }
+  }
+
+  public boolean moveUp(boolean shouldWrap) {
+    Function<Integer, Integer> padY = y -> shouldWrap ? (y + 1) % board.getHeight() : y + 1;
+    if (!isCollisionY(padY)) {
+      pieces.stream().forEach(p -> swap(p.getX(), p.getX(), p.getY(), padY.apply(p.getY())));
+      return true;
+    } else {
+      collision(Direction.UP);
+      return false;
+    }
+  }
+
+  private boolean isCollisionY(Function<Integer, Integer> padY) {
+    return !pieces.stream().allMatch(p -> board.get(p.getX(), padY.apply(p.getY())) instanceof Empty);
   }
 
   private boolean swap(int fromX, int toX, int fromY, int toY) {
@@ -78,20 +115,13 @@ public abstract class MultiTile {
 
   protected class TilePart extends TileEntity {
 
-    private boolean isFirst;
-
-    public TilePart(int x, int y, boolean isFirst) {
+    public TilePart(int x, int y) {
       super(x, y, board);
-      this.isFirst = isFirst;
     }
 
     @Override
     public Color getColor() {
       return MultiTile.this.getColor();
-    }
-
-    public boolean isFirst() {
-      return isFirst;
     }
   }
 }
