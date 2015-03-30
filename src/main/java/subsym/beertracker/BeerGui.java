@@ -33,42 +33,42 @@ public class BeerGui extends AIGui<TileEntity> {
     actionMap.put(Direction.LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        tracker.moveLeft();
+        tracker.moveLeft(true);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
     actionMap.put(Direction.RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        tracker.moveRight();
+        tracker.moveRight(true);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), Direction.DOWN);
     actionMap.put(Direction.DOWN, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        piece.moveDown();
+        piece.moveDown(false);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), Direction.UP);
     actionMap.put(Direction.UP, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        piece.moveUp();
+        piece.moveUp(false);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), KeyEvent.VK_RIGHT);
-    actionMap.put( KeyEvent.VK_RIGHT, new AbstractAction() {
+    actionMap.put(KeyEvent.VK_RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        piece.moveRight();
+        piece.moveRight(false);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), KeyEvent.VK_LEFT);
-    actionMap.put( KeyEvent.VK_LEFT, new AbstractAction() {
+    actionMap.put(KeyEvent.VK_LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        piece.moveLeft();
+        piece.moveLeft(false);
       }
     });
   }

@@ -15,28 +15,41 @@ public abstract class MultiTile {
   protected final List<TilePart> pieces;
   protected Board<TileEntity> board;
   protected int width;
+  private int x;
 
   public MultiTile(int width, Board<TileEntity> board) {
     this.width = width;
     this.board = board;
+    x = getStartX();
     pieces = IntStream.range(getStartX(), getStartX() + width)//
-        .mapToObj(x -> new TilePart(x, getStartY())).collect(Collectors.toList());
+        .mapToObj(x -> new TilePart(x, getStartY(), x == getStartX())).collect(Collectors.toList());
     pieces.forEach(board::set);
   }
+
   protected abstract int getStartY();
 
   protected abstract int getStartX();
 
-  public void moveLeft() {
-    int fromX = getX() + width - 1;
-    int toX = getX() - 1;
-    swap(fromX, toX, getY(), getY());
+  public void moveLeft(boolean shouldWrap) {
+    int fromX = shouldWrap ? (getX() + width - 1 + board.getWidth()) % board.getWidth() : getX() + width - 1;
+    int toX = shouldWrap ? (getX() + board.getWidth() - 1) % board.getWidth() : getX() - 1;
+    x = swap(fromX, toX, getY(), getY()) ? (x - 1 + board.getWidth()) % board.getWidth() : x;
   }
 
-  public void moveRight() {
-    int fromX = getX();
-    int toX = getX() + width;
-    swap(fromX, toX, getY(), getY());
+  public void moveRight(boolean shouldWrap) {
+    int fromX = shouldWrap ? getX() % board.getWidth() : getX();
+    int toX = shouldWrap ? (getX() + width) % board.getWidth() : getX() + width;
+    x = swap(fromX, toX, getY(), getY()) ? (x + 1) % board.getWidth() : x;
+  }
+
+  public void moveDown(boolean shouldWrap) {
+    pieces.stream().forEach(
+        p -> swap(p.getX(), p.getX(), p.getY(), shouldWrap ? (p.getY() - 1) % board.getHeight() : (p.getY() - 1)));
+  }
+
+  public void moveUp(boolean shouldWrap) {
+    pieces.stream().forEach(
+        p -> swap(p.getX(), p.getX(), p.getY(), shouldWrap ? (p.getY() + 1) % board.getHeight() : p.getY() + 1));
   }
 
   private boolean swap(int fromX, int toX, int fromY, int toY) {
@@ -53,16 +66,8 @@ public abstract class MultiTile {
     return false;
   }
 
-  public void moveDown() {
-    pieces.stream().forEach(p -> swap(p.getX(), p.getX(), p.getY(), p.getY() - 1));
-  }
-
-  public void moveUp() {
-    pieces.stream().forEach(p -> swap(p.getX(), p.getX(), p.getY(), p.getY() + 1));
-  }
-
   private int getX() {
-    return pieces.stream().mapToInt(TileEntity::getX).min().getAsInt();
+    return x;
   }
 
   private int getY() {
@@ -73,8 +78,11 @@ public abstract class MultiTile {
 
   protected class TilePart extends TileEntity {
 
-    public TilePart(int x, int y) {
+    private boolean isFirst;
+
+    public TilePart(int x, int y, boolean isFirst) {
       super(x, y, board);
+      this.isFirst = isFirst;
     }
 
     @Override
@@ -82,5 +90,8 @@ public abstract class MultiTile {
       return MultiTile.this.getColor();
     }
 
+    public boolean isFirst() {
+      return isFirst;
+    }
   }
 }
