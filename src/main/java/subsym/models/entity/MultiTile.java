@@ -44,7 +44,7 @@ public abstract class MultiTile {
 
   public void moveDown(boolean shouldWrap) {
     pieces.stream().forEach(
-        p -> swap(p.getX(), p.getX(), p.getY(), shouldWrap ? (p.getY() - 1) % board.getHeight() : (p.getY() - 1)));
+        p -> swap(p.getX(), p.getX(), p.getY(), shouldWrap ? (p.getY() - 1 + board.getHeight()) % board.getHeight() : (p.getY() - 1)));
   }
 
   public void moveUp(boolean shouldWrap) {
