@@ -81,5 +81,6 @@ public abstract class MultiTile {
     public Color getColor() {
       return MultiTile.this.getColor();
     }
+
   }
 }

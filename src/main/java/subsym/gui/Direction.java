@@ -21,7 +21,7 @@ public enum Direction {
         return dir;
       }
     }
-    return null;
+    throw new IllegalStateException("No such direction!");
   }
 }
 
