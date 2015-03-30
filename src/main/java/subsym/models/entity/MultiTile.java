@@ -1,6 +1,7 @@
 package subsym.models.entity;
 
 import java.awt.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -11,7 +12,7 @@ import subsym.models.Board;
  */
 public abstract class MultiTile {
 
-  protected final java.util.List<PiecePart> pieces;
+  protected final List<TilePart> pieces;
   protected Board<TileEntity> board;
   protected int width;
 
@@ -19,7 +20,7 @@ public abstract class MultiTile {
     this.width = width;
     this.board = board;
     pieces = IntStream.range(getStartX(), getStartX() + width)//
-        .mapToObj(x -> new PiecePart(x, getStartY())).collect(Collectors.toList());
+        .mapToObj(x -> new TilePart(x, getStartY())).collect(Collectors.toList());
     pieces.forEach(board::set);
   }
   protected abstract int getStartY();
@@ -70,9 +71,9 @@ public abstract class MultiTile {
 
   protected abstract Color getColor();
 
-  protected class PiecePart extends TileEntity {
+  protected class TilePart extends TileEntity {
 
-    public PiecePart(int x, int y) {
+    public TilePart(int x, int y) {
       super(x, y, board);
     }
 
