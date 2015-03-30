@@ -45,7 +45,7 @@ public class Main {
 //
 //        broid.addActionListener(e -> broid());
 //        panel.add(broid);
-////
+//
 //        buildFrame(panel, null, null);
 //        new Genetics();
 //

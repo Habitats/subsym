@@ -21,22 +21,21 @@ public class BeerTracker extends GeneticProblem {
     IntStream.range(0, board.getWidth()).forEach(x -> IntStream.range(0, board.getHeight())//
         .forEach(y -> board.set(new Empty(x, y, board))));
 
-    Tracker tracker = new Tracker(board);
-
-    Random r = new Random();
-    BeerGui gui = new BeerGui(tracker);
-    gui.setAdapter(board);
-    simulateFallingPieces(board, r);
+    simulateFallingPieces(board);
   }
 
-  private void simulateFallingPieces(Board<TileEntity> board, Random r) {
+  private void simulateFallingPieces(Board<TileEntity> board) {
+    Random r = new Random();
+    Tracker tracker = new Tracker(board);
+    BeerGui gui = new BeerGui(tracker);
+    gui.setAdapter(board);
     IntStream.range(0, 100).forEach(i -> {
-      Piece piece = new Piece(board, 1 + r.nextInt(8));
+      Piece piece = new Piece(board, 1 + r.nextInt(6), tracker);
       int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
       IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
-      while (piece.moveDown(true)) {
+      while (piece.moveDown(false)) {
         try {
-          Thread.sleep(10);
+          Thread.sleep(100);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
@@ -51,7 +50,6 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public void initPopulation() {
-
   }
 
   @Override
@@ -71,11 +69,9 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public void increment(int increment) {
-
   }
 
   @Override
   public void onSolved() {
-
   }
 }

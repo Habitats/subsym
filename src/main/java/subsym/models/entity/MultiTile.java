@@ -6,7 +6,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.Log;
 import subsym.ailife.entity.Empty;
 import subsym.gui.Direction;
 import subsym.models.Board;
@@ -59,9 +58,7 @@ public abstract class MultiTile {
     }
   }
 
-  private void collision(Direction dir) {
-    Log.v(TAG, "Collision: " + dir.name());
-  }
+  protected abstract void collision(Direction right);
 
   public boolean moveDown(boolean shouldWrap) {
     Function<Integer, Integer> padY = y -> shouldWrap ? (y - 1 + board.getHeight()) % board.getHeight() : (y - 1);
@@ -104,11 +101,16 @@ public abstract class MultiTile {
     return false;
   }
 
-  private int getX() {
+  protected int getX() {
     return x;
   }
 
-  private int getY() {
+  @Override
+  public String toString() {
+    return String.format("%s x: %d, y: %d, Width: %d"  ,TAG, getX(), getY(), getWidth());
+  }
+
+  protected int getY() {
     return pieces.get(0).getY();
   }
 
