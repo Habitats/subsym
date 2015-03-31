@@ -13,6 +13,7 @@ import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AILabel;
+import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Direction;
 import subsym.models.entity.TileEntity;
@@ -30,13 +31,13 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   private AILabel scoreLabel;
   private AIButton simulateButton;
   private AIButton resetButton;
+  private AILabel timeLabel;
+  private AISlider simulationSpeedSlider;
   private Tracker tracker;
 
-  public BeerGui(Tracker tracker) {
-    this.tracker = tracker;
+  public BeerGui(BeerTracker beerTracker) {
     buildFrame(mainPanel, null, null);
     canvas.setOutlinesEnabled(true);
-    tracker.addListener(this);
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap actionMap = mainPanel.getActionMap();
@@ -63,6 +64,12 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
       }
     });
 
+    resetButton.addActionListener(e -> beerTracker.stop(() -> beerTracker.reset()));
+  }
+
+  public void setTracker(Tracker tracker) {
+    tracker.addListener(this);
+    this.tracker = tracker;
     onAvoided();
     onCaught();
     onCrash();
@@ -101,23 +108,31 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
   @Override
   public void onCaught() {
-    caughtLabel.setText("Caught: " + tracker.getCaught());
+    caughtLabel.setText(String.format("Caught: %3d", tracker.getCaught()));
     updateScore();
   }
 
   @Override
   public void onAvoided() {
-    missedLabel.setText("Avoided: " + tracker.getAvoided());
+    missedLabel.setText(String.format("Avoided: %3d", tracker.getAvoided()));
     updateScore();
   }
 
   @Override
   public void onCrash() {
-    crashedLabel.setText("Crashed: " + tracker.getCrashed());
+    crashedLabel.setText(String.format("Crashed: %3d", tracker.getCrashed()));
     updateScore();
   }
 
   private void updateScore() {
-    scoreLabel.setText("Score: " + tracker.fitness());
+    scoreLabel.setText(String.format("Score: %3d", tracker.fitness()));
+  }
+
+  public void setTime(int time, int maxTime) {
+    timeLabel.setText(String.format("Time: %3d", maxTime - time));
+  }
+
+  public long getSimulationSpeed() {
+    return simulationSpeedSlider.getValue();
   }
 }
