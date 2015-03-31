@@ -63,21 +63,21 @@ public class Tracker extends MultiTile {
   }
 
   public void onAvoided(Piece piece) {
-    Log.v(TAG, "Avoided: " + piece);
+    Log.v(TAG, "Avoided: \t" + piece);
     fade(50, 70, () -> setColor(Color.darkGray));
     listeners.forEach(TrackerListener::onAvoided);
     avoided++;
   }
 
   public void onCaught(Piece piece) {
-    Log.v(TAG, "Caught: " + piece);
+    Log.v(TAG, "Caught: \t" + piece);
     fade(20, 40, () -> fade(40, 20, () -> setColor(Color.darkGray)));
     listeners.forEach(TrackerListener::onCaught);
     caught++;
   }
 
   public void onCrash(Piece piece) {
-    Log.v(TAG, "Crashed:" + piece);
+    Log.v(TAG, "Crashed: \t" + piece);
     fade(80, 100, () -> fade(100, 80, () -> setColor(Color.darkGray)));
     listeners.forEach(TrackerListener::onCrash);
     crashed++;
@@ -98,7 +98,7 @@ public class Tracker extends MultiTile {
         setColor(ColorUtils.toHsv(normalizedValue, 1));
         board.notifyDataChanged();
         try {
-          Thread.sleep(1);
+          Thread.sleep(3);
         } catch (InterruptedException e) {
         }
       });

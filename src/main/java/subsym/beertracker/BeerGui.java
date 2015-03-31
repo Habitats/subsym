@@ -35,6 +35,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   public BeerGui(Tracker tracker) {
     this.tracker = tracker;
     buildFrame(mainPanel, null, null);
+    canvas.setOutlinesEnabled(true);
     tracker.addListener(this);
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -61,6 +62,11 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
         tracker.pull();
       }
     });
+
+    onAvoided();
+    onCaught();
+    onCrash();
+    updateScore();
   }
 
   @Override
@@ -99,10 +105,6 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
     updateScore();
   }
 
-  private void updateScore() {
-    scoreLabel.setText("Score: " + tracker.fitness());
-  }
-
   @Override
   public void onAvoided() {
     missedLabel.setText("Avoided: " + tracker.getAvoided());
@@ -113,5 +115,9 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   public void onCrash() {
     crashedLabel.setText("Crashed: " + tracker.getCrashed());
     updateScore();
+  }
+
+  private void updateScore() {
+    scoreLabel.setText("Score: " + tracker.fitness());
   }
 }

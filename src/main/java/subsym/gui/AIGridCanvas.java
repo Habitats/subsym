@@ -24,9 +24,11 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
 
   @Override
   protected void drawOutline(T entity, Graphics2D g, int x, int y, int thickness) {
-    g.setColor(entity.getOutlineColor());
-    for (int i = 0; i < thickness; i++) {
-      g.drawRect(x + i, y + i, entity.getItemWidth() - 2 * i, entity.getItemHeight() - 2 * i);
+    if (outlinesEnabled()) {
+      g.setColor(entity.getOutlineColor());
+      for (int i = 0; i < thickness; i++) {
+        g.drawRect(x + i, y + i, entity.getItemWidth() - 2 * i, entity.getItemHeight() - 2 * i);
+      }
     }
   }
 
@@ -45,8 +47,8 @@ public class AIGridCanvas<T extends TileEntity> extends AICanvas<T, Board<T>> {
     // put origin to be the left bottom corner
     int x = entity.getX() * entity.getItemWidth();
     int y = getHeight() - entity.getItemHeight() - entity.getY() * entity.getItemHeight();
-      entity.draw(g, x, y);
-      drawOutline(entity, (Graphics2D) g, x, y, 2);
+    entity.draw(g, x, y);
+    drawOutline(entity, (Graphics2D) g, x, y, 2);
   }
 
   @Override

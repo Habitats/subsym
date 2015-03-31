@@ -19,6 +19,7 @@ public abstract class AICanvas<T extends Entity, A extends AIAdapter<T>> extends
 
   private static final String TAG = AICanvas.class.getSimpleName();
   private A adapter;
+  private boolean outlinesEnabled = true;
 
   public AICanvas() {
     super();
@@ -32,6 +33,10 @@ public abstract class AICanvas<T extends Entity, A extends AIAdapter<T>> extends
       updateMetrics();
       draw((Graphics2D) g);
     }
+  }
+
+  public void setOutlinesEnabled(boolean outlinesEnabled) {
+    this.outlinesEnabled = outlinesEnabled;
   }
 
   protected abstract void draw(Graphics2D g);
@@ -94,5 +99,9 @@ public abstract class AICanvas<T extends Entity, A extends AIAdapter<T>> extends
 
   public A getAdapter() {
     return adapter;
+  }
+
+  public boolean outlinesEnabled() {
+    return outlinesEnabled;
   }
 }
