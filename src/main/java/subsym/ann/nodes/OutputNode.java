@@ -13,7 +13,8 @@ public class OutputNode extends AnnNode {
   }
 
   protected double getInputSum() {
-    return inputs.stream().mapToDouble(n -> n.getValue() * n.outputWeights.get(this)).reduce((n1, n2) -> n1 + n2).getAsDouble();
+    return inputs.stream().mapToDouble(n -> n.getValue() * n.outputWeights.get(this)).reduce((n1, n2) -> n1 + n2)
+        .getAsDouble();
   }
 
   public double getValue() {
@@ -24,7 +25,9 @@ public class OutputNode extends AnnNode {
   public String toString() {
     String weights = "";
     if (outputs.size() > 0) {
-      weights = outputs.stream().map(n -> String.format("%.3f", outputWeights.get(n))).collect(Collectors.joining(", ", "- W: ", ""));
+      weights =
+          outputs.stream().map(n -> String.format("%.3f", outputWeights.get(n)))
+              .collect(Collectors.joining(", ", "- W: ", ""));
     }
     return String.format("S: %.3f - O: %.3f %s", getInputSum(), getValue(), weights);
   }

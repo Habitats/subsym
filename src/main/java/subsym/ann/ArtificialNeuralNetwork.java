@@ -93,7 +93,7 @@ public class ArtificialNeuralNetwork {
   }
 
   public int getNumWeights() {
- return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
+    return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
   }
 
   public int getNumNodes() {

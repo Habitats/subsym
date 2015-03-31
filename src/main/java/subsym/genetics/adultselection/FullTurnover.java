@@ -17,7 +17,7 @@ public class FullTurnover implements AdultSelection {
   }
 
   @Override
-  public int getFreeSpots(Population population){
+  public int getFreeSpots(Population population) {
     return population.getMaxPopulationSize() - population.nextGenerationSize();
   }
 }

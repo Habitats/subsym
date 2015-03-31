@@ -59,7 +59,7 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
     return items;
   }
 
-public boolean positionExist(int x, int y) {
+  public boolean positionExist(int x, int y) {
     try {
       T colorTile = tiles.get(x).get(y);
       return (colorTile != null);

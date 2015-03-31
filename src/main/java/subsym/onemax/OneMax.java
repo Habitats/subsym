@@ -43,8 +43,9 @@ public class OneMax extends GeneticProblem {
   public GeneticProblem newInstance() {
     return new OneMax(getPreferences(), bitVectorSize);
   }
+
   @Override
-  public GeneticProblem newInstance(GeneticPreferences prefs){
+  public GeneticProblem newInstance(GeneticPreferences prefs) {
     return new OneMax(prefs, bitVectorSize);
   }
 

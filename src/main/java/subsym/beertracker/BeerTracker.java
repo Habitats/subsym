@@ -20,7 +20,6 @@ public class BeerTracker extends GeneticProblem {
 
   private static final String TAG = BeerTracker.class.getSimpleName();
   private final BeerGui gui;
-  private boolean shouldRun;
   private State state;
 
   public BeerTracker(GeneticPreferences prefs) {
@@ -42,7 +41,6 @@ public class BeerTracker extends GeneticProblem {
 
   public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker) {
     state = State.SIMULATING;
-    shouldRun = true;
     Random r = new Random();
     int time = 0;
     int maxTime = 600;

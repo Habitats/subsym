@@ -77,7 +77,8 @@ public class Genetics implements GeneticGuiListener {
     int alphabetSize = 40;
     int populationSize = 40;
     GeneticPreferences prefs = new GeneticPreferences(populationSize, crossOverRate, populationMutationRate, //
-                                                      genomeMutationRate, adultSelectionMode, mateSelectionMode, Integer.MAX_VALUE);
+                                                      genomeMutationRate, adultSelectionMode, mateSelectionMode,
+                                                      Integer.MAX_VALUE);
     for (int length = 90; length < alphabetSize * 3; length++) {
       SurprisingSequences problem = new SurprisingSequences(prefs, alphabetSize, length, true);
       GeneticProblem solution = GeneticEngine.solve(problem, true);
@@ -195,7 +196,8 @@ public class Genetics implements GeneticGuiListener {
 
   public static List<String> values() {
     return Arrays
-        .asList(SurprisingSequences.class.getSimpleName(), Lolz.class.getSimpleName(), OneMax.class.getSimpleName(), AiLife.class.getSimpleName());
+        .asList(SurprisingSequences.class.getSimpleName(), Lolz.class.getSimpleName(), OneMax.class.getSimpleName(),
+                AiLife.class.getSimpleName());
   }
 
   @Override

@@ -16,7 +16,7 @@ import subsym.models.entity.Entity;
 /**
  * Created by Patrick on 08.09.2014.
  */
-public abstract class AIGui<T extends Entity> extends JFrame{
+public abstract class AIGui<T extends Entity> extends JFrame {
 
   private static final String TAG = AIGui.class.getSimpleName();
 
