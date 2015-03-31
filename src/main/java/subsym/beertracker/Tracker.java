@@ -17,6 +17,8 @@ public class Tracker extends MultiTile {
 
   private static final String TAG = Tracker.class.getSimpleName();
   private Color color = Color.darkGray;
+  private boolean pulling;
+  private boolean interrupt;
 
   public Tracker(Board<TileEntity> board) {
     super(5, board);
@@ -67,21 +69,35 @@ public class Tracker extends MultiTile {
 
   private void fade(int from, int to, Runnable callback) {
     new Thread(() -> {
-      double rounds = 200;
+      double rounds = 500;
       double resolution = Math.abs(from - to) / rounds;
       IntStream.range(0, (int) rounds).forEach(i -> {
+        if (interrupt) {
+          interrupt = false;
+          return;
+        }
         double colorValue = from < to ? (from + (i * resolution)) : (from - (i * resolution));
         double normalizedValue = colorValue / 100.;
 //        Log.v(TAG, normalizedValue);
         setColor(ColorUtils.toHsv(normalizedValue, 1));
         board.notifyDataChanged();
         try {
-          Thread.sleep(2);
+          Thread.sleep(1);
         } catch (InterruptedException e) {
         }
       });
 
       callback.run();
     }).start();
+  }
+
+  public void pull() {
+    pulling = true;
+  }
+
+  public boolean isPulling() {
+    boolean isPulling = pulling;
+    pulling = false;
+    return isPulling;
   }
 }

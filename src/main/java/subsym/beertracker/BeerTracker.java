@@ -34,6 +34,9 @@ public class BeerTracker extends GeneticProblem {
       int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
       IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
       while (piece.moveDown(false)) {
+        if (tracker.isPulling()) {
+          piece.moveBottom();
+        }
         try {
           Thread.sleep(100);
         } catch (InterruptedException e) {

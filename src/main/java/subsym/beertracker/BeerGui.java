@@ -43,34 +43,13 @@ public class BeerGui extends AIGui<TileEntity> {
         tracker.moveRight(true);
       }
     });
-//    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), Direction.DOWN);
-//    actionMap.put(Direction.DOWN, new AbstractAction() {
-//      @Override
-//      public void actionPerformed(ActionEvent e) {
-//        piece.moveDown(true);
-//      }
-//    });
-//    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), Direction.UP);
-//    actionMap.put(Direction.UP, new AbstractAction() {
-//      @Override
-//      public void actionPerformed(ActionEvent e) {
-//        piece.moveUp(true);
-//      }
-//    });
-//    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), KeyEvent.VK_RIGHT);
-//    actionMap.put(KeyEvent.VK_RIGHT, new AbstractAction() {
-//      @Override
-//      public void actionPerformed(ActionEvent e) {
-//        piece.moveRight(true);
-//      }
-//    });
-//    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), KeyEvent.VK_LEFT);
-//    actionMap.put(KeyEvent.VK_LEFT, new AbstractAction() {
-//      @Override
-//      public void actionPerformed(ActionEvent e) {
-//        piece.moveLeft(true);
-//      }
-//    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "pull");
+    actionMap.put("pull", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        tracker.pull();
+      }
+    });
   }
 
   @Override

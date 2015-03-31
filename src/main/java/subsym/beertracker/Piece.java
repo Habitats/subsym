@@ -57,5 +57,15 @@ public class Piece extends MultiTile {
   protected Color getColor() {
     return ColorUtils.toHsv(width / 10., 1);
   }
+
+  public void moveBottom() {
+    pieces.stream().forEach(p -> {
+      int oldY = p.getY();
+      p.setPosition(p.getX(), 1);
+      board.set(p);
+      board.set(new Empty(p.getX(), oldY, board));
+    });
+    board.notifyDataChanged();
+  }
 }
 
