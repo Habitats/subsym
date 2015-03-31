@@ -76,7 +76,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(977, 490);
+    return new Dimension(977, 500);
   }
 
   @Override
