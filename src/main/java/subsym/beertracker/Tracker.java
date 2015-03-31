@@ -1,6 +1,10 @@
 package subsym.beertracker;
 
 import java.awt.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import subsym.Log;
@@ -16,9 +20,9 @@ import subsym.models.entity.TileEntity;
 public class Tracker extends MultiTile {
 
   private static final String TAG = Tracker.class.getSimpleName();
-  private Color color = Color.darkGray;
   private boolean pulling;
   private boolean interrupt;
+  private List<Boolean> sensors;
 
   public Tracker(Board<TileEntity> board) {
     super(5, board);
@@ -44,8 +48,8 @@ public class Tracker extends MultiTile {
     return color;
   }
 
-  private void setColor(Color color) {
-    this.color = color;
+  public List<Boolean> getSensors() {
+    return sensors;
   }
 
   public boolean contains(TileEntity v) {
@@ -69,7 +73,7 @@ public class Tracker extends MultiTile {
 
   private void fade(int from, int to, Runnable callback) {
     new Thread(() -> {
-      double rounds = 500;
+      double rounds = 50;
       double resolution = Math.abs(from - to) / rounds;
       IntStream.range(0, (int) rounds).forEach(i -> {
         if (interrupt) {
@@ -99,5 +103,14 @@ public class Tracker extends MultiTile {
     boolean isPulling = pulling;
     pulling = false;
     return isPulling;
+  }
+
+  public void sense(Piece piece) {
+    IntFunction<Boolean> isSensed = x -> (x >= piece.getX() && x < piece.getX() + piece.getWidth());
+    sensors = IntStream.range(getX(), getX() + getWidth()).mapToObj(isSensed).collect(Collectors.toList());
+
+    AtomicInteger i = new AtomicInteger();
+    pieces.stream().sorted((p1, p2) -> Integer.compare(p1.getX(), p2.getX()))
+        .forEach(p -> p.setOutlineColor(sensors.get(i.getAndIncrement()) ? piece.getColor() : Color.BLACK));
   }
 }

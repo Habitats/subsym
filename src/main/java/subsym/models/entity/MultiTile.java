@@ -19,6 +19,7 @@ public abstract class MultiTile {
   protected final List<TilePart> pieces;
   protected Board<TileEntity> board;
   protected int width;
+  protected Color color = Color.darkGray;
   private int x;
 
   public MultiTile(int width, Board<TileEntity> board) {
@@ -101,13 +102,13 @@ public abstract class MultiTile {
     return false;
   }
 
-  protected int getX() {
+  public int getX() {
     return x;
   }
 
   @Override
   public String toString() {
-    return String.format("%s x: %d, y: %d, Width: %d"  ,TAG, getX(), getY(), getWidth());
+    return String.format("%s x: %d, y: %d, Width: %d", TAG, getX(), getY(), getWidth());
   }
 
   protected int getY() {
@@ -118,6 +119,10 @@ public abstract class MultiTile {
 
   public int getWidth() {
     return width;
+  }
+
+  protected void setColor(Color color) {
+    this.color = color;
   }
 
   protected class TilePart extends TileEntity {
