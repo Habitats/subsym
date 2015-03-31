@@ -3,7 +3,6 @@ package subsym.beertracker;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import subsym.Log;
 import subsym.ailife.entity.Empty;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
@@ -35,9 +34,7 @@ public class BeerTracker extends GeneticProblem {
     IntStream.range(0, 100).forEach(i -> {
       Piece piece = new Piece(board, 1 + r.nextInt(6), tracker);
       int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
-      Log.v(TAG, piece);
       IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
-      Log.v(TAG, piece);
       while (piece.moveDown(false)) {
         tracker.sense(piece);
         if (tracker.isPulling()) {
