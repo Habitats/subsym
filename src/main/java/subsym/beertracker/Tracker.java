@@ -1,6 +1,7 @@
 package subsym.beertracker;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntFunction;
@@ -23,9 +24,14 @@ public class Tracker extends MultiTile {
   private boolean pulling;
   private boolean interrupt;
   private List<Boolean> sensors;
+  private List<TrackerListener> listeners;
+  private int caught;
+  private int avoided;
+  private int crashed;
 
   public Tracker(Board<TileEntity> board) {
     super(5, board);
+    listeners = new ArrayList<>();
   }
 
   @Override
@@ -59,16 +65,22 @@ public class Tracker extends MultiTile {
   public void onAvoided(Piece piece) {
     Log.v(TAG, "Avoided: " + piece);
     fade(50, 70, () -> setColor(Color.darkGray));
+    listeners.forEach(TrackerListener::onAvoided);
+    avoided++;
   }
 
   public void onCaught(Piece piece) {
     Log.v(TAG, "Caught: " + piece);
     fade(20, 40, () -> fade(40, 20, () -> setColor(Color.darkGray)));
+    listeners.forEach(TrackerListener::onCaught);
+    caught++;
   }
 
   public void onCrash(Piece piece) {
     Log.v(TAG, "Crashed:" + piece);
     fade(80, 100, () -> fade(100, 80, () -> setColor(Color.darkGray)));
+    listeners.forEach(TrackerListener::onCrash);
+    crashed++;
   }
 
   private void fade(int from, int to, Runnable callback) {
@@ -112,5 +124,25 @@ public class Tracker extends MultiTile {
     AtomicInteger i = new AtomicInteger();
     pieces.stream().sorted((p1, p2) -> Integer.compare(p1.getX(), p2.getX()))
         .forEach(p -> p.setOutlineColor(sensors.get(i.getAndIncrement()) ? piece.getColor() : Color.BLACK));
+  }
+
+  public void addListener(TrackerListener listener) {
+    listeners.add(listener);
+  }
+
+  public int getCaught() {
+    return caught;
+  }
+
+  public int getAvoided() {
+    return avoided;
+  }
+
+  public int getCrashed() {
+    return crashed;
+  }
+
+  public int fitness() {
+    return (caught * 2) - crashed - avoided;
   }
 }

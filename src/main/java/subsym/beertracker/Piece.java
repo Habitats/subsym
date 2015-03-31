@@ -38,11 +38,16 @@ public class Piece extends MultiTile {
     if (dir == Direction.DOWN) {
       if (getY() == 0) {
         tracker.onAvoided(this);
-      } else if (IntStream.range(getX(), getX() + getWidth())//
-          .mapToObj(x -> board.get(x, getY() - 1)).allMatch(v -> tracker.contains(v))) {
-        tracker.onCaught(this);
       } else {
-        tracker.onCrash(this);
+        boolean canCatch = IntStream.range(getX(), getX() + getWidth())//
+                               .mapToObj(x -> board.get(x, getY() - 1)) //
+                               .allMatch(v -> tracker.contains(v))
+                           && tracker.getSensors().stream().filter(Boolean::booleanValue).count() < tracker.getWidth();
+        if (canCatch) {
+          tracker.onCaught(this);
+        } else {
+          tracker.onCrash(this);
+        }
       }
 
       dispose();
