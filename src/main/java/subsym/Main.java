@@ -49,7 +49,7 @@ public class Main {
 //        buildFrame(panel, null, null);
 //        new Genetics();
 //
-        new BeerTracker(null);
+        BeerTracker.demo();
 //        new AiLife().demo();
       }
 

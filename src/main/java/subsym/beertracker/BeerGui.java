@@ -5,9 +5,12 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 import javax.swing.*;
 
+import subsym.ailife.entity.Empty;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
@@ -16,12 +19,19 @@ import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Direction;
+import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
 /**
  * Created by Patrick on 30.03.2015.
  */
 public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
+
+  private enum State {
+    ABORTING, SIMULATING, IDLE;
+  }
+
+  private State state;
 
   private JPanel mainPanel;
   private AIGridCanvas canvas;
@@ -35,8 +45,9 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   private AISlider simulationSpeedSlider;
   private Tracker tracker;
 
-  public BeerGui(BeerTracker beerTracker) {
+  public BeerGui() {
     buildFrame(mainPanel, null, null);
+    state = State.IDLE;
     canvas.setOutlinesEnabled(true);
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -64,7 +75,8 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
       }
     });
 
-    resetButton.addActionListener(e -> beerTracker.stop(() -> beerTracker.reset()));
+    resetButton.addActionListener(e -> stop(() -> reset()));
+    reset();
   }
 
   public void setTracker(Tracker tracker) {
@@ -134,5 +146,59 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
   public long getSimulationSpeed() {
     return simulationSpeedSlider.getValue();
+  }
+
+  public void reset() {
+    Board<TileEntity> board = new Board<>(30, 15);
+    IntStream.range(0, board.getWidth()).forEach(x -> IntStream.range(0, board.getHeight())//
+        .forEach(y -> board.set(new Empty(x, y, board))));
+    Tracker tracker = new Tracker(board);
+    setAdapter(board);
+    setTracker(tracker);
+    simulateFallingPieces(board, tracker);
+  }
+
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker) {
+    state = State.SIMULATING;
+    Random r = new Random();
+    int time = 0;
+    int maxTime = 600;
+    while (true) {
+      Piece piece = new Piece(board, 1 + r.nextInt(6), tracker);
+      int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
+      IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
+      while (piece.moveDown(false)) {
+        tracker.sense(piece);
+        if (tracker.isPulling()) {
+          piece.moveBottom();
+        }
+        try {
+          Thread.sleep(getSimulationSpeed());
+        } catch (InterruptedException e) {
+        }
+        time++;
+        setTime(time, maxTime);
+        if (time >= maxTime || state == State.ABORTING) {
+          state = State.IDLE;
+          return;
+        }
+      }
+    }
+
+  }
+
+  public void stop(Runnable callback) {
+    state = state == State.SIMULATING ? State.ABORTING : State.IDLE;
+    while (state == State.ABORTING) {
+      try {
+        Thread.sleep(2);
+      } catch (InterruptedException e) {
+      }
+    }
+    new Thread(() -> callback.run()).start();
+  }
+
+  public static void demo() {
+    BeerGui gui = new BeerGui();
   }
 }
