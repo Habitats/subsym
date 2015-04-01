@@ -69,10 +69,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
     });
 
     simulationSpeedSlider.addChangeListener(e -> game.setSimulationSpeed(simulationSpeedSlider.getValue()));
-    resetButton.addActionListener(e -> game.stop(() -> {
-      game.reset();
-      game.initGui();
-    }));
+    resetButton.addActionListener(e -> game.stop(() -> game.restart()));
 
     onTick();
   }

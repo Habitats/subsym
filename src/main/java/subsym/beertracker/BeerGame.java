@@ -15,7 +15,6 @@ import subsym.models.entity.TileEntity;
  */
 public class BeerGame {
 
-
   private enum State {
     ABORTING, SIMULATING, IDLE;
   }
@@ -27,18 +26,18 @@ public class BeerGame {
   private final int MAX_TIME = 600;
   private int time = 0;
   private boolean shouldWrap = true;
-  private ArtificialNeuralNetwork ann;
   private State state;
   private BeerGui gui;
 
   public BeerGame() {
     state = State.IDLE;
+    reset();
   }
 
   public static void demo() {
     BeerGame game = new BeerGame();
-    game.reset();
     game.initGui();
+    game.simulate(null);
   }
 
   public void reset() {
@@ -47,16 +46,25 @@ public class BeerGame {
         .forEach(y -> board.set(new Empty(x, y, board))));
     tracker = new Tracker(board);
   }
+  public void restart(){
+    reset();
+    initGui();
+    simulate(null);
+  }
 
   public void initGui() {
     if (gui == null) {
       gui = new BeerGui(this);
     }
     gui.setAdapter(board);
-    simulateFallingPieces(board, tracker);
   }
 
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker) {
+  public int simulate(ArtificialNeuralNetwork ann) {
+    simulateFallingPieces(board, tracker, ann);
+    return getScore();
+  }
+
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann) {
     state = State.SIMULATING;
     Random r = new Random();
     time = 0;
@@ -134,10 +142,6 @@ public class BeerGame {
 
   public int getCaught() {
     return tracker.getCaught();
-  }
-
-  public void setAnn(ArtificialNeuralNetwork ann) {
-    this.ann = ann;
   }
 
   public void setSimulationSpeed(int simulationSpeed) {
