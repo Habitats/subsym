@@ -37,7 +37,7 @@ public class BeerGame {
   public static void demo() {
     BeerGame game = new BeerGame();
     game.initGui();
-    game.simulate(null);
+    game.simulateFallingPieces(game.board, game.tracker, null, game.simulationSpeed);
   }
 
   public void reset() {
@@ -46,10 +46,11 @@ public class BeerGame {
         .forEach(y -> board.set(new Empty(x, y, board))));
     tracker = new Tracker(board);
   }
-  public void restart(){
+
+  public void restart() {
     reset();
     initGui();
-    simulate(null);
+    simulateFallingPieces(board, tracker, null, simulationSpeed);
   }
 
   public void initGui() {
@@ -60,11 +61,12 @@ public class BeerGame {
   }
 
   public int simulate(ArtificialNeuralNetwork ann) {
-    simulateFallingPieces(board, tracker, ann);
+    simulateFallingPieces(board, tracker, ann, 0);
     return getScore();
   }
 
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann) {
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann,
+                                    int simulationSpeed) {
     state = State.SIMULATING;
     Random r = new Random();
     time = 0;
