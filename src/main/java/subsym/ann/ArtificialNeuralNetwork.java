@@ -103,4 +103,10 @@ public class ArtificialNeuralNetwork {
   public List<Double> getInputs() {
     return inputs.getValues();
   }
+
+  public int getBestIndex(List<Double> sensoryInput) {
+    updateInput(sensoryInput);
+    List<Double> outputs = getOutputs();
+    return outputs.indexOf(outputs.stream().max(Double::compare).get());
+  }
 }

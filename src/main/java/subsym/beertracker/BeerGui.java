@@ -5,12 +5,15 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.*;
 
 import subsym.ailife.entity.Empty;
+import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
@@ -26,6 +29,8 @@ import subsym.models.entity.TileEntity;
  * Created by Patrick on 30.03.2015.
  */
 public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
+
+  private ArtificialNeuralNetwork ann;
 
   private enum State {
     ABORTING, SIMULATING, IDLE;
@@ -171,6 +176,12 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
         tracker.sense(piece);
         if (tracker.isPulling()) {
           piece.moveBottom();
+          if (ann != null) {
+            ann.updateInput(tracker.getSensors().stream()//
+                                .mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
+            List<Double> outputs = ann.getOutputs();
+            tracker.move(outputs);
+          }
         }
         try {
           Thread.sleep(getSimulationSpeed());
@@ -184,7 +195,6 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
         }
       }
     }
-
   }
 
   public void stop(Runnable callback) {
@@ -199,6 +209,17 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   }
 
   public static void demo() {
+    new BeerGui();
+  }
+
+  public void setAnn(ArtificialNeuralNetwork ann) {
+    this.ann = ann;
+  }
+
+
+  public static void simulate(ArtificialNeuralNetwork ann) {
     BeerGui gui = new BeerGui();
+    gui.setAnn(ann);
+
   }
 }

@@ -5,7 +5,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -97,9 +96,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       }
       initBoard(board);
       for (int i = 0; i < 60; i++) {
-        ann.updateInput(robot.getSensoryInput());
-        List<Double> outputs = ann.getOutputs();
-        int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
+        int indexOfBest = ann.getBestIndex(robot.getSensoryInput());
         robot.move(indexOfBest);
         try {
           Thread.sleep(100);
@@ -159,4 +156,5 @@ public class AiLifeGui extends AIGui<TileEntity> {
     board.set(demo.robot);
     board.notifyDataChanged();
   }
+
 }
