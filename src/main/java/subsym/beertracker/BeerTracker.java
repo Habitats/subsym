@@ -74,11 +74,15 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public void initPopulation() {
+    IntStream.range(0, getPopulationSize()).forEach(i -> {
+      BeerGenotype genotype = new BeerGenotype(getPreferences().getAnnPreferences());
+      getPopulation().add(genotype);
+    });
   }
 
   @Override
   public boolean solution() {
-    return false;
+    return getPopulation().getCurrentGeneration() == getPreferences().getMaxGenerations();
   }
 
   @Override
