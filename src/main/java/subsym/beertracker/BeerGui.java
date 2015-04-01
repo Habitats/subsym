@@ -5,15 +5,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.swing.*;
 
-import subsym.ailife.entity.Empty;
-import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
@@ -22,7 +16,6 @@ import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Direction;
-import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
 /**
@@ -30,14 +23,8 @@ import subsym.models.entity.TileEntity;
  */
 public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
-  private ArtificialNeuralNetwork ann;
 
-  private enum State {
-    ABORTING, SIMULATING, IDLE;
-  }
-
-  private State state;
-
+  private final BeerGame game;
   private JPanel mainPanel;
   private AIGridCanvas canvas;
   private AILabel missedLabel;
@@ -48,12 +35,13 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   private AIButton resetButton;
   private AILabel timeLabel;
   private AISlider simulationSpeedSlider;
-  private Tracker tracker;
 
-  public BeerGui() {
+  public BeerGui(BeerGame game) {
     buildFrame(mainPanel, null, null);
-    state = State.IDLE;
     canvas.setOutlinesEnabled(true);
+    this.game = game;
+    game.setListener(this);
+    game.setSimulationSpeed(simulationSpeedSlider.getValue());
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap actionMap = mainPanel.getActionMap();
@@ -62,35 +50,31 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
     actionMap.put(Direction.LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        tracker.moveLeft(true);
+        game.moveLeft();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
     actionMap.put(Direction.RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        tracker.moveRight(true);
+        game.moveRight();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "pull");
     actionMap.put("pull", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        tracker.pull();
+        game.pull();
       }
     });
 
-    resetButton.addActionListener(e -> stop(() -> reset()));
-    reset();
-  }
+    simulationSpeedSlider.addChangeListener(e -> game.setSimulationSpeed(simulationSpeedSlider.getValue()));
+    resetButton.addActionListener(e -> game.stop(() -> {
+      game.reset();
+      game.initGui();
+    }));
 
-  public void setTracker(Tracker tracker) {
-    tracker.addListener(this);
-    this.tracker = tracker;
-    onAvoided();
-    onCaught();
-    onCrash();
-    updateScore();
+    onTick();
   }
 
   @Override
@@ -123,103 +107,31 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
     throw new NotImplementedException();
   }
 
-  @Override
   public void onCaught() {
-    caughtLabel.setText(String.format("Caught: %3d", tracker.getCaught()));
-    updateScore();
+    caughtLabel.setText(String.format("Caught: %3d", game.getCaught()));
   }
 
-  @Override
   public void onAvoided() {
-    missedLabel.setText(String.format("Avoided: %3d", tracker.getAvoided()));
-    updateScore();
+    missedLabel.setText(String.format("Avoided: %3d", game.getAvoided()));
   }
 
-  @Override
   public void onCrash() {
-    crashedLabel.setText(String.format("Crashed: %3d", tracker.getCrashed()));
-    updateScore();
+    crashedLabel.setText(String.format("Crashed: %3d", game.getCrashed()));
   }
 
   private void updateScore() {
-    scoreLabel.setText(String.format("Score: %3d", tracker.fitness()));
+    scoreLabel.setText(String.format("Score: %3d", game.getScore()));
   }
 
-  public void setTime(int time, int maxTime) {
-    timeLabel.setText(String.format("Time: %3d", maxTime - time));
+  private void updateTime() {
+    timeLabel.setText(String.format("Time: %3d", game.getTime()));
   }
 
-  public long getSimulationSpeed() {
-    return simulationSpeedSlider.getValue();
-  }
-
-  public void reset() {
-    Board<TileEntity> board = new Board<>(30, 15);
-    IntStream.range(0, board.getWidth()).forEach(x -> IntStream.range(0, board.getHeight())//
-        .forEach(y -> board.set(new Empty(x, y, board))));
-    Tracker tracker = new Tracker(board);
-    setAdapter(board);
-    setTracker(tracker);
-    simulateFallingPieces(board, tracker);
-  }
-
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker) {
-    state = State.SIMULATING;
-    Random r = new Random();
-    int time = 0;
-    int maxTime = 600;
-    while (true) {
-      Piece piece = new Piece(board, 1 + r.nextInt(6), tracker);
-      int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
-      IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
-      while (piece.moveDown(false)) {
-        tracker.sense(piece);
-        if (tracker.isPulling()) {
-          piece.moveBottom();
-          if (ann != null) {
-            ann.updateInput(tracker.getSensors().stream()//
-                                .mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
-            List<Double> outputs = ann.getOutputs();
-            tracker.move(outputs);
-          }
-        }
-        try {
-          Thread.sleep(getSimulationSpeed());
-        } catch (InterruptedException e) {
-        }
-        time++;
-        setTime(time, maxTime);
-        if (time >= maxTime || state == State.ABORTING) {
-          state = State.IDLE;
-          return;
-        }
-      }
-    }
-  }
-
-  public void stop(Runnable callback) {
-    state = state == State.SIMULATING ? State.ABORTING : State.IDLE;
-    while (state == State.ABORTING) {
-      try {
-        Thread.sleep(2);
-      } catch (InterruptedException e) {
-      }
-    }
-    new Thread(() -> callback.run()).start();
-  }
-
-  public static void demo() {
-    new BeerGui();
-  }
-
-  public void setAnn(ArtificialNeuralNetwork ann) {
-    this.ann = ann;
-  }
-
-
-  public static void simulate(ArtificialNeuralNetwork ann) {
-    BeerGui gui = new BeerGui();
-    gui.setAnn(ann);
-
+  public void onTick() {
+    onAvoided();
+    onCaught();
+    onCrash();
+    updateScore();
+    updateTime();
   }
 }

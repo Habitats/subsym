@@ -5,7 +5,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import subsym.beertracker.BeerTracker;
+import subsym.beertracker.BeerGame;
 import subsym.boids.Boids;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
@@ -49,7 +49,7 @@ public class Main {
 //        buildFrame(panel, null, null);
 //        new Genetics();
 //
-        BeerTracker.demo();
+        BeerGame.demo();
 //        new AiLife().demo();
       }
 

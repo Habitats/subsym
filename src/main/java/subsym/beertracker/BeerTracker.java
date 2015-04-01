@@ -16,9 +16,6 @@ public class BeerTracker extends GeneticProblem {
     super(prefs);
   }
 
-  public static void demo() {
-    BeerGui.demo();
-  }
 
   @Override
   protected double getCrossoverCut() {
