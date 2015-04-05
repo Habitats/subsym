@@ -11,6 +11,7 @@ import javax.swing.*;
 import subsym.Log;
 import subsym.ailife.AiLife;
 import subsym.ann.AnnPreferences;
+import subsym.beertracker.BeerTracker;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 import subsym.genetics.Genetics;
@@ -276,6 +277,23 @@ public class GeneticGui extends AIGui {
     annHiddenNeuronLabel.setVisible(b);
   }
 
+  private void setVisibleBeer(boolean b) {
+    zeroThresholdLabel.setVisible(!b);
+    zeroThresholdInput.setVisible(!b);
+    bitVectorSizeInput.setVisible(!b);
+    bitVectorSizeLabel.setVisible(!b);
+    surprisingLengthInput.setVisible(!b);
+    surprisingLengthLabel.setVisible(!b);
+    alphabetSizeInput.setVisible(!b);
+    alphabetSizeLabel.setVisible(!b);
+    globalCheckBox.setVisible(!b);
+
+    annHiddenLayerInput.setVisible(b);
+    annHiddenLayerLabel.setVisible(b);
+    annHiddenNeuronInput.setVisible(b);
+    annHiddenNeuronLabel.setVisible(b);
+  }
+
   private void initDefaultPreferences() {
     adultSelection.setSelectedItem(prefs.getAdultSelectionMode().getClass().getSimpleName());
     matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
@@ -365,6 +383,9 @@ public class GeneticGui extends AIGui {
     } else if (puzzle.equals(AiLife.class.getSimpleName())) {
       setVisibleAiLife(true);
       return new AiLife(prefs);
+    } else if (puzzle.equals(BeerTracker.class.getSimpleName())) {
+      setVisibleBeer(true);
+      return new BeerTracker(prefs);
     }
     throw new IllegalStateException("No puzzle selected!");
   }

@@ -2,6 +2,8 @@ package subsym.beertracker;
 
 import java.util.stream.IntStream;
 
+import subsym.Log;
+import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 
@@ -51,5 +53,16 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public void onSolved() {
+    BeerGenotype best = (BeerGenotype) getPopulation().getBestGenotype();
+    Log.v(TAG, best.fitness());
+    BeerPhenotype pheno = (BeerPhenotype) best.getPhenotype();
+    Log.v(TAG, pheno.fitness());
+
+    ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
+    BeerGame game = new BeerGame();
+    game.initGui();
+    game.simulate(ann);
+
+    Log.v(TAG, this);
   }
 }

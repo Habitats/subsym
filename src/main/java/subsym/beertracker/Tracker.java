@@ -145,8 +145,11 @@ public class Tracker extends MultiTile {
   public int fitness() {
     return (caught * 2) - crashed - avoided;
   }
-
   public void move(List<Double> outputs) {
-
+    if (outputs.get(0) > outputs.get(1)) {
+      moveRight(true);
+    } else {
+      moveLeft(true);
+    }
   }
 }

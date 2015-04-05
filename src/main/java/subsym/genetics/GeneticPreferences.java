@@ -6,6 +6,7 @@ import java.util.Map;
 import subsym.ailife.AiLife;
 import subsym.ann.AnnPreferences;
 import subsym.ann.Sigmoid;
+import subsym.beertracker.BeerTracker;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
@@ -38,7 +39,7 @@ public class GeneticPreferences {
   private boolean loggingEnabled;
   private boolean shouldIncrement;
   private boolean plotMultiple;
-  private AnnPreferences annPrettferences;
+  private AnnPreferences annPreferences;
   private int maxGenerations;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate, double genomeMutationRate,
@@ -109,10 +110,9 @@ public class GeneticPreferences {
 
   public static GeneticPreferences getDefault() {
 //    return new GeneticPreferences(40, 0.95, 0.9, 0.04, new Mixing(0.2), new Tournament(4, 0.05), Integer.MAX_VALUE);
-    return getAiLife();
+    return getBeer();
   }
 
-  p
   public static GeneticPreferences getTest() {
     return new GeneticPreferences(10, 1, 1, 1, new Mixing(1), new Tournament(10, 0.00), Integer.MAX_VALUE);
   }
@@ -139,6 +139,14 @@ public class GeneticPreferences {
     return prefs;
   }
 
+  public static GeneticPreferences getBeer() {
+    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(), 10);
+    GeneticProblem problem = new BeerTracker(prefs);
+    prefs.setPuzzle(problem);
+    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
+    return prefs;
+  }
+
   public static GeneticPreferences getLolzTest() {
     GeneticPreferences prefs = new GeneticPreferences(3, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
     GeneticProblem problem = new Lolz(prefs, 5, 2);
@@ -160,9 +168,9 @@ public class GeneticPreferences {
     return prefs;
   }
 
-
   public static Map<String, GeneticPreferences> getPresets() {
     Map<String, GeneticPreferences> presets = new HashMap<>();
+    presets.put("Beer", getBeer());
     presets.put("AiLife", getAiLife());
     presets.put("Surprising 90-40", getSurprisingSequences());
     presets.put("OneMax 3-5", getOneMaxTest());

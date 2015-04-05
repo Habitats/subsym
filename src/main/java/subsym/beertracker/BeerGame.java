@@ -19,7 +19,7 @@ public class BeerGame {
     ABORTING, SIMULATING, IDLE;
   }
 
-  private int simulationSpeed = 100;
+  private int simulationSpeed = 0;
   private BeerGui listener;
   private Board<TileEntity> board;
   private Tracker tracker;
@@ -37,7 +37,7 @@ public class BeerGame {
   public static void demo() {
     BeerGame game = new BeerGame();
     game.initGui();
-    game.simulateFallingPieces(game.board, game.tracker, null, game.simulationSpeed);
+    game.simulateFallingPieces(game.board, game.tracker, null);
   }
 
   public void reset() {
@@ -50,7 +50,7 @@ public class BeerGame {
   public void restart() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, null, simulationSpeed);
+    simulateFallingPieces(board, tracker, null);
   }
 
   public void initGui() {
@@ -61,11 +61,11 @@ public class BeerGame {
   }
 
   public int simulate(ArtificialNeuralNetwork ann) {
-    simulateFallingPieces(board, tracker, ann, 0);
+    simulateFallingPieces(board, tracker, ann);
     return getScore();
   }
 
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, int simulationSpeed) {
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann) {
     state = State.SIMULATING;
     Random r = new Random();
     time = 0;
@@ -75,16 +75,15 @@ public class BeerGame {
       IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
       while (piece.moveDown(false)) {
         time++;
-        listener.onTick();
+        onTick();
         tracker.sense(piece);
         if (tracker.isPulling()) {
           piece.moveBottom();
-          if (ann != null) {
-            ann.updateInput(tracker.getSensors().stream()//
-                                .mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
-            List<Double> outputs = ann.getOutputs();
-            tracker.move(outputs);
-          }
+        }
+        if (ann != null) {
+          ann.updateInput(tracker.getSensors().stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
+          List<Double> outputs = ann.getOutputs();
+          tracker.move(outputs);
         }
         try {
           Thread.sleep(simulationSpeed);
@@ -95,6 +94,12 @@ public class BeerGame {
           return;
         }
       }
+    }
+  }
+
+  private void onTick() {
+    if (listener != null) {
+      listener.onTick();
     }
   }
 
