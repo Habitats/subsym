@@ -8,6 +8,7 @@ import subsym.ailife.entity.Empty;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
+import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
@@ -22,6 +23,7 @@ public class AiLife extends GeneticProblem {
   private static final String TAG = AiLife.class.getSimpleName();
 
   private Robot robot;
+  private AnnPreferences annPrefs;
 
   public AiLife() {
     super(null);
@@ -31,8 +33,9 @@ public class AiLife extends GeneticProblem {
     board.set(robot);
   }
 
-  public AiLife(GeneticPreferences prefs) {
+  public AiLife(GeneticPreferences prefs, AnnPreferences annPrefs) {
     super(prefs);
+    this.annPrefs = annPrefs;
   }
 
   @Override
@@ -43,7 +46,7 @@ public class AiLife extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
-      AiLifeGenotype genotype = new AiLifeGenotype(getPreferences().getAnnPreferences());
+      AiLifeGenotype genotype = new AiLifeGenotype(annPrefs);
       getPopulation().add(genotype);
     });
   }
@@ -56,12 +59,12 @@ public class AiLife extends GeneticProblem {
 
   @Override
   public GeneticProblem newInstance(GeneticPreferences prefs) {
-    return new AiLife(prefs);
+    return new AiLife(prefs, annPrefs);
   }
 
   @Override
   public GeneticProblem newInstance() {
-    return new AiLife(getPreferences());
+    return new AiLife(getPreferences(), annPrefs);
   }
 
   @Override

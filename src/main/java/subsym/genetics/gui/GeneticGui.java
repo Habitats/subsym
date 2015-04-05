@@ -110,6 +110,7 @@ public class GeneticGui extends AIGui {
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
     annPreferences = AnnPreferences.getDefault();
+    setPreferences(prefs);
 
     Genetics.values().forEach(puzzleSelect::addItem);
     AdultSelection.values().forEach(adultSelection::addItem);
@@ -186,7 +187,7 @@ public class GeneticGui extends AIGui {
 
     adultSelection.setSelectedItem(Mixing.class.getSimpleName());
     matingSelection.setSelectedItem(Tournament.class.getSimpleName());
-    puzzleSelect.setSelectedItem(SurprisingSequences.class.getSimpleName());
+//    puzzleSelect.setSelectedItem(SurprisingSequences.class.getSimpleName());
 
     enableLoggingCheckbox.addActionListener(e -> updatePreferences());
     plotMultipleCheckbox.addActionListener(e -> {
@@ -331,6 +332,11 @@ public class GeneticGui extends AIGui {
   public boolean updatePreferences() {
     Log.i(TAG, "Updating preferences ...");
     try {
+      annPreferences.setSingle(singleCheckbox.isSelected());
+      annPreferences.setDynamic(dynamicCheckbox.isSelected());
+      annPreferences.setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
+      annPreferences.setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
+
       prefs.setCrossOverRate(Double.parseDouble(crossoverInput.getText()));
       prefs.setGenomeMutationRate(Double.parseDouble(genomeMutationInput.getText()));
       prefs.setPopulationMutationRate(Double.parseDouble(populationMutationInput.getText()));
@@ -354,13 +360,6 @@ public class GeneticGui extends AIGui {
 
       prefs.logginEnabled(enableLoggingCheckbox.isSelected());
       prefs.setMaxGenerations(Integer.parseInt(maxGenerationsInput.getText()));
-
-      annPreferences.setSingle(singleCheckbox.isSelected());
-      annPreferences.setDynamic(dynamicCheckbox.isSelected());
-      annPreferences.setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
-      annPreferences.setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
-
-      prefs.setAnnPreferences(annPreferences);
     } catch (NumberFormatException e) {
       Log.i(TAG, "Invalid values in preferences!");
       return false;
@@ -382,10 +381,10 @@ public class GeneticGui extends AIGui {
       return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
     } else if (puzzle.equals(AiLife.class.getSimpleName())) {
       setVisibleAiLife(true);
-      return new AiLife(prefs);
+      return new AiLife(prefs, annPreferences);
     } else if (puzzle.equals(BeerTracker.class.getSimpleName())) {
       setVisibleBeer(true);
-      return new BeerTracker(prefs);
+      return new BeerTracker(prefs, annPreferences);
     }
     throw new IllegalStateException("No puzzle selected!");
   }
@@ -508,6 +507,11 @@ public class GeneticGui extends AIGui {
       annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));
       singleCheckbox.setSelected(annPreferences.isSingle());
       dynamicCheckbox.setSelected(annPreferences.isDynamic());
+    }
+
+    if (prefs.getPuzzle() instanceof BeerTracker) {
+      annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
+      annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));
     }
   }
 }

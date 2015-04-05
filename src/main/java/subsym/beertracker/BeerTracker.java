@@ -3,6 +3,7 @@ package subsym.beertracker;
 import java.util.stream.IntStream;
 
 import subsym.Log;
+import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
@@ -13,9 +14,11 @@ import subsym.genetics.GeneticProblem;
 public class BeerTracker extends GeneticProblem {
 
   private static final String TAG = BeerTracker.class.getSimpleName();
+  private AnnPreferences annPrefs;
 
-  public BeerTracker(GeneticPreferences prefs) {
+  public BeerTracker(GeneticPreferences prefs, AnnPreferences annPrefs) {
     super(prefs);
+    this.annPrefs = annPrefs;
   }
 
 
@@ -27,7 +30,7 @@ public class BeerTracker extends GeneticProblem {
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
-      BeerGenotype genotype = new BeerGenotype(getPreferences().getAnnPreferences());
+      BeerGenotype genotype = new BeerGenotype(annPrefs);
       getPopulation().add(genotype);
     });
   }
@@ -39,12 +42,12 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public GeneticProblem newInstance(GeneticPreferences prefs) {
-    return new BeerTracker(prefs);
+    return new BeerTracker(prefs, annPrefs);
   }
 
   @Override
   public GeneticProblem newInstance() {
-    return new BeerTracker(getPreferences());
+    return new BeerTracker(getPreferences(), annPrefs);
   }
 
   @Override

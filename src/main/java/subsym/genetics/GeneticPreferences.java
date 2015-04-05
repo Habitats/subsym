@@ -5,7 +5,6 @@ import java.util.Map;
 
 import subsym.ailife.AiLife;
 import subsym.ann.AnnPreferences;
-import subsym.ann.Sigmoid;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
@@ -39,7 +38,7 @@ public class GeneticPreferences {
   private boolean loggingEnabled;
   private boolean shouldIncrement;
   private boolean plotMultiple;
-  private AnnPreferences annPreferences;
+//  private AnnPreferences annPreferences;
   private int maxGenerations;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate, double genomeMutationRate,
@@ -133,17 +132,17 @@ public class GeneticPreferences {
 
   public static GeneticPreferences getAiLife() {
     GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(), 200);
-    GeneticProblem problem = new AiLife(prefs);
+    GeneticProblem problem = new AiLife(prefs, AnnPreferences.getDefault());
     prefs.setPuzzle(problem);
-    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
+//    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
     return prefs;
   }
 
   public static GeneticPreferences getBeer() {
     GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(), 10);
-    GeneticProblem problem = new BeerTracker(prefs);
+    GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getDefault());
     prefs.setPuzzle(problem);
-    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
+//    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
     return prefs;
   }
 
@@ -281,18 +280,18 @@ public class GeneticPreferences {
     copy.plotMultiple = prefs.plotMultiple;
     copy.runCount = prefs.runCount;
     copy.maxGenerations = prefs.maxGenerations;
-    copy.annPreferences = prefs.annPreferences;
+//    copy.annPreferences = prefs.annPreferences;
     copy.puzzle = prefs.puzzle.newInstance(copy);
     return copy;
   }
 
-  public AnnPreferences getAnnPreferences() {
-    return annPreferences;
-  }
+//  public AnnPreferences getAnnPreferences() {
+//    return annPreferences;
+//  }
 
-  public void setAnnPreferences(AnnPreferences annPreferences) {
-    this.annPreferences = annPreferences;
-  }
+//  public void setAnnPreferences(AnnPreferences annPreferences) {
+//    this.annPreferences = annPreferences;
+//  }
 
   public int getMaxGenerations() {
     return maxGenerations;
