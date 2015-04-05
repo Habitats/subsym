@@ -108,7 +108,7 @@ public abstract class MultiTile {
 
   @Override
   public String toString() {
-    return String.format("%s x: %d, y: %d, Width: %d", TAG, getX(), getY(), getWidth());
+    return String.format("%s x: %3d, y: %3d, Width: %3d", TAG, getX(), getY(), getWidth());
   }
 
   protected int getY() {

@@ -15,8 +15,7 @@ import subsym.Log;
 
 
 /**
- * A continuous feed area, suitable for a continuous log. It will remove lines from the top when the maximum is
- * reached.
+ * A continuous feed area, suitable for a continuous log. It will remove lines from the top when the maximum is reached.
  *
  * @author Patrick
  */
@@ -50,8 +49,8 @@ public class AIContiniousScrollPane extends JScrollPane {
   }
 
   /**
-   * this yields some bugs since it isn't entirely thread safe. gogo swing and concurrency... but yeah. doesn't fail
-   * that often anyway, so lets just ignore exceptions for now TODO: fix this
+   * this yields some bugs since it isn't entirely thread safe. gogo swing and concurrency... but yeah. doesn't fail that often anyway, so
+   * lets just ignore exceptions for now TODO: fix this
    */
   public synchronized void append(String str) {
     try {

@@ -23,8 +23,7 @@ public class Lolz extends GeneticProblem {
 
   @Override
   public boolean solution() {
-    return getPopulation().getBestGenotype().fitness() == 1
-           || getPopulation().getCurrentGeneration() > bitVectorSize * 100;
+    return getPopulation().getBestGenotype().fitness() == 1 || getPopulation().getCurrentGeneration() > bitVectorSize * 100;
   }
 
   @Override
@@ -34,8 +33,7 @@ public class Lolz extends GeneticProblem {
 
   @Override
   public void initPopulation() {
-    IntStream.range(0, getPopulationSize())
-        .forEach(v -> getPopulation().add(new LolzGenotype(zeroThreshold).setRandom(bitVectorSize)));
+    IntStream.range(0, getPopulationSize()).forEach(v -> getPopulation().add(new LolzGenotype(zeroThreshold).setRandom(bitVectorSize)));
   }
 
   public int getZeroThreshold() {

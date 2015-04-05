@@ -97,8 +97,7 @@ public class BoidAdapter extends AIAdapter<BroidEntity> {
     Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 1) {
       // find the center of mass
-      neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.getPosition())
-          .forEach(p -> deltaVelocity.add(p));
+      neighbors.stream().filter(neighbor -> neighbor != boid).map(broid -> broid.getPosition()).forEach(p -> deltaVelocity.add(p));
       deltaVelocity.divide(neighbors.size() - 1);
 
       // move with a magnitude of 1% towards the center of mass
@@ -126,12 +125,11 @@ public class BoidAdapter extends AIAdapter<BroidEntity> {
   private Vec getSeperation(BroidEntity boid, List<BroidEntity> neighbors) {
     Vec deltaVelocity = Vec.create(0, 0);
     if (neighbors.size() > 0) {
-      neighbors.stream().filter(neighbor -> neighbor != boid && distance(boid, neighbor) < neighbor.closeRadius())
-          .forEach(neighbor -> {
-            deltaVelocity.subtract(neighbor.getPosition());
-            deltaVelocity.add(boid.getPosition());
-            deltaVelocity.multiply(neighbor.getSepWeight());
-          });
+      neighbors.stream().filter(neighbor -> neighbor != boid && distance(boid, neighbor) < neighbor.closeRadius()).forEach(neighbor -> {
+        deltaVelocity.subtract(neighbor.getPosition());
+        deltaVelocity.add(boid.getPosition());
+        deltaVelocity.multiply(neighbor.getSepWeight());
+      });
     }
     return deltaVelocity;
   }
@@ -173,16 +171,14 @@ public class BoidAdapter extends AIAdapter<BroidEntity> {
   public void update() {
     getItems().stream().forEach(boid -> updateDirection(boid));
     getItems().removeIf(
-        broid -> broid.isPurgable() && isOutOfBounds(broid) && getSize() > maxBroids && !broid.getColor()
-            .equals(ColorUtils.c(0)));
-    getItems().stream().filter(broid -> isOutOfBounds(broid))
-        .forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
+        broid -> broid.isPurgable() && isOutOfBounds(broid) && getSize() > maxBroids && !broid.getColor().equals(ColorUtils.c(0)));
+    getItems().stream().filter(broid -> isOutOfBounds(broid)).forEach(broid -> broid.wrapAround(getWidth(), getHeight()));
     notifyDataChanged();
   }
 
   private boolean isOutOfBounds(BroidEntity broid) {
-    return (broid.getX() > dismissLimit + getWidth() || broid.getX() < -dismissLimit
-            || broid.getY() > dismissLimit + getHeight() || broid.getY() < -dismissLimit);
+    return (broid.getX() > dismissLimit + getWidth() || broid.getX() < -dismissLimit || broid.getY() > dismissLimit + getHeight()
+            || broid.getY() < -dismissLimit);
   }
 
   public List<BroidEntity> neighbors(BroidEntity broid) {

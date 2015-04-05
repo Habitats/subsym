@@ -18,8 +18,7 @@ public class Mixing implements AdultSelection {
   @Override
   public void selectAdults(Population population) {
     int adultLimit = (int) (mixingRate * population.getMaxPopulationSize());
-    IntStream.range(0, adultLimit)
-        .forEach(i -> population.getNextGeneration().add(population.getCurrent().removeBest()));
+    IntStream.range(0, adultLimit).forEach(i -> population.getNextGeneration().add(population.getCurrent().removeBest()));
     population.getCurrent().clear();
     population.getCurrent().addAll(population.getNextGeneration());
     while (population.getCurrent().size() > population.getMaxPopulationSize()) {

@@ -89,8 +89,7 @@ public class AiLife extends GeneticProblem {
   public static Board<TileEntity> createAiLifeBoard(int seed) {
     Board<TileEntity> board = new Board<>(10, 10);
     Random random = new Random(seed);
-    IntStream.range(0, 10)
-        .forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
+    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
     return board;
   }
 

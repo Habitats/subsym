@@ -38,12 +38,11 @@ public class GeneticPreferences {
   private boolean loggingEnabled;
   private boolean shouldIncrement;
   private boolean plotMultiple;
-  private AnnPreferences annPreferences;
+  private AnnPreferences annPrettferences;
   private int maxGenerations;
 
-  public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate,
-                            double genomeMutationRate, AdultSelection adultSelectionMode,
-                            MatingSelection mateSelectionMode, int maxGenerations) {
+  public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate, double genomeMutationRate,
+                            AdultSelection adultSelectionMode, MatingSelection mateSelectionMode, int maxGenerations) {
     this.populationSize = populationSize;
     this.crossOverRate = crossOverRate;
     this.populationMutationRate = populationMutationRate;
@@ -104,8 +103,8 @@ public class GeneticPreferences {
   @Override
   public String toString() {
     return String.format("CR: %.2f - GMR: %.2f IMR: %.2f - AS: %s - MS: %s", //
-                         crossOverRate, populationMutationRate, genomeMutationRate,
-                         adultSelectionMode.getClass().getSimpleName(), mateSelectionMode.getClass().getSimpleName());
+                         crossOverRate, populationMutationRate, genomeMutationRate, adultSelectionMode.getClass().getSimpleName(),
+                         mateSelectionMode.getClass().getSimpleName());
   }
 
   public static GeneticPreferences getDefault() {
@@ -113,23 +112,20 @@ public class GeneticPreferences {
     return getAiLife();
   }
 
+  p
   public static GeneticPreferences getTest() {
     return new GeneticPreferences(10, 1, 1, 1, new Mixing(1), new Tournament(10, 0.00), Integer.MAX_VALUE);
   }
 
   public static GeneticPreferences getOneMaxTest() {
-    GeneticPreferences
-        prefs =
-        new GeneticPreferences(3, 1, 1, 0.5, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
+    GeneticPreferences prefs = new GeneticPreferences(3, 1, 1, 0.5, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
     OneMax oneMax = new OneMax(prefs, 5);
     prefs.setPuzzle(oneMax);
     return prefs;
   }
 
   public static GeneticPreferences getSurprisingSequences() {
-    GeneticPreferences
-        prefs =
-        new GeneticPreferences(40, 0.1, 0.9, 0.0017, new Mixing(0.5), new Tournament(10, 0.05), Integer.MAX_VALUE);
+    GeneticPreferences prefs = new GeneticPreferences(40, 0.1, 0.9, 0.0017, new Mixing(0.5), new Tournament(10, 0.05), Integer.MAX_VALUE);
     GeneticProblem problem = new SurprisingSequences(prefs, 40, 90, true);
     prefs.setPuzzle(problem);
     return prefs;
@@ -144,27 +140,21 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getLolzTest() {
-    GeneticPreferences
-        prefs =
-        new GeneticPreferences(3, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
+    GeneticPreferences prefs = new GeneticPreferences(3, 1, 1, 0.2, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
     GeneticProblem problem = new Lolz(prefs, 5, 2);
     prefs.setPuzzle(problem);
     return prefs;
   }
 
   public static GeneticPreferences getLolz2() {
-    GeneticPreferences
-        prefs =
-        new GeneticPreferences(75, 1, 1, 0.001, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
+    GeneticPreferences prefs = new GeneticPreferences(75, 1, 1, 0.001, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
     GeneticProblem problem = new Lolz(prefs, 40, 21);
     prefs.setPuzzle(problem);
     return prefs;
   }
 
   public static GeneticPreferences getOneMaxBelow100() {
-    GeneticPreferences
-        prefs =
-        new GeneticPreferences(75, 1, 1, 0.001, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
+    GeneticPreferences prefs = new GeneticPreferences(75, 1, 1, 0.001, new FullTurnover(), new FitnessProportiate(), Integer.MAX_VALUE);
     GeneticProblem problem = new OneMax(prefs, 40);
     prefs.setPuzzle(problem);
     return prefs;
@@ -271,8 +261,7 @@ public class GeneticPreferences {
   public static GeneticPreferences copy(GeneticPreferences prefs) {
     GeneticPreferences copy = new GeneticPreferences(prefs.getPopulationSize(), prefs.getCrossOverRate(),//
                                                      prefs.getPopulationMutationRate(), prefs.getGenomeMutationRate(),
-                                                     prefs.getAdultSelectionMode(), prefs.getMateSelectionMode(),
-                                                     Integer.MAX_VALUE);
+                                                     prefs.getAdultSelectionMode(), prefs.getMateSelectionMode(), Integer.MAX_VALUE);
     copy.puzzle = prefs.puzzle;
     copy.bitVectorSize = prefs.bitVectorSize;
     copy.surprisingLength = prefs.surprisingLength;

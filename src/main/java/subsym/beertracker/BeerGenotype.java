@@ -7,7 +7,7 @@ import subsym.genetics.Phenotype;
 /**
  * Created by Patrick on 01.04.2015.
  */
-public class BeerGenotype extends Genotype{
+public class BeerGenotype extends Genotype {
 
   private BeerPhenotype phenotype;
   private AnnPreferences prefs;

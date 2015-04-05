@@ -147,5 +147,6 @@ public class Tracker extends MultiTile {
   }
 
   public void move(List<Double> outputs) {
+
   }
 }

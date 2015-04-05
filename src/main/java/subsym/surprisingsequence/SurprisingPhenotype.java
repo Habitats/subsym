@@ -64,8 +64,8 @@ public class SurprisingPhenotype implements Phenotype {
 
   private static int getDistinctCount(List<Integer> ints, List<Integer> shifted, int startIndex) {
     Set distinct = new HashSet<>();
-    IntStream.range(0, ints.size() - 1 - startIndex).forEach(
-        i -> distinct.add(new StringBuilder().append(ints.get(i)).append(":").append(shifted.get(i)).toString())); //
+    IntStream.range(0, ints.size() - 1 - startIndex)
+        .forEach(i -> distinct.add(new StringBuilder().append(ints.get(i)).append(":").append(shifted.get(i)).toString())); //
     return distinct.size();
 //    return (int) IntStream.range(0, ints.size() - 1 - startIndex)
 //        .mapToObj(i -> (new StringBuilder().append(ints.get(i)).append(":").append(shifted.get(i)).toString()))
@@ -85,7 +85,6 @@ public class SurprisingPhenotype implements Phenotype {
     return surprisingGenotype.toList().stream() //
         .map(v -> String.format("%" + maxWidth + "d", v)) //
         .collect(Collectors.joining(", ", String.format(" > Pheno > S: %d - L: %d - Seq: ", //
-                                                        surprisingGenotype.getAlphabet().size(),
-                                                        surprisingGenotype.toList().size()), ""));
+                                                        surprisingGenotype.getAlphabet().size(), surprisingGenotype.toList().size()), ""));
   }
 }

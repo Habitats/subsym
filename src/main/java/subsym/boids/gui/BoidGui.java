@@ -96,11 +96,9 @@ public class BoidGui extends AIGui {
     scenario6Button.addActionListener(e -> initScenario(SEP_HIGH, ALIGN_HIGH, COH_LOW));
 
     wrapAroundPhysicsCheckbox.setSelected(true);
-    wrapAroundPhysicsCheckbox
-        .addActionListener(e -> BoidAdapter.WRAP_AROUND_PHYSICS_ENABLED = ((JCheckBox) e.getSource()).isSelected());
+    wrapAroundPhysicsCheckbox.addActionListener(e -> BoidAdapter.WRAP_AROUND_PHYSICS_ENABLED = ((JCheckBox) e.getSource()).isSelected());
     wrapAroundPhysicsCheckbox.setSelected(false);
-    enableVectorsCheckbox
-        .addActionListener(e -> BoidAdapter.VECTORS_ENABLED = ((JCheckBox) e.getSource()).isSelected());
+    enableVectorsCheckbox.addActionListener(e -> BoidAdapter.VECTORS_ENABLED = ((JCheckBox) e.getSource()).isSelected());
 
     spawnObsticleButton.addActionListener(e -> boids.spawnObsticle());
     spawnPredButton.addActionListener(e -> boids.spawnPredator());

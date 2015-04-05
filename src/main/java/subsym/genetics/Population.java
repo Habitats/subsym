@@ -122,8 +122,8 @@ public class Population {
   @Override
   public String toString() {
     return String.format("Gen: %5d - Fitness (max/avg): %6.2f / %6.2f - SD: %6.2f > Geno > %s",//
-                         currentGeneration, getCurrentMaxFitness(), getCurrentAverageFitness(),
-                         getCurrentStandardDeviation(), currentPopulation.peekBest());
+                         currentGeneration, getCurrentMaxFitness(), getCurrentAverageFitness(), getCurrentStandardDeviation(),
+                         currentPopulation.peekBest());
   }
 
   public double getCurrentStandardDeviation() {

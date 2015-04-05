@@ -18,8 +18,7 @@ public class AnnNodes {
   }
 
   public static AnnNodes createOutput(int numberOfNodes) {
-    return new AnnNodes(
-        IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createOutput()).collect(Collectors.toList()));
+    return new AnnNodes(IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createOutput()).collect(Collectors.toList()));
   }
 
   public static AnnNodes createInput(Double... values) {

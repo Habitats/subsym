@@ -65,8 +65,7 @@ public class BeerGame {
     return getScore();
   }
 
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann,
-                                    int simulationSpeed) {
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, int simulationSpeed) {
     state = State.SIMULATING;
     Random r = new Random();
     time = 0;

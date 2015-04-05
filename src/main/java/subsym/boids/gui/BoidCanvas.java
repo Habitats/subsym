@@ -51,8 +51,7 @@ public class BoidCanvas extends AICanvas<BroidEntity, AIAdapter<BroidEntity>> {
     items.stream().filter(broid -> !(broid instanceof Obstacle)).forEach(broid -> {
       int x = getX(broid);
       int y = getY(broid);
-      drawArrow(g, Vec.create(x + broid.getItemWidth() / 2, y + broid.getItemHeight() / 2),
-                Vec.create(broid.v.x, -broid.v.y));
+      drawArrow(g, Vec.create(x + broid.getItemWidth() / 2, y + broid.getItemHeight() / 2), Vec.create(broid.v.x, -broid.v.y));
     });
   }
 
