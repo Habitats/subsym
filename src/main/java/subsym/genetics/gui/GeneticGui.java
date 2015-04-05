@@ -109,7 +109,7 @@ public class GeneticGui extends AIGui {
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
-    annPreferences = AnnPreferences.getDefault();
+    annPreferences = AnnPreferences.getAiLifeDefault();
     setPreferences(prefs);
 
     Genetics.values().forEach(puzzleSelect::addItem);

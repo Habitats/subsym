@@ -41,8 +41,12 @@ public class AnnPreferences {
     this.activationFunction = activationFunction;
   }
 
-  public static AnnPreferences getDefault() {
-    return new AnnPreferences(1, 6, new Sigmoid());
+  public static AnnPreferences getAiLifeDefault() {
+    return new AnnPreferences(0, 3, new Sigmoid());
+  }
+
+  public static AnnPreferences getBeerDefault() {
+    return new AnnPreferences(1, 4, new Sigmoid());
   }
 
   public boolean isSingle() {

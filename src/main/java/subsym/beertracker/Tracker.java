@@ -145,11 +145,15 @@ public class Tracker extends MultiTile {
   public int fitness() {
     return (caught * 2) - crashed - avoided;
   }
+
   public void move(List<Double> outputs) {
+    double max = Math.max(outputs.get(0), outputs.get(1));
+    double min = Math.max(outputs.get(0), outputs.get(1));
+    int multiplier = (int) Math.round(max / min);
     if (outputs.get(0) > outputs.get(1)) {
-      moveRight(true);
+      IntStream.range(0, multiplier).forEach(i -> moveRight(true));
     } else {
-      moveLeft(true);
+      IntStream.range(0, multiplier).forEach(i -> moveLeft(true));
     }
   }
 }
