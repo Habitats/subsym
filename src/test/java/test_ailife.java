@@ -73,7 +73,7 @@ public class test_ailife {
     AnnNodes inputs = AnnNodes.createInput(0.1, 0.2, 0.3);
     assertEquals(inputs.getValues(), Arrays.asList(0.1, 0.2, 0.3));
     AnnNodes outputs = AnnNodes.createOutput(2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs, new Sigmoid());
     ann.updateInput(0.8, 0.9, 0.2);
     assertEquals(inputs.getValues(), Arrays.asList(0.8, 0.9, 0.2));
     assertEquals(ann.getInputs(), Arrays.asList(0.8, 0.9, 0.2));

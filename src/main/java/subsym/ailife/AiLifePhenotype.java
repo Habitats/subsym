@@ -11,6 +11,7 @@ import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
+import subsym.ann.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 import subsym.models.Board;
@@ -31,7 +32,7 @@ public class AiLifePhenotype implements Phenotype {
 
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(3);
-    ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
+    ann = new ArtificialNeuralNetwork(prefs, inputs, outputs, new Sigmoid());
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }

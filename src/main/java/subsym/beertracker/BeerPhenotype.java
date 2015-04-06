@@ -35,7 +35,7 @@ public class BeerPhenotype implements Phenotype {
   private ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(BeerGenotype beerGenotype, AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs, new Sigmoid());
     ann.setStateful();
 
     List<AnnNodes> layers = ann.getLayers();

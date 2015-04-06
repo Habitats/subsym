@@ -29,13 +29,13 @@ public class ArtificialNeuralNetwork {
   private final List<AnnNodes> layers;
   private AnnNodes biasNodes;
 
-  public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
+  public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs, ActivationFunction activationFunction) {
     layers = new ArrayList<>();
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
     this.inputs = inputs;
     this.outputs = outputs;
-    this.activationFunction = prefs.getActivationFunction();
+    this.activationFunction = activationFunction;
     createNetwork();
     setActivationFunction();
     setWeights(Collections.nCopies(getNumWeights(), .1));
@@ -148,8 +148,8 @@ public class ArtificialNeuralNetwork {
   }
 
 
-  private void setActivationFunction() {
-    inputs.stream().forEach(node -> node.setActivationFunction(activationFunction));
+public void setActivationFunction() {
+    outputs.stream().forEach(node -> node.setActivationFunction(activationFunction));
   }
 
   public void setStateful() {
