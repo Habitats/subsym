@@ -9,5 +9,6 @@ public class ContinuousTimeRecurrentNeuralNetwork extends ArtificialNeuralNetwor
 
   public ContinuousTimeRecurrentNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
     super(prefs, inputs,outputs);
+
   }
 }

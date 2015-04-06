@@ -14,34 +14,35 @@ import subsym.ann.ArtificialNeuralNetwork;
  */
 public abstract class AnnNode {
 
-  protected AnnNodes outputs;
   protected AnnNodes inputs;
   protected ActivationFunction activationFunction;
   private Random random = new Random();
-  protected Map<AnnNode, Double> outputWeights;
+  private final String id;
+  protected Map<AnnNode, Double> inputWeights;
+  protected double currentValue;
+  private InputNode selfNode;
 
   protected AnnNode(Random random) {
     this.random = random;
     inputs = AnnNodes.createInput();
-    outputs = AnnNodes.createOutput(0);
-    outputWeights = new HashMap<>();
+    inputWeights = new HashMap<>();
+    id = ArtificialNeuralNetwork.nextId();
   }
 
-  public static AnnNode createOutput() {
+  public static OutputNode createOutput() {
     return new OutputNode(ArtificialNeuralNetwork.random());
   }
 
-  public static AnnNode createInput(Double value) {
+  public static InputNode createInput(Double value) {
     return new InputNode(value, ArtificialNeuralNetwork.random());
   }
 
   public void connect(AnnNodes outputs) {
     outputs.stream().forEach(this::connect);
-    outputs.stream().forEach(n -> outputWeights.put(n, 1.));
   }
 
-  private void connect(AnnNode annNode) {
-    outputs.add(annNode);
+  public void connect(AnnNode annNode) {
+    annNode.inputWeights.put(this, 1.);
     annNode.addInput(this);
   }
 
@@ -51,21 +52,45 @@ public abstract class AnnNode {
 
   public void setActivationFunction(ActivationFunction activationFunction) {
     this.activationFunction = activationFunction;
-    outputs.stream().forEach(n -> n.setActivationFunction(activationFunction));
+    inputs.stream().forEach(n -> n.setActivationFunction(activationFunction));
   }
 
   public void setRandomWeights() {
-    outputs.stream().forEach(n -> outputWeights.put(n, random.nextDouble()));
-    outputs.setRandomWeights();
+    inputs.stream().forEach(n -> inputWeights.put(n, random.nextDouble()));
+    inputs.setRandomWeights();
   }
 
-  public Set<AnnNode> getOutputs() {
-    return outputWeights.keySet();
+  public Set<AnnNode> getInputs() {
+    return inputWeights.keySet();
   }
 
   public void setWeight(AnnNode outputNode, Double weight) {
-    outputWeights.put(outputNode, weight);
+    inputWeights.put(outputNode, weight);
   }
 
   public abstract double getValue();
+
+  public static AnnNode createBias() {
+    return new InputNode(1., ArtificialNeuralNetwork.random());
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  @Override
+  public String toString() {
+    return id + " ";
+  }
+
+  public void incrementTime() {
+    if (selfNode != null) {
+      selfNode.setValue(currentValue);
+    }
+  }
+
+  public void addSelfNode(InputNode bias) {
+    bias.connect(this);
+    selfNode = bias;
+  }
 }

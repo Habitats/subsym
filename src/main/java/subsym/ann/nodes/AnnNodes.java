@@ -1,5 +1,6 @@
 package subsym.ann.nodes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,9 @@ public class AnnNodes {
 
   public AnnNodes(List<AnnNode> values) {
     this.values = values;
+  }
+  public AnnNodes(AnnNode... values) {
+    this.values = new ArrayList<>(Arrays.asList(values));
   }
 
   public static AnnNodes createOutput(int numberOfNodes) {
@@ -51,8 +55,6 @@ public class AnnNodes {
 
   @Override
   public String toString() {
-    return values.stream().map(AnnNode::toString).collect(Collectors.joining(" --- ", "", ""));
+    return values.stream().map(AnnNode::getId).collect(Collectors.joining("], [", " > [", "]"));
   }
-
-
 }

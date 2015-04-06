@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import subsym.ann.nodes.AnnNode;
 import subsym.ann.nodes.AnnNodes;
 import subsym.ann.nodes.InputNode;
 
@@ -17,25 +18,54 @@ import subsym.ann.nodes.InputNode;
 public class ArtificialNeuralNetwork {
 
   private static Random random = new Random(1);
+  private static int idCounter = 0;
   private final int hiddenLayerCount;
   private final int hiddenNeuronCount;
   private final AnnNodes inputs;
   private final AnnNodes outputs;
   private final ActivationFunction activationFunction;
   private final List<AnnNodes> layers;
+  private AnnNodes biasNodes;
 
   public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
     layers = new ArrayList<>();
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
 //    this.inputs = prefs.getInputs();
-//    this.outputs = prefs.getOutputs();
+//    this.outputs = prefs.getInputs();
     this.inputs = inputs;
     this.outputs = outputs;
     this.activationFunction = prefs.getActivationFunction();
     createNetwork();
     setActivationFunction();
     setWeights(Collections.nCopies(getNumWeights(), .1));
+  }
+
+  public void addBiasNode(AnnNodes nodes) {
+    AnnNode bias = AnnNode.createBias();
+    bias.connect(nodes);
+
+    if (biasNodes == null) {
+      biasNodes = new AnnNodes();
+      layers.add(biasNodes);
+    }
+    biasNodes.add(bias);
+  }
+
+  public void addSelfNode(AnnNodes nodes) {
+    nodes.stream().forEach(n -> {
+      InputNode bias = InputNode.createInput(1.);
+      n.addSelfNode(bias);
+      if (biasNodes == null) {
+        biasNodes = new AnnNodes();
+        layers.add(biasNodes);
+      }
+      biasNodes.add(bias);
+    });
+  }
+
+  public List<AnnNodes> getLayers() {
+    return layers;
   }
 
   private void createNetwork() {
@@ -69,6 +99,7 @@ public class ArtificialNeuralNetwork {
     }
     AtomicInteger i = new AtomicInteger(0);
     this.inputs.stream().forEach(n -> ((InputNode) n).setValue(inputs.get(i.getAndIncrement())));
+    layers.stream().flatMap(AnnNodes::stream).forEach(AnnNode::incrementTime);
   }
 
   public List<Double> getOutputs() {
@@ -77,7 +108,7 @@ public class ArtificialNeuralNetwork {
 
   @Override
   public String toString() {
-    return "ANN > Inputs: " + inputs + " > Outputs: " + outputs;
+    return "ANN > Inputs " + inputs + " > Outputs " + outputs;
   }
 
   public static Random random() {
@@ -88,12 +119,12 @@ public class ArtificialNeuralNetwork {
     AtomicInteger i = new AtomicInteger();
     layers.stream()//
         .flatMap(layer -> layer.stream())//
-        .forEach(node -> node.getOutputs().stream()//
+        .forEach(node -> node.getInputs().stream()//
             .forEach(outputNode -> node.setWeight(outputNode, weights.get(i.getAndIncrement()))));
   }
 
   public int getNumWeights() {
-    return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getOutputs().size()).sum();
+    return layers.stream().flatMap(layer -> layer.stream()).mapToInt(node -> node.getInputs().size()).sum();
   }
 
   public int getNumNodes() {
@@ -108,5 +139,9 @@ public class ArtificialNeuralNetwork {
     updateInput(sensoryInput);
     List<Double> outputs = getOutputs();
     return outputs.indexOf(outputs.stream().max(Double::compare).get());
+  }
+
+  public static String nextId() {
+    return "n" + (idCounter++);
   }
 }

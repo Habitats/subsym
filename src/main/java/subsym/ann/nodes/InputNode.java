@@ -18,10 +18,11 @@ public class InputNode extends AnnNode {
   @Override
   public String toString() {
     String weights = "";
-    if (outputs.size() > 0) {
-      weights = outputs.stream().map(n -> String.format("%.3f", outputWeights.get(n))).collect(Collectors.joining(", ", "- W: ", ""));
+    if (inputs.size() > 0) {
+      weights = inputs.stream()//
+          .map(n -> String.format("(%s - %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
     }
-    return String.format("V: %.3f %s", getValue(), weights);
+    return super.toString() + String.format("V = %.3f %s", getValue(), weights);
   }
 
   @Override

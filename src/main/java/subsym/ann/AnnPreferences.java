@@ -46,7 +46,7 @@ public class AnnPreferences {
   }
 
   public static AnnPreferences getBeerDefault() {
-    return new AnnPreferences(1, 4, new Sigmoid());
+    return new AnnPreferences(1, 2, new Sigmoid());
   }
 
   public boolean isSingle() {

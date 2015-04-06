@@ -14,6 +14,7 @@ import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
+import subsym.ann.Linear;
 import subsym.ann.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.gui.AIGridCanvas;
@@ -69,31 +70,32 @@ public class test_ailife {
 
   @Test
   public void test_ann() {
-    AnnNodes inputs = AnnNodes.createInput(0.3, 0.1, 0.7);
-    assertEquals(inputs.getValues(), Arrays.asList(0.3, 0.1, 0.7));
+    AnnNodes inputs = AnnNodes.createInput(0.1, 0.2, 0.3);
+    assertEquals(inputs.getValues(), Arrays.asList(0.1, 0.2, 0.3));
     AnnNodes outputs = AnnNodes.createOutput(2);
     ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs);
     ann.updateInput(0.8, 0.9, 0.2);
     assertEquals(inputs.getValues(), Arrays.asList(0.8, 0.9, 0.2));
     assertEquals(ann.getInputs(), Arrays.asList(0.8, 0.9, 0.2));
     ann.updateInput(0.0, 0.0, 0.0);
+    Linear activationFunction = new Linear();
+    ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(activationFunction));
     assertEquals(ann.getInputs(), Arrays.asList(0.0, 0.0, 0.0));
     assertEquals(ann.getOutputs(), Arrays.asList(0.0, 0.0));
 
-    List<Double> testInputs = Arrays.asList(0.7, 0.8, 0.9);
+    List<Double> testInputs = Arrays.asList(0.1, 0.2, 0.3);
     ann.updateInput(testInputs);
     List<Double> weights = IntStream.range(0, ann.getNumWeights())//
         .mapToDouble(i -> (double) i / ann.getNumWeights()).boxed().collect(Collectors.toList());
 //        .mapToDouble(i -> random.nextDouble()).boxed().collect(Collectors.toList());
     ann.setWeights(weights);
-    double h1 = (weights.get(0) + weights.get(2) + weights.get(4)) * testInputs.get(0);
-    double h2 = (weights.get(1) + weights.get(3) + weights.get(5)) * testInputs.get(1);
-    Sigmoid sig = new Sigmoid();
-    double o1 = (weights.get(6) + weights.get(8)) * sig.evaluate(h1);
-    double o2 = (weights.get(7) + weights.get(9)) * sig.evaluate(h2);
+    double h1 = weights.get(0) * testInputs.get(2) + weights.get(1) * testInputs.get(0) + weights.get(2) * testInputs.get(1);
+    double h2 = weights.get(3) * testInputs.get(2) + weights.get(4) * testInputs.get(0) + weights.get(5) * testInputs.get(1);
+    double o1 = weights.get(6) * activationFunction.evaluate(h1) + weights.get(7) * activationFunction.evaluate(h2);
+    double o2 = weights.get(8) * activationFunction.evaluate(h1) + weights.get(9) * activationFunction.evaluate(h2);
 
-    double out1 = sig.evaluate(o1);
-    double out2 = sig.evaluate(o2);
+    double out1 = activationFunction.evaluate(o1);
+    double out2 = activationFunction.evaluate(o2);
     assertEquals(Arrays.asList(out1, out2), ann.getOutputs());
   }
 
