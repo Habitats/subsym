@@ -148,8 +148,9 @@ public class Tracker extends MultiTile {
 
   public void move(List<Double> outputs) {
     double max = Math.max(outputs.get(0), outputs.get(1));
-    double min = Math.max(outputs.get(0), outputs.get(1));
+    double min = Math.min(outputs.get(0), outputs.get(1));
     int multiplier = (int) Math.round(max / min);
+    Log.v(TAG, multiplier  + " "  + min + " " + max);
     if (outputs.get(0) > outputs.get(1)) {
       IntStream.range(0, multiplier).forEach(i -> moveRight(true));
     } else {

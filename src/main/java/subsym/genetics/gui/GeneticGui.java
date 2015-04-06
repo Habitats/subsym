@@ -109,7 +109,7 @@ public class GeneticGui extends AIGui {
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
-    annPreferences = AnnPreferences.getAiLifeDefault();
+    annPreferences = AnnPreferences.getBeerDefault();
     setPreferences(prefs);
 
     Genetics.values().forEach(puzzleSelect::addItem);
@@ -187,7 +187,8 @@ public class GeneticGui extends AIGui {
 
     adultSelection.setSelectedItem(Mixing.class.getSimpleName());
     matingSelection.setSelectedItem(Tournament.class.getSimpleName());
-//    puzzleSelect.setSelectedItem(SurprisingSequences.class.getSimpleName());
+    puzzleSelect.setSelectedItem(BeerTracker.class.getSimpleName());
+    presetsComboBox.setSelectedItem("Beer");
 
     enableLoggingCheckbox.addActionListener(e -> updatePreferences());
     plotMultipleCheckbox.addActionListener(e -> {
