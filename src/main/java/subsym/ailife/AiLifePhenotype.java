@@ -36,14 +36,6 @@ public class AiLifePhenotype implements Phenotype {
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }
 
-  private double normalize(int v) {
-    return (v % 1000) / 1000.;
-  }
-
-  private List<Double> getNormalizedValues(List<Integer> values) {
-    return values.stream().mapToDouble(this::normalize).boxed().collect(Collectors.toList());
-  }
-
   @Override
   public double fitness() {
 //    return robotFitness();
@@ -91,13 +83,21 @@ public class AiLifePhenotype implements Phenotype {
     return robot.fitness();
   }
 
-  @Override
-  public String toString() {
-    return getNormalizedValues(aiLifeGenotype.toList()).stream().map(i -> String.format("%.3f", i))
-        .collect(Collectors.joining(", ", " > Pheno > ", ""));
+  private double normalize(int v) {
+    return (v % 1000) / 1000.;
+  }
+
+  private List<Double> getNormalizedValues(List<Integer> values) {
+    return values.stream().mapToDouble(this::normalize).boxed().collect(Collectors.toList());
   }
 
   public ArtificialNeuralNetwork getArtificialNeuralNetwork() {
     return ann;
+  }
+
+  @Override
+  public String toString() {
+    return getNormalizedValues(aiLifeGenotype.toList()).stream().map(i -> String.format("%.3f", i))
+        .collect(Collectors.joining(", ", " > Pheno > ", ""));
   }
 }

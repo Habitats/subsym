@@ -17,6 +17,14 @@ public class AnnPreferences {
     this.activationFunction = activationFunction;
   }
 
+  public static AnnPreferences getAiLifeDefault() {
+    return new AnnPreferences(0, 3, new Sigmoid());
+  }
+
+  public static AnnPreferences getBeerDefault() {
+    return new AnnPreferences(1, 2, new Sigmoid());
+  }
+
   public int getHiddenLayerCount() {
     return hiddenLayerCount;
   }
@@ -39,14 +47,6 @@ public class AnnPreferences {
 
   public void setActivationFunction(ActivationFunction activationFunction) {
     this.activationFunction = activationFunction;
-  }
-
-  public static AnnPreferences getAiLifeDefault() {
-    return new AnnPreferences(0, 3, new Sigmoid());
-  }
-
-  public static AnnPreferences getBeerDefault() {
-    return new AnnPreferences(1, 2, new Sigmoid());
   }
 
   public boolean isSingle() {

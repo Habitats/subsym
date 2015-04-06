@@ -16,6 +16,12 @@ public class OutputNode extends AnnNode {
     super(random);
   }
 
+  @Override
+  public void incrementTime() {
+    super.incrementTime();
+    y += getInternalChange();
+  }
+
   protected double getInputSum() {
     return inputs.stream().mapToDouble(n -> n.getValue() * inputWeights.get(n)).sum();
   }
@@ -43,12 +49,6 @@ public class OutputNode extends AnnNode {
 
   private double getInternalChange() {
     return (-y + getInputSum()) / t;
-  }
-
-  @Override
-  public void incrementTime() {
-    super.incrementTime();
-    y += getInternalChange();
   }
 
   @Override

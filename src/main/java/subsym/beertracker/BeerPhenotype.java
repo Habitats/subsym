@@ -26,6 +26,12 @@ public class BeerPhenotype implements Phenotype {
     ann = buildContinuousTimeRecurrentNeuralNetwork(beerGenotype, prefs);
   }
 
+  @Override
+  public double fitness() {
+    BeerGame game = new BeerGame();
+    return game.simulate(ann);
+  }
+
   private ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(BeerGenotype beerGenotype, AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(2);
@@ -33,7 +39,7 @@ public class BeerPhenotype implements Phenotype {
     ann.setStateful();
 
     List<AnnNodes> layers = ann.getLayers();
-    AnnNodes nodes = new AnnNodes( IntStream.range(1, layers.size())//
+    AnnNodes nodes = new AnnNodes(IntStream.range(1, layers.size())//
                                       .mapToObj(layers::get).flatMap(AnnNodes::stream)//
                                       .collect(Collectors.toList()));
     ann.addBiasNode(nodes);
@@ -77,12 +83,6 @@ public class BeerPhenotype implements Phenotype {
 
   private double normalize(int v) {
     return (v % 1000) / 1000.;
-  }
-
-  @Override
-  public double fitness() {
-    BeerGame game = new BeerGame();
-    return game.simulate(ann);
   }
 
   public ArtificialNeuralNetwork getArtificialNeuralNetwork() {

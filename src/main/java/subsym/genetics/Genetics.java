@@ -195,8 +195,8 @@ public class Genetics implements GeneticGuiListener {
   }
 
   public static List<String> values() {
-    return Arrays.asList(BeerTracker.class.getSimpleName(), SurprisingSequences.class.getSimpleName(), Lolz.class.getSimpleName(), OneMax.class.getSimpleName(),
-                         AiLife.class.getSimpleName());
+    return Arrays.asList(BeerTracker.class.getSimpleName(), SurprisingSequences.class.getSimpleName(), Lolz.class.getSimpleName(),
+                         OneMax.class.getSimpleName(), AiLife.class.getSimpleName());
   }
 
   @Override

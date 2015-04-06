@@ -14,12 +14,12 @@ import subsym.ann.ArtificialNeuralNetwork;
  */
 public abstract class AnnNode {
 
+  private final String id;
   protected AnnNodes inputs;
   protected ActivationFunction activationFunction;
-  private Random random = new Random();
-  private final String id;
   protected Map<AnnNode, Double> inputWeights;
   protected double currentValue;
+  private Random random = new Random();
   private InputNode selfNode;
   private boolean hasState = false;
 
@@ -30,6 +30,10 @@ public abstract class AnnNode {
     id = ArtificialNeuralNetwork.nextId();
   }
 
+  //##################################################################
+  //################# STATIC FACTORY #################################
+  //##################################################################
+
   public static OutputNode createOutput() {
     return new OutputNode(ArtificialNeuralNetwork.random());
   }
@@ -37,6 +41,14 @@ public abstract class AnnNode {
   public static InputNode createInput(Double value) {
     return new InputNode(value, ArtificialNeuralNetwork.random());
   }
+
+  public static AnnNode createBias() {
+    return new InputNode(1., ArtificialNeuralNetwork.random());
+  }
+
+  //##################################################################
+  //################# MANAGEMENT #####################################
+  //##################################################################
 
   public void connect(AnnNodes outputs) {
     outputs.stream().forEach(this::connect);
@@ -51,40 +63,9 @@ public abstract class AnnNode {
     inputs.add(annNode);
   }
 
-  public void setActivationFunction(ActivationFunction activationFunction) {
-    if (this.activationFunction != null) {
-      return;
-    }
-    this.activationFunction = activationFunction;
-    inputs.stream().forEach(n -> n.setActivationFunction(activationFunction));
-  }
-
-  public void setRandomWeights() {
-    inputs.stream().forEach(n -> inputWeights.put(n, random.nextDouble()));
-    inputs.setRandomWeights();
-  }
-
-  public Set<AnnNode> getInputs() {
-    return inputWeights.keySet();
-  }
-
-  public void setWeight(AnnNode outputNode, Double weight) {
-    inputWeights.put(outputNode, weight);
-  }
-
-  public abstract double getValue();
-
-  public static AnnNode createBias() {
-    return new InputNode(1., ArtificialNeuralNetwork.random());
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  @Override
-  public String toString() {
-    return id + " ";
+  public void addSelfNode(InputNode bias) {
+    bias.connect(this);
+    selfNode = bias;
   }
 
   public void incrementTime() {
@@ -93,9 +74,35 @@ public abstract class AnnNode {
     }
   }
 
-  public void addSelfNode(InputNode bias) {
-    bias.connect(this);
-    selfNode = bias;
+  //##################################################################
+  //################# PROPERTIES #####################################
+  //##################################################################
+
+  public void setRandomWeights() {
+    inputs.stream().forEach(n -> inputWeights.put(n, random.nextDouble()));
+    inputs.setRandomWeights();
+  }
+
+  public void setWeight(AnnNode outputNode, Double weight) {
+    inputWeights.put(outputNode, weight);
+  }
+
+  public void setActivationFunction(ActivationFunction activationFunction) {
+    if (this.activationFunction != null) {
+      return;
+    }
+    this.activationFunction = activationFunction;
+    inputs.stream().forEach(n -> n.setActivationFunction(activationFunction));
+  }
+
+  public abstract double getValue();
+
+  public Set<AnnNode> getInputs() {
+    return inputWeights.keySet();
+  }
+
+  public String getId() {
+    return id;
   }
 
   public void setStateful() {
@@ -104,5 +111,10 @@ public abstract class AnnNode {
 
   public boolean hasState() {
     return hasState;
+  }
+
+  @Override
+  public String toString() {
+    return id + " ";
   }
 }

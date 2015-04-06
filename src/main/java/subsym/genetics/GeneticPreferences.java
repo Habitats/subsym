@@ -38,7 +38,7 @@ public class GeneticPreferences {
   private boolean loggingEnabled;
   private boolean shouldIncrement;
   private boolean plotMultiple;
-//  private AnnPreferences annPreferences;
+  //  private AnnPreferences annPreferences;
   private int maxGenerations;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate, double genomeMutationRate,
