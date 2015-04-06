@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
-import subsym.ann.ContiniousTimeRecurrentNeuralNetwork;
+import subsym.ann.ContinuousTimeRecurrentNeuralNetwork;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 
@@ -25,7 +25,7 @@ public class BeerPhenotype implements Phenotype {
 
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(2);
-    ann = new ContiniousTimeRecurrentNeuralNetwork(prefs, inputs, outputs);
+    ann = new ContinuousTimeRecurrentNeuralNetwork(prefs, inputs, outputs);
     this.beerGenotype.setRandom(ann.getNumWeights() * beerGenotype.getBitGroupSize());
     ann.setWeights(getNormalizedValues(beerGenotype.toList()));
   }
