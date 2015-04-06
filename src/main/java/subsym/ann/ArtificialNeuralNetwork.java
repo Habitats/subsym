@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import subsym.ann.nodes.AnnNode;
 import subsym.ann.nodes.AnnNodes;
 import subsym.ann.nodes.InputNode;
+import subsym.ann.nodes.OutputNode;
 
 /**
  * Created by anon on 20.03.2015.
@@ -99,6 +101,7 @@ public class ArtificialNeuralNetwork {
     }
     AtomicInteger i = new AtomicInteger(0);
     this.inputs.stream().forEach(n -> ((InputNode) n).setValue(inputs.get(i.getAndIncrement())));
+
     layers.stream().flatMap(AnnNodes::stream).forEach(AnnNode::incrementTime);
   }
 
@@ -143,5 +146,23 @@ public class ArtificialNeuralNetwork {
 
   public static String nextId() {
     return "n" + (idCounter++);
+  }
+
+  public void setTimeConstants(List<Double> doubles) {
+    AtomicInteger i = new AtomicInteger();
+    getOutputStream().forEach(outputNode -> outputNode.setTimeConstant(doubles.get(i.getAndIncrement())));
+  }
+
+  public void setGains(List<Double> gains) {
+    AtomicInteger i = new AtomicInteger();
+    getOutputStream().forEach(outputNode -> outputNode.setGain(gains.get(i.getAndIncrement())));
+  }
+
+  private Stream<OutputNode> getOutputStream() {
+    return layers.stream().flatMap(AnnNodes::stream).filter(n -> n instanceof OutputNode).map(n -> (OutputNode) n);
+  }
+
+  public void setStateful() {
+    layers.stream().flatMap(AnnNodes::stream).forEach(AnnNode::setStateful);
   }
 }

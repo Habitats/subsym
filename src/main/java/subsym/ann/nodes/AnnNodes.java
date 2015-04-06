@@ -14,7 +14,7 @@ public class AnnNodes {
 
   private final List<AnnNode> values;
 
-  public AnnNodes(List<AnnNode> values) {
+  public AnnNodes( List<AnnNode> values) {
     this.values = values;
   }
   public AnnNodes(AnnNode... values) {
@@ -30,7 +30,7 @@ public class AnnNodes {
   }
 
   public static AnnNodes createInput(List<Double> values) {
-    return new AnnNodes(values.stream().map(AnnNode::createInput).collect(Collectors.toList()));
+    return new AnnNodes( values.stream().map(AnnNode::createInput).collect(Collectors.toList()));
   }
 
   public List<Double> getValues() {

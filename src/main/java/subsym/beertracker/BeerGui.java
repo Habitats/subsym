@@ -23,7 +23,6 @@ import subsym.models.entity.TileEntity;
  */
 public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
-
   private final BeerGame game;
   private JPanel mainPanel;
   private AIGridCanvas canvas;

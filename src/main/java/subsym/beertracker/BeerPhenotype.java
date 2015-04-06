@@ -30,19 +30,45 @@ public class BeerPhenotype implements Phenotype {
     AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(2);
     ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
+    ann.setStateful();
 
     List<AnnNodes> layers = ann.getLayers();
-    AnnNodes nodes = new AnnNodes(IntStream.range(1, layers.size())//
+    AnnNodes nodes = new AnnNodes( IntStream.range(1, layers.size())//
                                       .mapToObj(layers::get).flatMap(AnnNodes::stream)//
                                       .collect(Collectors.toList()));
-    ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
     ann.addBiasNode(nodes);
     ann.addSelfNode(nodes);
+    ann.getLayers().stream().forEach(layer -> {
+      layer.stream().forEach(n -> {
+        layer.stream().filter(other -> !n.equals(other)).forEach(n::connect);
+      });
+    });
 
-    this.beerGenotype.setRandom(ann.getNumWeights() * beerGenotype.getBitGroupSize());
-    ann.setWeights(getNormalizedValues(beerGenotype.toList()));
+    this.beerGenotype.setRandom(ann.getNumWeights() * beerGenotype.getBitGroupSize() * 3);
+
+    List<Double> normalizedValues = getNormalizedValues(beerGenotype.toList());
+
+    List<Double> weights = getWeights(normalizedValues.subList(0, ann.getNumWeights()));
+    List<Double> timeConstants = getTimeConstants(normalizedValues.subList(ann.getNumWeights(), ann.getNumWeights() * 2));
+    List<Double> gains = getGains(normalizedValues.subList(ann.getNumWeights() * 2, ann.getNumWeights() * 3));
+    ann.setWeights(weights);
+    ann.setTimeConstants(timeConstants);
+    ann.setGains(gains);
+
     ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
     return ann;
+  }
+
+  private List<Double> getWeights(List<Double> values) {
+    return values.stream().map(g -> (g * 10) - 5).collect(Collectors.toList());
+  }
+
+  private List<Double> getTimeConstants(List<Double> values) {
+    return values.stream().map(g -> g + 1).collect(Collectors.toList());
+  }
+
+  private List<Double> getGains(List<Double> values) {
+    return values.stream().map(g -> (g * 4) + 1).collect(Collectors.toList());
   }
 
   private List<Double> getNormalizedValues(List<Integer> values) {

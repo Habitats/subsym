@@ -21,6 +21,7 @@ public abstract class AnnNode {
   protected Map<AnnNode, Double> inputWeights;
   protected double currentValue;
   private InputNode selfNode;
+  private boolean hasState = false;
 
   protected AnnNode(Random random) {
     this.random = random;
@@ -51,6 +52,9 @@ public abstract class AnnNode {
   }
 
   public void setActivationFunction(ActivationFunction activationFunction) {
+    if (this.activationFunction != null) {
+      return;
+    }
     this.activationFunction = activationFunction;
     inputs.stream().forEach(n -> n.setActivationFunction(activationFunction));
   }
@@ -92,5 +96,13 @@ public abstract class AnnNode {
   public void addSelfNode(InputNode bias) {
     bias.connect(this);
     selfNode = bias;
+  }
+
+  public void setStateful() {
+    hasState = true;
+  }
+
+  public boolean hasState() {
+    return hasState;
   }
 }
