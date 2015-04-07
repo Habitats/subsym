@@ -44,7 +44,7 @@ import subsym.surprisingsequence.SurprisingSequences;
 public class GeneticGui extends AIGui {
 
   private static final String TAG = GeneticGui.class.getSimpleName();
-  private final AnnPreferences annPreferences;
+//  private final AnnPreferences annPreferences;
 
   private Plot plot;
   private JPanel mainPanel;
@@ -109,13 +109,13 @@ public class GeneticGui extends AIGui {
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
-    annPreferences = AnnPreferences.getBeerDefault();
+    prefs.setAnnPreferences(AnnPreferences.getBeerDefault());
     setPreferences(prefs);
 
     Genetics.values().forEach(puzzleSelect::addItem);
     AdultSelection.values().forEach(adultSelection::addItem);
     MatingSelection.values().forEach(matingSelection::addItem);
-    GeneticPreferences.getPresets().keySet().forEach(presetsComboBox::addItem);
+    GeneticPreferences.getPresets().keySet().stream().sorted().forEach(presetsComboBox::addItem);
 
     presetsComboBox
         .addActionListener(e -> setPreferences(GeneticPreferences.getPresets().get(((JComboBox) e.getSource()).getSelectedItem())));
@@ -226,6 +226,8 @@ public class GeneticGui extends AIGui {
     annHiddenLayerLabel.setVisible(!b);
     annHiddenNeuronInput.setVisible(!b);
     annHiddenNeuronLabel.setVisible(!b);
+    singleCheckbox.setVisible(!b);
+    dynamicCheckbox.setVisible(!b);
   }
 
   private void setVisibleOneMax(boolean b) {
@@ -243,6 +245,8 @@ public class GeneticGui extends AIGui {
     annHiddenLayerLabel.setVisible(!b);
     annHiddenNeuronInput.setVisible(!b);
     annHiddenNeuronLabel.setVisible(!b);
+    singleCheckbox.setVisible(!b);
+    dynamicCheckbox.setVisible(!b);
   }
 
   private void setVisibleSurprising(boolean b) {
@@ -260,6 +264,8 @@ public class GeneticGui extends AIGui {
     annHiddenLayerLabel.setVisible(!b);
     annHiddenNeuronInput.setVisible(!b);
     annHiddenNeuronLabel.setVisible(!b);
+    singleCheckbox.setVisible(!b);
+    dynamicCheckbox.setVisible(!b);
   }
 
   private void setVisibleAiLife(boolean b) {
@@ -277,6 +283,8 @@ public class GeneticGui extends AIGui {
     annHiddenLayerLabel.setVisible(b);
     annHiddenNeuronInput.setVisible(b);
     annHiddenNeuronLabel.setVisible(b);
+    singleCheckbox.setVisible(b);
+    dynamicCheckbox.setVisible(b);
   }
 
   private void setVisibleBeer(boolean b) {
@@ -294,6 +302,8 @@ public class GeneticGui extends AIGui {
     annHiddenLayerLabel.setVisible(b);
     annHiddenNeuronInput.setVisible(b);
     annHiddenNeuronLabel.setVisible(b);
+    singleCheckbox.setVisible(!b);
+    dynamicCheckbox.setVisible(!b);
   }
 
   private void initDefaultPreferences() {
@@ -333,6 +343,7 @@ public class GeneticGui extends AIGui {
   public boolean updatePreferences() {
     Log.i(TAG, "Updating preferences ...");
     try {
+      AnnPreferences annPreferences = prefs.getAnnPreferences();
       annPreferences.setSingle(singleCheckbox.isSelected());
       annPreferences.setDynamic(dynamicCheckbox.isSelected());
       annPreferences.setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
@@ -382,10 +393,10 @@ public class GeneticGui extends AIGui {
       return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
     } else if (puzzle.equals(AiLife.class.getSimpleName())) {
       setVisibleAiLife(true);
-      return new AiLife(prefs, annPreferences);
+      return new AiLife(prefs, prefs.getAnnPreferences());
     } else if (puzzle.equals(BeerTracker.class.getSimpleName())) {
       setVisibleBeer(true);
-      return new BeerTracker(prefs, annPreferences);
+      return new BeerTracker(prefs, prefs.getAnnPreferences());
     }
     throw new IllegalStateException("No puzzle selected!");
   }
@@ -468,6 +479,8 @@ public class GeneticGui extends AIGui {
   }
 
   public void setPreferences(GeneticPreferences prefs) {
+
+    // Genetics Preferences below
     crossoverInput.setText(String.valueOf(prefs.getCrossOverRate()));
     populationSizeInput.setText(String.valueOf(prefs.getPopulationSize()));
     genomeMutationInput.setText(String.valueOf(prefs.getGenomeMutationRate()));
@@ -503,6 +516,8 @@ public class GeneticGui extends AIGui {
       tournamentInput.setText(mateSelectionMode.getTournamentK() + "/" + mateSelectionMode.getTournamentE());
     }
 
+    // Artificial Neural Network Preferences below
+    AnnPreferences annPreferences = prefs.getAnnPreferences();
     if (prefs.getPuzzle() instanceof AiLife) {
       annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
       annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));

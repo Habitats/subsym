@@ -5,6 +5,7 @@ import java.util.Map;
 
 import subsym.ailife.AiLife;
 import subsym.ann.AnnPreferences;
+import subsym.ann.Sigmoid;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
@@ -40,6 +41,7 @@ public class GeneticPreferences {
   private boolean plotMultiple;
   //  private AnnPreferences annPreferences;
   private int maxGenerations;
+  private AnnPreferences annPreferences;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate, double genomeMutationRate,
                             AdultSelection adultSelectionMode, MatingSelection mateSelectionMode, int maxGenerations) {
@@ -134,7 +136,7 @@ public class GeneticPreferences {
     GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(), 200);
     GeneticProblem problem = new AiLife(prefs, AnnPreferences.getAiLifeDefault());
     prefs.setPuzzle(problem);
-//    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
+    prefs.setAnnPreferences(new AnnPreferences(0, 0, new Sigmoid()));
     return prefs;
   }
 
@@ -142,7 +144,8 @@ public class GeneticPreferences {
     GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(), 10);
     GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getBeerDefault());
     prefs.setPuzzle(problem);
-//    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
+
+    prefs.setAnnPreferences(new AnnPreferences(1, 2, new Sigmoid()));
     return prefs;
   }
 
@@ -299,5 +302,13 @@ public class GeneticPreferences {
 
   public void setMaxGenerations(int maxGenerations) {
     this.maxGenerations = maxGenerations;
+  }
+
+  public void setAnnPreferences(AnnPreferences annPreferences) {
+    this.annPreferences = annPreferences;
+  }
+
+  public AnnPreferences getAnnPreferences() {
+    return annPreferences;
   }
 }
