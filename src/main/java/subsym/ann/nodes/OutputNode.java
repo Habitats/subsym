@@ -1,7 +1,6 @@
 package subsym.ann.nodes;
 
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * Created by anon on 24.03.2015.
@@ -12,8 +11,8 @@ public class OutputNode extends AnnNode {
   private double t = 1;
   private double gain = 1;
 
-  protected OutputNode(Random random) {
-    super(random);
+  protected OutputNode(Random random, WeightBound bound) {
+    super(random, bound);
   }
 
   @Override

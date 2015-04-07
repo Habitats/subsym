@@ -54,7 +54,7 @@ public class BeerPhenotype implements Phenotype {
 
     List<Double> normalizedValues = getNormalizedValues(beerGenotype.toList());
 
-    List<Double> weights = getWeights(normalizedValues.subList(0, ann.getNumWeights()));
+    List<Double> weights = normalizedValues.subList(0, ann.getNumWeights());
     List<Double> timeConstants = getTimeConstants(normalizedValues.subList(ann.getNumWeights(), ann.getNumWeights() * 2));
     List<Double> gains = getGains(normalizedValues.subList(ann.getNumWeights() * 2, ann.getNumWeights() * 3));
     ann.setWeights(weights);
@@ -63,10 +63,6 @@ public class BeerPhenotype implements Phenotype {
 
     ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
     return ann;
-  }
-
-  private List<Double> getWeights(List<Double> values) {
-    return values.stream().map(g -> (g * 10) - 5).collect(Collectors.toList());
   }
 
   private List<Double> getTimeConstants(List<Double> values) {

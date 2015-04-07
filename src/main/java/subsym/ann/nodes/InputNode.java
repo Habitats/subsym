@@ -10,8 +10,8 @@ public class InputNode extends AnnNode {
 
   private Double value;
 
-  protected InputNode(Double value, Random random) {
-    super(random);
+  protected InputNode(Double value, Random random, WeightBound bound) {
+    super(random, bound);
     this.value = value;
   }
 

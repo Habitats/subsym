@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import subsym.ann.ActivationFunction;
 import subsym.ann.ArtificialNeuralNetwork;
@@ -22,9 +23,11 @@ public abstract class AnnNode {
   private Random random = new Random();
   private InputNode selfNode;
   private boolean hasState = false;
+  private WeightBound bound;
 
-  protected AnnNode(Random random) {
+  protected AnnNode(Random random, WeightBound bound) {
     this.random = random;
+    this.bound = bound;
     inputs = AnnNodes.createInput();
     inputWeights = new HashMap<>();
     id = ArtificialNeuralNetwork.nextId();
@@ -35,15 +38,15 @@ public abstract class AnnNode {
   //##################################################################
 
   public static OutputNode createOutput() {
-    return new OutputNode(ArtificialNeuralNetwork.random());
+    return new OutputNode(ArtificialNeuralNetwork.random(), new WeightBound(-5, 5));
   }
 
   public static InputNode createInput(Double value) {
-    return new InputNode(value, ArtificialNeuralNetwork.random());
+    return new InputNode(value, ArtificialNeuralNetwork.random(), new WeightBound(-5, 5));
   }
 
   public static AnnNode createBias() {
-    return new InputNode(1., ArtificialNeuralNetwork.random());
+    return new InputNode(1., ArtificialNeuralNetwork.random(), new WeightBound(-10, 0));
   }
 
   //##################################################################
@@ -84,7 +87,7 @@ public abstract class AnnNode {
   }
 
   public void setWeight(AnnNode outputNode, Double weight) {
-    inputWeights.put(outputNode, weight);
+    inputWeights.put(outputNode, bound.fromNormal(weight));
   }
 
   public void setActivationFunction(ActivationFunction activationFunction) {
@@ -116,5 +119,20 @@ public abstract class AnnNode {
   @Override
   public String toString() {
     return id + " ";
+  }
+
+  public static class WeightBound {
+
+    private final double lower;
+    private final double upper;
+
+    private WeightBound(double lower, double upper) {
+      this.lower = lower;
+      this.upper = upper;
+    }
+
+    public double fromNormal(double weight) {
+      return (weight * (upper - lower)) + lower;
+    }
   }
 }
