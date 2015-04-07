@@ -17,6 +17,7 @@ public class BeerGame {
 
   private ArtificialNeuralNetwork ann;
 
+
   private enum State {
     ABORTING, SIMULATING, IDLE;
   }
@@ -53,6 +54,12 @@ public class BeerGame {
     reset();
     initGui();
     simulateFallingPieces(board, tracker, ann);
+  }
+
+  public void play() {
+    reset();
+    initGui();
+    simulateFallingPieces(board, tracker, null);
   }
 
   public void initGui() {
