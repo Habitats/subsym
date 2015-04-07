@@ -116,6 +116,15 @@ public abstract class AnnNode {
     return hasState;
   }
 
+
+  protected String getFormattedWeights() {
+    String weights = "";
+    if (inputs.size() > 0) {
+      weights = inputs.stream()//
+          .map(n -> String.format("(%s,- %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
+    }
+    return weights;
+  }
   @Override
   public String toString() {
     return id + " ";

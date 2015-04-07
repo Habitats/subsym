@@ -17,13 +17,10 @@ public class InputNode extends AnnNode {
 
   @Override
   public String toString() {
-    String weights = "";
-    if (inputs.size() > 0) {
-      weights = inputs.stream()//
-          .map(n -> String.format("(%s - %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
-    }
+    String weights = getFormattedWeights();
     return super.toString() + String.format("V = %.3f %s", getValue(), weights);
   }
+
 
   @Override
   public double getValue() {

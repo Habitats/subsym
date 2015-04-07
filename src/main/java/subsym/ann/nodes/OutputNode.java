@@ -52,11 +52,6 @@ public class OutputNode extends AnnNode {
 
   @Override
   public String toString() {
-    String weights = "";
-    if (inputs.size() > 0) {
-      weights = inputs.stream() //
-          .map(n -> String.format("(%s - %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
-    }
-    return super.toString() + String.format("S = %.3f > O = %.3f %s", getInputSum(), getValue(), weights);
+    return super.toString() + String.format("S = %.3f > O = %.3f %s", getInputSum(), getValue(), getFormattedWeights());
   }
 }
