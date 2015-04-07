@@ -126,13 +126,33 @@ public abstract class Genotype implements Comparable<Genotype> {
     IntStream.range(0, numInts).forEach(intIndex -> {
       int start = intIndex * getBitGroupSize();
       BitSet bitSet = bits.get(start, start + getBitGroupSize());
-      int bitInt = !bitSet.isEmpty() ? (int) bitSet.toLongArray()[0] : 0;
+//      int bitInt = toIntegerFromBinary(bitSet);
+      int bitInt = grayDecode(bitSet);
       ints.add(bitInt);
     });
     return ints;
   }
 
+  private int toIntegerFromBinary(BitSet bitSet) {
+    return !bitSet.isEmpty() ? (int) bitSet.toLongArray()[0] : 0;
+  }
+
+  private int grayDecode(BitSet bits) {
+    String nBits = getBitsString(bits);
+//    String result = nBits.substring(0, 1);
+    BitSet res = new BitSet();
+    for (int i = 1; i < nBits.length(); i++) {
+//      result += nBits.charAt(i) != result.charAt(i - 1) ? "1" : "0";
+      res.set(i, bits.get(i) != res.get(i - 1) ? true : false);
+    }
+    return !res.isEmpty() ? (int) res.toLongArray()[0] : 0;
+  }
+
   public String getBitsString() {
+    return getBitsString(bits);
+  }
+
+  public String getBitsString(BitSet bits) {
     BigInteger b = BigInteger.ZERO;
     for (int i = bits.nextSetBit(0); i >= 0; i = bits.nextSetBit(i + 1)) {
       b = b.setBit(i);
