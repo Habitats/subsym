@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import subsym.ann.activation.ActivationFunction;
 import subsym.ann.nodes.AnnNode;
 import subsym.ann.nodes.AnnNodes;
 import subsym.ann.nodes.InputNode;

@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import subsym.ann.ActivationFunction;
+import subsym.ann.activation.ActivationFunction;
 import subsym.ann.ArtificialNeuralNetwork;
 
 /**

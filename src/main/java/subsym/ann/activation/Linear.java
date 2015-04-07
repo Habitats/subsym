@@ -1,4 +1,4 @@
-package subsym.ann;
+package subsym.ann.activation;
 
 /**
  * Created by anon on 06.04.2015.

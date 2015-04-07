@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
-import subsym.ann.Sigmoid;
+import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 

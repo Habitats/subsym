@@ -1,5 +1,8 @@
 package subsym.ann;
 
+import subsym.ann.activation.ActivationFunction;
+import subsym.ann.activation.Sigmoid;
+
 /**
  * Created by anon on 24.03.2015.
  */

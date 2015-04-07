@@ -11,7 +11,7 @@ import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
-import subsym.ann.Sigmoid;
+import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 import subsym.models.Board;
