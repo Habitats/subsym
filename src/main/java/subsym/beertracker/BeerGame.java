@@ -15,6 +15,8 @@ import subsym.models.entity.TileEntity;
  */
 public class BeerGame {
 
+  private ArtificialNeuralNetwork ann;
+
   private enum State {
     ABORTING, SIMULATING, IDLE;
   }
@@ -50,7 +52,7 @@ public class BeerGame {
   public void restart() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, null);
+    simulateFallingPieces(board, tracker, ann);
   }
 
   public void initGui() {
@@ -61,6 +63,7 @@ public class BeerGame {
   }
 
   public int simulate(ArtificialNeuralNetwork ann) {
+    this.ann = ann;
     simulateFallingPieces(board, tracker, ann);
     return getScore();
   }
