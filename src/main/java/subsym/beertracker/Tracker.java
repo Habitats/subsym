@@ -8,7 +8,6 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.Log;
 import subsym.gui.ColorUtils;
 import subsym.gui.Direction;
 import subsym.models.Board;
@@ -46,7 +45,7 @@ public class Tracker extends MultiTile {
 
   @Override
   protected void collision(Direction dir) {
-    Log.v(TAG, "Collision: " + dir.name());
+//    Log.v(TAG, "Collision: " + dir.name());
   }
 
   @Override
@@ -63,21 +62,21 @@ public class Tracker extends MultiTile {
   }
 
   public void onAvoided(Piece piece) {
-    Log.v(TAG, "Avoided: \t" + piece);
+//    Log.v(TAG, "Avoided: \t" + piece);
     fade(50, 70, () -> setColor(Color.darkGray));
     listeners.forEach(TrackerListener::onAvoided);
     avoided++;
   }
 
   public void onCaught(Piece piece) {
-    Log.v(TAG, "Caught: \t" + piece);
+//    Log.v(TAG, "Caught: \t" + piece);
     fade(20, 40, () -> fade(40, 20, () -> setColor(Color.darkGray)));
     listeners.forEach(TrackerListener::onCaught);
     caught++;
   }
 
   public void onCrash(Piece piece) {
-    Log.v(TAG, "Crashed: \t" + piece);
+//    Log.v(TAG, "Crashed: \t" + piece);
     fade(80, 100, () -> fade(100, 80, () -> setColor(Color.darkGray)));
     listeners.forEach(TrackerListener::onCrash);
     crashed++;
@@ -143,19 +142,16 @@ public class Tracker extends MultiTile {
   }
 
   public int fitness() {
-    return (caught * 2) - crashed - avoided;
+    return (caught * 2) - (crashed * 3) - avoided;
   }
 
   public void move(List<Double> outputs) {
     double max = Math.max(outputs.get(0), outputs.get(1));
     double min = Math.min(outputs.get(0), outputs.get(1));
-
     double delta = Math.abs(max - min) / max;
-
-//    int multiplier = (int) Math.round(max / min);
     int multiplier = (int) Math.round(delta * 4);
-    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f",multiplier, min , max,delta));
-    if (outputs.get(0) > outputs.get(1)) {
+//    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f",multiplier, min , max,delta));
+    if (outputs.get(0) >= outputs.get(1)) {
       IntStream.range(0, multiplier).forEach(i -> moveRight(true));
     } else {
       IntStream.range(0, multiplier).forEach(i -> moveLeft(true));

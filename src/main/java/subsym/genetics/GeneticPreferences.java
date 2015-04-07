@@ -141,7 +141,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getBeer() {
-    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(), 10);
+    GeneticPreferences prefs = new GeneticPreferences(50, 0.1, 0.9, 0.0001, new Mixing(0.5), new Rank(), 50);
     GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getBeerDefault());
     prefs.setPuzzle(problem);
 
