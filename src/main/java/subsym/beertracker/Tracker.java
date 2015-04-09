@@ -141,9 +141,14 @@ public class Tracker extends MultiTile {
     return crashed;
   }
 
-  public int fitness() {
-    return (caught * 3) - (crashed * 2) - avoided * 1;
-//    return avoided;
+  public double calculateScore(int numBad, int numGood) {
+    double max = numGood * 3;
+    int deltaGood = numGood - caught;
+    int deltaBad = numBad - crashed;
+    double goodScore = 1 / (1. + deltaGood);
+    double badScore = 1 / (1. + numBad - deltaBad);
+//    Log.v(TAG, goodScore + " " + badScore);
+    return caught - crashed;
   }
 
   public void move(List<Double> outputs) {

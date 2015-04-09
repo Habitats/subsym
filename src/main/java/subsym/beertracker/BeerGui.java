@@ -117,7 +117,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   }
 
   private void updateScore() {
-    scoreLabel.setText(String.format("Score: %3d", game.getScore()));
+    scoreLabel.setText(String.format("Score: %3f", game.getScore()));
   }
 
   private void updateTime() {

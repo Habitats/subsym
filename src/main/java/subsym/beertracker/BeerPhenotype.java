@@ -19,7 +19,7 @@ public class BeerPhenotype implements Phenotype {
   private final BeerGenotype beerGenotype;
   private final AnnPreferences prefs;
   private final ArtificialNeuralNetwork ann;
-  private Integer score = null;
+  private Double score = null;
 
   public BeerPhenotype(BeerGenotype beerGenotype, AnnPreferences prefs) {
     this.beerGenotype = beerGenotype;

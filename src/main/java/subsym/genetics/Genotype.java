@@ -39,15 +39,19 @@ public abstract class Genotype implements Comparable<Genotype> {
     for (int i = 0; i < size; i++) {
       bits.set(i, random.nextBoolean());
     }
-    fitness = null;
+    resetFitness();
     return this;
+  }
+
+  private  void resetFitness() {
+    fitness = null;
   }
 
   public Genotype setEmpty(int size) {
     this.size = size;
     bits = new BitSet();
     bits.set(0, size, false);
-    fitness = null;
+    resetFitness();
     return this;
   }
 
@@ -55,7 +59,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
     copy.size = size;
-    copy.fitness = null;
+    copy.fitness = fitness;
     copy(copy);
     return copy;
   }
@@ -90,7 +94,7 @@ public abstract class Genotype implements Comparable<Genotype> {
       w.bits.set(i, value);
     }
 
-    w.fitness = null;
+    w.resetFitness();
     return w;
   }
 
@@ -102,13 +106,15 @@ public abstract class Genotype implements Comparable<Genotype> {
       Collections.swap(randomSequence, i, i + r.nextInt(randomSequence.size() - i));
     }
     IntStream.range(0, numBits).forEach(i -> bits.flip(randomSequence.remove(0)));
-    fitness = null;
+    resetFitness();
   }
 
   // mutate each bit with a given probability
   public void mutate(double mutationRate) {
-    IntStream.range(0, size()).filter(i -> Math.random() < mutationRate).forEach(bits::flip);
-    fitness = null;
+    IntStream.range(0, size()).filter(i -> Math.random() < mutationRate).forEach((bitIndex) -> {
+      bits.flip(bitIndex);
+      resetFitness();
+    });
   }
 
   public BitSet toBitSet(List<Integer> ints, int groupSize) {
@@ -184,7 +190,7 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   public void invert() {
     bits.flip(0, size);
-    fitness = null;
+    resetFitness();
   }
 
   public void setGenerationOrigin(int generationOrigin) {

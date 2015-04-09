@@ -16,6 +16,8 @@ import subsym.models.entity.TileEntity;
 public class BeerGame {
 
   private ArtificialNeuralNetwork ann;
+  private int numGood;
+  private int numBad;
 
 
   private enum State {
@@ -44,6 +46,8 @@ public class BeerGame {
   }
 
   public void reset() {
+    numGood = 0;
+    numBad = 0;
     board = new Board<>(30, 15);
     IntStream.range(0, board.getWidth()).forEach(x -> IntStream.range(0, board.getHeight())//
         .forEach(y -> board.set(new Empty(x, y, board))));
@@ -69,7 +73,7 @@ public class BeerGame {
     gui.setAdapter(board);
   }
 
-  public int simulate(ArtificialNeuralNetwork ann) {
+  public double simulate(ArtificialNeuralNetwork ann) {
     this.ann = ann;
     simulateFallingPieces(board, tracker, ann);
     return getScore();
@@ -79,8 +83,15 @@ public class BeerGame {
     state = State.SIMULATING;
     Random r = new Random();
     time = 0;
+
     while (true) {
-      Piece piece = new Piece(board, 1 + r.nextInt(6), tracker);
+      int width = 1 + r.nextInt(6);
+      Piece piece = new Piece(board, width, tracker);
+      if (width < 5) {
+        numGood++;
+      } else {
+        numBad++;
+      }
       int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
       IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
       while (piece.moveDown(false)) {
@@ -144,8 +155,8 @@ public class BeerGame {
     return MAX_TIME - time;
   }
 
-  public int getScore() {
-    return tracker.fitness();
+  public double getScore() {
+    return tracker.calculateScore(numBad, numGood);
   }
 
   public int getCrashed() {
