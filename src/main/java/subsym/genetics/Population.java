@@ -82,17 +82,19 @@ public class Population {
   }
 
   public void mutate(double populationMutationRate, double genotypeMutationRate) {
-    List<Genotype> children = new ArrayList<>(nextGeneration.get());
+    List<Genotype> mutationCandidates = new ArrayList<>(currentPopulation.get());
 
-    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peekBest().size());
-    int numIndividualsToMutate = (int) Math.ceil(populationMutationRate * (children.size()));
+//    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peekBest().size());
+    int numIndividualsToMutate = (int) Math.ceil(populationMutationRate * currentPopulation.size());
     Random r = new Random();
     for (int i = 0; i < (numIndividualsToMutate); i++) {
-      Collections.swap(children, i, r.nextInt(children.size() - i));
+      Collections.swap(mutationCandidates, i, r.nextInt(mutationCandidates.size() - i));
     }
-    children.stream() //
-        .limit(numIndividualsToMutate) //
-        .forEach(v -> v.mutate(genotypeMutationRate));
+    mutationCandidates.stream().limit(numIndividualsToMutate).map(Genotype::copy).forEach(v -> {
+      v.mutate(genotypeMutationRate);
+      nextGeneration.add(v);
+    });
+
   }
 
   public void add(Genotype genotype) {

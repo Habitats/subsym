@@ -14,6 +14,7 @@ import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
+import subsym.ann.WeightBound;
 import subsym.ann.activation.Linear;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
@@ -70,10 +71,10 @@ public class test_ailife {
 
   @Test
   public void test_ann() {
-    AnnNodes inputs = AnnNodes.createInput(0.1, 0.2, 0.3);
+    AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0.1, 0.2, 0.3);
     assertEquals(inputs.getValues(), Arrays.asList(0.1, 0.2, 0.3));
-    AnnNodes outputs = AnnNodes.createOutput(2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs, new Sigmoid());
+    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs);
     ann.updateInput(0.8, 0.9, 0.2);
     assertEquals(inputs.getValues(), Arrays.asList(0.8, 0.9, 0.2));
     assertEquals(ann.getInputs(), Arrays.asList(0.8, 0.9, 0.2));
@@ -97,6 +98,44 @@ public class test_ailife {
     double out1 = activationFunction.evaluate(o1);
     double out2 = activationFunction.evaluate(o2);
     assertEquals(Arrays.asList(out1, out2), ann.getOutputs());
+  }
+
+  @Test
+  public void test_ctrnn() {
+    AnnNodes inputs = AnnNodes.createInput(new WeightBound(0, 1), 1., 1.);
+    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(0, 1), 1);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Linear()), inputs, outputs);
+    ann.setStateful();
+
+    AnnNodes nodes = ann.getLayers().get(1);
+    ann.addBiasNode(new WeightBound(1, 2), nodes);
+    ann.addSelfNode(new WeightBound(3, 4), nodes);
+    nodes.stream().forEach(n -> {
+      nodes.stream().filter(other -> !n.equals(other)).forEach(n::connect);
+    });
+
+    Random r = new Random(0);
+    List<Double> weights = getRandom(ann.getNumWeights(), r);
+    assertEquals(weights.size(), 12);
+    List<Double> timeConstants = getRandom(ann.getNumNodes(), r);
+    List<Double> gains = getRandom(ann.getNumNodes(), r);
+    ann.setWeights(weights);
+    ann.setTimeConstants(timeConstants);
+    ann.setGains(gains);
+
+    List<Double> vals = outputs.getValues();
+    ann.updateInput(1., 0.);
+    vals = outputs.getValues();
+    ann.updateInput(0., 1.);
+    vals = outputs.getValues();
+    ann.updateInput(0., 0.);
+    vals = outputs.getValues();
+    ann.updateInput(1., 1.);
+    vals = outputs.getValues();
+  }
+
+  private List<Double> getRandom(int num, Random r) {
+    return IntStream.range(0, num).mapToDouble(i -> r.nextDouble()).boxed().collect(Collectors.toList());
   }
 
   private void displayGui(Board<TileEntity> board, final Robot robot) {

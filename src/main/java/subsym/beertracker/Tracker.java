@@ -142,7 +142,7 @@ public class Tracker extends MultiTile {
   }
 
   public int fitness() {
-    return (caught * 10) - (crashed * 15) - avoided * 1;
+    return (caught * 3) - (crashed * 2) - avoided * 1;
 //    return avoided;
   }
 

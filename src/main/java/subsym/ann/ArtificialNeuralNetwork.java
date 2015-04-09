@@ -30,13 +30,13 @@ public class ArtificialNeuralNetwork {
   private final List<AnnNodes> layers;
   private AnnNodes biasNodes;
 
-  public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs, ActivationFunction activationFunction) {
+  public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
     layers = new ArrayList<>();
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
     this.inputs = inputs;
     this.outputs = outputs;
-    this.activationFunction = activationFunction;
+    this.activationFunction = prefs.getActivationFunction();
     createNetwork();
     setActivationFunction();
     setWeights(Collections.nCopies(getNumWeights(), .1));
@@ -50,8 +50,8 @@ public class ArtificialNeuralNetwork {
     return "n" + (idCounter++);
   }
 
-  public void addBiasNode(AnnNodes nodes) {
-    AnnNode bias = AnnNode.createBias();
+  public void addBiasNode(WeightBound bound, AnnNodes nodes) {
+    AnnNode bias = AnnNode.createBias(bound);
     bias.connect(nodes);
 
     if (biasNodes == null) {
@@ -61,9 +61,9 @@ public class ArtificialNeuralNetwork {
     biasNodes.add(bias);
   }
 
-  public void addSelfNode(AnnNodes nodes) {
+  public void addSelfNode(WeightBound bound, AnnNodes nodes) {
     nodes.stream().forEach(n -> {
-      InputNode bias = InputNode.createInput(1.);
+      InputNode bias = InputNode.createInput(bound, 1.);
       n.addSelfNode(bias);
       if (biasNodes == null) {
         biasNodes = new AnnNodes();
@@ -81,13 +81,17 @@ public class ArtificialNeuralNetwork {
     AnnNodes currentLayer = inputs;
     layers.add(inputs);
     for (int i = 0; i < hiddenLayerCount; i++) {
-      AnnNodes nextLayer = AnnNodes.createOutput(hiddenNeuronCount);
+      AnnNodes nextLayer = AnnNodes.createOutput(getInternalWeightBound(), hiddenNeuronCount);
       layers.add(nextLayer);
       currentLayer.stream().forEach(v -> v.connect(nextLayer));
       currentLayer = nextLayer;
     }
     layers.add(outputs);
     currentLayer.stream().forEach(v -> v.connect(outputs));
+  }
+
+  private WeightBound getInternalWeightBound() {
+    return getLayers().get(0).stream().findFirst().get().getBound();
   }
 
   public void updateInput(Double... inputs) {
@@ -149,7 +153,7 @@ public class ArtificialNeuralNetwork {
   }
 
 
-public void setActivationFunction() {
+  public void setActivationFunction() {
     outputs.stream().forEach(node -> node.setActivationFunction(activationFunction));
   }
 

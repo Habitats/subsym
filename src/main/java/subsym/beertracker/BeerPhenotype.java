@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
+import subsym.ann.WeightBound;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
@@ -18,6 +19,7 @@ public class BeerPhenotype implements Phenotype {
   private final BeerGenotype beerGenotype;
   private final AnnPreferences prefs;
   private final ArtificialNeuralNetwork ann;
+  private Integer score = null;
 
   public BeerPhenotype(BeerGenotype beerGenotype, AnnPreferences prefs) {
     this.beerGenotype = beerGenotype;
@@ -28,27 +30,30 @@ public class BeerPhenotype implements Phenotype {
 
   @Override
   public double fitness() {
-    BeerGame game = new BeerGame();
-    return game.simulate(ann);
+    if (score == null) {
+      BeerGame game = new BeerGame();
+      score = game.simulate(ann);
+    }
+    return score;
   }
 
   private ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(BeerGenotype beerGenotype, AnnPreferences prefs) {
-    AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0.);
-    AnnNodes outputs = AnnNodes.createOutput(2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs, new Sigmoid());
+    AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
+    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
     ann.setStateful();
 
     List<AnnNodes> layers = ann.getLayers();
     AnnNodes nodes = new AnnNodes(IntStream.range(1, layers.size())//
                                       .mapToObj(layers::get).flatMap(AnnNodes::stream)//
                                       .collect(Collectors.toList()));
-    ann.addBiasNode(nodes);
-    ann.addSelfNode(nodes);
+    ann.addBiasNode(new WeightBound(-10, 0), nodes);
     ann.getLayers().stream().forEach(layer -> {
       layer.stream().forEach(n -> {
         layer.stream().filter(other -> !n.equals(other)).forEach(n::connect);
       });
     });
+    ann.addSelfNode(new WeightBound(-5, 5), nodes);
 
     this.beerGenotype.setRandom(ann.getNumWeights() * beerGenotype.getBitGroupSize() * 3);
 

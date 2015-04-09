@@ -12,17 +12,19 @@ import subsym.genetics.Phenotype;
 public class SurprisingGenotype extends Genotype {
 
   private static final String TAG = SurprisingGenotype.class.getSimpleName();
+  private final boolean grayCode;
   private boolean global;
   private List<Integer> alphabet;
   private SurprisingPhenotype phenotype;
   private int groupSize;
 
-  public SurprisingGenotype(int bitGroupSize) {
+  public SurprisingGenotype(int bitGroupSize, boolean grayCode) {
     this.groupSize = bitGroupSize;
+    this.grayCode = grayCode;
   }
 
-  public SurprisingGenotype() {
-    this(1);
+  public SurprisingGenotype(boolean grayCode) {
+    this(1, grayCode);
   }
 
   @Override
@@ -34,14 +36,20 @@ public class SurprisingGenotype extends Genotype {
     surpriseCopy.global = global;
   }
 
-  public SurprisingGenotype(List<Integer> permutation, List<Integer> alphabet, boolean global) {
+  public SurprisingGenotype(List<Integer> permutation, List<Integer> alphabet, boolean global, boolean grayCode) {
     this.alphabet = alphabet;
     this.global = global;
     groupSize = getBitGroupSize(alphabet);
     setSize(groupSize * permutation.size());
     bits = toBitSet(permutation, groupSize);
     phenotype = new SurprisingPhenotype(this);
+    this.grayCode = grayCode;
 //    Log.v(TAG, phenotype);
+  }
+
+  @Override
+  public boolean shouldGrayCode() {
+    return grayCode;
   }
 
   @Override
@@ -51,7 +59,7 @@ public class SurprisingGenotype extends Genotype {
 
   @Override
   protected Genotype newInstance() {
-    return new SurprisingGenotype();
+    return new SurprisingGenotype(shouldGrayCode());
   }
 
   @Override

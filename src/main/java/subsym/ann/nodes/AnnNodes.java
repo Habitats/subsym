@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import subsym.ann.WeightBound;
+
 /**
  * Created by anon on 20.03.2015.
  */
@@ -22,16 +24,16 @@ public class AnnNodes {
     this.values = new ArrayList<>(Arrays.asList(values));
   }
 
-  public static AnnNodes createOutput(int numberOfNodes) {
-    return new AnnNodes(IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createOutput()).collect(Collectors.toList()));
+  public static AnnNodes createOutput(WeightBound bound, int numberOfNodes) {
+    return new AnnNodes(IntStream.range(0, numberOfNodes).mapToObj(i -> AnnNode.createOutput(bound)).collect(Collectors.toList()));
   }
 
-  public static AnnNodes createInput(Double... values) {
-    return createInput(Arrays.asList(values));
+  public static AnnNodes createInput(WeightBound bound, Double... values) {
+    return createInput(bound, Arrays.asList(values));
   }
 
-  public static AnnNodes createInput(List<Double> values) {
-    return new AnnNodes(values.stream().map(AnnNode::createInput).collect(Collectors.toList()));
+  public static AnnNodes createInput(WeightBound bound, List<Double> values) {
+    return new AnnNodes(values.stream().map(value -> AnnNode.createInput(bound, value)).collect(Collectors.toList()));
   }
 
   public List<Double> getValues() {
@@ -58,4 +60,5 @@ public class AnnNodes {
   public String toString() {
     return values.stream().map(AnnNode::getId).collect(Collectors.joining("], [", " > [", "]"));
   }
+
 }

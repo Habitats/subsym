@@ -62,6 +62,10 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   public abstract void copy(Genotype copy);
 
+  public boolean shouldGrayCode() {
+    return false;
+  }
+
   public Genotype fromString(final String s) {
     size = s.length();
     bits = BitSet.valueOf(new long[]{Long.parseLong(s, 2)});
@@ -112,7 +116,8 @@ public abstract class Genotype implements Comparable<Genotype> {
 
     Iterator<Integer> iter = ints.iterator();
     IntStream.range(0, ints.size()).forEach(intIndex -> {
-      BitSet bitInt = BitSet.valueOf(new long[]{iter.next()});
+      long decimalNumber = shouldGrayCode() ? grayEncode(iter.next()) : iter.next();
+      BitSet bitInt = BitSet.valueOf(new long[]{decimalNumber});
       int start = intIndex * groupSize;
       IntStream.range(0, groupSize).forEach(bitIndex -> bitSet.set(start + bitIndex, bitInt.get(bitIndex)));
     });
@@ -126,26 +131,26 @@ public abstract class Genotype implements Comparable<Genotype> {
     IntStream.range(0, numInts).forEach(intIndex -> {
       int start = intIndex * getBitGroupSize();
       BitSet bitSet = bits.get(start, start + getBitGroupSize());
-//      int bitInt = toIntegerFromBinary(bitSet);
-      int bitInt = grayDecode(bitSet);
+      int bitInt = shouldGrayCode() ? grayDecode(toIntegerFromBinary(bitSet)) : toIntegerFromBinary(bitSet);
       ints.add(bitInt);
     });
     return ints;
   }
 
-  private int toIntegerFromBinary(BitSet bitSet) {
-    return !bitSet.isEmpty() ? (int) bitSet.toLongArray()[0] : 0;
+  public int grayEncode(int n) {
+    return n ^ (n >>> 1);
   }
 
-  private int grayDecode(BitSet bits) {
-    String nBits = getBitsString(bits);
-//    String result = nBits.substring(0, 1);
-    BitSet res = new BitSet();
-    for (int i = 1; i < nBits.length(); i++) {
-//      result += nBits.charAt(i) != result.charAt(i - 1) ? "1" : "0";
-      res.set(i, bits.get(i) != res.get(i - 1) ? true : false);
+  public int grayDecode(int n) {
+    int p = n;
+    while ((n >>>= 1) != 0) {
+      p ^= n;
     }
-    return !res.isEmpty() ? (int) res.toLongArray()[0] : 0;
+    return p;
+  }
+
+  private int toIntegerFromBinary(BitSet bitSet) {
+    return !bitSet.isEmpty() ? (int) bitSet.toLongArray()[0] : 0;
   }
 
   public String getBitsString() {

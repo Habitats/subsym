@@ -42,6 +42,7 @@ public class GeneticPreferences {
   //  private AnnPreferences annPreferences;
   private int maxGenerations;
   private AnnPreferences annPreferences;
+  private boolean grayCode;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate, double genomeMutationRate,
                             AdultSelection adultSelectionMode, MatingSelection mateSelectionMode, int maxGenerations) {
@@ -141,7 +142,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getBeer() {
-    GeneticPreferences prefs = new GeneticPreferences(50, 0.1, 0.9, 0.00001, new Mixing(0.5), new Rank(), 50);
+    GeneticPreferences prefs = new GeneticPreferences(10, 0.1, 0.9, 0.01, new Mixing(0.1), new Rank(), 500);
     GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getBeerDefault());
     prefs.setPuzzle(problem);
 
@@ -310,5 +311,13 @@ public class GeneticPreferences {
 
   public AnnPreferences getAnnPreferences() {
     return annPreferences;
+  }
+
+  public boolean shouldGrayCode() {
+    return grayCode;
+  }
+
+  public void setGrayCode(boolean grayCode) {
+    this.grayCode = grayCode;
   }
 }

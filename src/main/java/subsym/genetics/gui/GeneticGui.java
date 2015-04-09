@@ -106,6 +106,7 @@ public class GeneticGui extends AIGui {
   private AIButton benchMarkButton;
   private JCheckBox dynamicCheckbox;
   private JCheckBox singleCheckbox;
+  private JCheckBox grayCheckbox;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -349,6 +350,7 @@ public class GeneticGui extends AIGui {
       annPreferences.setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
       annPreferences.setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
 
+      prefs.setGrayCode(grayCheckbox.isSelected());
       prefs.setCrossOverRate(Double.parseDouble(crossoverInput.getText()));
       prefs.setGenomeMutationRate(Double.parseDouble(genomeMutationInput.getText()));
       prefs.setPopulationMutationRate(Double.parseDouble(populationMutationInput.getText()));
@@ -481,6 +483,7 @@ public class GeneticGui extends AIGui {
   public void setPreferences(GeneticPreferences prefs) {
 
     // Genetics Preferences below
+    grayCheckbox.setSelected(prefs.shouldGrayCode());
     crossoverInput.setText(String.valueOf(prefs.getCrossOverRate()));
     populationSizeInput.setText(String.valueOf(prefs.getPopulationSize()));
     genomeMutationInput.setText(String.valueOf(prefs.getGenomeMutationRate()));

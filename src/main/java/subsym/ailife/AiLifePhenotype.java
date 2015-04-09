@@ -11,7 +11,7 @@ import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
-import subsym.ann.activation.Sigmoid;
+import subsym.ann.WeightBound;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 import subsym.models.Board;
@@ -25,14 +25,15 @@ public class AiLifePhenotype implements Phenotype {
   private final AnnPreferences prefs;
   private final ArtificialNeuralNetwork ann;
   private final AiLifeGenotype aiLifeGenotype;
+  private Double score;
 
   public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AnnPreferences prefs) {
     this.aiLifeGenotype = aiLifeGenotype;
     this.prefs = prefs;
 
-    AnnNodes inputs = AnnNodes.createInput(0., 0., 0., 0., 0., 0.);
-    AnnNodes outputs = AnnNodes.createOutput(3);
-    ann = new ArtificialNeuralNetwork(prefs, inputs, outputs, new Sigmoid());
+    AnnNodes inputs = AnnNodes.createInput(new WeightBound(0, 1), 0., 0., 0., 0., 0., 0.);
+    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(0, 1), 3);
+    ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
     this.aiLifeGenotype.setRandom(ann.getNumWeights() * aiLifeGenotype.getBitGroupSize());
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
   }
@@ -40,7 +41,10 @@ public class AiLifePhenotype implements Phenotype {
   @Override
   public double fitness() {
 //    return robotFitness();
-    return boardFitness();
+    if (score == null) {
+      score = boardFitness();
+    }
+    return score;
   }
 
   private double boardFitness() {

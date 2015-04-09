@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.genetics.PopulationList;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.Genotype;
 import subsym.genetics.Population;
+import subsym.genetics.PopulationList;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.adultselection.OverProduction;
@@ -188,18 +188,16 @@ public class test_Genotype {
   @Test
   public void test_intToBit() {
     List<Integer> permutation = Arrays.asList(1, 2, 3, 4);
-    SurprisingGenotype v = new SurprisingGenotype(permutation, permutation, true);
+    SurprisingGenotype v = new SurprisingGenotype(permutation, permutation, true, false);
     BitSet bits = v.toBitSet(permutation, v.getBitGroupSize());
     v.setBits(bits);
-    SurprisingGenotype
-        w =
-        (SurprisingGenotype) new SurprisingGenotype(permutation, permutation, true).fromString("100011010001");
+    SurprisingGenotype w = (SurprisingGenotype) new SurprisingGenotype(permutation, permutation, true, false).fromString("100011010001");
     assertEquals(v.getOnBits(), w.getOnBits());
   }
 
   @Test
   public void test_bitToInt() {
-    SurprisingGenotype w = (SurprisingGenotype) new SurprisingGenotype(3).fromString("100011010001");
+    SurprisingGenotype w = (SurprisingGenotype) new SurprisingGenotype(3, false).fromString("100011010001");
     List<Integer> lst1 = w.toList();
     List<Integer> lst2 = Arrays.asList(1, 2, 3, 4);
 
@@ -209,8 +207,8 @@ public class test_Genotype {
   @Test
   public void test_bitBlockCrossOver() {
     List<Integer> alphabet = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
-    Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet, true);
-    Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true);
+    Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet, true, false);
+    Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true, false);
 
     Genotype w;
     w = Genotype.crossOver(v, u, 0);
@@ -233,6 +231,25 @@ public class test_Genotype {
     assertEquals(w.toList(), Arrays.asList(1, 2, 3, 4));
     w = Genotype.crossOver(v, u, 1);
     assertEquals(w.toList(), Arrays.asList(1, 2, 3, 4));
+  }
+
+  @Test
+  public void test_grayCode() {
+    List<Integer> alphabet = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
+    Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet, true, true);
+    Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true, true);
+
+    Genotype w;
+    w = Genotype.crossOver(v, u, 0);
+    assertEquals(w.toList(), Arrays.asList(5, 6, 7, 8));
+
+    Genotype g1 = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true, true);
+    Genotype g2 = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true, false);
+    List<Integer> grayList = g1.toList();
+    List<Integer> list = g2.toList();
+    BitSet grayBits = g1.toBitSet(grayList, 4);
+    BitSet bits = g2.toBitSet(list, 4);
+    assertEquals(grayBits, bits);
   }
 
   @Test

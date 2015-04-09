@@ -7,8 +7,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import subsym.ann.activation.ActivationFunction;
 import subsym.ann.ArtificialNeuralNetwork;
+import subsym.ann.WeightBound;
+import subsym.ann.activation.ActivationFunction;
 
 /**
  * Created by anon on 20.03.2015.
@@ -28,7 +29,7 @@ public abstract class AnnNode {
   protected AnnNode(Random random, WeightBound bound) {
     this.random = random;
     this.bound = bound;
-    inputs = AnnNodes.createInput();
+    inputs = AnnNodes.createInput(new WeightBound(-5., 5.));
     inputWeights = new HashMap<>();
     id = ArtificialNeuralNetwork.nextId();
   }
@@ -37,16 +38,16 @@ public abstract class AnnNode {
   //################# STATIC FACTORY #################################
   //##################################################################
 
-  public static OutputNode createOutput() {
-    return new OutputNode(ArtificialNeuralNetwork.random(), new WeightBound(-5, 5));
+  public static OutputNode createOutput(WeightBound bound) {
+    return new OutputNode(ArtificialNeuralNetwork.random(), bound);
   }
 
-  public static InputNode createInput(Double value) {
-    return new InputNode(value, ArtificialNeuralNetwork.random(), new WeightBound(-5, 5));
+  public static InputNode createInput(WeightBound bound, Double value) {
+    return new InputNode(value, ArtificialNeuralNetwork.random(), bound);
   }
 
-  public static AnnNode createBias() {
-    return new InputNode(1., ArtificialNeuralNetwork.random(), new WeightBound(-10, 0));
+  public static AnnNode createBias(WeightBound bound) {
+    return new InputNode(1., ArtificialNeuralNetwork.random(), bound);
   }
 
   //##################################################################
@@ -87,7 +88,7 @@ public abstract class AnnNode {
   }
 
   public void setWeight(AnnNode outputNode, Double weight) {
-    inputWeights.put(outputNode, bound.fromNormal(weight));
+    inputWeights.put(outputNode, outputNode.getBound().fromNormal(weight));
   }
 
   public void setActivationFunction(ActivationFunction activationFunction) {
@@ -121,27 +122,18 @@ public abstract class AnnNode {
     String weights = "";
     if (inputs.size() > 0) {
       weights = inputs.stream()//
-          .map(n -> String.format("(%s,- %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
+          .map(n -> String.format("(%s | %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
     }
     return weights;
   }
+
+  public WeightBound getBound() {
+    return bound;
+  }
+
   @Override
   public String toString() {
     return id + " ";
   }
 
-  public static class WeightBound {
-
-    private final double lower;
-    private final double upper;
-
-    private WeightBound(double lower, double upper) {
-      this.lower = lower;
-      this.upper = upper;
-    }
-
-    public double fromNormal(double weight) {
-      return (weight * (upper - lower)) + lower;
-    }
-  }
 }

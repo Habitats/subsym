@@ -41,7 +41,7 @@ public class SurprisingSequences extends GeneticProblem {
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
       List<Integer> permutation = createPermutation(alphabet, getSurprisingLength());
-      getPopulation().add(new SurprisingGenotype(permutation, alphabet, global));
+      getPopulation().add(new SurprisingGenotype(permutation, alphabet, global, getPreferences().shouldGrayCode()));
     });
   }
 

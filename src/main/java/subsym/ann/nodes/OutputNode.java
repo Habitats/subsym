@@ -2,6 +2,8 @@ package subsym.ann.nodes;
 
 import java.util.Random;
 
+import subsym.ann.WeightBound;
+
 /**
  * Created by anon on 24.03.2015.
  */
