@@ -40,7 +40,6 @@ public class AiLifePhenotype implements Phenotype {
 
   @Override
   public double fitness() {
-//    return robotFitness();
     if (score == null) {
       score = boardFitness();
     }
@@ -51,7 +50,8 @@ public class AiLifePhenotype implements Phenotype {
     ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
 
     AtomicDouble fitness = new AtomicDouble();
-    IntStream.range(0, prefs.isSingle() ? 1 : 5).forEach(run -> {
+    int rounds = prefs.isSingle() ? 1 : 5;
+    IntStream.range(0, rounds).forEach(run -> {
       int seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : run;
       Board<TileEntity> board = AiLife.createAiLifeBoard(seed);
       long numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
@@ -69,23 +69,7 @@ public class AiLifePhenotype implements Phenotype {
       long deltaFood = numFood - board.getItems().stream().filter(i -> i instanceof Food).count();
       fitness.getAndAdd(deltaFood * 2 + deltaPoison * -2);
     });
-    return fitness.get();
-  }
-
-  private double robotFitness() {
-    ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
-
-    Board<TileEntity> board = AiLife.createAiLifeBoard(0101);
-    Robot robot = new Robot(0, 0, board);
-    board.set(robot);
-    for (int i = 0; i < 60; i++) {
-      ann.updateInput(robot.getSensoryInput());
-      List<Double> outputs = ann.getOutputs();
-      int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
-      robot.move(indexOfBest);
-    }
-
-    return robot.fitness();
+    return fitness.get() / (double) rounds;
   }
 
   private double normalize(int v) {

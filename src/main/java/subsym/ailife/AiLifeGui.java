@@ -15,6 +15,8 @@ import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
 import subsym.gui.AIGui;
+import subsym.gui.AILabel;
+import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Direction;
 import subsym.models.Board;
@@ -33,6 +35,10 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private AIButton simulateButton;
   private AIButton generateButton;
   private AIButton resetButton;
+  private AILabel timeLabel;
+  private AILabel poisonLabel;
+  private AILabel foodLabel;
+  private AISlider simulationSpeedSlider;
   private Board<TileEntity> board;
 
   public AiLifeGui(Board<TileEntity> board, ArtificialNeuralNetwork ann) {
@@ -86,6 +92,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private void generateRandomBoard() {
     board = AiLife.createAiLifeBoard(ArtificialNeuralNetwork.random().nextInt());
     initBoard(board);
+    onTick(0);
   }
 
   public void simulate() {
@@ -95,13 +102,13 @@ public class AiLifeGui extends AIGui<TileEntity> {
         return;
       }
       initBoard(board);
-      for (int i = 0; i < 60; i++) {
+      for (int i = 1; i <= 60; i++) {
         int indexOfBest = ann.getBestIndex(robot.getSensoryInput());
         robot.move(indexOfBest);
+        onTick(i);
         try {
-          Thread.sleep(100);
+          Thread.sleep(simulationSpeedSlider.getValue());
         } catch (InterruptedException e) {
-          e.printStackTrace();
         }
       }
     }).start();
@@ -114,6 +121,12 @@ public class AiLifeGui extends AIGui<TileEntity> {
     this.board.notifyDataChanged();
   }
 
+  public void onTick(int time) {
+    foodLabel.setText(String.format("Food: %2d", robot.getFoodCount()));
+    poisonLabel.setText(String.format("Poison: %2d", robot.getPoisonCount()));
+    timeLabel.setText(String.format("Time: %2d", time));
+  }
+
   @Override
   public int getDefaultCloseOperation() {
     return WindowConstants.DISPOSE_ON_CLOSE;
@@ -121,7 +134,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
 
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(500, 500);
+    return new Dimension(600, 600);
   }
 
   @Override

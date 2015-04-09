@@ -20,7 +20,8 @@ import subsym.models.entity.TileEntity;
 public class Robot extends TileEntity {
 
   private static final String TAG = Robot.class.getSimpleName();
-  private double fitness;
+  private int poisonCount;
+  private int foodCount;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = Stream.of(getFoodSensorInput(), getPoisonSensorInput()) //
@@ -78,10 +79,6 @@ public class Robot extends TileEntity {
                           (getY() + dy + getBoard().getHeight()) % getBoard().getHeight());
   }
 
-  public double fitness() {
-    return fitness;
-  }
-
   public void move(int index) {
     Vec oldPosition = getPosition().copy();
 
@@ -93,7 +90,6 @@ public class Robot extends TileEntity {
         break;
       case 1:
         moveForward();
-        fitness += 2;
         break;
       case 2:
         moveRight();
@@ -102,7 +98,11 @@ public class Robot extends TileEntity {
         throw new IllegalStateException("Invalid index!");
     }
     TileEntity oldTile = getBoard().get(getX(), getY());
-    fitness += oldTile instanceof Poison ? -60 : oldTile instanceof Food ? 40 : 0;
+    if(oldTile instanceof Poison)
+      poisonCount++;
+    else if(oldTile instanceof Food){
+      foodCount++;
+    }
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
     getBoard().set(this);
     getBoard().notifyDataChanged();
@@ -180,13 +180,16 @@ public class Robot extends TileEntity {
   @Override
   public void draw(Graphics g, int x, int y) {
     super.draw(g, x, y);
-    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
+//    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
     drawArrow(g, x, y, dir);
   }
 
-  @Override
-  public String getDescription() {
-    return String.valueOf(fitness);
+  public int getFoodCount() {
+    return foodCount;
+  }
+
+  public int getPoisonCount() {
+    return poisonCount;
   }
 
   @Override

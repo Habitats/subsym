@@ -85,10 +85,6 @@ public class AiLife extends GeneticProblem {
     Log.v(TAG, this);
   }
 
-  public void demo() {
-    AiLifeGui.demo();
-  }
-
   public static Board<TileEntity> createAiLifeBoard(int seed) {
     Board<TileEntity> board = new Board<>(10, 10);
     Random random = new Random(seed);
