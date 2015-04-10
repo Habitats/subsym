@@ -13,6 +13,7 @@ public class BeerGenotype extends Genotype {
   private AnnPreferences prefs;
 
   public BeerGenotype(AnnPreferences prefs) {
+    super(false);
     this.prefs = prefs;
     phenotype = new BeerPhenotype(this, prefs);
   }

@@ -72,6 +72,9 @@ public class ArtificialNeuralNetwork {
       biasNodes.add(bias);
     });
   }
+  public void resetInternalState(){
+    getNodeStream().forEach(n -> n.resetInternalState());
+  }
 
   public List<AnnNodes> getLayers() {
     return layers;
@@ -144,12 +147,12 @@ public class ArtificialNeuralNetwork {
 
   public void setTimeConstants(List<Double> doubles) {
     AtomicInteger i = new AtomicInteger();
-    getOutputStream().forEach(outputNode -> outputNode.setTimeConstant(doubles.get(i.getAndIncrement())));
+    getNodeStream().forEach(outputNode -> outputNode.setTimeConstant(doubles.get(i.getAndIncrement())));
   }
 
   public void setGains(List<Double> gains) {
     AtomicInteger i = new AtomicInteger();
-    getOutputStream().forEach(outputNode -> outputNode.setGain(gains.get(i.getAndIncrement())));
+    getNodeStream().forEach(outputNode -> outputNode.setGain(gains.get(i.getAndIncrement())));
   }
 
 
@@ -161,7 +164,7 @@ public class ArtificialNeuralNetwork {
     layers.stream().flatMap(AnnNodes::stream).forEach(AnnNode::setStateful);
   }
 
-  private Stream<OutputNode> getOutputStream() {
+  private Stream<OutputNode> getNodeStream() {
     return layers.stream().flatMap(AnnNodes::stream).filter(n -> n instanceof OutputNode).map(n -> (OutputNode) n);
   }
 

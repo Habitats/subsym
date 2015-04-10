@@ -14,7 +14,7 @@ public class OneMaxGenotype extends Genotype implements Phenotype {
   }
 
   public OneMaxGenotype() {
-    super();
+    super(false);
   }
 
   @Override

@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -117,12 +116,13 @@ public class Tracker extends MultiTile {
   }
 
   public void sense(Piece piece) {
-    IntFunction<Boolean> isSensed = x -> (x >= piece.getX() && x < piece.getX() + piece.getWidth());
-    sensors = IntStream.range(getX(), getX() + getWidth()).mapToObj(isSensed).collect(Collectors.toList());
+    sensors = pieces.stream()//
+        .mapToInt(t -> t.getX()) //
+        .mapToObj(trackerX -> piece.stream().mapToInt(TilePart::getX).anyMatch(pieceX -> pieceX == trackerX))//
+        .collect(Collectors.toList());
 
     AtomicInteger i = new AtomicInteger();
-    pieces.stream().sorted((p1, p2) -> Integer.compare(p1.getX(), p2.getX()))
-        .forEach(p -> p.setOutlineColor(sensors.get(i.getAndIncrement()) ? piece.getColor() : Color.BLACK));
+    pieces.stream().forEach(p -> p.setOutlineColor(sensors.get(i.getAndIncrement()) ? piece.getColor() : Color.BLACK));
   }
 
   public void addListener(TrackerListener listener) {
@@ -148,7 +148,9 @@ public class Tracker extends MultiTile {
     double goodScore = 1 / (1. + deltaGood);
     double badScore = 1 / (1. + numBad - deltaBad);
 //    Log.v(TAG, goodScore + " " + badScore);
-    return caught - crashed;
+    return goodScore * 2 + badScore * 1;
+//    return caught * 2 - (crashed * 1.5);
+//    return -avoided - crashed;
   }
 
   public void move(List<Double> outputs) {

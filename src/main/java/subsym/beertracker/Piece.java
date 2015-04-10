@@ -42,7 +42,8 @@ public class Piece extends MultiTile {
         boolean canCatch = IntStream.range(getX(), getX() + getWidth())//
                                .mapToObj(x -> board.get(x, getY() - 1)) //
                                .allMatch(v -> tracker.contains(v))
-                           && tracker.getSensors().stream().filter(Boolean::booleanValue).count() < tracker.getWidth();
+                           && tracker.getSensors().stream().filter(Boolean::booleanValue).count() < tracker.getWidth()//
+                           && width < tracker.getWidth();
         if (canCatch) {
           tracker.onCaught(this);
         } else {

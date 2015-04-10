@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import subsym.ailife.entity.Empty;
 import subsym.gui.Direction;
@@ -35,23 +36,56 @@ public abstract class MultiTile {
 
   protected abstract int getStartX();
 
-  public boolean moveLeft(boolean shouldWrap) {
-    int fromX = shouldWrap ? (getX() + width - 1 + board.getWidth()) % board.getWidth() : getX() + width - 1;
-    int toX = shouldWrap ? (getX() + board.getWidth() - 1) % board.getWidth() : getX() - 1;
-    if ((board.get(toX, getY()) instanceof Empty)) {
-      x = swap(fromX, toX, getY(), getY()) ? (x - 1 + board.getWidth()) % board.getWidth() : x;
+//  public boolean moveLeft(boolean shouldWrap) {
+//    int fromX = shouldWrap ? (getX() + width - 1 + board.getWidth()) % board.getWidth() : getX() + width - 1;
+//    int toX = shouldWrap ? (getX() + board.getWidth() - 1) % board.getWidth() : getX() - 1;
+//    if ((board.get(toX, getY()) instanceof Empty)) {
+//      x = swap(fromX, toX, getY(), getY()) ? (x - 1 + board.getWidth()) % board.getWidth() : x;
+//      return true;
+//    } else {
+//      collision(Direction.LEFT);
+//      return false;
+//    }
+//  }
+
+  //  public boolean moveRight(boolean shouldWrap) {
+//    int fromX = shouldWrap ? getX() % board.getWidth() : getX();
+//    int toX = shouldWrap ? (getX() + width) % board.getWidth() : getX() + width;
+//    if ((board.get(toX, getY()) instanceof Empty)) {
+//      x = swap(fromX, toX, getY(), getY()) ? (x + 1) % board.getWidth() : x;
+//      return true;
+//    } else {
+//      collision(Direction.RIGHT);
+//      return false;
+//    }
+//  }
+  public boolean moveRight(boolean shouldWrap) {
+    TileEntity old;
+    int oldX = shouldWrap ? (getX() + width) % board.getWidth() : getX() + width;
+    if (board.positionExist(oldX, getY()) && (old = board.get(oldX, getY())) instanceof Empty) {
+      pieces.stream().forEach(p -> p.setPosition((p.getX() + 1) % board.getWidth(), p.getY()));
+      pieces.stream().forEach(board::set);
+
+      old.setPosition(getX(), getY());
+      board.set(old);
+      x = (x + 1) % board.getWidth();
       return true;
     } else {
-      collision(Direction.LEFT);
+      collision(Direction.RIGHT);
       return false;
     }
   }
 
-  public boolean moveRight(boolean shouldWrap) {
-    int fromX = shouldWrap ? getX() % board.getWidth() : getX();
-    int toX = shouldWrap ? (getX() + width) % board.getWidth() : getX() + width;
-    if ((board.get(toX, getY()) instanceof Empty)) {
-      x = swap(fromX, toX, getY(), getY()) ? (x + 1) % board.getWidth() : x;
+  public boolean moveLeft(boolean shouldWrap) {
+    TileEntity old;
+    int oldX = shouldWrap ? (getX() - 1 + board.getWidth()) % board.getWidth() : getX() - 1;
+    if (board.positionExist(oldX, getY()) && (old = board.get(oldX, getY())) instanceof Empty) {
+      pieces.stream().forEach(p -> p.setPosition((p.getX() - 1 + board.getWidth()) % board.getWidth(), p.getY()));
+      pieces.stream().forEach(board::set);
+
+      old.setPosition((getX() + width - 1) % board.getWidth(), getY());
+      board.set(old);
+      x = (x - 1 + board.getWidth()) % board.getWidth();
       return true;
     } else {
       collision(Direction.RIGHT);
@@ -104,6 +138,10 @@ public abstract class MultiTile {
 
   public int getX() {
     return x;
+  }
+
+  public Stream<TilePart> stream() {
+    return pieces.stream();
   }
 
   @Override

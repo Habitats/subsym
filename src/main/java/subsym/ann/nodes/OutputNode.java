@@ -56,4 +56,8 @@ public class OutputNode extends AnnNode {
   public String toString() {
     return super.toString() + String.format("S = %.3f > O = %.3f %s", getInputSum(), getValue(), getFormattedWeights());
   }
+
+  public void resetInternalState() {
+    y = 0;
+  }
 }

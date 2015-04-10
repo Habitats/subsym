@@ -32,7 +32,7 @@ public class BeerPhenotype implements Phenotype {
   public double fitness() {
     if (score == null) {
       BeerGame game = new BeerGame();
-      score = game.simulate(ann);
+      score = game.simulate(ann, 0);
     }
     return score;
   }

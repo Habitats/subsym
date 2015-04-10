@@ -14,7 +14,7 @@ public class LolzGenotype extends Genotype {
   private int zeroThreshold;
 
   public LolzGenotype(int zeroThreshold) {
-    super();
+    super(false);
     this.zeroThreshold = zeroThreshold;
   }
 

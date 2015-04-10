@@ -13,6 +13,7 @@ public class AiLifeGenotype extends Genotype {
   private AiLifePhenotype phenotype;
 
   public AiLifeGenotype(AnnPreferences prefs) {
+    super(true);
     this.prefs = prefs;
     phenotype = new AiLifePhenotype(this, prefs);
   }

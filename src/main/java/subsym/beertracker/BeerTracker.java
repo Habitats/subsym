@@ -15,6 +15,7 @@ public class BeerTracker extends GeneticProblem {
 
   private static final String TAG = BeerTracker.class.getSimpleName();
   private AnnPreferences annPrefs;
+  private int count = 0;
 
   public BeerTracker(GeneticPreferences prefs, AnnPreferences annPrefs) {
     super(prefs);
@@ -64,7 +65,8 @@ public class BeerTracker extends GeneticProblem {
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
     BeerGame game = new BeerGame();
     game.initGui();
-    game.simulate(ann);
+    game.simulate(ann, 0 + count);
+    count++;
 
     Log.v(TAG, this);
   }

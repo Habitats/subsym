@@ -15,6 +15,7 @@ import subsym.models.entity.TileEntity;
  */
 public class BeerGame {
 
+  private static final String TAG = BeerGame.class.getSimpleName();
   private ArtificialNeuralNetwork ann;
   private int numGood;
   private int numBad;
@@ -42,7 +43,7 @@ public class BeerGame {
   public static void demo() {
     BeerGame game = new BeerGame();
     game.initGui();
-    game.simulateFallingPieces(game.board, game.tracker, null);
+    game.simulateFallingPieces(game.board, game.tracker, null, System.currentTimeMillis());
   }
 
   public void reset() {
@@ -57,13 +58,13 @@ public class BeerGame {
   public void restart() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, ann);
+    simulateFallingPieces(board, tracker, ann, System.currentTimeMillis());
   }
 
   public void play() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, null);
+    simulateFallingPieces(board, tracker, null, System.currentTimeMillis());
   }
 
   public void initGui() {
@@ -73,15 +74,15 @@ public class BeerGame {
     gui.setAdapter(board);
   }
 
-  public double simulate(ArtificialNeuralNetwork ann) {
+  public double simulate(ArtificialNeuralNetwork ann, int seed) {
     this.ann = ann;
-    simulateFallingPieces(board, tracker, ann);
+    simulateFallingPieces(board, tracker, ann, seed);
     return getScore();
   }
 
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann) {
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed) {
     state = State.SIMULATING;
-    Random r = new Random();
+    Random r = new Random(seed);
     time = 0;
 
     while (true) {
@@ -102,7 +103,9 @@ public class BeerGame {
           piece.moveBottom();
         }
         if (ann != null) {
-          ann.updateInput(tracker.getSensors().stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
+          List<Boolean> sensors = tracker.getSensors();
+//          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
+          ann.updateInput(sensors.stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
           List<Double> outputs = ann.getOutputs();
           tracker.move(outputs);
         }
@@ -114,6 +117,9 @@ public class BeerGame {
           state = State.IDLE;
           return;
         }
+      }
+      if (ann != null) {
+        ann.resetInternalState();
       }
     }
   }

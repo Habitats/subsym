@@ -236,20 +236,24 @@ public class test_Genotype {
   @Test
   public void test_grayCode() {
     List<Integer> alphabet = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8);
-    Genotype v = new SurprisingGenotype(Arrays.asList(1, 2, 3, 4), alphabet, true, true);
-    Genotype u = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true, true);
-
-    Genotype w;
-    w = Genotype.crossOver(v, u, 0);
-    assertEquals(w.toList(), Arrays.asList(5, 6, 7, 8));
 
     Genotype g1 = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true, true);
     Genotype g2 = new SurprisingGenotype(Arrays.asList(5, 6, 7, 8), alphabet, true, false);
+    String g1s = g1.getBitsString();
+    String g2s = g2.getBitsString();
     List<Integer> grayList = g1.toList();
     List<Integer> list = g2.toList();
+    assertEquals(grayList, list);
+    g1.mutate(.5);
+    g1.mutate(.5);
+    g1.mutate(.5);
+    g1.mutate(.5);
+    g1.mutate(.5);
+    g1.mutate(.5);
+    g1.mutate(.5);
     BitSet grayBits = g1.toBitSet(grayList, 4);
     BitSet bits = g2.toBitSet(list, 4);
-    assertEquals(grayBits, bits);
+    assertNotEquals(grayBits, bits);
   }
 
   @Test

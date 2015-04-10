@@ -20,12 +20,14 @@ public abstract class Genotype implements Comparable<Genotype> {
   private int size;
   private Double fitness;
   private int currentGeneration;
+  private final boolean grayCode;
 
   // ###############################################################################
   // ### CONSTRUCTORS ##############################################################
   // ###############################################################################
 
-  protected Genotype() {
+  protected Genotype(boolean shouldGrayCode) {
+    this.grayCode = shouldGrayCode;
   }
 
   protected abstract Genotype newInstance();
@@ -43,7 +45,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-  private  void resetFitness() {
+  private void resetFitness() {
     fitness = null;
   }
 
@@ -59,22 +61,20 @@ public abstract class Genotype implements Comparable<Genotype> {
     Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
     copy.size = size;
-    copy.fitness = fitness;
+    copy.fitness = null;
     copy(copy);
     return copy;
   }
 
   public abstract void copy(Genotype copy);
 
-  public boolean shouldGrayCode() {
-    return false;
-  }
-
   public Genotype fromString(final String s) {
     size = s.length();
     bits = BitSet.valueOf(new long[]{Long.parseLong(s, 2)});
     return this;
   }
+
+
 
   // ###############################################################################
   // ### INSTANCE PROPERTIES #######################################################
@@ -211,6 +211,9 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   protected BitSet getBits() {
     return bits;
+  }
+  public boolean shouldGrayCode() {
+    return grayCode;
   }
 
   public abstract Phenotype getPhenotype();
