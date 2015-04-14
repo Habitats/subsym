@@ -24,8 +24,6 @@ public class BeerPhenotype implements Phenotype {
     ann = ArtificialNeuralNetwork.buildContinuousTimeRecurrentNeuralNetwork(prefs);
   }
 
-
-
   public int getNumWeights() {
     return ann.getNumWeights();
   }
@@ -38,7 +36,7 @@ public class BeerPhenotype implements Phenotype {
   public double fitness() {
     if (score == null) {
       BeerGame game = new BeerGame();
-      setValues(beerGenotype,  ann);
+      setValues(beerGenotype, ann);
       score = game.simulate(ann, 0, false);
     }
     return score;

@@ -230,6 +230,7 @@ public class ArtificialNeuralNetwork {
   }
 
   public void setWeights(String s) {
-    setWeights(Arrays.asList(s.replaceAll(",",".").split(" ")).stream().mapToDouble(Double::parseDouble).boxed().collect(Collectors.toList()));
+    setWeights(
+        Arrays.asList(s.replaceAll(",", ".").split(" ")).stream().mapToDouble(Double::parseDouble).boxed().collect(Collectors.toList()));
   }
 }

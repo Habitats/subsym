@@ -61,7 +61,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
     copy.size = size;
-    copy.fitness = fitness;
+    copy.fitness = null;
     copy(copy);
     return copy;
   }
@@ -73,8 +73,6 @@ public abstract class Genotype implements Comparable<Genotype> {
     bits = BitSet.valueOf(new long[]{Long.parseLong(s, 2)});
     return this;
   }
-
-
 
   // ###############################################################################
   // ### INSTANCE PROPERTIES #######################################################
@@ -212,6 +210,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   protected BitSet getBits() {
     return bits;
   }
+
   public boolean shouldGrayCode() {
     return grayCode;
   }

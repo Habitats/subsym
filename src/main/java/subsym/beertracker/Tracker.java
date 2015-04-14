@@ -160,7 +160,7 @@ public class Tracker extends MultiTile {
 //    Log.v(TAG, String.format(
 //              "Fitness: %2.2f - Good: %2.0f - Bad: %2.0f - Caught: %2d - Good Crash: %2d - Bad Crash: %2d - Good Avoid: %2d - Bad Avoid: %2d",
 //              fitness, numGood, numBad, caught, goodCrash, badCrash, goodAvoid, badAvoid));
-    return caught  - badCrash * .5 ;
+    return caught;
   }
 
   public void move(List<Double> outputs) {

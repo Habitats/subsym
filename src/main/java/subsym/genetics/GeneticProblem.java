@@ -35,7 +35,7 @@ public abstract class GeneticProblem {
     return prefs.getPopulationSize();
   }
 
-public Population getPopulation() {
+  public Population getPopulation() {
     return population;
   }
 

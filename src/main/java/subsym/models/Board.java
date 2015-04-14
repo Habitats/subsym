@@ -140,9 +140,7 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
   }
 
   public String getFormattedBoard() {
-    String
-        xRow =
-        IntStream.range(0, getWidth()).mapToObj(x -> String.format("%-10d", x)).collect(Collectors.joining("   ", "   ", "  "));
+    String xRow = IntStream.range(0, getWidth()).mapToObj(x -> String.format("%-10d", x)).collect(Collectors.joining("   ", "   ", "  "));
     return "\n" + IntStream.range(0, getWidth()).mapToObj(y -> IntStream.range(0, getHeight()) //
         .mapToObj(x -> String.format("%1$-10s", get(x, getHeight() - 1 - y).getDescription()))
         .collect(Collectors.joining(" | ", (getHeight() - 1 - y) + "[ ", " ]")))//

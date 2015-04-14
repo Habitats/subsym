@@ -34,7 +34,6 @@ public class AiLifeGenotype extends Genotype {
   }
 
 
-
   @Override
   public Phenotype getPhenotype() {
     return phenotype;

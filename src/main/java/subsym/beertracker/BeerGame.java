@@ -68,13 +68,12 @@ public class BeerGame {
     simulateFallingPieces(board, tracker, null, System.currentTimeMillis(), false);
   }
 
-  public void manual() {
+  public void manual(String text) {
     reset();
     initGui();
     ann = ArtificialNeuralNetwork.buildContinuousTimeRecurrentNeuralNetwork(AnnPreferences.getBeerDefault());
-    ann.setWeights(
-        "0,64 0,59 0,76 0,85 0,76 0,92 0,78 0,18 0,98 0,98 0,01 0,11 0,42 0,12 0,56 0,05 0,04 0,30 0,42 0,43 0,04 0,86 0,64 0,84 0,10 0,58 0,48 0,30 0,60 0,63");
-    simulateFallingPieces(board, tracker, ann, System.currentTimeMillis(), false);
+    ann.setWeights(text);
+    simulateFallingPieces(board, tracker, ann, 0, false);
   }
 
   public void initGui() {
