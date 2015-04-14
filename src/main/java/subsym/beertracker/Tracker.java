@@ -24,8 +24,10 @@ public class Tracker extends MultiTile {
   private List<Boolean> sensors;
   private List<TrackerListener> listeners;
   private int caught;
-  private int avoided;
-  private int crashed;
+  private int goodCrash;
+  private int goodAvoid;
+  private int badAvoid;
+  private int badCrash;
 
   public Tracker(Board<TileEntity> board) {
     super(5, board);
@@ -62,9 +64,15 @@ public class Tracker extends MultiTile {
 
   public void onAvoided(Piece piece) {
 //    Log.v(TAG, "Avoided: \t" + piece);
-    fade(50, 70, () -> setColor(Color.darkGray));
+    if (piece.getWidth() < 5) {
+      fade(50, 70, () -> setColor(Color.darkGray));
+      goodAvoid++;
+    } else {
+      fade(20, 40, () -> fade(40, 20, () -> setColor(Color.darkGray)));
+      badAvoid++;
+    }
+
     listeners.forEach(TrackerListener::onAvoided);
-    avoided++;
   }
 
   public void onCaught(Piece piece) {
@@ -78,7 +86,11 @@ public class Tracker extends MultiTile {
 //    Log.v(TAG, "Crashed: \t" + piece);
     fade(80, 100, () -> fade(100, 80, () -> setColor(Color.darkGray)));
     listeners.forEach(TrackerListener::onCrash);
-    crashed++;
+    if (piece.getWidth() < 5) {
+      goodCrash++;
+    } else {
+      badCrash++;
+    }
   }
 
   private void fade(int from, int to, Runnable callback) {
@@ -134,35 +146,59 @@ public class Tracker extends MultiTile {
   }
 
   public int getAvoided() {
-    return avoided;
+    return goodAvoid + badAvoid;
   }
 
-  public int getCrashed() {
-    return crashed;
+  public int getCrash() {
+    return goodCrash + badCrash;
   }
 
-  public double calculateScore(int numBad, int numGood) {
+  public double calculateScore(double numBad, double numGood) {
     double max = numGood * 3;
-    int deltaGood = numGood - caught;
-    int deltaBad = numBad - crashed;
-    double goodScore = 1 / (1. + deltaGood);
-    double badScore = 1 / (1. + numBad - deltaBad);
-//    Log.v(TAG, goodScore + " " + badScore);
-    return goodScore * 2 + badScore * 1;
-//    return caught * 2 - (crashed * 1.5);
-//    return -avoided - crashed;
+    double fitness = ((-Math.pow(badCrash, 2.2))) + ((-goodCrash + caught * 3));
+//    double fitness = -badCrash  + caught * 2;
+//    Log.v(TAG, String.format(
+//              "Fitness: %2.2f - Good: %2.0f - Bad: %2.0f - Caught: %2d - Good Crash: %2d - Bad Crash: %2d - Good Avoid: %2d - Bad Avoid: %2d",
+//              fitness, numGood, numBad, caught, goodCrash, badCrash, goodAvoid, badAvoid));
+    return fitness / max;
   }
 
   public void move(List<Double> outputs) {
-    double max = Math.max(outputs.get(0), outputs.get(1));
-    double min = Math.min(outputs.get(0), outputs.get(1));
+    Double left = outputs.get(0);
+    Double right = outputs.get(1);
+    oldMove(left, right);
+//    newMove(left, right);
+  }
+
+  private void newMove(Double left, Double right) {
+    double dir = Math.max(left, right);
+    int multiplier = (int) Math.round(dir * 4);
+//    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f", multiplier, min, max, delta));
+//    Log.v(TAG, String.format("M: %d - LEFT: %.10f - RIGHT: %.10f", multiplier, left, right));
+    if (dir < 0.2) {
+      return;
+    }
+    if (left > right) {
+      IntStream.range(0, multiplier).forEach(i -> moveLeft(true));
+    } else if (left < right) {
+      IntStream.range(0, multiplier).forEach(i -> moveRight(true));
+    }
+  }
+
+  private void oldMove(Double left, Double right) {
+    double max = Math.max(left, right);
+    double min = Math.min(left, right);
     double delta = Math.abs(max - min) / max;
     int multiplier = (int) Math.round(delta * 4);
-//    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f",multiplier, min , max,delta));
-    if (outputs.get(0) >= outputs.get(1)) {
-      IntStream.range(0, multiplier).forEach(i -> moveRight(true));
-    } else {
+//    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f", multiplier, min, max, delta));
+//    Log.v(TAG, String.format("LEFT: %.10f - RIGHT: %.10f", left, right));
+    if (delta < 0.1) {
+      return;
+    }
+    if (left > right) {
       IntStream.range(0, multiplier).forEach(i -> moveLeft(true));
+    } else if (left < right) {
+      IntStream.range(0, multiplier).forEach(i -> moveRight(true));
     }
   }
 }
