@@ -134,7 +134,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getAiLife() {
-    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.5), new Rank(), 200);
+    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.05), new Rank(), 200);
     GeneticProblem problem = new AiLife(prefs, AnnPreferences.getAiLifeDefault());
     prefs.setPuzzle(problem);
     prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
@@ -142,7 +142,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getBeer() {
-    GeneticPreferences prefs = new GeneticPreferences(20, 0.6, 0.9, 0.015, new Mixing(0.4), new Rank(), 300);
+    GeneticPreferences prefs = new GeneticPreferences(20, 0.6, 0.9, 0.015, new Mixing(0.05), new Rank(), 300);
     GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getBeerDefault());
     prefs.setPuzzle(problem);
 
