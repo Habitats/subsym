@@ -14,10 +14,9 @@ import subsym.ann.activation.ActivationFunction;
 /**
  * Created by anon on 20.03.2015.
  */
-public abstract class AnnNode {
+public abstract class AnnNode implements Comparable<AnnNode> {
 
-  private static int idCounter;
-  private final String id;
+  private String id;
   protected AnnNodes inputs;
   protected ActivationFunction activationFunction;
   protected Map<AnnNode, Double> inputWeights;
@@ -33,13 +32,6 @@ public abstract class AnnNode {
     this.bound = bound;
     inputs = AnnNodes.createInput(new WeightBound(-5., 5.));
     inputWeights = new HashMap<>();
-    this.id = nextId();
-  }
-
-  private static String nextId() {
-    String id = String.valueOf(idCounter);
-    idCounter++;
-    return id;
   }
 
   //##################################################################
@@ -165,5 +157,14 @@ public abstract class AnnNode {
   @Override
   public String toString() {
     return id + " ";
+  }
+
+  public void setId(int id) {
+    this.id = "n" + String.valueOf(id);
+  }
+
+  @Override
+  public int compareTo(AnnNode o) {
+    return o.getId().compareTo(getId());
   }
 }

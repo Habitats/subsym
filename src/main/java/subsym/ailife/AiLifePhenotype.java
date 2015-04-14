@@ -36,6 +36,7 @@ public class AiLifePhenotype implements Phenotype {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(0, 1), 0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(0, 1), 3);
     ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
+    ann.setIds();
   }
 
   public void setValues(AiLifeGenotype aiLifeGenotype) {

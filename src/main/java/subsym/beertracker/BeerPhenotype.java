@@ -67,6 +67,7 @@ public class BeerPhenotype implements Phenotype {
     ann.addSelfNode(new WeightBound(-5, 5), nodes);
     ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
 
+    ann.setIds();
     return ann;
   }
 

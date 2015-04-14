@@ -2,7 +2,6 @@ package subsym.ann;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,8 +31,10 @@ public class ArtificialNeuralNetwork {
   private final List<AnnNodes> layers;
   private AnnNodes biasNodes;
   private List<Double> weights;
+  private AtomicInteger idCounter;
 
   public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
+    idCounter = new AtomicInteger();
     layers = new ArrayList<>();
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
@@ -42,7 +43,6 @@ public class ArtificialNeuralNetwork {
     this.activationFunction = prefs.getActivationFunction();
     createNetwork();
     setActivationFunction();
-    setWeights(Collections.nCopies(getNumWeights(), .1));
   }
 
   public static Random random() {
@@ -123,8 +123,8 @@ public class ArtificialNeuralNetwork {
     this.weights = weights;
     AtomicInteger i = new AtomicInteger();
     layers.stream()//
-        .flatMap(layer -> layer.stream())//
-        .forEach(node -> node.getInputs().stream()//
+        .flatMap(layer -> layer.stream()).sorted()//
+        .forEach(node -> node.getInputs().stream().sorted()//
             .forEach(outputNode -> {
               Double weight = weights.get(i.getAndIncrement());
               node.setWeight(outputNode, weight);
@@ -183,7 +183,7 @@ public class ArtificialNeuralNetwork {
   }
 
   private List<AnnNode> getSortedNodes() {
-    return layers.stream().flatMap(AnnNodes::stream).sorted((o1, o2) -> o1.getId().compareTo(o2.getId())).collect(Collectors.toList());
+    return layers.stream().flatMap(AnnNodes::stream).sorted().collect(Collectors.toList());
   }
 
   @Override
@@ -199,5 +199,9 @@ public class ArtificialNeuralNetwork {
 
   public void statePrint() {
     layers.stream().forEach(n -> Log.v(TAG, n));
+  }
+
+  public void setIds() {
+    layers.stream().flatMap(AnnNodes::stream).forEach(n -> n.setId(idCounter.getAndIncrement()));
   }
 }
