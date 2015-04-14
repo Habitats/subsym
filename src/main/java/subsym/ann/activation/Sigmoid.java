@@ -6,7 +6,7 @@ package subsym.ann.activation;
 public class Sigmoid implements ActivationFunction {
 
   @Override
-  public double evaluate(double inputSum) {
-    return 1 / (1 + Math.exp(-inputSum));
+  public double evaluate(double exp) {
+    return 1 / (1 + Math.exp(-exp));
   }
 }
