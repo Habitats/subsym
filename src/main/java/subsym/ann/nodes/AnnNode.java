@@ -16,6 +16,7 @@ import subsym.ann.activation.ActivationFunction;
  */
 public abstract class AnnNode {
 
+  private static int idCounter;
   private final String id;
   protected AnnNodes inputs;
   protected ActivationFunction activationFunction;
@@ -32,7 +33,13 @@ public abstract class AnnNode {
     this.bound = bound;
     inputs = AnnNodes.createInput(new WeightBound(-5., 5.));
     inputWeights = new HashMap<>();
-    id = ArtificialNeuralNetwork.nextId();
+    this.id = nextId();
+  }
+
+  private static String nextId() {
+    String id = String.valueOf(idCounter);
+    idCounter++;
+    return id;
   }
 
   //##################################################################
@@ -139,6 +146,16 @@ public abstract class AnnNode {
           .map(n -> String.format("(%s | %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
     }
     return weights;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof AnnNode) {
+      AnnNode other = (AnnNode) obj;
+      return getFormattedWeights().equals(other.getFormattedWeights());
+    }
+
+    return false;
   }
 
   public WeightBound getBound() {

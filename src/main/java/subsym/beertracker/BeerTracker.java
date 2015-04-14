@@ -32,6 +32,7 @@ public class BeerTracker extends GeneticProblem {
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
       BeerGenotype genotype = new BeerGenotype(annPrefs);
+      genotype.randomize();
       getPopulation().add(genotype);
     });
   }
@@ -65,7 +66,7 @@ public class BeerTracker extends GeneticProblem {
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
     BeerGame game = new BeerGame();
     game.initGui();
-    game.simulate(ann, 0 + count);
+    game.simulate(ann, 0 + count, true);
     count++;
 
     Log.v(TAG, this);

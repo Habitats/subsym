@@ -43,7 +43,7 @@ public class BeerGame {
   public static void demo() {
     BeerGame game = new BeerGame();
     game.initGui();
-    game.simulateFallingPieces(game.board, game.tracker, null, System.currentTimeMillis());
+    game.simulateFallingPieces(game.board, game.tracker, null, System.currentTimeMillis(), false);
   }
 
   public void reset() {
@@ -58,13 +58,13 @@ public class BeerGame {
   public void restart() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, ann, System.currentTimeMillis());
+    simulateFallingPieces(board, tracker, ann, System.currentTimeMillis(), false);
   }
 
   public void play() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, null, System.currentTimeMillis());
+    simulateFallingPieces(board, tracker, null, System.currentTimeMillis(), false);
   }
 
   public void initGui() {
@@ -74,13 +74,13 @@ public class BeerGame {
     gui.setAdapter(board);
   }
 
-  public double simulate(ArtificialNeuralNetwork ann, int seed) {
+  public double simulate(ArtificialNeuralNetwork ann, long seed, boolean shouldLog) {
     this.ann = ann;
-    simulateFallingPieces(board, tracker, ann, seed);
+    simulateFallingPieces(board, tracker, ann, seed, false);
     return getScore();
   }
 
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed) {
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed, boolean shouldLog) {
     state = State.SIMULATING;
     Random r = new Random(seed);
     time = 0;
@@ -106,6 +106,9 @@ public class BeerGame {
           List<Boolean> sensors = tracker.getSensors();
 //          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
           ann.updateInput(sensors.stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
+          if (shouldLog) {
+            ann.statePrint();
+          }
           List<Double> outputs = ann.getOutputs();
           tracker.move(outputs);
         }
@@ -119,7 +122,7 @@ public class BeerGame {
         }
       }
       if (ann != null) {
-        ann.resetInternalState();
+//        ann.resetInternalState();
       }
     }
   }
@@ -166,7 +169,7 @@ public class BeerGame {
   }
 
   public int getCrashed() {
-    return tracker.getCrashed();
+    return tracker.getCrash();
   }
 
   public int getAvoided() {

@@ -9,6 +9,7 @@ import subsym.genetics.Population;
  */
 public class Mixing implements AdultSelection {
 
+  private static final String TAG = Mixing.class.getSimpleName();
   private double mixingRate;
 
   public Mixing(double mixingRate) {
@@ -21,6 +22,7 @@ public class Mixing implements AdultSelection {
     IntStream.range(0, adultLimit).forEach(i -> population.getNextGeneration().add(population.getCurrent().removeBest()));
     population.getCurrent().clear();
     population.getCurrent().addAll(population.getNextGeneration());
+
     while (population.getCurrent().size() > population.getMaxPopulationSize()) {
       population.getCurrent().removeWorst();
     }

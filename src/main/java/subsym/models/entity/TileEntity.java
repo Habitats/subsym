@@ -92,6 +92,10 @@ public abstract class TileEntity extends Entity {
     return board;
   }
 
+  @Override
+  public String toString() {
+    return getDescription() + " " +getX() + "," +getY();
+  }
   public String getDescription() {
     return "";
   }

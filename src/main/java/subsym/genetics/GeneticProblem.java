@@ -35,7 +35,7 @@ public abstract class GeneticProblem {
     return prefs.getPopulationSize();
   }
 
-  protected Population getPopulation() {
+public Population getPopulation() {
     return population;
   }
 
@@ -56,8 +56,9 @@ public abstract class GeneticProblem {
   public void log() {
     delta = System.currentTimeMillis() - delta;
     avg += delta;
-    Log.i(TAG, String.format("(%4d / %4d) ms - %s",//
-                             delta, (int) (avg / count), population));
+//    Log.i(TAG, String.format("(%4d / %4d) ms - %s",//
+//                             delta, (int) (avg / count), population));
+    Log.i(TAG, getPopulation().getBestGenotype().getPhenotype());
     delta = System.currentTimeMillis();
     count++;
   }

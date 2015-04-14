@@ -57,6 +57,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(0);
+        printBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), Direction.UP);
@@ -64,6 +65,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(1);
+        printBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
@@ -71,6 +73,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(2);
+        printBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "simulate");
@@ -89,9 +92,14 @@ public class AiLifeGui extends AIGui<TileEntity> {
     });
   }
 
+  private void printBoard() {
+    Log.v(TAG, board.getFormattedBoard());
+  }
+
   private void generateRandomBoard() {
     board = AiLife.createAiLifeBoard(ArtificialNeuralNetwork.random().nextInt());
     initBoard(board);
+    Log.v(TAG, board.getFormattedBoard());
     onTick(0);
   }
 

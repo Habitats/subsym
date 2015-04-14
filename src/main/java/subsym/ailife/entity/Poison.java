@@ -35,5 +35,7 @@ public class Poison extends ImageTileEntity {
   public Color getColor() {
     return ColorUtils.c(0);
   }
+
+
 }
 

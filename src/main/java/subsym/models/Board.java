@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import subsym.models.entity.TileEntity;
 
@@ -136,6 +137,16 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
 
   public T get(Vec oldPosition) {
     return get((int) oldPosition.x, (int) oldPosition.y);
+  }
+
+  public String getFormattedBoard() {
+    String
+        xRow =
+        IntStream.range(0, getWidth()).mapToObj(x -> String.format("%-10d", x)).collect(Collectors.joining("   ", "   ", "  "));
+    return "\n" + IntStream.range(0, getWidth()).mapToObj(y -> IntStream.range(0, getHeight()) //
+        .mapToObj(x -> String.format("%1$-10s", get(x, getHeight() - 1 - y).getDescription()))
+        .collect(Collectors.joining(" | ", (getHeight() - 1 - y) + "[ ", " ]")))//
+        .collect(Collectors.joining("\n", "", "\n" + xRow));
   }
 
   @Override

@@ -13,9 +13,15 @@ public class BeerGenotype extends Genotype {
   private AnnPreferences prefs;
 
   public BeerGenotype(AnnPreferences prefs) {
-    super(false);
+    super(true);
     this.prefs = prefs;
     phenotype = new BeerPhenotype(this, prefs);
+  }
+
+  public void randomize() {
+    int numNodes = phenotype.getNodeCount();
+    int numWeights = phenotype.getNumWeights();
+    setRandom((numWeights + numNodes * 2) * getBitGroupSize());
   }
 
   @Override
@@ -36,6 +42,11 @@ public class BeerGenotype extends Genotype {
 
   @Override
   public int getBitGroupSize() {
-    return 10;
+    return 8;
+  }
+
+  @Override
+  public String toString() {
+    return getPaddedBitString();
   }
 }

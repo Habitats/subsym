@@ -25,19 +25,30 @@ public class BeerPhenotype implements Phenotype {
     this.beerGenotype = beerGenotype;
     this.prefs = prefs;
 
-    ann = buildContinuousTimeRecurrentNeuralNetwork(beerGenotype, prefs);
+    ann = buildContinuousTimeRecurrentNeuralNetwork(prefs);
+  }
+
+
+
+  public int getNumWeights() {
+    return ann.getNumWeights();
+  }
+
+  public int getNodeCount() {
+    return (int) ann.getOutputNodeStream().count();
   }
 
   @Override
   public double fitness() {
     if (score == null) {
       BeerGame game = new BeerGame();
-      score = game.simulate(ann, 0);
+      setValues(beerGenotype,  ann);
+      score = game.simulate(ann, 0, false);
     }
     return score;
   }
 
-  private ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(BeerGenotype beerGenotype, AnnPreferences prefs) {
+  private static ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
     ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
@@ -48,26 +59,29 @@ public class BeerPhenotype implements Phenotype {
                                       .mapToObj(layers::get).flatMap(AnnNodes::stream)//
                                       .collect(Collectors.toList()));
     ann.addBiasNode(new WeightBound(-10, 0), nodes);
-    ann.getLayers().stream().forEach(layer -> {
+    ann.getLayers().subList(1, layers.size() - 1).stream().forEach(layer -> {
       layer.stream().forEach(n -> {
-        layer.stream().filter(other -> !n.equals(other)).forEach(n::connect);
+        layer.stream().filter(other -> !n.equals(other)).forEach(n::crossConnect);
       });
     });
     ann.addSelfNode(new WeightBound(-5, 5), nodes);
+    ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
 
-    this.beerGenotype.setRandom(ann.getNumWeights() * beerGenotype.getBitGroupSize() * 3);
+    return ann;
+  }
+
+  private void setValues(BeerGenotype beerGenotype, ArtificialNeuralNetwork ann) {
+    int numNodes = (int) ann.getOutputNodeStream().count();
+    int numWeights = ann.getNumWeights();
 
     List<Double> normalizedValues = getNormalizedValues(beerGenotype.toList());
 
-    List<Double> weights = normalizedValues.subList(0, ann.getNumWeights());
-    List<Double> timeConstants = getTimeConstants(normalizedValues.subList(ann.getNumWeights(), ann.getNumWeights() * 2));
-    List<Double> gains = getGains(normalizedValues.subList(ann.getNumWeights() * 2, ann.getNumWeights() * 3));
+    List<Double> weights = normalizedValues.subList(0, numWeights);
+    List<Double> timeConstants = getTimeConstants(normalizedValues.subList(numWeights, numWeights + numNodes));
+    List<Double> gains = getGains(normalizedValues.subList(numWeights + numNodes, numWeights + numNodes * 2));
     ann.setWeights(weights);
     ann.setTimeConstants(timeConstants);
     ann.setGains(gains);
-
-    ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
-    return ann;
   }
 
   private List<Double> getTimeConstants(List<Double> values) {
@@ -83,10 +97,16 @@ public class BeerPhenotype implements Phenotype {
   }
 
   private double normalize(int v) {
-    return (v % 1000) / 1000.;
+    return ((v * 4) % 1000) / 1000.;
   }
 
   public ArtificialNeuralNetwork getArtificialNeuralNetwork() {
     return ann;
+  }
+
+  @Override
+  public String toString() {
+    return getNormalizedValues(beerGenotype.toList()).stream().map(i -> String.format("%.2f", i))
+        .collect(Collectors.joining(" ", " > Pheno > ", ""));
   }
 }

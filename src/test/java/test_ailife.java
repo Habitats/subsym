@@ -8,6 +8,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import subsym.Log;
+import subsym.ailife.AiLifeGenotype;
+import subsym.ailife.AiLifePhenotype;
 import subsym.ailife.entity.Empty;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
@@ -18,6 +21,8 @@ import subsym.ann.WeightBound;
 import subsym.ann.activation.Linear;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
+import subsym.beertracker.BeerGenotype;
+import subsym.genetics.Genotype;
 import subsym.gui.AIGridCanvas;
 import subsym.models.Board;
 import subsym.models.Vec;
@@ -69,7 +74,7 @@ public class test_ailife {
     displayGui(board, robot);
   }
 
-  @Test
+  //  @Test
   public void test_ann() {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0.1, 0.2, 0.3);
     assertEquals(inputs.getValues(), Arrays.asList(0.1, 0.2, 0.3));
@@ -101,17 +106,28 @@ public class test_ailife {
   }
 
   @Test
+  public void test_annMutate() {
+//    Genotype genotype = new AiLifeGenotype(AnnPreferences.getAiLifeDefault());
+    Genotype genotype = new BeerGenotype(AnnPreferences.getBeerDefault());
+    IntStream.range(0, 100).forEach(i -> {
+      Log.v(TAG, genotype.getBitsString().length() + " " + genotype.getBitsString());
+      Log.v(TAG, genotype.getPhenotype());
+      genotype.mutate(0.011);
+    });
+  }
+
+  @Test
   public void test_ctrnn() {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(0, 1), 1., 1.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(0, 1), 1);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Linear()), inputs, outputs);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs);
     ann.setStateful();
 
     AnnNodes nodes = ann.getLayers().get(1);
     ann.addBiasNode(new WeightBound(1, 2), nodes);
     ann.addSelfNode(new WeightBound(3, 4), nodes);
     nodes.stream().forEach(n -> {
-      nodes.stream().filter(other -> !n.equals(other)).forEach(n::connect);
+      nodes.stream().filter(other -> !n.equals(other)).forEach(n::crossConnect);
     });
 
     Random r = new Random(0);
@@ -120,18 +136,41 @@ public class test_ailife {
     List<Double> timeConstants = getRandom(ann.getNumNodes(), r);
     List<Double> gains = getRandom(ann.getNumNodes(), r);
     ann.setWeights(weights);
+//    weights.forEach(System.out::print);
     ann.setTimeConstants(timeConstants);
     ann.setGains(gains);
 
     List<Double> vals = outputs.getValues();
-    ann.updateInput(1., 0.);
+    ann.statePrint();
+    IntStream.range(0, 10000).forEach(i -> {
+      ann.updateInput(1., 0.);
+      ann.statePrint();
+    });
     vals = outputs.getValues();
     ann.updateInput(0., 1.);
+    ann.statePrint();
     vals = outputs.getValues();
     ann.updateInput(0., 0.);
+    ann.statePrint();
     vals = outputs.getValues();
     ann.updateInput(1., 1.);
+    ann.statePrint();
     vals = outputs.getValues();
+  }
+
+  @Test
+  public void test_copy() {
+    AnnPreferences preferences = AnnPreferences.getAiLifeDefault();
+    preferences.setSingle(true);
+    preferences.setDynamic(false);
+    AiLifeGenotype genotype = new AiLifeGenotype(preferences);
+    genotype.randomize();
+    Genotype copy = genotype.copy();
+    AiLifePhenotype p1 = (AiLifePhenotype) genotype.getPhenotype();
+    AiLifePhenotype p2 = (AiLifePhenotype) copy.getPhenotype();
+    double f1 = copy.fitness();
+    double f2 = genotype.fitness();
+    assertEquals(f1, f2, 0);
   }
 
   private List<Double> getRandom(int num, Random r) {

@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import subsym.Log;
 import subsym.ann.activation.ActivationFunction;
 import subsym.ann.nodes.AnnNode;
 import subsym.ann.nodes.AnnNodes;
@@ -20,8 +22,8 @@ import subsym.ann.nodes.OutputNode;
  */
 public class ArtificialNeuralNetwork {
 
+  private static final String TAG = ArtificialNeuralNetwork.class.getSimpleName();
   private static Random random = new Random(1);
-  private static int idCounter = 0;
   private final int hiddenLayerCount;
   private final int hiddenNeuronCount;
   private final AnnNodes inputs;
@@ -29,6 +31,7 @@ public class ArtificialNeuralNetwork {
   private final ActivationFunction activationFunction;
   private final List<AnnNodes> layers;
   private AnnNodes biasNodes;
+  private List<Double> weights;
 
   public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
     layers = new ArrayList<>();
@@ -44,10 +47,6 @@ public class ArtificialNeuralNetwork {
 
   public static Random random() {
     return random;
-  }
-
-  public static String nextId() {
-    return "n" + (idCounter++);
   }
 
   public void addBiasNode(WeightBound bound, AnnNodes nodes) {
@@ -72,8 +71,9 @@ public class ArtificialNeuralNetwork {
       biasNodes.add(bias);
     });
   }
-  public void resetInternalState(){
-    getNodeStream().forEach(n -> n.resetInternalState());
+
+  public void resetInternalState() {
+    getOutputNodeStream().forEach(n -> n.resetInternalState());
   }
 
   public List<AnnNodes> getLayers() {
@@ -120,11 +120,16 @@ public class ArtificialNeuralNetwork {
   }
 
   public void setWeights(List<Double> weights) {
+    this.weights = weights;
     AtomicInteger i = new AtomicInteger();
     layers.stream()//
         .flatMap(layer -> layer.stream())//
         .forEach(node -> node.getInputs().stream()//
-            .forEach(outputNode -> node.setWeight(outputNode, weights.get(i.getAndIncrement()))));
+            .forEach(outputNode -> {
+              Double weight = weights.get(i.getAndIncrement());
+              node.setWeight(outputNode, weight);
+              Log.v(TAG, node.getId() + " -> " + outputNode.getId() + " = " + weight);
+            }));
   }
 
   public int getNumWeights() {
@@ -147,12 +152,12 @@ public class ArtificialNeuralNetwork {
 
   public void setTimeConstants(List<Double> doubles) {
     AtomicInteger i = new AtomicInteger();
-    getNodeStream().forEach(outputNode -> outputNode.setTimeConstant(doubles.get(i.getAndIncrement())));
+    getOutputNodeStream().forEach(outputNode -> outputNode.setTimeConstant(doubles.get(i.getAndIncrement())));
   }
 
   public void setGains(List<Double> gains) {
     AtomicInteger i = new AtomicInteger();
-    getNodeStream().forEach(outputNode -> outputNode.setGain(gains.get(i.getAndIncrement())));
+    getOutputNodeStream().forEach(outputNode -> outputNode.setGain(gains.get(i.getAndIncrement())));
   }
 
 
@@ -164,12 +169,35 @@ public class ArtificialNeuralNetwork {
     layers.stream().flatMap(AnnNodes::stream).forEach(AnnNode::setStateful);
   }
 
-  private Stream<OutputNode> getNodeStream() {
+  public Stream<OutputNode> getOutputNodeStream() {
     return layers.stream().flatMap(AnnNodes::stream).filter(n -> n instanceof OutputNode).map(n -> (OutputNode) n);
+  }
+
+  public List<Double> getWeights() {
+    return weights;
   }
 
   @Override
   public String toString() {
     return "ANN > Inputs " + inputs + " > Outputs " + outputs;
+  }
+
+  private List<AnnNode> getSortedNodes() {
+    return layers.stream().flatMap(AnnNodes::stream).sorted((o1, o2) -> o1.getId().compareTo(o2.getId())).collect(Collectors.toList());
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof ArtificialNeuralNetwork) {
+      ArtificialNeuralNetwork other = (ArtificialNeuralNetwork) obj;
+      List<AnnNode> otherNodes = other.getSortedNodes();
+      List<AnnNode> nodes = getSortedNodes();
+      return IntStream.range(0, getNumNodes()).allMatch(i -> otherNodes.get(i).equals(nodes.get(i)));
+    }
+    return false;
+  }
+
+  public void statePrint() {
+    layers.stream().forEach(n -> Log.v(TAG, n));
   }
 }

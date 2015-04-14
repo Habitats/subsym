@@ -1,11 +1,11 @@
 package subsym.ailife.entity;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.ColorUtils;
@@ -24,8 +24,9 @@ public class Robot extends TileEntity {
   private int foodCount;
 
   public List<Double> getSensoryInput() {
-    List<Double> sensoryInput = Stream.of(getFoodSensorInput(), getPoisonSensorInput()) //
-        .flatMap(List::stream).mapToDouble(Double::valueOf).boxed().collect(Collectors.toList());
+    List<Double> sensoryInput = new ArrayList<>();
+    sensoryInput.addAll(getFoodSensorInput());
+    sensoryInput.addAll(getPoisonSensorInput());
     return sensoryInput;
   }
 
@@ -43,14 +44,14 @@ public class Robot extends TileEntity {
     dir = Direction.UP;
   }
 
-  public List<Integer> getFoodSensorInput() {
+  public List<Double> getFoodSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();
-    return neighbors.stream().mapToInt(i -> i instanceof Food ? 1 : 0).boxed().collect(Collectors.toList());
+    return neighbors.stream().mapToDouble(i -> i instanceof Food ? 1. : 0.).boxed().collect(Collectors.toList());
   }
 
-  public List<Integer> getPoisonSensorInput() {
+  public List<Double> getPoisonSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();
-    return neighbors.stream().mapToInt(i -> i instanceof Poison ? 1 : 0).boxed().collect(Collectors.toList());
+    return neighbors.stream().mapToDouble(i -> i instanceof Poison ? 1. : 0.).boxed().collect(Collectors.toList());
   }
 
   private List<TileEntity> getSensorNeighbors() {
@@ -66,7 +67,7 @@ public class Robot extends TileEntity {
         neighbors = Arrays.asList(getWrapped(1, 0), getWrapped(0, -1), getWrapped(-1, 0));
         break;
       case LEFT:
-        neighbors = Arrays.asList(getWrapped(0, -1), getWrapped(1, 0), getWrapped(0, 1));
+        neighbors = Arrays.asList(getWrapped(0, -1), getWrapped(-1, 0), getWrapped(0, 1));
         break;
       default:
         throw new IllegalStateException("No direction set!");
@@ -75,8 +76,9 @@ public class Robot extends TileEntity {
   }
 
   private TileEntity getWrapped(int dx, int dy) {
-    return getBoard().get((getX() + dx + getBoard().getWidth()) % getBoard().getWidth(),
-                          (getY() + dy + getBoard().getHeight()) % getBoard().getHeight());
+    int x = (getX() + dx + getBoard().getWidth()) % getBoard().getWidth();
+    int y = (getY() + dy + getBoard().getHeight()) % getBoard().getHeight();
+    return getBoard().get(x, y);
   }
 
   public void move(int index) {
@@ -98,9 +100,9 @@ public class Robot extends TileEntity {
         throw new IllegalStateException("Invalid index!");
     }
     TileEntity oldTile = getBoard().get(getX(), getY());
-    if(oldTile instanceof Poison)
+    if (oldTile instanceof Poison) {
       poisonCount++;
-    else if(oldTile instanceof Food){
+    } else if (oldTile instanceof Food) {
       foodCount++;
     }
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
@@ -182,6 +184,11 @@ public class Robot extends TileEntity {
     super.draw(g, x, y);
 //    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
     drawArrow(g, x, y, dir);
+  }
+
+  @Override
+  public String getDescription() {
+    return "Robot " + dir.name().charAt(0);
   }
 
   public int getFoodCount() {
