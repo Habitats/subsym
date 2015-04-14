@@ -58,7 +58,7 @@ public class AnnNodes {
 
   @Override
   public String toString() {
-    return values.stream().map(AnnNode::getId).collect(Collectors.joining("], [", " > [", "]"));
+    return values.stream().map(AnnNode::toString).collect(Collectors.joining("], [", " > [", "]"));
   }
 
 }
