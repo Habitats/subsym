@@ -10,7 +10,9 @@ import javax.swing.*;
 
 import subsym.Log;
 import subsym.ailife.AiLife;
+import subsym.ailife.AiLifeGui;
 import subsym.ann.AnnPreferences;
+import subsym.beertracker.BeerGame;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
@@ -107,6 +109,8 @@ public class GeneticGui extends AIGui {
   private JCheckBox dynamicCheckbox;
   private JCheckBox singleCheckbox;
   private JCheckBox grayCheckbox;
+  private AIButton beerDemoButton;
+  private AIButton aiLifeDemoButton;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -152,6 +156,8 @@ public class GeneticGui extends AIGui {
 
     runButton.addActionListener(e -> run());
     stopButton.addActionListener(e -> listener.stop());
+    beerDemoButton.addActionListener(e -> new Thread(() -> BeerGame.demo()).start());
+    aiLifeDemoButton.addActionListener(e -> new Thread(() -> AiLifeGui.demo()).start());
     benchMarkButton.addActionListener(e -> benchmark());
 
     crossoverInput.addActionListener(e -> updatePreferences());

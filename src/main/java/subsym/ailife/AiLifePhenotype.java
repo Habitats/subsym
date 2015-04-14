@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.Log;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
@@ -59,24 +58,24 @@ public class AiLifePhenotype implements Phenotype {
     IntStream.range(0, rounds).forEach(run -> {
       int seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : run;
       Board<TileEntity> board = AiLife.createAiLifeBoard(seed);
-      Log.v(TAG, ann.getNumWeights());
+//      Log.v(TAG, ann.getNumWeights());
       long numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
       long numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
       Robot robot = new Robot(0, 0, board);
       board.set(robot);
-      for (int i = 0; i < 1; i++) {
-        Log.v(TAG, board.getFormattedBoard());
+      for (int i = 0; i < 60; i++) {
+//        Log.v(TAG, board.getFormattedBoard());
         ann.updateInput(robot.getSensoryInput());
         List<Double> outputs = ann.getOutputs();
         int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
-        Log.v(TAG, robot.getSensoryInput() + " " + outputs);
-        Log.v(TAG, ann.getWeights().stream().map(String::valueOf).collect(Collectors.joining(" ")));
+//        Log.v(TAG, robot.getSensoryInput() + " " + outputs);
+//        Log.v(TAG, ann.getWeights().stream().map(String::valueOf).collect(Collectors.joining(" ")));
         robot.move(indexOfBest);
       }
 
       long deltaPoison = numPoison - board.getItems().stream().filter(i -> i instanceof Poison).count();
       long deltaFood = numFood - board.getItems().stream().filter(i -> i instanceof Food).count();
-      Log.v(TAG, "" + deltaFood + deltaPoison);
+//      Log.v(TAG, "" + deltaFood + deltaPoison);
       fitness.getAndAdd(deltaFood * 2 + deltaPoison * -2);
     });
     return fitness.get() / (double) rounds;
@@ -104,12 +103,4 @@ public class AiLifePhenotype implements Phenotype {
     return ann.getNumWeights();
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof AiLifePhenotype) {
-      AiLifePhenotype other = (AiLifePhenotype) obj;
-      return other.score.equals(score) && other.ann.equals(ann);
-    }
-    return false;
-  }
 }

@@ -33,14 +33,7 @@ public class AiLifeGenotype extends Genotype {
     aiCopy.phenotype = new AiLifePhenotype(this, prefs);
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (super.equals(obj)) {
-      AiLifeGenotype other = (AiLifeGenotype) obj;
-      return other.phenotype.equals(phenotype);
-    }
-    return false;
-  }
+
 
   @Override
   public Phenotype getPhenotype() {

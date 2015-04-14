@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import subsym.Log;
 import subsym.ann.activation.ActivationFunction;
+import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNode;
 import subsym.ann.nodes.AnnNodes;
 import subsym.ann.nodes.InputNode;
@@ -47,6 +48,29 @@ public class ArtificialNeuralNetwork {
 
   public static Random random() {
     return random;
+  }
+
+  public static ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(AnnPreferences prefs) {
+    AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
+    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
+    ann.setStateful();
+
+    List<AnnNodes> layers = ann.getLayers();
+    AnnNodes nodes = new AnnNodes(IntStream.range(1, layers.size())//
+                                      .mapToObj(layers::get).flatMap(AnnNodes::stream)//
+                                      .collect(Collectors.toList()));
+    ann.addBiasNode(new WeightBound(-10, 0), nodes);
+    ann.getLayers().subList(1, layers.size() - 1).stream().forEach(layer -> {
+      layer.stream().forEach(n -> {
+        layer.stream().filter(other -> !n.equals(other)).forEach(n::crossConnect);
+      });
+    });
+    ann.addSelfNode(new WeightBound(-5, 5), nodes);
+    ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
+
+    ann.setIds();
+    return ann;
   }
 
   public void addBiasNode(WeightBound bound, AnnNodes nodes) {
@@ -128,7 +152,7 @@ public class ArtificialNeuralNetwork {
             .forEach(outputNode -> {
               Double weight = weights.get(i.getAndIncrement());
               node.setWeight(outputNode, weight);
-              Log.v(TAG, node.getId() + " -> " + outputNode.getId() + " = " + weight);
+//              Log.v(TAG, node.getId() + " -> " + outputNode.getId() + " = " + weight);
             }));
   }
 
@@ -203,5 +227,9 @@ public class ArtificialNeuralNetwork {
 
   public void setIds() {
     layers.stream().flatMap(AnnNodes::stream).forEach(n -> n.setId(idCounter.getAndIncrement()));
+  }
+
+  public void setWeights(String s) {
+    setWeights(Arrays.asList(s.replaceAll(",",".").split(" ")).stream().mapToDouble(Double::parseDouble).boxed().collect(Collectors.toList()));
   }
 }

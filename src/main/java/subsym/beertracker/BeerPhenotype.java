@@ -2,13 +2,9 @@ package subsym.beertracker;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
-import subsym.ann.WeightBound;
-import subsym.ann.activation.Sigmoid;
-import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
 
 /**
@@ -25,7 +21,7 @@ public class BeerPhenotype implements Phenotype {
     this.beerGenotype = beerGenotype;
     this.prefs = prefs;
 
-    ann = buildContinuousTimeRecurrentNeuralNetwork(prefs);
+    ann = ArtificialNeuralNetwork.buildContinuousTimeRecurrentNeuralNetwork(prefs);
   }
 
 
@@ -46,29 +42,6 @@ public class BeerPhenotype implements Phenotype {
       score = game.simulate(ann, 0, false);
     }
     return score;
-  }
-
-  private static ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(AnnPreferences prefs) {
-    AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
-    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
-    ann.setStateful();
-
-    List<AnnNodes> layers = ann.getLayers();
-    AnnNodes nodes = new AnnNodes(IntStream.range(1, layers.size())//
-                                      .mapToObj(layers::get).flatMap(AnnNodes::stream)//
-                                      .collect(Collectors.toList()));
-    ann.addBiasNode(new WeightBound(-10, 0), nodes);
-    ann.getLayers().subList(1, layers.size() - 1).stream().forEach(layer -> {
-      layer.stream().forEach(n -> {
-        layer.stream().filter(other -> !n.equals(other)).forEach(n::crossConnect);
-      });
-    });
-    ann.addSelfNode(new WeightBound(-5, 5), nodes);
-    ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
-
-    ann.setIds();
-    return ann;
   }
 
   private void setValues(BeerGenotype beerGenotype, ArtificialNeuralNetwork ann) {

@@ -155,12 +155,12 @@ public class Tracker extends MultiTile {
 
   public double calculateScore(double numBad, double numGood) {
     double max = numGood * 3;
-    double fitness = ((-Math.pow(badCrash, 2.2))) + ((-goodCrash + caught * 3));
+//    double fitness = ((-Math.pow(badCrash, 2.2))) + ((-goodCrash + caught * 3));
 //    double fitness = -badCrash  + caught * 2;
 //    Log.v(TAG, String.format(
 //              "Fitness: %2.2f - Good: %2.0f - Bad: %2.0f - Caught: %2d - Good Crash: %2d - Bad Crash: %2d - Good Avoid: %2d - Bad Avoid: %2d",
 //              fitness, numGood, numBad, caught, goodCrash, badCrash, goodAvoid, badAvoid));
-    return fitness / max;
+    return caught  - badCrash * .5 ;
   }
 
   public void move(List<Double> outputs) {

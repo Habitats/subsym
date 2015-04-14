@@ -34,6 +34,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   private AIButton simulateButton;
   private AILabel timeLabel;
   private AISlider simulationSpeedSlider;
+  private AIButton manualButton;
 
   public BeerGui(BeerGame game) {
     buildFrame(mainPanel, null, null);
@@ -69,6 +70,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
     simulationSpeedSlider.addChangeListener(e -> game.setSimulationSpeed(simulationSpeedSlider.getValue()));
     simulateButton.addActionListener(e -> game.stop(() -> game.restart()));
+    manualButton.addActionListener(e -> game.stop(() -> game.manual()));
     playButton.addActionListener(e -> game.stop(() -> game.play()));
 
     onTick();

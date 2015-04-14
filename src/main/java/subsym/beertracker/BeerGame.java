@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import subsym.ailife.entity.Empty;
+import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
@@ -65,6 +66,15 @@ public class BeerGame {
     reset();
     initGui();
     simulateFallingPieces(board, tracker, null, System.currentTimeMillis(), false);
+  }
+
+  public void manual() {
+    reset();
+    initGui();
+    ann = ArtificialNeuralNetwork.buildContinuousTimeRecurrentNeuralNetwork(AnnPreferences.getBeerDefault());
+    ann.setWeights(
+        "0,64 0,59 0,76 0,85 0,76 0,92 0,78 0,18 0,98 0,98 0,01 0,11 0,42 0,12 0,56 0,05 0,04 0,30 0,42 0,43 0,04 0,86 0,64 0,84 0,10 0,58 0,48 0,30 0,60 0,63");
+    simulateFallingPieces(board, tracker, ann, System.currentTimeMillis(), false);
   }
 
   public void initGui() {
