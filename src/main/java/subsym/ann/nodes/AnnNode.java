@@ -23,6 +23,7 @@ public abstract class AnnNode {
   protected double currentValue;
   private Random random = new Random();
   private InputNode selfNode;
+  private InputNode crossNode;
   private boolean hasState = false;
   private WeightBound bound;
 
@@ -63,6 +64,15 @@ public abstract class AnnNode {
     annNode.addInput(this);
   }
 
+  public void crossConnect(AnnNode annNode) {
+    if (crossNode == null) {
+      crossNode = createInput(bound, 1.);
+    }
+    crossNode.inputWeights = inputWeights;
+    annNode.inputWeights.put(crossNode, 1.);
+    annNode.addInput(crossNode);
+  }
+
   private void addInput(AnnNode annNode) {
     inputs.add(annNode);
   }
@@ -73,6 +83,9 @@ public abstract class AnnNode {
   }
 
   public void incrementTime() {
+    if (crossNode != null) {
+      crossNode.setValue(currentValue);
+    }
     if (selfNode != null) {
       selfNode.setValue(currentValue);
     }
@@ -86,6 +99,7 @@ public abstract class AnnNode {
     inputs.stream().forEach(n -> inputWeights.put(n, random.nextDouble()));
     inputs.setRandomWeights();
   }
+
 
   public void setWeight(AnnNode outputNode, Double weight) {
     inputWeights.put(outputNode, outputNode.getBound().fromNormal(weight));
@@ -113,10 +127,10 @@ public abstract class AnnNode {
     hasState = true;
   }
 
+
   public boolean hasState() {
     return hasState;
   }
-
 
   protected String getFormattedWeights() {
     String weights = "";
@@ -135,5 +149,4 @@ public abstract class AnnNode {
   public String toString() {
     return id + " ";
   }
-
 }

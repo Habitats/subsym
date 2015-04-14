@@ -61,7 +61,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
     copy.size = size;
-    copy.fitness = null;
+    copy.fitness = fitness;
     copy(copy);
     return copy;
   }

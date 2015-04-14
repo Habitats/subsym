@@ -47,6 +47,7 @@ public class AiLife extends GeneticProblem {
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
       AiLifeGenotype genotype = new AiLifeGenotype(annPrefs);
+      genotype.randomize();
       getPopulation().add(genotype);
     });
   }

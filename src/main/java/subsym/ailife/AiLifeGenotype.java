@@ -18,6 +18,10 @@ public class AiLifeGenotype extends Genotype {
     phenotype = new AiLifePhenotype(this, prefs);
   }
 
+  public void randomize(){
+    setRandom(phenotype.getNumWeights() * getBitGroupSize());
+  }
+
   @Override
   protected Genotype newInstance() {
     return new AiLifeGenotype(prefs);
