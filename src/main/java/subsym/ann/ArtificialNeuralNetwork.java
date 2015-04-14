@@ -32,11 +32,13 @@ public class ArtificialNeuralNetwork {
   private final List<AnnNodes> layers;
   private AnnNodes biasNodes;
   private List<Double> weights;
-  private AtomicInteger idCounter;
+
+  private final static AtomicInteger globalIdCounter = new AtomicInteger();
+  private final AtomicInteger idCounter;
 
   public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
-    idCounter = new AtomicInteger();
     layers = new ArrayList<>();
+    idCounter = new AtomicInteger();
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
     this.inputs = inputs;
@@ -130,7 +132,7 @@ public class ArtificialNeuralNetwork {
       throw new IllegalStateException("Inputs not equal size!");
     }
     AtomicInteger i = new AtomicInteger(0);
-    this.inputs.stream().forEach(n -> ((InputNode) n).setValue(inputs.get(i.getAndIncrement())));
+    this.inputs.stream().sorted().forEach(n -> ((InputNode) n).setValue(inputs.get(i.getAndIncrement())));
 
     layers.stream().flatMap(AnnNodes::stream).forEach(AnnNode::incrementTime);
   }
@@ -140,7 +142,7 @@ public class ArtificialNeuralNetwork {
   //##################################################################
 
   public List<Double> getOutputs() {
-    return outputs.stream().mapToDouble(n -> n.getValue()).boxed().collect(Collectors.toList());
+    return outputs.stream().sorted().mapToDouble(n -> n.getValue()).boxed().collect(Collectors.toList());
   }
 
   public void setWeights(List<Double> weights) {
@@ -176,12 +178,12 @@ public class ArtificialNeuralNetwork {
 
   public void setTimeConstants(List<Double> doubles) {
     AtomicInteger i = new AtomicInteger();
-    getOutputNodeStream().forEach(outputNode -> outputNode.setTimeConstant(doubles.get(i.getAndIncrement())));
+    getOutputNodeStream().sorted().forEach(outputNode -> outputNode.setTimeConstant(doubles.get(i.getAndIncrement())));
   }
 
   public void setGains(List<Double> gains) {
     AtomicInteger i = new AtomicInteger();
-    getOutputNodeStream().forEach(outputNode -> outputNode.setGain(gains.get(i.getAndIncrement())));
+    getOutputNodeStream().sorted().forEach(outputNode -> outputNode.setGain(gains.get(i.getAndIncrement())));
   }
 
 
@@ -226,11 +228,16 @@ public class ArtificialNeuralNetwork {
   }
 
   public void setIds() {
-    layers.stream().flatMap(AnnNodes::stream).forEach(n -> n.setId(idCounter.getAndIncrement()));
+    layers.stream().flatMap(AnnNodes::stream).sorted((o1, o2) -> o1.getGlobalId().compareTo(o2.getGlobalId()))
+        .forEach(n -> n.setId(idCounter.getAndIncrement()));
   }
 
   public void setWeights(String s) {
     setWeights(
         Arrays.asList(s.replaceAll(",", ".").split(" ")).stream().mapToDouble(Double::parseDouble).boxed().collect(Collectors.toList()));
+  }
+
+  public static int nextGlobalId() {
+    return globalIdCounter.getAndIncrement();
   }
 }

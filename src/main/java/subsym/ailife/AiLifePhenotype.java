@@ -50,6 +50,11 @@ public class AiLifePhenotype implements Phenotype {
     return score;
   }
 
+  @Override
+  public void resetFitness() {
+    score = null;
+  }
+
   private double boardFitness() {
     setValues(aiLifeGenotype);
 

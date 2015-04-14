@@ -68,6 +68,11 @@ public class BeerPhenotype implements Phenotype {
     return values.stream().mapToDouble(this::normalize).boxed().collect(Collectors.toList());
   }
 
+  @Override
+  public void resetFitness() {
+    score = null;
+  }
+
   private double normalize(int v) {
     return ((v * 4) % 1000) / 1000.;
   }
@@ -79,6 +84,7 @@ public class BeerPhenotype implements Phenotype {
   @Override
   public String toString() {
     return getNormalizedValues(beerGenotype.toList()).stream().map(i -> String.format("%.2f", i))
-        .collect(Collectors.joining(" ", " > Pheno > ", ""));
+        .collect(Collectors.joining(" ", "Pheno > ", ""));
   }
+
 }

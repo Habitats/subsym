@@ -26,12 +26,14 @@ public abstract class AnnNode implements Comparable<AnnNode> {
   private InputNode crossNode;
   private boolean hasState = false;
   private WeightBound bound;
+  private String globalId;
 
   protected AnnNode(Random random, WeightBound bound) {
     this.random = random;
     this.bound = bound;
     inputs = AnnNodes.createInput(new WeightBound(-5., 5.));
     inputWeights = new HashMap<>();
+    globalId = String.valueOf(ArtificialNeuralNetwork.nextGlobalId());
   }
 
   //##################################################################
@@ -166,5 +168,9 @@ public abstract class AnnNode implements Comparable<AnnNode> {
   @Override
   public int compareTo(AnnNode o) {
     return o.getId().compareTo(getId());
+  }
+
+  public String getGlobalId() {
+    return String.valueOf(globalId);
   }
 }

@@ -154,8 +154,8 @@ public class Population {
     return nextGeneration;
   }
 
-  public void selectAdults(AdultSelection overProduction) {
-    prefs.setAdultSelectionMode(overProduction);
+  public void selectAdults(AdultSelection mode) {
+    prefs.setAdultSelectionMode(mode);
     selectAdults();
   }
 }

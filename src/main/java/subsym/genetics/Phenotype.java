@@ -6,4 +6,7 @@ package subsym.genetics;
 public interface Phenotype {
 
   double fitness();
+
+  default void resetFitness() {
+  }
 }

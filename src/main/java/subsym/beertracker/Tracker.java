@@ -160,14 +160,14 @@ public class Tracker extends MultiTile {
 //    Log.v(TAG, String.format(
 //              "Fitness: %2.2f - Good: %2.0f - Bad: %2.0f - Caught: %2d - Good Crash: %2d - Bad Crash: %2d - Good Avoid: %2d - Bad Avoid: %2d",
 //              fitness, numGood, numBad, caught, goodCrash, badCrash, goodAvoid, badAvoid));
-    return caught;
+    return caught * 1.0 - badCrash * .7 - goodAvoid * .5;
   }
 
   public void move(List<Double> outputs) {
     Double left = outputs.get(0);
     Double right = outputs.get(1);
-    oldMove(left, right);
-//    newMove(left, right);
+//    oldMove(left, right);
+    newMove(left, right);
   }
 
   private void newMove(Double left, Double right) {

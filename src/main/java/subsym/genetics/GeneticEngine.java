@@ -18,18 +18,11 @@ public class GeneticEngine {
     int count = 0;
     long start = System.currentTimeMillis();
     while (shouldRun && !problem.solution()) {
-      Log.v(TAG, "Best: " + problem.getPopulation().getCurrent().peekBest().fitness() + " - Worst: " + problem.getPopulation().getCurrent()
-          .peekWorst().fitness());
       problem.crossOver();
-      Log.v(TAG, "Best: " + problem.getPopulation().getCurrent().peekBest().fitness() + " - Worst: " + problem.getPopulation().getCurrent()
-          .peekWorst().fitness());
       problem.mutate();
-      Log.v(TAG, "Best: " + problem.getPopulation().getCurrent().peekBest().fitness() + " - Worst: " + problem.getPopulation().getCurrent()
-          .peekWorst().fitness());
       problem.select();
+      Log.v(TAG, String.format("Current population - Size: %3d:", problem.getPopulation().getCurrent().size()));
       problem.getPopulation().getCurrent().stream().sorted().forEach(n -> Log.v(TAG, n.getPhenotype() + " " + n.fitness()));
-      Log.v(TAG, "Best: " + problem.getPopulation().getCurrent().peekBest().fitness() + " - Worst: " + problem.getPopulation().getCurrent()
-          .peekWorst().fitness());
       if (enableLogging) {
         problem.addSomePlots();
         problem.log();

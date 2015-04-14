@@ -47,6 +47,7 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   private void resetFitness() {
     fitness = null;
+    getPhenotype().resetFitness();
   }
 
   public Genotype setEmpty(int size) {

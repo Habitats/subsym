@@ -30,7 +30,7 @@ public class AiLifeGenotype extends Genotype {
   @Override
   public void copy(Genotype copy) {
     AiLifeGenotype aiCopy = (AiLifeGenotype) copy;
-    aiCopy.phenotype = new AiLifePhenotype(this, prefs);
+    aiCopy.phenotype = new AiLifePhenotype(aiCopy, prefs);
   }
 
 
