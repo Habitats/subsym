@@ -64,8 +64,10 @@ public class Population {
       addToNextGeneration(c1);
       addToNextGeneration(c2);
     } else {
-      addToNextGeneration(p1.copy());
-      addToNextGeneration(p2.copy());
+      Genotype p1Copy = p1.copy();
+      Genotype p2Copy = p2.copy();
+      addToNextGeneration(p1Copy);
+      addToNextGeneration(p2Copy);
     }
   }
 
