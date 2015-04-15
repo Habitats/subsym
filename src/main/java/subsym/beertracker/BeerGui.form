@@ -76,6 +76,20 @@
               <font name="Consolas" style="1"/>
             </properties>
           </component>
+          <component id="13667" class="subsym.gui.AILabel" binding="numGoodLabel">
+            <constraints/>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="1"/>
+            </properties>
+          </component>
+          <component id="fc80b" class="subsym.gui.AILabel" binding="numBadLabel">
+            <constraints/>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="1"/>
+            </properties>
+          </component>
           <component id="6eedf" class="subsym.gui.AISlider" binding="simulationSpeedSlider">
             <constraints/>
             <properties>

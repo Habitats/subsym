@@ -189,6 +189,14 @@ public class BeerGame {
     return tracker.getCaught();
   }
 
+  public int getNumBad() {
+    return numBad;
+  }
+
+  public int getNumGood() {
+    return numGood;
+  }
+
   public void setSimulationSpeed(int simulationSpeed) {
     this.simulationSpeed = simulationSpeed;
   }

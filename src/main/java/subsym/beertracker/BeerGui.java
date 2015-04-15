@@ -36,6 +36,8 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   private AISlider simulationSpeedSlider;
   private AIButton manualButton;
   private subsym.gui.AITextField inputField;
+  private AILabel numGoodLabel;
+  private AILabel numBadLabel;
 
   public BeerGui(BeerGame game) {
     buildFrame(mainPanel, null, null);
@@ -121,6 +123,8 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
   private void updateScore() {
     scoreLabel.setText(String.format("Score: %3f", game.getScore()));
+    numBadLabel.setText(String.format("Bad: %3d", game.getNumBad()));
+    numGoodLabel.setText(String.format("Good: %3d", game.getNumGood()));
   }
 
   private void updateTime() {
