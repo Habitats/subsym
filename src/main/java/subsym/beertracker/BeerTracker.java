@@ -64,7 +64,7 @@ public class BeerTracker extends GeneticProblem {
     Log.v(TAG, pheno.fitness());
 
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
-    BeerGame game = new BeerGame();
+    BeerGame game = new BeerGame(annPrefs.getBeerScenario());
     game.initGui();
     game.simulate(ann, 0 + count, true);
     count++;

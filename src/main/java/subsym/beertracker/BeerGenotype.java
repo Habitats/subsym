@@ -32,7 +32,7 @@ public class BeerGenotype extends Genotype {
   @Override
   public void copy(Genotype copy) {
     BeerGenotype beerCopy = (BeerGenotype) copy;
-    beerCopy.phenotype =new BeerPhenotype(beerCopy, prefs);
+    beerCopy.phenotype = new BeerPhenotype(beerCopy, prefs);
   }
 
   @Override

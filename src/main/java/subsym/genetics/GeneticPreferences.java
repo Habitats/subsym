@@ -6,6 +6,7 @@ import java.util.Map;
 import subsym.ailife.AiLife;
 import subsym.ann.AnnPreferences;
 import subsym.ann.activation.Sigmoid;
+import subsym.beertracker.BeerScenario;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
@@ -137,7 +138,7 @@ public class GeneticPreferences {
     GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.05), new Rank(), 200);
     GeneticProblem problem = new AiLife(prefs, AnnPreferences.getAiLifeDefault());
     prefs.setPuzzle(problem);
-    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid()));
+    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid(), BeerScenario.WRAP));
     return prefs;
   }
 
@@ -146,7 +147,7 @@ public class GeneticPreferences {
     GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getBeerDefault());
     prefs.setPuzzle(problem);
 
-    prefs.setAnnPreferences(new AnnPreferences(1, 2, new Sigmoid()));
+    prefs.setAnnPreferences(new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP));
     return prefs;
   }
 

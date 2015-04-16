@@ -5,6 +5,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 
 import javax.swing.*;
 
@@ -13,6 +14,7 @@ import subsym.ailife.AiLife;
 import subsym.ailife.AiLifeGui;
 import subsym.ann.AnnPreferences;
 import subsym.beertracker.BeerGame;
+import subsym.beertracker.BeerScenario;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
@@ -111,6 +113,8 @@ public class GeneticGui extends AIGui {
   private JCheckBox grayCheckbox;
   private AIButton beerDemoButton;
   private AIButton aiLifeDemoButton;
+  private AIComboBox<BeerScenario> beerScenarioSelection;
+  private AILabel beerScenarioLabel;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -120,6 +124,7 @@ public class GeneticGui extends AIGui {
     Genetics.values().forEach(puzzleSelect::addItem);
     AdultSelection.values().forEach(adultSelection::addItem);
     MatingSelection.values().forEach(matingSelection::addItem);
+    Arrays.asList(BeerScenario.values()).stream().forEach(beerScenarioSelection::addItem);
     GeneticPreferences.getPresets().keySet().stream().sorted().forEach(presetsComboBox::addItem);
 
     presetsComboBox
@@ -156,7 +161,7 @@ public class GeneticGui extends AIGui {
 
     runButton.addActionListener(e -> run());
     stopButton.addActionListener(e -> listener.stop());
-    beerDemoButton.addActionListener(e -> new Thread(() -> BeerGame.demo()).start());
+    beerDemoButton.addActionListener(e -> new Thread(() -> BeerGame.demo((BeerScenario) beerScenarioSelection.getSelectedItem())).start());
     aiLifeDemoButton.addActionListener(e -> new Thread(() -> AiLifeGui.demo()).start());
     benchMarkButton.addActionListener(e -> benchmark());
 
@@ -235,6 +240,10 @@ public class GeneticGui extends AIGui {
     annHiddenNeuronLabel.setVisible(!b);
     singleCheckbox.setVisible(!b);
     dynamicCheckbox.setVisible(!b);
+    beerScenarioLabel.setVisible(!b);
+    beerScenarioSelection.setVisible(!b);
+    beerDemoButton.setVisible(!b);
+    aiLifeDemoButton.setVisible(!b);
   }
 
   private void setVisibleOneMax(boolean b) {
@@ -254,6 +263,10 @@ public class GeneticGui extends AIGui {
     annHiddenNeuronLabel.setVisible(!b);
     singleCheckbox.setVisible(!b);
     dynamicCheckbox.setVisible(!b);
+    beerScenarioLabel.setVisible(!b);
+    beerScenarioSelection.setVisible(!b);
+    beerDemoButton.setVisible(!b);
+    aiLifeDemoButton.setVisible(!b);
   }
 
   private void setVisibleSurprising(boolean b) {
@@ -273,6 +286,10 @@ public class GeneticGui extends AIGui {
     annHiddenNeuronLabel.setVisible(!b);
     singleCheckbox.setVisible(!b);
     dynamicCheckbox.setVisible(!b);
+    beerScenarioLabel.setVisible(!b);
+    beerScenarioSelection.setVisible(!b);
+    beerDemoButton.setVisible(!b);
+    aiLifeDemoButton.setVisible(!b);
   }
 
   private void setVisibleAiLife(boolean b) {
@@ -292,6 +309,10 @@ public class GeneticGui extends AIGui {
     annHiddenNeuronLabel.setVisible(b);
     singleCheckbox.setVisible(b);
     dynamicCheckbox.setVisible(b);
+    beerScenarioLabel.setVisible(!b);
+    beerScenarioSelection.setVisible(!b);
+    beerDemoButton.setVisible(!b);
+    aiLifeDemoButton.setVisible(b);
   }
 
   private void setVisibleBeer(boolean b) {
@@ -311,6 +332,10 @@ public class GeneticGui extends AIGui {
     annHiddenNeuronLabel.setVisible(b);
     singleCheckbox.setVisible(!b);
     dynamicCheckbox.setVisible(!b);
+    beerScenarioLabel.setVisible(b);
+    beerScenarioSelection.setVisible(b);
+    beerDemoButton.setVisible(b);
+    aiLifeDemoButton.setVisible(!b);
   }
 
   private void initDefaultPreferences() {
@@ -355,6 +380,7 @@ public class GeneticGui extends AIGui {
       annPreferences.setDynamic(dynamicCheckbox.isSelected());
       annPreferences.setHiddenLayerCount(Integer.parseInt(annHiddenLayerInput.getText()));
       annPreferences.setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
+      annPreferences.setBeerScenario((BeerScenario) beerScenarioSelection.getSelectedItem());
 
       prefs.setGrayCode(grayCheckbox.isSelected());
       prefs.setCrossOverRate(Double.parseDouble(crossoverInput.getText()));

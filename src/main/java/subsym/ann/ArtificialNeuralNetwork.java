@@ -52,15 +52,35 @@ public class ArtificialNeuralNetwork {
     return random;
   }
 
-  public static ArtificialNeuralNetwork buildContinuousTimeRecurrentNeuralNetwork(AnnPreferences prefs) {
+  public static ArtificialNeuralNetwork buildWrappingCtrnn(AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs);
+    return ann;
+  }
+
+  public static ArtificialNeuralNetwork buildNoWrapCtrnn(AnnPreferences prefs) {
+    AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0., 0., 0.);
+    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs);
+    return ann;
+  }
+
+  public static ArtificialNeuralNetwork buildPullingCtrnn(AnnPreferences prefs) {
+    AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
+    AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 3);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs);
+    return ann;
+  }
+
+  private static ArtificialNeuralNetwork createBeerAnn(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
     ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
     ann.setStateful();
 
     List<AnnNodes> layers = ann.getLayers();
     AnnNodes nodes = new AnnNodes(IntStream.range(1, layers.size())//
-                                      .mapToObj(layers::get).flatMap(AnnNodes::stream)//
+                                      .mapToObj(layers::get).flatMap(AnnNodes::stream) //
+                                      .sorted((o1, o2) -> o1.getGlobalId().compareTo(o2.getGlobalId()))//
                                       .collect(Collectors.toList()));
     ann.addBiasNode(new WeightBound(-10, 0), nodes);
     ann.getLayers().subList(1, layers.size() - 1).stream().forEach(layer -> {
@@ -240,4 +260,5 @@ public class ArtificialNeuralNetwork {
   public static int nextGlobalId() {
     return globalIdCounter.getAndIncrement();
   }
+
 }

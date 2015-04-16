@@ -17,6 +17,7 @@ import subsym.models.entity.TileEntity;
 public class BeerGame {
 
   private static final String TAG = BeerGame.class.getSimpleName();
+  private final BeerScenario scenario;
   private ArtificialNeuralNetwork ann;
   private int numGood;
   private int numBad;
@@ -36,13 +37,14 @@ public class BeerGame {
   private State state;
   private BeerGui gui;
 
-  public BeerGame() {
+  public BeerGame(BeerScenario scenario) {
+    this.scenario = scenario;
     state = State.IDLE;
     reset();
   }
 
-  public static void demo() {
-    BeerGame game = new BeerGame();
+  public static void demo(BeerScenario scenario) {
+    BeerGame game = new BeerGame(scenario);
     game.initGui();
     game.simulateFallingPieces(game.board, game.tracker, null, System.currentTimeMillis(), false);
   }
@@ -71,7 +73,7 @@ public class BeerGame {
   public void manual(String text) {
     reset();
     initGui();
-    ann = ArtificialNeuralNetwork.buildContinuousTimeRecurrentNeuralNetwork(AnnPreferences.getBeerDefault());
+    ann = ArtificialNeuralNetwork.buildWrappingCtrnn(AnnPreferences.getBeerDefault());
     ann.setWeights(text);
     simulateFallingPieces(board, tracker, ann, 0, false);
   }
@@ -95,15 +97,7 @@ public class BeerGame {
     time = 0;
 
     while (true) {
-      int width = 1 + r.nextInt(6);
-      Piece piece = new Piece(board, width, tracker);
-      if (width < 5) {
-        numGood++;
-      } else {
-        numBad++;
-      }
-      int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
-      IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
+      Piece piece = spawnPiece(board, tracker, r);
       while (piece.moveDown(false)) {
         time++;
         onTick();
@@ -112,14 +106,33 @@ public class BeerGame {
           piece.moveBottom();
         }
         if (ann != null) {
-          List<Boolean> sensors = tracker.getSensors();
-//          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
-          ann.updateInput(sensors.stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList()));
           if (shouldLog) {
             ann.statePrint();
           }
+
+          List<Double> sensors = tracker.getSensors().stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList());
           List<Double> outputs = ann.getOutputs();
-          tracker.move(outputs);
+          switch (scenario) {
+            case WRAP:
+              ann.updateInput(sensors.subList(0, 5));
+              tracker.move(outputs.subList(0, 2), true);
+              break;
+            case NO_WRAP:
+              ann.updateInput(sensors);
+              tracker.move(outputs.subList(0, 2), false);
+              break;
+            case PULL:
+              ann.updateInput(sensors.subList(0, 5));
+              tracker.move(outputs.subList(0, 2), true);
+              if (outputs.get(2) > .9) {
+                tracker.pull();
+              }
+              break;
+            default:
+              throw new IllegalStateException("Invalid scenario");
+          }
+//          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
+
         }
         try {
           Thread.sleep(simulationSpeed);
@@ -134,6 +147,19 @@ public class BeerGame {
 //        ann.resetInternalState();
       }
     }
+  }
+
+  private Piece spawnPiece(Board<TileEntity> board, Tracker tracker, Random r) {
+    int width = 1 + r.nextInt(6);
+    Piece piece = new Piece(board, width, tracker);
+    if (width < 5) {
+      numGood++;
+    } else {
+      numBad++;
+    }
+    int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
+    IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
+    return piece;
   }
 
   private void onTick() {

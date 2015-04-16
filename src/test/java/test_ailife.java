@@ -22,6 +22,7 @@ import subsym.ann.activation.Linear;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.beertracker.BeerGenotype;
+import subsym.beertracker.BeerScenario;
 import subsym.genetics.Genotype;
 import subsym.gui.AIGridCanvas;
 import subsym.models.Board;
@@ -79,7 +80,7 @@ public class test_ailife {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0.1, 0.2, 0.3);
     assertEquals(inputs.getValues(), Arrays.asList(0.1, 0.2, 0.3));
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP), inputs, outputs);
     ann.updateInput(0.8, 0.9, 0.2);
     assertEquals(inputs.getValues(), Arrays.asList(0.8, 0.9, 0.2));
     assertEquals(ann.getInputs(), Arrays.asList(0.8, 0.9, 0.2));
@@ -120,7 +121,7 @@ public class test_ailife {
   public void test_ctrnn() {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(0, 1), 1., 1.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(0, 1), 1);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid()), inputs, outputs);
+    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP), inputs, outputs);
     ann.setStateful();
 
     AnnNodes nodes = ann.getLayers().get(1);

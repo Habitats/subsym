@@ -28,6 +28,8 @@ public class Tracker extends MultiTile {
   private int goodAvoid;
   private int badAvoid;
   private int badCrash;
+  private boolean collisionLeft;
+  private boolean collisionRight;
 
   public Tracker(Board<TileEntity> board) {
     super(5, board);
@@ -47,6 +49,11 @@ public class Tracker extends MultiTile {
   @Override
   protected void collision(Direction dir) {
 //    Log.v(TAG, "Collision: " + dir.name());
+    if (dir == Direction.RIGHT) {
+      collisionRight = true;
+    } else if (dir == Direction.LEFT) {
+      collisionLeft = true;
+    }
   }
 
   @Override
@@ -133,6 +140,10 @@ public class Tracker extends MultiTile {
         .mapToObj(trackerX -> piece.stream().mapToInt(TilePart::getX).anyMatch(pieceX -> pieceX == trackerX))//
         .collect(Collectors.toList());
 
+    sensors.add(collisionLeft);
+    sensors.add(collisionRight);
+    collisionLeft = false;
+    collisionRight = false;
     AtomicInteger i = new AtomicInteger();
     pieces.stream().forEach(p -> p.setOutlineColor(sensors.get(i.getAndIncrement()) ? piece.getColor() : Color.BLACK));
   }
@@ -175,17 +186,17 @@ public class Tracker extends MultiTile {
 //      return (caught + 40 - badCrash);
 //    }
 //    return (caught * 1.0 - (badCrash + goodCrash) * .8);
-    return caught * 1.0 - badCrash * 1.1- goodAvoid * .5;
+    return caught * 1.0 - badCrash * 1.1 - goodAvoid * .5;
   }
 
-  public void move(List<Double> outputs) {
+  public void move(List<Double> outputs, boolean shouldWrap) {
     Double left = outputs.get(0);
     Double right = outputs.get(1);
 //    oldMove(left, right);
-    newMove(left, right);
+    newMove(left, right, shouldWrap);
   }
 
-  private void newMove(Double left, Double right) {
+  private void newMove(Double left, Double right, boolean shouldWrap) {
     double dir = Math.max(left, right);
     int multiplier = (int) Math.round(dir * 4);
 //    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f", multiplier, min, max, delta));
@@ -194,9 +205,9 @@ public class Tracker extends MultiTile {
       return;
     }
     if (left > right) {
-      IntStream.range(0, multiplier).forEach(i -> moveLeft(true));
+      IntStream.range(0, multiplier).forEach(i -> moveLeft(shouldWrap));
     } else if (left < right) {
-      IntStream.range(0, multiplier).forEach(i -> moveRight(true));
+      IntStream.range(0, multiplier).forEach(i -> moveRight(shouldWrap));
     }
   }
 

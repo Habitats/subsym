@@ -21,7 +21,19 @@ public class BeerPhenotype implements Phenotype {
     this.beerGenotype = beerGenotype;
     this.prefs = prefs;
 
-    ann = ArtificialNeuralNetwork.buildContinuousTimeRecurrentNeuralNetwork(prefs);
+    switch (prefs.getBeerScenario()) {
+      case WRAP:
+        ann = ArtificialNeuralNetwork.buildWrappingCtrnn(prefs);
+        break;
+      case NO_WRAP:
+        ann = ArtificialNeuralNetwork.buildNoWrapCtrnn(prefs);
+        break;
+      case PULL:
+        ann = ArtificialNeuralNetwork.buildPullingCtrnn(prefs);
+        break;
+      default:
+        throw new IllegalStateException("No scenario!");
+    }
   }
 
   public int getNumWeights() {
@@ -35,7 +47,7 @@ public class BeerPhenotype implements Phenotype {
   @Override
   public double fitness() {
     if (score == null) {
-      BeerGame game = new BeerGame();
+      BeerGame game = new BeerGame(prefs.getBeerScenario());
       setValues(beerGenotype, ann);
       score = game.simulate(ann, 0, false);
     }
