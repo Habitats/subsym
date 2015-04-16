@@ -28,8 +28,6 @@ public class Tracker extends MultiTile {
   private int goodAvoid;
   private int badAvoid;
   private int badCrash;
-  private boolean collisionLeft;
-  private boolean collisionRight;
 
   public Tracker(Board<TileEntity> board) {
     super(5, board);
@@ -49,11 +47,6 @@ public class Tracker extends MultiTile {
   @Override
   protected void collision(Direction dir) {
 //    Log.v(TAG, "Collision: " + dir.name());
-    if (dir == Direction.RIGHT) {
-      collisionRight = true;
-    } else if (dir == Direction.LEFT) {
-      collisionLeft = true;
-    }
   }
 
   @Override
@@ -140,12 +133,18 @@ public class Tracker extends MultiTile {
         .mapToObj(trackerX -> piece.stream().mapToInt(TilePart::getX).anyMatch(pieceX -> pieceX == trackerX))//
         .collect(Collectors.toList());
 
-    sensors.add(collisionLeft);
-    sensors.add(collisionRight);
-    collisionLeft = false;
-    collisionRight = false;
+    sensors.add(isCollidingLeft());
+    sensors.add(isCollidingRight());
     AtomicInteger i = new AtomicInteger();
     pieces.stream().forEach(p -> p.setOutlineColor(sensors.get(i.getAndIncrement()) ? piece.getColor() : Color.BLACK));
+  }
+
+  private boolean isCollidingLeft() {
+    return getX() == 0;
+  }
+
+  private Boolean isCollidingRight() {
+    return getX() + getWidth() == board.getWidth();
   }
 
   public void addListener(TrackerListener listener) {
