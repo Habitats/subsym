@@ -23,7 +23,7 @@ import subsym.ann.nodes.OutputNode;
 public class ArtificialNeuralNetwork {
 
   private static final String TAG = ArtificialNeuralNetwork.class.getSimpleName();
-  private static Random random = new Random(1);
+  private static Random random = new Random(3);
   private final int hiddenLayerCount;
   private final int hiddenNeuronCount;
   private final AnnNodes inputs;
@@ -248,8 +248,12 @@ public class ArtificialNeuralNetwork {
   }
 
   public void setIds() {
-    layers.stream().flatMap(AnnNodes::stream).sorted((o1, o2) -> o1.getGlobalId().compareTo(o2.getGlobalId()))
-        .forEach(n -> n.setId(idCounter.getAndIncrement()));
+    List<AnnNodes> sorted = layers.stream().sorted().collect(Collectors.toList());
+    for(AnnNodes layer : sorted){
+      for(AnnNode node : layer){
+        node.setId(idCounter.getAndIncrement());
+      }
+    }
   }
 
 

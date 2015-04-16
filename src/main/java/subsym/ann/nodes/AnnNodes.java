@@ -2,6 +2,7 @@ package subsym.ann.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -13,7 +14,7 @@ import subsym.ann.WeightBound;
 /**
  * Created by anon on 20.03.2015.
  */
-public class AnnNodes implements Comparable<AnnNodes> {
+public class AnnNodes implements Comparable<AnnNodes>,Iterable<AnnNode> {
 
   private final List<AnnNode> values;
   private final int id;
@@ -67,5 +68,10 @@ public class AnnNodes implements Comparable<AnnNodes> {
   @Override
   public int compareTo(AnnNodes o) {
     return Integer.compare(id, o.id);
+  }
+
+  @Override
+  public Iterator<AnnNode> iterator() {
+    return values.iterator();
   }
 }
