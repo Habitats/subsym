@@ -7,21 +7,24 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.WeightBound;
 
 /**
  * Created by anon on 20.03.2015.
  */
-public class AnnNodes {
+public class AnnNodes implements Comparable<AnnNodes> {
 
   private final List<AnnNode> values;
+  private final int id;
 
   public AnnNodes(List<AnnNode> values) {
     this.values = values;
+    id = ArtificialNeuralNetwork.nextGlobalId();
   }
 
   public AnnNodes(AnnNode... values) {
-    this.values = new ArrayList<>(Arrays.asList(values));
+    this(new ArrayList<>(Arrays.asList(values)));
   }
 
   public static AnnNodes createOutput(WeightBound bound, int numberOfNodes) {
@@ -58,7 +61,11 @@ public class AnnNodes {
 
   @Override
   public String toString() {
-    return values.stream().map(AnnNode::toString).collect(Collectors.joining("], [", " > [", "]"));
+    return values.stream().map(AnnNode::toString).collect(Collectors.joining("],\n   [", " > [", "]"));
   }
 
+  @Override
+  public int compareTo(AnnNodes o) {
+    return Integer.compare(id, o.id);
+  }
 }

@@ -5,9 +5,12 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.*;
 
+import subsym.Log;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
@@ -23,6 +26,7 @@ import subsym.models.entity.TileEntity;
  */
 public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
+  private static final String TAG = BeerGui.class.getSimpleName();
   private final BeerGame game;
   private JPanel mainPanel;
   private AIGridCanvas canvas;
@@ -68,6 +72,11 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
       @Override
       public void actionPerformed(ActionEvent e) {
         game.pull();
+      }
+    });
+    addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        game.stop(() -> Log.v(TAG, "Exiting ..."));
       }
     });
 

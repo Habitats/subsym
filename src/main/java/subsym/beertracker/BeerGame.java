@@ -1,5 +1,6 @@
 package subsym.beertracker;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -21,7 +22,6 @@ public class BeerGame {
   private ArtificialNeuralNetwork ann;
   private int numGood;
   private int numBad;
-
 
   private enum State {
     ABORTING, SIMULATING, IDLE;
@@ -74,7 +74,10 @@ public class BeerGame {
     reset();
     initGui();
     ann = ArtificialNeuralNetwork.buildWrappingCtrnn(AnnPreferences.getBeerDefault());
-    ann.setWeights(text);
+    List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
+        .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
+    BeerPhenotype.setValues(values, ann);
+    ann.statePrint();
     simulateFallingPieces(board, tracker, ann, 0, false);
   }
 

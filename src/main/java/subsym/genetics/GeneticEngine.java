@@ -22,7 +22,8 @@ public class GeneticEngine {
       problem.mutate();
       problem.select();
       Log.v(TAG, String.format("Current population - Size: %3d:", problem.getPopulation().getCurrent().size()));
-      problem.getPopulation().getCurrent().stream().sorted().forEach(n -> Log.v(TAG, n.getPhenotype() + " " + n.fitness()));
+      problem.getPopulation().getCurrent().stream().sorted()
+          .forEach(n -> Log.v(TAG, n.getPhenotype() + " > Fitness > " + String.format("%.3f ", n.fitness())));
       if (enableLogging) {
         problem.addSomePlots();
         problem.log();

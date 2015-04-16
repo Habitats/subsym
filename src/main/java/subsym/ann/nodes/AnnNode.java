@@ -137,7 +137,7 @@ public abstract class AnnNode implements Comparable<AnnNode> {
     String weights = "";
     if (inputs.size() > 0) {
       weights = inputs.stream()//
-          .map(n -> String.format("(%s | %.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
+          .map(n -> String.format("(%3s | %7.3f)", n.getId(), inputWeights.get(n))).collect(Collectors.joining(", ", " > W = [", "]"));
     }
     return weights;
   }
@@ -158,7 +158,7 @@ public abstract class AnnNode implements Comparable<AnnNode> {
 
   @Override
   public String toString() {
-    return id + " ";
+    return String.format("%3s %3s", id, globalId);
   }
 
   public void setId(int id) {

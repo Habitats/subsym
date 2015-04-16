@@ -48,17 +48,16 @@ public class BeerPhenotype implements Phenotype {
   public double fitness() {
     if (score == null) {
       BeerGame game = new BeerGame(prefs.getBeerScenario());
-      setValues(beerGenotype, ann);
+      setValues(beerGenotype.toList(), ann);
       score = game.simulate(ann, 0, false);
     }
     return score;
   }
 
-  private void setValues(BeerGenotype beerGenotype, ArtificialNeuralNetwork ann) {
+  public static void setValues(List<Integer> values, ArtificialNeuralNetwork ann) {
     int numNodes = (int) ann.getOutputNodeStream().count();
     int numWeights = ann.getNumWeights();
-
-    List<Double> normalizedValues = getNormalizedValues(beerGenotype.toList());
+    List<Double> normalizedValues = getNormalizedValues(values);
 
     List<Double> weights = normalizedValues.subList(0, numWeights);
     List<Double> timeConstants = getTimeConstants(normalizedValues.subList(numWeights, numWeights + numNodes));
@@ -68,16 +67,16 @@ public class BeerPhenotype implements Phenotype {
     ann.setGains(gains);
   }
 
-  private List<Double> getTimeConstants(List<Double> values) {
+  private static List<Double> getTimeConstants(List<Double> values) {
     return values.stream().map(g -> g + 1).collect(Collectors.toList());
   }
 
-  private List<Double> getGains(List<Double> values) {
+  private static List<Double> getGains(List<Double> values) {
     return values.stream().map(g -> (g * 4) + 1).collect(Collectors.toList());
   }
 
-  private List<Double> getNormalizedValues(List<Integer> values) {
-    return values.stream().mapToDouble(this::normalize).boxed().collect(Collectors.toList());
+  private static List<Double> getNormalizedValues(List<Integer> values) {
+    return values.stream().mapToDouble(BeerPhenotype::normalize).boxed().collect(Collectors.toList());
   }
 
   @Override
@@ -85,7 +84,7 @@ public class BeerPhenotype implements Phenotype {
     score = null;
   }
 
-  private double normalize(int v) {
+  public static double normalize(int v) {
     return ((v * 4) % 1000) / 1000.;
   }
 
@@ -95,8 +94,8 @@ public class BeerPhenotype implements Phenotype {
 
   @Override
   public String toString() {
-    return getNormalizedValues(beerGenotype.toList()).stream().map(i -> String.format("%.2f", i))
-        .collect(Collectors.joining(" ", "Pheno > ", ""));
+    return beerGenotype.toList().stream().map(i -> String.format("%3d", i).replaceAll(" ", "0"))
+        .collect(Collectors.joining("  ", "Pheno > ", ""));
   }
 
 }

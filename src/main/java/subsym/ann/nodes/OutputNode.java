@@ -60,7 +60,7 @@ public class OutputNode extends AnnNode {
   @Override
   public String toString() {
     double exp = hasState() ? getInternalState() * getGain() : getInputSum();
-    boolean includeWeights = false;
+    boolean includeWeights = true;
     return super.toString() + String
         .format("S = %6.3f > O = %.3f > G = %.3f > T = %.3f > Y = %6.3f > dY = %6.3f " + (includeWeights ? getFormattedWeights() : ""),//
                 getInputSum(), getValue(), getGain(), getTimeConstant(), getInternalState(), getInternalChange());

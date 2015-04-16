@@ -244,7 +244,7 @@ public class ArtificialNeuralNetwork {
   }
 
   public void statePrint() {
-    layers.stream().forEach(n -> Log.v(TAG, n));
+    Log.v(TAG, layers.stream().map(String::valueOf).collect(Collectors.joining("\n", "\n", "")));
   }
 
   public void setIds() {
@@ -252,10 +252,6 @@ public class ArtificialNeuralNetwork {
         .forEach(n -> n.setId(idCounter.getAndIncrement()));
   }
 
-  public void setWeights(String s) {
-    setWeights(
-        Arrays.asList(s.replaceAll(",", ".").split(" ")).stream().mapToDouble(Double::parseDouble).boxed().collect(Collectors.toList()));
-  }
 
   public static int nextGlobalId() {
     return globalIdCounter.getAndIncrement();
