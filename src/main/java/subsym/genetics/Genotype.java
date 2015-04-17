@@ -246,7 +246,7 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   @Override
   public int compareTo(Genotype o) {
-    return Double.compare(o.fitness(), fitness());
+    return Double.compare(fitness(), o.fitness());
   }
 
   public void setCurrentGeneration(int currentGeneration) {

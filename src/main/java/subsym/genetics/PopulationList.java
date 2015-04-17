@@ -2,7 +2,7 @@ package subsym.genetics;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.HashSet;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -11,11 +11,12 @@ import java.util.stream.Stream;
  */
 public class PopulationList {
 
-  private PriorityQueue<Genotype> c;
+  private Collection<Genotype> c;
 
   public PopulationList() {
 //    c = MinMaxPriorityQueue.create();
-    c = new PriorityQueue<>();
+//    c = new ArrayList<>();
+    c = new HashSet<>();
   }
 
   public Stream<Genotype> stream() {
@@ -43,7 +44,7 @@ public class PopulationList {
   }
 
   public void removeWorst() {
-    Genotype v = c.stream().sorted(Comparator.<Genotype>reverseOrder()).findFirst().get();
+    Genotype v = c.stream().min(Comparator.<Genotype>naturalOrder()).get();
     c.remove(v);
   }
 
@@ -52,12 +53,12 @@ public class PopulationList {
   }
 
   public Genotype peekWorst() {
-    return c.stream().sorted(Comparator.<Genotype>reverseOrder()).findFirst().get();
+    return c.stream().min(Comparator.<Genotype>naturalOrder()).get();
   }
 
   public Genotype peekBest() {
 //    return c.peekFirst();
-    return c.peek();
+    return c.stream().max(Comparator.<Genotype>naturalOrder()).get();
   }
 
   public Collection<Genotype> get() {
@@ -74,6 +75,8 @@ public class PopulationList {
   }
 
   public Genotype removeBest() {
-    return c.poll();
+    Genotype genotype = peekBest();
+    c.remove(genotype);
+    return genotype;
   }
 }
