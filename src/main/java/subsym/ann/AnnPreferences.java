@@ -15,20 +15,23 @@ public class AnnPreferences {
   private boolean dynamic;
   private boolean single;
   private BeerScenario beerScenario;
+  private boolean shouldGrayCode;
 
-  public AnnPreferences(int hiddenLayerCount, int hiddenNeuronCount, ActivationFunction activationFunction, BeerScenario beerScenario) {
+  public AnnPreferences(int hiddenLayerCount, int hiddenNeuronCount, ActivationFunction activationFunction, BeerScenario beerScenario,
+                        boolean shouldGrayCode) {
     this.hiddenLayerCount = hiddenLayerCount;
+    this.shouldGrayCode = shouldGrayCode;
     this.hiddenNeuronCount = hiddenNeuronCount;
     this.activationFunction = activationFunction;
     this.beerScenario = beerScenario;
   }
 
   public static AnnPreferences getAiLifeDefault() {
-    return new AnnPreferences(0, 3, new Sigmoid(), BeerScenario.WRAP);
+    return new AnnPreferences(0, 3, new Sigmoid(), BeerScenario.WRAP, true);
   }
 
   public static AnnPreferences getBeerDefault() {
-    return new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP);
+    return new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP, true);
   }
 
   public int getHiddenLayerCount() {
@@ -77,5 +80,13 @@ public class AnnPreferences {
 
   public void setBeerScenario(BeerScenario beerScenario) {
     this.beerScenario = beerScenario;
+  }
+
+  public boolean shouldGrayCode() {
+    return shouldGrayCode;
+  }
+
+  public void shouldGrayCode(boolean shouldGrayCode) {
+   this.shouldGrayCode = shouldGrayCode;
   }
 }

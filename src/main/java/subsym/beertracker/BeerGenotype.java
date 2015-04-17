@@ -13,7 +13,7 @@ public class BeerGenotype extends Genotype {
   private AnnPreferences prefs;
 
   public BeerGenotype(AnnPreferences prefs) {
-    super(true);
+    super(prefs.shouldGrayCode());
     this.prefs = prefs;
     phenotype = new BeerPhenotype(this, prefs);
   }
@@ -47,6 +47,6 @@ public class BeerGenotype extends Genotype {
 
   @Override
   public String toString() {
-    return getPaddedBitString();
+    return getPhenotype() + " " + fitness();
   }
 }
