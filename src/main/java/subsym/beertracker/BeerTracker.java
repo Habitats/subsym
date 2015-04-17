@@ -16,6 +16,7 @@ public class BeerTracker extends GeneticProblem {
   private static final String TAG = BeerTracker.class.getSimpleName();
   private AnnPreferences annPrefs;
   private int count = 0;
+  private long start;
 
   public BeerTracker(GeneticPreferences prefs, AnnPreferences annPrefs) {
     super(prefs);
@@ -30,6 +31,7 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public void initPopulation() {
+    start = System.currentTimeMillis();
     IntStream.range(0, getPopulationSize()).forEach(i -> {
       BeerGenotype genotype = new BeerGenotype(annPrefs);
       genotype.randomize();
@@ -62,6 +64,8 @@ public class BeerTracker extends GeneticProblem {
     Log.v(TAG, best.fitness());
     BeerPhenotype pheno = (BeerPhenotype) best.getPhenotype();
     Log.v(TAG, pheno.fitness());
+    int v = (int) ((System.currentTimeMillis() - start) / 1000.);
+    Log.v(TAG, String.format("Search finished in %d seconds", v));
 
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
     BeerGame game = new BeerGame(annPrefs.getBeerScenario());
