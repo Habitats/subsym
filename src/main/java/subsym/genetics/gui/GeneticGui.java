@@ -115,6 +115,7 @@ public class GeneticGui extends AIGui {
   private AIButton aiLifeDemoButton;
   private AIComboBox<BeerScenario> beerScenarioSelection;
   private AILabel beerScenarioLabel;
+  private JTextField seedInput;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -382,6 +383,7 @@ public class GeneticGui extends AIGui {
       annPreferences.setHiddenNeuronCount(Integer.parseInt(annHiddenNeuronInput.getText()));
       annPreferences.setBeerScenario((BeerScenario) beerScenarioSelection.getSelectedItem());
       annPreferences.shouldGrayCode(grayCheckbox.isSelected());
+      annPreferences.setSimulationSeed(Integer.parseInt(seedInput.getText()));
 
       prefs.setGrayCode(grayCheckbox.isSelected());
       prefs.setCrossOverRate(Double.parseDouble(crossoverInput.getText()));
@@ -554,6 +556,7 @@ public class GeneticGui extends AIGui {
     // Artificial Neural Network Preferences below
     AnnPreferences annPreferences = prefs.getAnnPreferences();
     grayCheckbox.setSelected(annPreferences.shouldGrayCode());
+    seedInput.setText(String.valueOf(annPreferences.getSimulationSeed()));
     if (prefs.getPuzzle() instanceof AiLife) {
       annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
       annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));

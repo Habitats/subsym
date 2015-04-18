@@ -49,7 +49,7 @@ public class BeerPhenotype implements Phenotype {
     if (score == null) {
       BeerGame game = new BeerGame(prefs.getBeerScenario());
       setValues(beerGenotype.toList(), ann);
-      score = game.simulate(ann, 0, false);
+      score = game.simulate(ann, prefs.getSimulationSeed(), false);
     }
     return score;
   }

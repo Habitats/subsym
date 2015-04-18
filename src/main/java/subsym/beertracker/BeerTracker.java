@@ -70,7 +70,7 @@ public class BeerTracker extends GeneticProblem {
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
     BeerGame game = new BeerGame(annPrefs.getBeerScenario());
     game.initGui();
-    game.simulate(ann, 0 + count, true);
+    game.simulate(ann, annPrefs.getSimulationSeed() + count, true);
     ann.statePrint();
     count++;
 

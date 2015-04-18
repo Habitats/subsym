@@ -16,6 +16,8 @@ public class AnnPreferences {
   private boolean single;
   private BeerScenario beerScenario;
   private boolean shouldGrayCode;
+  private long simulationSeed = 1L;
+  private long randomSeed;
 
   public AnnPreferences(int hiddenLayerCount, int hiddenNeuronCount, ActivationFunction activationFunction, BeerScenario beerScenario,
                         boolean shouldGrayCode) {
@@ -88,5 +90,21 @@ public class AnnPreferences {
 
   public void shouldGrayCode(boolean shouldGrayCode) {
    this.shouldGrayCode = shouldGrayCode;
+  }
+
+  public long getSimulationSeed() {
+    return simulationSeed;
+  }
+
+  public void setSimulationSeed(long simulationSeed) {
+    this.simulationSeed = simulationSeed;
+  }
+
+  public long getRandomSeed() {
+    return randomSeed;
+  }
+
+  public void setRandomSeed(long randomSeed) {
+    this.randomSeed = randomSeed;
   }
 }
