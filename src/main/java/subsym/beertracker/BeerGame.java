@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import subsym.Log;
 import subsym.ailife.entity.Empty;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
@@ -22,6 +23,9 @@ public class BeerGame {
   private ArtificialNeuralNetwork ann;
   private int numGood;
   private int numBad;
+  private int startPositionX;
+  private int lastWidth;
+  private int lastStartX;
 
   private enum State {
     ABORTING, SIMULATING, IDLE;
@@ -46,7 +50,7 @@ public class BeerGame {
   public static void demo(BeerScenario scenario) {
     BeerGame game = new BeerGame(scenario);
     game.initGui();
-    game.simulateFallingPieces(game.board, game.tracker, null, System.currentTimeMillis(), false);
+    game.simulateFallingPieces(game.board, game.tracker, null, 1429309386261L, false);
   }
 
   public void reset() {
@@ -61,7 +65,9 @@ public class BeerGame {
   public void restart() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, ann, System.currentTimeMillis(), false);
+    long seed = System.currentTimeMillis();
+    Log.v(TAG, seed);
+    simulateFallingPieces(board, tracker, ann, seed, false);
   }
 
   public void play() {
@@ -73,7 +79,18 @@ public class BeerGame {
   public void manual(String text) {
     reset();
     initGui();
-    ann = ArtificialNeuralNetwork.buildWrappingCtrnn(AnnPreferences.getBeerDefault());
+    AnnPreferences beerDefault = AnnPreferences.getBeerDefault();
+    switch (scenario){
+      case WRAP:
+        ann = ArtificialNeuralNetwork.buildWrappingCtrnn(beerDefault);
+        break;
+      case NO_WRAP:
+        ann = ArtificialNeuralNetwork.buildNoWrapCtrnn(beerDefault);
+        break;
+      case PULL:
+        ann = ArtificialNeuralNetwork.buildPullingCtrnn(beerDefault);
+        break;
+    }
     List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     BeerPhenotype.setValues(values, ann);
@@ -113,27 +130,7 @@ public class BeerGame {
             ann.statePrint();
           }
 
-          List<Double> sensors = tracker.getSensors().stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList());
-          List<Double> outputs = ann.getOutputs();
-          switch (scenario) {
-            case WRAP:
-              ann.updateInput(sensors.subList(0, 5));
-              tracker.move(outputs.subList(0, 2), true);
-              break;
-            case NO_WRAP:
-              ann.updateInput(sensors);
-              tracker.move(outputs.subList(0, 2), false);
-              break;
-            case PULL:
-              ann.updateInput(sensors.subList(0, 5));
-              tracker.move(outputs.subList(0, 2), true);
-              if (outputs.get(2) > .9) {
-                tracker.pull();
-              }
-              break;
-            default:
-              throw new IllegalStateException("Invalid scenario");
-          }
+          moveTracker(tracker, ann);
 //          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
 
         }
