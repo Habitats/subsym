@@ -23,6 +23,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   private Double fitness;
   private int currentGeneration;
   private final boolean grayCode;
+  private static final String TAG = Genotype.class.getSimpleName();
 
   // ###############################################################################
   // ### CONSTRUCTORS ##############################################################
@@ -47,7 +48,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-  private void resetFitness() {
+protected void resetFitness() {
     fitness = null;
     getPhenotype().resetFitness();
   }
@@ -112,11 +113,14 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   // mutate each bit with a given probability
   public void mutate(double mutationRate) {
+//    double offset = random.nextGaussian() * random.nextGaussian();
+//    Log.v(TAG, offset);
     IntStream.range(0, size()).filter(i -> Math.random() < mutationRate).forEach((bitIndex) -> {
       bits.flip(bitIndex);
       resetFitness();
     });
   }
+
 
   public BitSet toBitSet(List<Integer> ints, int groupSize) {
     BitSet bitSet = new BitSet();
