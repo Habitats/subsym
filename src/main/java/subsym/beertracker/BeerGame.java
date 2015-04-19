@@ -184,7 +184,9 @@ public class BeerGame {
     } else {
       numBad++;
     }
-    int startPositionX = r.nextInt(board.getWidth() - (piece.getWidth() - 1));
+    startPositionX = (lastStartX + 1 + r.nextInt(board.getWidth() - (piece.getWidth() - 1) - lastWidth -1))%board.getWidth();
+    lastWidth = width;
+    lastStartX = startPositionX;
     IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
     return piece;
   }
