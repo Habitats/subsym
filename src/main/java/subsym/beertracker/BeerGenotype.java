@@ -70,6 +70,6 @@ public class BeerGenotype extends Genotype {
 
   @Override
   public String toString() {
-    return getPhenotype() + " " + fitness();
+    return getPhenotype() + " > " + String.format("%.3f",fitness());
   }
 }

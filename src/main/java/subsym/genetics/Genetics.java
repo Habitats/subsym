@@ -202,10 +202,8 @@ public class Genetics implements GeneticGuiListener {
   @Override
   public void runBenchmark(GeneticPreferences prefs) {
     double i = 0.001;
-    while (i < 0.02) {
-      prefs.setGenomeMutationRate(i);
+//      prefs.setGenomeMutationRate(i);
       run(GeneticPreferences.copy(prefs));
-      i += 0.001;
-    }
+//      i += 0.001;
   }
 }
