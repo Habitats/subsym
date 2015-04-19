@@ -5,6 +5,9 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -40,6 +43,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private AILabel foodLabel;
   private AISlider simulationSpeedSlider;
   private Board<TileEntity> board;
+  private boolean shouldStop = false;
 
   public AiLifeGui(Board<TileEntity> board, ArtificialNeuralNetwork ann) {
     this.ann = ann;
@@ -90,6 +94,16 @@ public class AiLifeGui extends AIGui<TileEntity> {
         generateRandomBoard();
       }
     });
+
+    addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        shouldStop = true;
+      }
+    });
+  }
+
+  private void simulate() {
+    simulate(() -> Log.v(TAG, "Simulation done!"));
   }
 
   private void printBoard() {
@@ -97,13 +111,15 @@ public class AiLifeGui extends AIGui<TileEntity> {
   }
 
   private void generateRandomBoard() {
-    board = AiLife.createAiLifeBoard(ArtificialNeuralNetwork.random().nextInt());
+    int seed = ArtificialNeuralNetwork.random().nextInt();
+    Log.v(TAG, "Board seed: " + seed);
+    board = AiLife.createAiLifeBoard(seed);
     initBoard(board);
     Log.v(TAG, board.getFormattedBoard());
     onTick(0);
   }
 
-  public void simulate() {
+  public void simulate(Runnable callback) {
     new Thread(() -> {
       if (ann == null) {
         Log.v(TAG, "No Artificial Neural Network present! Simulation exiting ...");
@@ -118,7 +134,12 @@ public class AiLifeGui extends AIGui<TileEntity> {
           Thread.sleep(simulationSpeedSlider.getValue());
         } catch (InterruptedException e) {
         }
+        if(shouldStop){
+          Log.v(TAG, "Exiting ...");
+          return;
+        }
       }
+      callback.run();
     }).start();
   }
 
@@ -127,6 +148,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     robot = new Robot(0, 0, board);
     this.board.set(robot);
     this.board.notifyDataChanged();
+    onTick(0);
   }
 
   public void onTick(int time) {
@@ -178,4 +200,17 @@ public class AiLifeGui extends AIGui<TileEntity> {
     board.notifyDataChanged();
   }
 
+  public static void simulate(List<Board<TileEntity>> boards, ArtificialNeuralNetwork ann, Runnable callback) {
+    AiLifeGui gui = new AiLifeGui(boards.get(0), ann);
+    simulate(boards, callback, gui);
+  }
+
+  private static void simulate(List<Board<TileEntity>> boards, Runnable callback, AiLifeGui gui) {
+    if (boards.isEmpty()) {
+      callback.run();
+      return;
+    }
+    gui.board = boards.remove(0);
+    gui.simulate(() -> simulate(boards, callback, gui));
+  }
 }

@@ -135,10 +135,10 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getAiLife() {
-    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.0017, new Mixing(0.05), new Rank(), 200);
+    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.05, new Mixing(0.05), new Rank(), 500);
     GeneticProblem problem = new AiLife(prefs, AnnPreferences.getAiLifeDefault());
     prefs.setPuzzle(problem);
-    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid(), BeerScenario.WRAP, true));
+    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid(), BeerScenario.WRAP, false));
     return prefs;
   }
 

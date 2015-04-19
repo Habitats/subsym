@@ -11,7 +11,6 @@ import javax.swing.*;
 
 import subsym.Log;
 import subsym.ailife.AiLife;
-import subsym.ailife.AiLifeGui;
 import subsym.ann.AnnPreferences;
 import subsym.beertracker.BeerGame;
 import subsym.beertracker.BeerScenario;
@@ -163,7 +162,7 @@ public class GeneticGui extends AIGui {
     runButton.addActionListener(e -> run());
     stopButton.addActionListener(e -> listener.stop());
     beerDemoButton.addActionListener(e -> new Thread(() -> BeerGame.demo((BeerScenario) beerScenarioSelection.getSelectedItem())).start());
-    aiLifeDemoButton.addActionListener(e -> new Thread(() -> AiLifeGui.demo()).start());
+    aiLifeDemoButton.addActionListener(e -> new Thread(() ->listener.demo(prefs)).start());
     benchMarkButton.addActionListener(e -> benchmark());
 
     crossoverInput.addActionListener(e -> updatePreferences());

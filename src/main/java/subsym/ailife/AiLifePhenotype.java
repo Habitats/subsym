@@ -2,6 +2,7 @@ package subsym.ailife;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -27,6 +28,7 @@ public class AiLifePhenotype implements Phenotype {
   private final ArtificialNeuralNetwork ann;
   private final AiLifeGenotype aiLifeGenotype;
   private Double score;
+  public static final List<Long> goodSeeds = Arrays.asList(new Long[]{-1517918040L, 1968097058L, 875635521L, 1489956094L, -1643623517L});
 
   public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AnnPreferences prefs) {
     this.aiLifeGenotype = aiLifeGenotype;
@@ -61,7 +63,7 @@ public class AiLifePhenotype implements Phenotype {
     AtomicDouble fitness = new AtomicDouble();
     int rounds = prefs.isSingle() ? 1 : 5;
     IntStream.range(0, rounds).forEach(run -> {
-      int seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : run;
+      long seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : goodSeeds.get(run);
       Board<TileEntity> board = AiLife.createAiLifeBoard(seed);
 //      Log.v(TAG, ann.getNumWeights());
       long numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
@@ -81,9 +83,9 @@ public class AiLifePhenotype implements Phenotype {
       long deltaPoison = numPoison - board.getItems().stream().filter(i -> i instanceof Poison).count();
       long deltaFood = numFood - board.getItems().stream().filter(i -> i instanceof Food).count();
 //      Log.v(TAG, "" + deltaFood + deltaPoison);
-      double delta = deltaFood * 2 + deltaPoison * -2;
+      double delta = deltaFood * 2 + deltaPoison * -3;
       double max = numFood * 2;
-      fitness.getAndAdd(delta/max);
+      fitness.getAndAdd(delta / max);
     });
     return fitness.get() / (double) rounds;
   }

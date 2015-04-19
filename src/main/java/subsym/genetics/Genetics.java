@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import subsym.Log;
 import subsym.ailife.AiLife;
+import subsym.ailife.AiLifeGui;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.Mixing;
@@ -31,6 +32,7 @@ public class Genetics implements GeneticGuiListener {
 
   private static String TAG = Genetics.class.getSimpleName();
   private final GeneticGui gui;
+  private GeneticProblem lastSolution;
 
   public Genetics() {
     gui = new GeneticGui();
@@ -123,6 +125,7 @@ public class Genetics implements GeneticGuiListener {
   }
 
   public void onSolved(GeneticProblem solution) {
+    lastSolution = solution;
     solution.onSolved();
   }
 
@@ -203,7 +206,16 @@ public class Genetics implements GeneticGuiListener {
   public void runBenchmark(GeneticPreferences prefs) {
     double i = 0.001;
 //      prefs.setGenomeMutationRate(i);
-      run(GeneticPreferences.copy(prefs));
+    run(GeneticPreferences.copy(prefs));
 //      i += 0.001;
+  }
+
+  @Override
+  public void demo(GeneticPreferences prefs) {
+    if (lastSolution != null) {
+      lastSolution.demo(prefs);
+    } else {
+      AiLifeGui.demo();
+    }
   }
 }

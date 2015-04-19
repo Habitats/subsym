@@ -14,4 +14,6 @@ public interface GeneticGuiListener {
   void plotMultipleToggled(boolean selected);
 
   void runBenchmark(GeneticPreferences prefs);
+
+  void demo(GeneticPreferences prefs);
 }

@@ -1,5 +1,7 @@
 package subsym.ailife;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -44,6 +46,11 @@ public class AiLife extends GeneticProblem {
   }
 
   @Override
+  public void demo(GeneticPreferences prefs) {
+    onSolved();
+  }
+
+  @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
       AiLifeGenotype genotype = new AiLifeGenotype(annPrefs);
@@ -80,14 +87,12 @@ public class AiLife extends GeneticProblem {
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
     Log.v(TAG, pheno.fitness());
-    Board<TileEntity> board = createAiLifeBoard(0101);
-    AiLifeGui.show(board, ann);
-
-    Log.v(TAG, this);
+    List<Board<TileEntity>> boards = new ArrayList<>();
+    IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
+    AiLifeGui.simulate(boards, ann, () -> Log.v(TAG, this));
   }
 
-  public static Board<TileEntity> createAiLifeBoard(int seed) {
-    Log.v(TAG, "Board seed: " + seed);
+  public static Board<TileEntity> createAiLifeBoard(long seed) {
     Board<TileEntity> board = new Board<>(10, 10);
     Random random = new Random(seed);
     IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
@@ -103,5 +108,6 @@ public class AiLife extends GeneticProblem {
       return new Poison(x, y, board);
     }
   }
+
 }
 

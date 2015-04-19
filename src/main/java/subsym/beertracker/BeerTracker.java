@@ -70,6 +70,11 @@ public class BeerTracker extends GeneticProblem {
     Log.i(TAG, this);
   }
 
+  @Override
+  public void demo(GeneticPreferences prefs) {
+    onSolved();
+  }
+
   private void simulate(BeerGenotype best) {
     BeerPhenotype pheno = (BeerPhenotype) best.getPhenotype();
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();

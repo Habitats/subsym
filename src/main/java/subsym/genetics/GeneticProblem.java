@@ -136,4 +136,9 @@ public abstract class GeneticProblem {
   }
 
   public abstract void onSolved();
+
+
+  public void demo(GeneticPreferences prefs) {
+
+  }
 }
