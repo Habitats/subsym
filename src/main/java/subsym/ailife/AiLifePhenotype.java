@@ -81,7 +81,9 @@ public class AiLifePhenotype implements Phenotype {
       long deltaPoison = numPoison - board.getItems().stream().filter(i -> i instanceof Poison).count();
       long deltaFood = numFood - board.getItems().stream().filter(i -> i instanceof Food).count();
 //      Log.v(TAG, "" + deltaFood + deltaPoison);
-      fitness.getAndAdd(deltaFood * 2 + deltaPoison * -2);
+      double delta = deltaFood * 2 + deltaPoison * -2;
+      double max = numFood * 2;
+      fitness.getAndAdd(delta/max);
     });
     return fitness.get() / (double) rounds;
   }
