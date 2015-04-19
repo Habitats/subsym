@@ -152,6 +152,30 @@ public class BeerGame {
     }
   }
 
+  private void moveTracker(Tracker tracker, ArtificialNeuralNetwork ann) {
+    List<Double> sensors = tracker.getSensors().stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList());
+    List<Double> outputs = ann.getOutputs();
+    switch (scenario) {
+      case WRAP:
+        ann.updateInput(sensors.subList(0, 5));
+        tracker.move(outputs.subList(0, 2), true);
+        break;
+      case NO_WRAP:
+        ann.updateInput(sensors);
+        tracker.move(outputs.subList(0, 2), false);
+        break;
+      case PULL:
+        ann.updateInput(sensors.subList(0, 5));
+        tracker.move(outputs.subList(0, 2), true);
+        if (outputs.get(2) > .9) {
+          tracker.pull();
+        }
+        break;
+      default:
+        throw new IllegalStateException("Invalid scenario");
+    }
+  }
+
   private Piece spawnPiece(Board<TileEntity> board, Tracker tracker, Random r) {
     int width = 1 + r.nextInt(6);
     Piece piece = new Piece(board, width, tracker);
