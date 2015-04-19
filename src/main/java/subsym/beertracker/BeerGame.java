@@ -80,7 +80,7 @@ public class BeerGame {
     reset();
     initGui();
     AnnPreferences beerDefault = AnnPreferences.getBeerDefault();
-    switch (scenario){
+    switch (scenario) {
       case WRAP:
         ann = ArtificialNeuralNetwork.buildWrappingCtrnn(beerDefault);
         break;
@@ -181,7 +181,12 @@ public class BeerGame {
     } else {
       numBad++;
     }
-    startPositionX = (lastStartX + 1 + r.nextInt(board.getWidth() - (piece.getWidth() - 1) - lastWidth -1))%board.getWidth();
+    if ((lastStartX + lastWidth + piece.getWidth() + 1) > board.getWidth()) {
+      startPositionX = r.nextInt(lastStartX - piece.getWidth() - 1);
+    } else {
+      int delta = lastStartX + lastWidth + 1;
+      startPositionX = delta + r.nextInt(board.getWidth() - delta);
+    }
     lastWidth = width;
     lastStartX = startPositionX;
     IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
