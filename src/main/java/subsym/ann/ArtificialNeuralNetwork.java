@@ -23,7 +23,7 @@ import subsym.ann.nodes.OutputNode;
 public class ArtificialNeuralNetwork {
 
   private static final String TAG = ArtificialNeuralNetwork.class.getSimpleName();
-  private static Random random = new Random(16);
+  private static Random random = new Random(1234);
   private final int hiddenLayerCount;
   private final int hiddenNeuronCount;
   private final AnnNodes inputs;

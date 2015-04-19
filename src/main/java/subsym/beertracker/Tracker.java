@@ -184,8 +184,12 @@ public class Tracker extends MultiTile {
 //    } else {
 //      return (caught + 40 - badCrash);
 //    }
-//    return (caught * 1.0 - (badCrash + goodCrash) * .8);
-    return caught * 1.0 - badCrash * 1.1 - goodAvoid * .5;
+//    return (caught * 1.0 - badCrash * 0.6 - goodAvoid * .5);
+//    return (caught + badAvoid * 0.3 - badCrash * 0.3);
+    return (caught + badAvoid) / (numGood + numBad);
+//    return caught / numGood;
+//    return (caught * numGood + badAvoid * numBad) / (Math.pow(numGood, 2) + Math.pow(numBad, 2));
+//return (caught - (badCrash + goodCrash) * 0.9) / numGood;
   }
 
   public void move(List<Double> outputs, boolean shouldWrap) {
@@ -200,6 +204,7 @@ public class Tracker extends MultiTile {
     int multiplier = (int) Math.round(dir * 4);
 //    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f", multiplier, min, max, delta));
 //    Log.v(TAG, String.format("M: %d - LEFT: %.10f - RIGHT: %.10f", multiplier, left, right));
+//    Log.v(TAG, multiplier);
     if (dir < 0.2) {
       return;
     }
@@ -217,7 +222,7 @@ public class Tracker extends MultiTile {
     int multiplier = (int) Math.round(delta * 4);
 //    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f", multiplier, min, max, delta));
 //    Log.v(TAG, String.format("LEFT: %.10f - RIGHT: %.10f", left, right));
-    if (delta < 0.1) {
+    if (delta < 0.2) {
       return;
     }
     if (left > right) {
