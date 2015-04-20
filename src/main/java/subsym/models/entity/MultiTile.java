@@ -36,29 +36,6 @@ public abstract class MultiTile {
 
   protected abstract int getStartX();
 
-//  public boolean moveLeft(boolean shouldWrap) {
-//    int fromX = shouldWrap ? (getX() + width - 1 + board.getWidth()) % board.getWidth() : getX() + width - 1;
-//    int toX = shouldWrap ? (getX() + board.getWidth() - 1) % board.getWidth() : getX() - 1;
-//    if ((board.get(toX, getY()) instanceof Empty)) {
-//      x = swap(fromX, toX, getY(), getY()) ? (x - 1 + board.getWidth()) % board.getWidth() : x;
-//      return true;
-//    } else {
-//      collision(Direction.LEFT);
-//      return false;
-//    }
-//  }
-
-  //  public boolean moveRight(boolean shouldWrap) {
-//    int fromX = shouldWrap ? getX() % board.getWidth() : getX();
-//    int toX = shouldWrap ? (getX() + width) % board.getWidth() : getX() + width;
-//    if ((board.get(toX, getY()) instanceof Empty)) {
-//      x = swap(fromX, toX, getY(), getY()) ? (x + 1) % board.getWidth() : x;
-//      return true;
-//    } else {
-//      collision(Direction.RIGHT);
-//      return false;
-//    }
-//  }
   public boolean moveRight(boolean shouldWrap) {
     TileEntity old;
     int oldX = shouldWrap ? (getX() + width) % board.getWidth() : getX() + width;

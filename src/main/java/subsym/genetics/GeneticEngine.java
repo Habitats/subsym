@@ -1,7 +1,5 @@
 package subsym.genetics;
 
-import java.util.Comparator;
-
 import subsym.Log;
 
 /**
@@ -24,9 +22,9 @@ public class GeneticEngine {
       problem.mutate();
       problem.select();
       if (enableLogging) {
-        Log.v(TAG, String.format("Current population - Size: %3d:", problem.getPopulation().getCurrent().size()));
-        problem.getPopulation().getCurrent().stream().sorted(Comparator.<Genotype>naturalOrder())
-            .forEach(n -> Log.v(TAG, n.getPhenotype() + " > Fitness > " + String.format("%.3f ", n.fitness())));
+//        Log.v(TAG, String.format("Current population - Size: %3d:", problem.getPopulation().getCurrent().size()));
+//        problem.getPopulation().getCurrent().stream().sorted(Comparator.<Genotype>naturalOrder())
+//            .forEach(n -> Log.v(TAG, n.getPhenotype() + " > Fitness > " + String.format("%.3f ", n.fitness())));
         problem.addSomePlots();
         problem.log();
       }
