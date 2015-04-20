@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import subsym.Log;
 import subsym.gui.ColorUtils;
 import subsym.gui.Direction;
 import subsym.models.Board;
@@ -31,7 +32,8 @@ public class Tracker extends MultiTile {
   private BeerGame beerGame;
   private double numPulls;
   private int numGoodPull;
-  private int numBadPulls;
+  private int numFailPull;
+  private int numBadPull;
 
   public Tracker(Board<TileEntity> board, BeerGame beerGame) {
     super(5, board);
@@ -173,38 +175,30 @@ public class Tracker extends MultiTile {
   }
 
   public double calculateScore(double numBad, double numGood) {
-    double max = numGood * 3;
-//    double fitness = ((-Math.pow(badCrash, 2.2))) + ((-goodCrash + caught * 3));
-//    double fitness = -badCrash  + caught * 2;
-//    Log.v(TAG, String.format(
-//              "Fitness: %2.2f - Good: %2.0f - Bad: %2.0f - Caught: %2d - Good Crash: %2d - Bad Crash: %2d - Good Avoid: %2d - Bad Avoid: %2d",
-//              fitness, numGood, numBad, caught, goodCrash, badCrash, goodAvoid, badAvoid));
-//    if (badCrash >= 5) {
-//      return -badCrash;
-//    } else if (caught <= 20) {
-//      return caught;
-//    } else {
-//      return caught + badAvoid;
-//    }
-//    if (caught <= 20) {
-//      return caught;
-//    } else if (badCrash > 5) {
-//      return (20 + (numBad - badCrash));
-//    } else {
-//      return (caught + 40 - badCrash);
-//    }
-//    return (caught * 1.0 - badCrash * 0.6 - goodAvoid * .5);
-//    return (caught + badAvoid * 0.3 - badCrash * 0.3);
-    return (caught + badAvoid + (numGoodPull - numBadPulls)) / (numGood * 2 + numBad);
-//    return caught / numGood;
-//    return (caught * numGood + badAvoid * numBad) / (Math.pow(numGood, 2) + Math.pow(numBad, 2));
-//return (caught - (badCrash + goodCrash) * 0.9) / numGood;
+    switch (beerGame.getScenario()) {
+      case WRAP:
+        return (caught + badAvoid) / (numGood + numBad);
+      case NO_WRAP:
+        return (caught * 1.5 + badAvoid) / (numGood * 1.5 + numBad);
+      case PULL:
+        double score = caught + badAvoid;
+        double max = (numGood + numBad) * 1;
+        Log.v(TAG, String
+            .format("Score: %8.3f - Max: %8.3f - Good Pull: %4d - Bad Pull: %4d - Good: %3.0f - Bad: %3.0f", score, max, numGoodPull,
+                    numBadPull, numGood, numBad));
+        if (score / max > 1) {
+          Log.v(TAG, "wut");
+        }
+        return score / max;
+//        return score;
+      default:
+        throw new IllegalStateException("Invalid scenario!");
+    }
   }
 
   public void move(List<Double> outputs, boolean shouldWrap) {
     Double left = outputs.get(0);
     Double right = outputs.get(1);
-//    oldMove(left, right);
     newMove(left, right, shouldWrap);
   }
 
@@ -241,15 +235,15 @@ public class Tracker extends MultiTile {
     }
   }
 
-  public boolean canPull() {
-    return sensors.contains(true);
-  }
-
   public void pullFail() {
-    numBadPulls++;
+    numFailPull++;
   }
 
   public void pullSuccsess() {
     numGoodPull++;
+  }
+
+  public void pullBad() {
+    numBadPull++;
   }
 }

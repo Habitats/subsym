@@ -27,6 +27,10 @@ public class BeerGame {
   private int lastWidth;
   private int lastStartX;
 
+  public BeerScenario getScenario() {
+    return scenario;
+  }
+
   private enum State {
     ABORTING, SIMULATING, IDLE;
 
@@ -96,7 +100,7 @@ public class BeerGame {
     List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     BeerPhenotype.setValues(values, ann);
-    ann.statePrint();
+//    ann.statePrint();
     simulateFallingPieces(board, tracker, ann, 0, false);
   }
 
@@ -120,33 +124,36 @@ public class BeerGame {
 
     while (true) {
       Piece piece = spawnPiece(board, tracker, r);
-      while (piece.moveDown(false)) {
-        time++;
-        onTick();
-        tracker.sense(piece);
-        if (tracker.isPulling()) {
-          piece.moveBottom();
-        }
-        if (ann != null) {
-          if (shouldLog) {
-            ann.statePrint();
-          }
-
-          moveTracker(tracker, ann);
-//          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
-
+      boolean spawnNext = false;
+      while (!spawnNext) {
+        if (time >= MAX_TIME || state == State.ABORTING) {
+          state = State.IDLE;
+          return;
         }
         try {
           Thread.sleep(simulationSpeed);
         } catch (InterruptedException e) {
         }
-        if (time >= MAX_TIME || state == State.ABORTING) {
-          state = State.IDLE;
-          return;
+        time++;
+        onTick();
+        if (tracker.isPulling()) {
+          piece.moveBottom();
+          spawnNext = true;
+        } else if (!piece.moveDown(false)) {
+          spawnNext = true;
         }
-      }
-      if (ann != null) {
-//        ann.resetInternalState();
+        tracker.sense(piece);
+        if (ann != null) {
+          if (shouldLog) {
+            ann.statePrint();
+          }
+          moveTracker(tracker, ann);
+//          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
+        }
+        try {
+          Thread.sleep(simulationSpeed);
+        } catch (InterruptedException e) {
+        }
       }
     }
   }
@@ -166,11 +173,9 @@ public class BeerGame {
       case PULL:
         ann.updateInput(sensors.subList(0, 5));
         tracker.move(outputs.subList(0, 2), true);
-//        if (tracker.canPull()) {
         if (outputs.get(2) > .5) {
           tracker.pull();
         }
-//        }
         break;
       default:
         throw new IllegalStateException("Invalid scenario");

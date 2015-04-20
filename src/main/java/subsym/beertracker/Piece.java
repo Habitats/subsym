@@ -45,7 +45,6 @@ public class Piece extends MultiTile {
           tracker.onCrash(this);
         }
       }
-
       dispose();
     }
   }
@@ -69,6 +68,7 @@ public class Piece extends MultiTile {
 
   public void moveBottom() {
     if (getY() <= 1) {
+      dispose();
       return;
     }
     pieces.stream().forEach(p -> {
@@ -80,9 +80,14 @@ public class Piece extends MultiTile {
     if (!moveDown(false) && canCatch()) {
       tracker.pullSuccsess();
 //      Log.v(TAG, "Successful pull!");
-    } else {
+    } else if (width < tracker.getWidth()) {
       tracker.pullFail();
 //      Log.v(TAG, "Failed pull!");
+      collision(Direction.DOWN);
+    } else {
+      tracker.pullBad();
+//      Log.v(TAG, "Bad pull!");
+      collision(Direction.DOWN);
     }
     board.notifyDataChanged();
   }
