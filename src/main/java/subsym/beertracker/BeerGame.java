@@ -166,9 +166,11 @@ public class BeerGame {
       case PULL:
         ann.updateInput(sensors.subList(0, 5));
         tracker.move(outputs.subList(0, 2), true);
-        if (outputs.get(2) > .9) {
+//        if (tracker.canPull()) {
+        if (outputs.get(2) > .5) {
           tracker.pull();
         }
+//        }
         break;
       default:
         throw new IllegalStateException("Invalid scenario");

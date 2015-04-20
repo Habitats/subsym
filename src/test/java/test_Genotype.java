@@ -50,6 +50,7 @@ public class test_Genotype {
     assertEquals(v, u);
   }
 
+
   @Test
   public void test_equals() {
     Genotype v = new OneMaxGenotype().setEmpty(10);
@@ -202,6 +203,15 @@ public class test_Genotype {
     List<Integer> lst2 = Arrays.asList(1, 2, 3, 4);
 
     assertEquals(lst1, lst2);
+  }
+
+  @Test
+  public void test_blockMutate() {
+    SurprisingGenotype w = (SurprisingGenotype) new SurprisingGenotype(3, false).fromString("100011010001");
+    List<Integer> lst1 = w.toList();
+    List<Integer> lst2 = Arrays.asList(1, 2, 3, 4);
+    w.mutateBlock(1);
+
   }
 
   @Test

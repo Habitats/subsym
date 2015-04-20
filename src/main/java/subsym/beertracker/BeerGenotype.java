@@ -25,7 +25,12 @@ public class BeerGenotype extends Genotype {
     int numWeights = phenotype.getNumWeights();
     setRandom((numWeights + numNodes * 2) * getBitGroupSize());
   }
-//
+
+//  @Override
+//  public void mutate(double mutationRate) {
+//    super.mutateBlock(mutationRate);
+//  }
+  //
 //  @Override
 //  public void mutate(double mutationRate) {
 //    List<Integer> vals = toList();
@@ -67,6 +72,6 @@ public class BeerGenotype extends Genotype {
 
   @Override
   public String toString() {
-    return getPhenotype() + " > " + String.format("%.3f",fitness());
+    return getPhenotype() + " > " + String.format("%.3f", fitness());
   }
 }

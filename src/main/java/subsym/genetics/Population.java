@@ -14,6 +14,7 @@ import subsym.genetics.matingselection.MatingSelection;
  */
 public class Population {
 
+  private static final String TAG = Population.class.getSimpleName();
   private final PopulationList currentPopulation;
   private final GeneticPreferences prefs;
   private PopulationList nextGeneration;
@@ -93,7 +94,13 @@ public class Population {
       Collections.swap(mutationCandidates, i, r.nextInt(mutationCandidates.size() - i));
     }
     mutationCandidates.stream().limit(numIndividualsToMutate).map(Genotype::copy).forEach(v -> {
+//      Log.v(TAG, "MUTATION ...");
+//      String before = v.getPaddedBitString();
+//      Log.v(TAG, before);
       v.mutate(genotypeMutationRate);
+//      String after = v.getPaddedBitString();
+//      Log.v(TAG, after);
+//      Log.v(TAG, IntStream.range(0, v.size()).mapToObj(i -> before.charAt(i) == after.charAt(i) ? " " : "x").collect(Collectors.joining()));
       nextGeneration.add(v);
     });
 

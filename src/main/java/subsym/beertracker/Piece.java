@@ -39,12 +39,7 @@ public class Piece extends MultiTile {
       if (getY() == 0) {
         tracker.onAvoided(this);
       } else {
-        boolean canCatch = IntStream.range(getX(), getX() + getWidth())//
-                               .mapToObj(x -> board.get(x, getY() - 1)) //
-                               .allMatch(v -> tracker.contains(v))
-                           && tracker.getSensors().stream().filter(Boolean::booleanValue).count() < tracker.getWidth()//
-                           && width < tracker.getWidth();
-        if (canCatch) {
+        if (canCatch()) {
           tracker.onCaught(this);
         } else {
           tracker.onCrash(this);
@@ -53,6 +48,14 @@ public class Piece extends MultiTile {
 
       dispose();
     }
+  }
+
+  public boolean canCatch() {
+    return IntStream.range(getX(), getX() + getWidth())//
+               .mapToObj(x -> board.get(x, getY() - 1)) //
+               .allMatch(v -> tracker.contains(v)) && tracker.getSensors().stream().filter(Boolean::booleanValue).count() < tracker
+        .getWidth()//
+           && width < tracker.getWidth();
   }
 
   private void dispose() {
@@ -65,12 +68,22 @@ public class Piece extends MultiTile {
   }
 
   public void moveBottom() {
+    if (getY() <= 1) {
+      return;
+    }
     pieces.stream().forEach(p -> {
       int oldY = p.getY();
       p.setPosition(p.getX(), 1);
       board.set(p);
       board.set(new Empty(p.getX(), oldY, board));
     });
+    if (!moveDown(false) && canCatch()) {
+      tracker.pullSuccsess();
+//      Log.v(TAG, "Successful pull!");
+    } else {
+      tracker.pullFail();
+//      Log.v(TAG, "Failed pull!");
+    }
     board.notifyDataChanged();
   }
 }

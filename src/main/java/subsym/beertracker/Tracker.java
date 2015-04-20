@@ -127,6 +127,7 @@ public class Tracker extends MultiTile {
 
   public void pull() {
     pulling = true;
+    numPulls++;
   }
 
   public boolean isPulling() {
@@ -194,7 +195,7 @@ public class Tracker extends MultiTile {
 //    }
 //    return (caught * 1.0 - badCrash * 0.6 - goodAvoid * .5);
 //    return (caught + badAvoid * 0.3 - badCrash * 0.3);
-    return (caught + badAvoid) / (numGood + numBad);
+    return (caught + badAvoid + (numGoodPull - numBadPulls)) / (numGood * 2 + numBad);
 //    return caught / numGood;
 //    return (caught * numGood + badAvoid * numBad) / (Math.pow(numGood, 2) + Math.pow(numBad, 2));
 //return (caught - (badCrash + goodCrash) * 0.9) / numGood;
@@ -238,5 +239,17 @@ public class Tracker extends MultiTile {
     } else if (left < right) {
       IntStream.range(0, multiplier).forEach(i -> moveRight(true));
     }
+  }
+
+  public boolean canPull() {
+    return sensors.contains(true);
+  }
+
+  public void pullFail() {
+    numBadPulls++;
+  }
+
+  public void pullSuccsess() {
+    numGoodPull++;
   }
 }

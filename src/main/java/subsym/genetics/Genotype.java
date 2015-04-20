@@ -48,9 +48,11 @@ public abstract class Genotype implements Comparable<Genotype> {
     return this;
   }
 
-protected void resetFitness() {
+  public void resetFitness() {
     fitness = null;
-    getPhenotype().resetFitness();
+    if (getPhenotype() != null) {
+      getPhenotype().resetFitness();
+    }
   }
 
   public Genotype setEmpty(int size) {
@@ -115,10 +117,25 @@ protected void resetFitness() {
   public void mutate(double mutationRate) {
 //    double offset = random.nextGaussian() * random.nextGaussian();
 //    Log.v(TAG, offset);
+
     IntStream.range(0, size()).filter(i -> Math.random() < mutationRate).forEach((bitIndex) -> {
       bits.flip(bitIndex);
       resetFitness();
     });
+
+  }
+
+  // mutate each bit with a given probability
+  public void mutateBlock(double mutationRate) {
+    for (int i = 0; i < size(); i += getBitGroupSize()) {
+      if (Math.random() < mutationRate) {
+        IntStream.range(i, i + getBitGroupSize()).forEach((bitIndex -> {
+          bits.set(bitIndex, Math.random() < .5 ? true : false);
+//          bits.flip(bitIndex);
+        }));
+      }
+    }
+    resetFitness();
   }
 
 
