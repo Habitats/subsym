@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.ailife.entity.Food;
-import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
@@ -66,8 +64,7 @@ public class AiLifePhenotype implements Phenotype {
       long seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : goodSeeds.get(run);
       Board<TileEntity> board = AiLife.createAiLifeBoard(seed);
 //      Log.v(TAG, ann.getNumWeights());
-      long numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
-      long numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
+
       Robot robot = new Robot(0, 0, board);
       board.set(robot);
       for (int i = 0; i < 60; i++) {
@@ -80,12 +77,7 @@ public class AiLifePhenotype implements Phenotype {
         robot.move(indexOfBest);
       }
 
-      long deltaPoison = numPoison - board.getItems().stream().filter(i -> i instanceof Poison).count();
-      long deltaFood = numFood - board.getItems().stream().filter(i -> i instanceof Food).count();
-//      Log.v(TAG, "" + deltaFood + deltaPoison);
-      double delta = deltaFood * 2 + deltaPoison * -3;
-      double max = numFood * 2;
-      fitness.getAndAdd(delta / max);
+      fitness.getAndAdd(robot.getScore());
     });
     return fitness.get() / (double) rounds;
   }

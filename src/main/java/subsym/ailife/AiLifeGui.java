@@ -12,6 +12,8 @@ import java.util.List;
 import javax.swing.*;
 
 import subsym.Log;
+import subsym.ailife.entity.Food;
+import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.AIButton;
@@ -42,8 +44,11 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private AILabel poisonLabel;
   private AILabel foodLabel;
   private AISlider simulationSpeedSlider;
+  private AILabel scoreLabel;
   private Board<TileEntity> board;
   private boolean shouldStop = false;
+  private long numFood;
+  private long numPoison;
 
   public AiLifeGui(Board<TileEntity> board, ArtificialNeuralNetwork ann) {
     this.ann = ann;
@@ -134,7 +139,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
           Thread.sleep(simulationSpeedSlider.getValue());
         } catch (InterruptedException e) {
         }
-        if(shouldStop){
+        if (shouldStop) {
           Log.v(TAG, "Exiting ...");
           return;
         }
@@ -145,16 +150,21 @@ public class AiLifeGui extends AIGui<TileEntity> {
 
   private void initBoard(Board<TileEntity> board) {
     canvas.setAdapter(board);
+    numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
+    numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
     robot = new Robot(0, 0, board);
     this.board.set(robot);
     this.board.notifyDataChanged();
-    onTick(0);
+    if (isVisible()) {
+      onTick(0);
+    }
   }
 
   public void onTick(int time) {
-    foodLabel.setText(String.format("Food: %2d", robot.getFoodCount()));
-    poisonLabel.setText(String.format("Poison: %2d", robot.getPoisonCount()));
+    foodLabel.setText(String.format("Food: %2d/%2d", robot.getFoodCount(), numFood));
+    poisonLabel.setText(String.format("Poison: %2d/%2d", robot.getPoisonCount(), numPoison));
     timeLabel.setText(String.format("Time: %2d", time));
+    scoreLabel.setText(String.format("Score: %.3f", robot.getScore()));
   }
 
   @Override

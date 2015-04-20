@@ -138,7 +138,7 @@ public class GeneticPreferences {
     GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.05, new Mixing(0.05), new Rank(), 500);
     GeneticProblem problem = new AiLife(prefs, AnnPreferences.getAiLifeDefault());
     prefs.setPuzzle(problem);
-    prefs.setAnnPreferences(new AnnPreferences(1, 6, new Sigmoid(), BeerScenario.WRAP, false));
+    prefs.setAnnPreferences(new AnnPreferences(0, 6, new Sigmoid(), BeerScenario.WRAP, false));
     return prefs;
   }
 

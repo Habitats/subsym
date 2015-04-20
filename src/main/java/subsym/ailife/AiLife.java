@@ -86,7 +86,8 @@ public class AiLife extends GeneticProblem {
     Log.v(TAG, best.fitness());
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
     ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
-    Log.v(TAG, pheno.fitness());
+    Log.v(TAG,
+          String.format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(), pheno.fitness()));
     List<Board<TileEntity>> boards = new ArrayList<>();
     IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
     AiLifeGui.simulate(boards, ann, () -> Log.v(TAG, this));

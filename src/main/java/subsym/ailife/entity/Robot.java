@@ -20,8 +20,11 @@ import subsym.models.entity.TileEntity;
 public class Robot extends TileEntity {
 
   private static final String TAG = Robot.class.getSimpleName();
+  private final long numPoison;
+  private final long numFood;
   private int poisonCount;
   private int foodCount;
+  private double score;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = new ArrayList<>();
@@ -42,6 +45,8 @@ public class Robot extends TileEntity {
   public Robot(int x, int y, Board board) {
     super(x, y, board);
     dir = Direction.UP;
+   numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
+   numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
   }
 
   public List<Double> getFoodSensorInput() {
@@ -202,5 +207,18 @@ public class Robot extends TileEntity {
   @Override
   public Color getColor() {
     return ColorUtils.c(4);
+  }
+
+  public double getScore() {
+    long deltaPoison = numPoison - getBoard().getItems().stream().filter(i -> i instanceof Poison).count();
+    long deltaFood = numFood - getBoard().getItems().stream().filter(i -> i instanceof Food).count();
+//      Log.v(TAG, "" + deltaFood + deltaPoison);
+    double delta = deltaFood * 2 + deltaPoison * -3;
+    double max = numFood * 2;
+    return delta / max;
+  }
+
+  public void setScore(double score) {
+    this.score = score;
   }
 }
