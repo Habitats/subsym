@@ -29,9 +29,11 @@ public class BeerGame {
 
   private enum State {
     ABORTING, SIMULATING, IDLE;
+
   }
 
   private int simulationSpeed = 0;
+
   private BeerGui listener;
   private Board<TileEntity> board;
   private Tracker tracker;
@@ -59,7 +61,7 @@ public class BeerGame {
     board = new Board<>(30, 15);
     IntStream.range(0, board.getWidth()).forEach(x -> IntStream.range(0, board.getHeight())//
         .forEach(y -> board.set(new Empty(x, y, board))));
-    tracker = new Tracker(board);
+    tracker = new Tracker(board, this);
   }
 
   public void restart() {
@@ -220,6 +222,10 @@ public class BeerGame {
       }
     }
     new Thread(() -> callback.run()).start();
+  }
+
+  public boolean isVisible() {
+    return gui != null && gui.isVisible();
   }
 
   public void setListener(BeerGui beerGui) {

@@ -28,9 +28,14 @@ public class Tracker extends MultiTile {
   private int goodAvoid;
   private int badAvoid;
   private int badCrash;
+  private BeerGame beerGame;
+  private double numPulls;
+  private int numGoodPull;
+  private int numBadPulls;
 
-  public Tracker(Board<TileEntity> board) {
+  public Tracker(Board<TileEntity> board, BeerGame beerGame) {
     super(5, board);
+    this.beerGame = beerGame;
     listeners = new ArrayList<>();
   }
 
@@ -94,6 +99,9 @@ public class Tracker extends MultiTile {
   }
 
   private void fade(int from, int to, Runnable callback) {
+    if (!beerGame.isVisible()) {
+      return;
+    }
     new Thread(() -> {
       double rounds = 50;
       double resolution = Math.abs(from - to) / rounds;
