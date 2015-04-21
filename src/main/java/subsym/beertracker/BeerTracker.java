@@ -72,7 +72,10 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public void demo(GeneticPreferences prefs) {
-    onSolved();
+    BeerScenario scenario = prefs.getAnnPreferences().getBeerScenario();
+    BeerGame game = new BeerGame(scenario);
+    game.demo(prefs.getAnnPreferences().getSimulationSeed());
+
   }
 
   private void simulate(BeerGenotype best) {

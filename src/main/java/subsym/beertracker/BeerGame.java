@@ -26,9 +26,14 @@ public class BeerGame {
   private int startPositionX;
   private int lastWidth;
   private int lastStartX;
+  private long simulationSeed;
 
   public BeerScenario getScenario() {
     return scenario;
+  }
+
+  public long getSimulationSeed() {
+    return simulationSeed;
   }
 
   private enum State {
@@ -39,26 +44,20 @@ public class BeerGame {
   private int simulationSpeed = 0;
 
   private BeerGui listener;
+
   private Board<TileEntity> board;
+
   private Tracker tracker;
   private final int MAX_TIME = 600;
   private int time = 0;
   private boolean shouldWrap = true;
   private State state;
   private BeerGui gui;
-
   public BeerGame(BeerScenario scenario) {
     this.scenario = scenario;
     state = State.IDLE;
     reset();
   }
-
-  public static void demo(BeerScenario scenario) {
-    BeerGame game = new BeerGame(scenario);
-    game.initGui();
-    game.simulateFallingPieces(game.board, game.tracker, null, 1429309386261L, false);
-  }
-
   public void reset() {
     numGood = 0;
     numBad = 0;
@@ -68,11 +67,17 @@ public class BeerGame {
     tracker = new Tracker(board, this);
   }
 
-  public void restart() {
+  public void demo(long simulationSeed) {
+    setSimulationSeed(simulationSeed);
+    initGui();
+    simulateFallingPieces(board, tracker, null, simulationSeed, false);
+  }
+
+  public void generateNew() {
     reset();
     initGui();
     long seed = System.currentTimeMillis();
-    Log.v(TAG, seed);
+    setSimulationSeed(seed);
     simulateFallingPieces(board, tracker, ann, seed, false);
   }
 
@@ -85,6 +90,7 @@ public class BeerGame {
   public void manual(String text) {
     reset();
     initGui();
+    gui.setInput(text);
     AnnPreferences beerDefault = AnnPreferences.getBeerDefault();
     switch (scenario) {
       case WRAP:
@@ -101,7 +107,7 @@ public class BeerGame {
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     BeerPhenotype.setValues(values, ann);
 //    ann.statePrint();
-    simulateFallingPieces(board, tracker, ann, 0, false);
+    simulateFallingPieces(board, tracker, ann, getSimulationSeed(), false);
   }
 
   public void initGui() {
@@ -119,6 +125,8 @@ public class BeerGame {
 
   public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed, boolean shouldLog) {
     state = State.SIMULATING;
+    lastWidth = 0;
+    lastStartX = 0;
     Random r = new Random(seed);
     time = 0;
 
@@ -229,6 +237,11 @@ public class BeerGame {
       }
     }
     new Thread(() -> callback.run()).start();
+  }
+
+  public void setSimulationSeed(long simulationSeed) {
+    this.simulationSeed = simulationSeed;
+    Log.v(TAG, "New seed: " + simulationSeed);
   }
 
   public boolean isVisible() {

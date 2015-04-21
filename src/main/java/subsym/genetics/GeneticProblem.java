@@ -58,7 +58,8 @@ public abstract class GeneticProblem {
     avg += delta;
 //    Log.i(TAG, String.format("(%4d / %4d) ms - %s",//
 //                             delta, (int) (avg / count), population));
-    Log.i(TAG, getPopulation().getBestGenotype().getPhenotype());
+    Genotype bestGenotype = getPopulation().getBestGenotype();
+    Log.i(TAG, String.format("%s > Fitness > %.3f ", bestGenotype.getPhenotype(), bestGenotype.fitness()));
     delta = System.currentTimeMillis();
     count++;
   }

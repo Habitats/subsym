@@ -106,7 +106,6 @@ public class Genetics implements GeneticGuiListener {
 
     IntStream.range(0, runCount).forEach(i -> {
       GeneticProblem problem = prefs.getPuzzleCopy();
-      prefs.setCurrentPuzzle(problem);
       if (prefs.shouldIncrement()) {
         prefs.increment();
         problem.increment(prefs.getIncrement());
@@ -215,7 +214,7 @@ public class Genetics implements GeneticGuiListener {
     if (lastSolution != null) {
       lastSolution.demo(prefs);
     } else {
-      prefs.getCurrentPuzzle().demo(prefs);
+      prefs.getPuzzleCopy().demo(prefs);
     }
   }
 }
