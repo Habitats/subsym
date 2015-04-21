@@ -181,15 +181,17 @@ public class Tracker extends MultiTile {
       case NO_WRAP:
         return (caught * 1.1 + badAvoid) / (numGood * 1.1 + numBad);
       case PULL:
-        double score = caught + badAvoid;
+        double pullScore = (numGoodPull / numGood) - (numBadPull / numBad);
+        double score = pullScore;
         double max = (numGood + numBad) * 1;
-//        Log.v(TAG, String
-//            .format("Score: %8.3f - Max: %8.3f - Good Pull: %4d - Bad Pull: %4d - Good: %3.0f - Bad: %3.0f", score, max, numGoodPull,
-//                    numBadPull, numGood, numBad));
-        if (score / max > 1) {
+        double totalScore = score;
+//        Log.v(TAG, String.format(
+//            "Score: %8.3f - Max: %8.3f - Good Pull: %4d - Bad Pull: %4d - Good: %3.0f - Bad: %3.0f - Pull Score: %8.3f - Score: %8.3f",
+//            score, max, numGoodPull, numBadPull, numGood, numBad, pullScore, totalScore));
+        if (totalScore > 1) {
           Log.v(TAG, "wut");
         }
-        return score / max;
+        return totalScore;
 //        return score;
       default:
         throw new IllegalStateException("Invalid scenario!");
