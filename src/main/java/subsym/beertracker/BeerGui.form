@@ -90,6 +90,20 @@
               <font name="Consolas" style="1"/>
             </properties>
           </component>
+          <component id="67c7a" class="subsym.gui.AILabel" binding="goodPullLabel">
+            <constraints/>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="1"/>
+            </properties>
+          </component>
+          <component id="3fb4" class="subsym.gui.AILabel" binding="badPullLabel">
+            <constraints/>
+            <properties>
+              <background color="-131586"/>
+              <font name="Consolas" style="1"/>
+            </properties>
+          </component>
           <component id="6eedf" class="subsym.gui.AISlider" binding="simulationSpeedSlider">
             <constraints/>
             <properties>

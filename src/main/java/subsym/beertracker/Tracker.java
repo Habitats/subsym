@@ -237,6 +237,14 @@ public class Tracker extends MultiTile {
     }
   }
 
+  public int getNumBadPull() {
+    return numBadPull;
+  }
+
+  public int getNumGoodPull() {
+    return numGoodPull;
+  }
+
   public void pullFail() {
     numFailPull++;
   }

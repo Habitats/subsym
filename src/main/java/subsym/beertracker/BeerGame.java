@@ -36,6 +36,7 @@ public class BeerGame {
     return simulationSeed;
   }
 
+
   private enum State {
     ABORTING, SIMULATING, IDLE;
 
@@ -180,10 +181,10 @@ public class BeerGame {
         break;
       case PULL:
         ann.updateInput(sensors.subList(0, 5));
-        tracker.move(outputs.subList(0, 2), true);
         if (outputs.get(2) > .5) {
           tracker.pull();
         }
+        tracker.move(outputs.subList(0, 2), true);
         break;
       default:
         throw new IllegalStateException("Invalid scenario");
@@ -278,6 +279,13 @@ public class BeerGame {
 
   public int getNumGood() {
     return numGood;
+  }
+
+  public int getNumBadPull() {
+    return tracker.getNumBadPull();
+  }
+  public int getNumGoodPull(){
+    return tracker.getNumGoodPull();
   }
 
   public void setSimulationSpeed(int simulationSpeed) {

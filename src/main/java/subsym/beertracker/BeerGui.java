@@ -42,6 +42,8 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
   private subsym.gui.AITextField inputField;
   private AILabel numGoodLabel;
   private AILabel numBadLabel;
+  private AILabel goodPullLabel;
+  private AILabel badPullLabel;
 
   public BeerGui(BeerGame game) {
     buildFrame(mainPanel, null, null);
@@ -95,7 +97,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
 
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(977, 500);
+    return new Dimension(1277, 600);
   }
 
   @Override
@@ -134,6 +136,8 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
     scoreLabel.setText(String.format("Score: %3f", game.getScore()));
     numBadLabel.setText(String.format("Bad: %3d", game.getNumBad()));
     numGoodLabel.setText(String.format("Good: %3d", game.getNumGood()));
+    goodPullLabel.setText(String.format("Good Pull: %3d", game.getNumGoodPull()));
+    badPullLabel.setText(String.format("Bad Pull: %3d", game.getNumBadPull()));
   }
 
   private void updateTime() {
