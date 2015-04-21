@@ -54,11 +54,13 @@ public class BeerGame {
   private boolean shouldWrap = true;
   private State state;
   private BeerGui gui;
+
   public BeerGame(BeerScenario scenario) {
     this.scenario = scenario;
     state = State.IDLE;
     reset();
   }
+
   public void reset() {
     numGood = 0;
     numBad = 0;
@@ -139,10 +141,6 @@ public class BeerGame {
           state = State.IDLE;
           return;
         }
-        try {
-          Thread.sleep(simulationSpeed);
-        } catch (InterruptedException e) {
-        }
         time++;
         onTick();
         if (tracker.isPulling()) {
@@ -151,23 +149,24 @@ public class BeerGame {
         } else if (!piece.moveDown(false)) {
           spawnNext = true;
         }
-        tracker.sense(piece);
-        if (ann != null) {
-          if (shouldLog) {
-            ann.statePrint();
-          }
-          moveTracker(tracker, ann);
-//          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
-        }
         try {
           Thread.sleep(simulationSpeed);
         } catch (InterruptedException e) {
         }
+        tracker.sense(piece);
+        moveTracker(tracker, ann);
+//          if (shouldLog) {
+//            ann.statePrint();
+//          }
+//          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
       }
     }
   }
 
   private void moveTracker(Tracker tracker, ArtificialNeuralNetwork ann) {
+    if (ann == null) {
+      return;
+    }
     List<Double> sensors = tracker.getSensors().stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList());
     List<Double> outputs = ann.getOutputs();
     switch (scenario) {
