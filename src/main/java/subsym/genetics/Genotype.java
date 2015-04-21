@@ -50,7 +50,7 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   public void resetFitness() {
     fitness = null;
-    if (getPhenotype() != null) {
+    if (getPhenotype() != null && this != getPhenotype()) {
       getPhenotype().resetFitness();
     }
   }
@@ -67,7 +67,7 @@ public abstract class Genotype implements Comparable<Genotype> {
     Genotype copy = newInstance();
     copy.bits = bits.get(0, bits.length());
     copy.size = size;
-    copy.fitness = null;
+    copy.fitness = fitness;
     copy(copy);
     return copy;
   }

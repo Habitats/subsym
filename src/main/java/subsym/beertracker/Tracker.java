@@ -179,8 +179,10 @@ public class Tracker extends MultiTile {
       case WRAP:
         return (caught + badAvoid) / (numGood + numBad);
       case NO_WRAP:
-        return (caught * 1.1 + badAvoid) / (numGood * 1.1 + numBad);
+//        return (caught + badAvoid) / (numGood + numBad);
+        return caught / numGood;
       case PULL:
+//        return (caught + badAvoid) / (numGood + numBad);
         double pullScore = (numGoodPull / numGood) - (numBadPull / numBad);
         double score = pullScore;
         double max = (numGood + numBad) * 1;
@@ -192,7 +194,6 @@ public class Tracker extends MultiTile {
           Log.v(TAG, "wut");
         }
         return totalScore;
-//        return score;
       default:
         throw new IllegalStateException("Invalid scenario!");
     }
@@ -204,20 +205,23 @@ public class Tracker extends MultiTile {
     newMove(left, right, shouldWrap);
   }
 
-  private void newMove(Double left, Double right, boolean shouldWrap) {
+  private String newMove(Double left, Double right, boolean shouldWrap) {
     double dir = Math.max(left, right);
     int multiplier = (int) Math.round(dir * 4);
 //    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f", multiplier, min, max, delta));
 //    Log.v(TAG, String.format("M: %d - LEFT: %.10f - RIGHT: %.10f", multiplier, left, right));
 //    Log.v(TAG, multiplier);
     if (dir < 0.2) {
-      return;
+      return "STAY";
     }
     if (left > right) {
       IntStream.range(0, multiplier).forEach(i -> moveLeft(shouldWrap));
+      return "LEFT " + multiplier;
     } else if (left < right) {
       IntStream.range(0, multiplier).forEach(i -> moveRight(shouldWrap));
+      return "RIGHT " + multiplier;
     }
+    return null;
   }
 
   private void oldMove(Double left, Double right) {

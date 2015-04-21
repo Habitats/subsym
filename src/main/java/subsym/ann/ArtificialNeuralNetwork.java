@@ -61,16 +61,21 @@ public class ArtificialNeuralNetwork {
   }
 
   public static ArtificialNeuralNetwork buildNoWrapCtrnn(AnnPreferences prefs) {
+//    AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
+//    AnnNode noWrap1 = AnnNode.createInput(new WeightBound(-10., 10.), 0.);
+//    AnnNode noWrap2 = AnnNode.createInput(new WeightBound(-10., 10.), 0.);
+//    inputs.add(noWrap1);
+//    inputs.add(noWrap2);
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
-    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs, true);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs, false);
     return ann;
   }
 
   public static ArtificialNeuralNetwork buildPullingCtrnn(AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 3);
-    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs, true);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs, false);
 //    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
 //    ann.setStateful();
 //

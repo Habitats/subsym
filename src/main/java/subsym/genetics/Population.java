@@ -103,7 +103,6 @@ public class Population {
 //      Log.v(TAG, IntStream.range(0, v.size()).mapToObj(i -> before.charAt(i) == after.charAt(i) ? " " : "x").collect(Collectors.joining()));
       nextGeneration.add(v);
     });
-
   }
 
   public void add(Genotype genotype) {

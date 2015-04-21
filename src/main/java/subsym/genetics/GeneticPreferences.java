@@ -54,6 +54,7 @@ public class GeneticPreferences {
     this.adultSelectionMode = adultSelectionMode;
     this.mateSelectionMode = mateSelectionMode;
     this.maxGenerations = maxGenerations;
+    this.annPreferences = AnnPreferences.getBeerDefault();
   }
 
   public AdultSelection getAdultSelectionMode() {
@@ -135,7 +136,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getAiLife() {
-    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.05, new Mixing(0.05), new Rank(), 500);
+    GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.05, new Mixing(0.05), new Rank(), 700);
     GeneticProblem problem = new AiLife(prefs, AnnPreferences.getAiLifeDefault());
     prefs.setPuzzle(problem);
     prefs.setAnnPreferences(new AnnPreferences(0, 6, new Sigmoid(), BeerScenario.WRAP, false));
@@ -143,7 +144,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getBeer() {
-    GeneticPreferences prefs = new GeneticPreferences(300, 0.2, 0.95, 0.015, new Mixing(0.40), new Rank(), 300);
+    GeneticPreferences prefs = new GeneticPreferences(100, 0.2, 0.95, 0.015, new Mixing(0.40), new Rank(), 500);
     GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getBeerDefault());
     prefs.setPuzzle(problem);
 

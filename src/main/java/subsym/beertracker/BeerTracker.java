@@ -65,7 +65,7 @@ public class BeerTracker extends GeneticProblem {
     int v = (int) ((System.currentTimeMillis() - start) / 1000.);
     Log.v(TAG, String.format("Search finished in %d seconds", v));
 
-//    simulate(best);
+    simulate(best);
 
     Log.i(TAG, this);
   }

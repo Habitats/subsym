@@ -184,7 +184,7 @@ public class test_ailife {
   public void test_beerOutput() {
     String
         text =
-        "089  151  212  098  236  135  221  166  247  206  235  192  208  133  140  135  140  139  248  176  099  126  227  001  124  100  157  248  237  063";
+        "034 221 126 248 082 073 062 124 073 187 061 171 016 095 138 102 030 121 021 097 014 236 085 146 082 205 107 231 160 184 048 235 026 015 152 103 213 222 177 182 071 218 200 053 144 027 162 139 120 180 213 216 016 244 053 252 074 178 064 005";
     List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     ArtificialNeuralNetwork ann = ArtificialNeuralNetwork.buildWrappingCtrnn(GeneticPreferences.getBeer().getAnnPreferences());
@@ -196,18 +196,42 @@ public class test_ailife {
         for (double c = 0; c < 2; c++) {
           for (double d = 0; d < 2; d++) {
             for (double e = 0; e < 2; e++) {
-              Log.v(TAG, "New input!");
-              for(int i = 0; i < 10; i++) {
+//              Log.v(TAG, "New input!");
+              for (int i = 0; i < 3; i++) {
                 ann.updateInput(a, b, c, d, e);
-                String inputs = "" + (int) a + (int) b + (int) c + (int) d;
-                String outputs = ann.getOutputs().stream().map(o -> String.format("%.3f", o)).collect(Collectors.joining(" "));
-                Log.v(TAG, String.format("Inputs: %s > Outputs: %s", inputs, outputs));
               }
+              String inputs = "" + (int) a + (int) b + (int) c + (int) d + (int) e;
+              String[] split = inputs.replaceAll("1+", "1").replaceAll("0+", " ").trim().split(" ");
+              if (split.length > 1) {
+                continue;
+              }
+              String outputs = ann.getOutputs().stream().map(o -> String.format("%.3f", o)).collect(Collectors.joining(" "));
+              System.out.println(String.format("%s > %s > %s", inputs, outputs, move(ann.getOutputs())));
+
             }
           }
         }
       }
     }
+  }
+
+  private String move(List<Double> outputs) {
+    Double left = outputs.get(0);
+    Double right = outputs.get(1);
+    double dir = Math.max(left, right);
+    int multiplier = (int) Math.round(dir * 4);
+//    Log.v(TAG, String.format("Multiplier: %d - Min: %f - Max: %f - Delta: %f", multiplier, min, max, delta));
+//    Log.v(TAG, String.format("M: %d - LEFT: %.10f - RIGHT: %.10f", multiplier, left, right));
+//    Log.v(TAG, multiplier);
+    if (dir < 0.2) {
+      return "STAY";
+    }
+    if (left > right) {
+      return "LEFT " + multiplier;
+    } else if (left < right) {
+      return "RIGHT " + multiplier;
+    }
+    return null;
   }
 
   private List<Double> getRandom(int num, Random r) {

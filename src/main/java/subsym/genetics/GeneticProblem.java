@@ -51,6 +51,7 @@ public abstract class GeneticProblem {
 
   public void mutate() {
     population.mutate(prefs.getPopulationMutationRate(), prefs.getGenomeMutationRate());
+    population.getNextGeneration().parallellStream().forEach(Genotype::fitness);
   }
 
   public void log() {
