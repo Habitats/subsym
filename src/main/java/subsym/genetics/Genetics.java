@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 
 import subsym.Log;
 import subsym.ailife.AiLife;
-import subsym.ailife.AiLifeGui;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.Mixing;
@@ -106,7 +105,8 @@ public class Genetics implements GeneticGuiListener {
     prefs.reset();
 
     IntStream.range(0, runCount).forEach(i -> {
-      GeneticProblem problem = prefs.getPuzzle();
+      GeneticProblem problem = prefs.getPuzzleCopy();
+      prefs.setCurrentPuzzle(problem);
       if (prefs.shouldIncrement()) {
         prefs.increment();
         problem.increment(prefs.getIncrement());
@@ -215,7 +215,7 @@ public class Genetics implements GeneticGuiListener {
     if (lastSolution != null) {
       lastSolution.demo(prefs);
     } else {
-      AiLifeGui.demo();
+      prefs.getCurrentPuzzle().demo(prefs);
     }
   }
 }

@@ -12,7 +12,6 @@ import javax.swing.*;
 import subsym.Log;
 import subsym.ailife.AiLife;
 import subsym.ann.AnnPreferences;
-import subsym.beertracker.BeerGame;
 import subsym.beertracker.BeerScenario;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.GeneticPreferences;
@@ -161,7 +160,7 @@ public class GeneticGui extends AIGui {
 
     runButton.addActionListener(e -> run());
     stopButton.addActionListener(e -> listener.stop());
-    beerDemoButton.addActionListener(e -> new Thread(() -> BeerGame.demo((BeerScenario) beerScenarioSelection.getSelectedItem())).start());
+    beerDemoButton.addActionListener(e -> new Thread(() -> listener.demo(prefs)).start());
     aiLifeDemoButton.addActionListener(e -> new Thread(() ->listener.demo(prefs)).start());
     benchMarkButton.addActionListener(e -> benchmark());
 
@@ -522,7 +521,7 @@ public class GeneticGui extends AIGui {
     genomeMutationInput.setText(String.valueOf(prefs.getGenomeMutationRate()));
     populationMutationInput.setText(String.valueOf(prefs.getPopulationMutationRate()));
 
-    puzzleSelect.setSelectedItem(prefs.getPuzzle().getClass().getSimpleName());
+    puzzleSelect.setSelectedItem(prefs.getPuzzleCopy().getClass().getSimpleName());
     adultSelection.setSelectedItem(prefs.getAdultSelectionMode().getClass().getSimpleName());
     matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
 
@@ -535,14 +534,14 @@ public class GeneticGui extends AIGui {
       mixingRateInput.setText(String.valueOf(((Mixing) prefs.getAdultSelectionMode()).getMixingRate()));
     }
 
-    if (prefs.getPuzzle() instanceof SurprisingSequences) {
-      SurprisingSequences puzzle = (SurprisingSequences) prefs.getPuzzle();
+    if (prefs.getPuzzleCopy() instanceof SurprisingSequences) {
+      SurprisingSequences puzzle = (SurprisingSequences) prefs.getPuzzleCopy();
       surprisingLengthInput.setText(String.valueOf(puzzle.getSurprisingLength()));
       alphabetSizeInput.setText(String.valueOf(puzzle.getAlphabetSize()));
-    } else if (prefs.getPuzzle() instanceof OneMax) {
-      bitVectorSizeInput.setText(String.valueOf(((OneMax) prefs.getPuzzle()).getBitVecotorSize()));
-    } else if (prefs.getPuzzle() instanceof Lolz) {
-      Lolz puzzle = (Lolz) prefs.getPuzzle();
+    } else if (prefs.getPuzzleCopy() instanceof OneMax) {
+      bitVectorSizeInput.setText(String.valueOf(((OneMax) prefs.getPuzzleCopy()).getBitVecotorSize()));
+    } else if (prefs.getPuzzleCopy() instanceof Lolz) {
+      Lolz puzzle = (Lolz) prefs.getPuzzleCopy();
       zeroThresholdInput.setText(String.valueOf(puzzle.getZeroThreshold()));
       bitVectorSizeInput.setText(String.valueOf(puzzle.getBitVecotorSize()));
     }
@@ -556,14 +555,14 @@ public class GeneticGui extends AIGui {
     AnnPreferences annPreferences = prefs.getAnnPreferences();
     grayCheckbox.setSelected(annPreferences.shouldGrayCode());
     seedInput.setText(String.valueOf(annPreferences.getSimulationSeed()));
-    if (prefs.getPuzzle() instanceof AiLife) {
+    if (prefs.getPuzzleCopy() instanceof AiLife) {
       annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
       annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));
       singleCheckbox.setSelected(annPreferences.isSingle());
       dynamicCheckbox.setSelected(annPreferences.isDynamic());
     }
 
-    if (prefs.getPuzzle() instanceof BeerTracker) {
+    if (prefs.getPuzzleCopy() instanceof BeerTracker) {
       annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
       annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));
     }

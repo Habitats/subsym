@@ -71,6 +71,27 @@ public class ArtificialNeuralNetwork {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 3);
     ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs);
+//    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
+//    ann.setStateful();
+//
+//    List<AnnNodes> layers = ann.getLayers();
+//    AnnNodes nodes = new AnnNodes(IntStream.range(1, layers.size())//
+//                                      .mapToObj(layers::get).flatMap(AnnNodes::stream) //
+//                                      .sorted((o1, o2) -> o1.getGlobalId().compareTo(o2.getGlobalId()))//
+//                                      .collect(Collectors.toList()));
+//    ann.addBiasNode(new WeightBound(-10, 0), nodes);
+//    ann.getLayers().subList(1, layers.size() - 1).stream().forEach(layer -> {
+//      layer.stream().forEach(n -> {
+//        layer.stream().filter(other -> !n.equals(other)).forEach(n::crossConnect);
+//      });
+//    });
+//    ann.addSelfNode(new WeightBound(-5, 5), nodes);
+//    OutputNode pull = OutputNode.createOutput(new WeightBound(-5, 5));
+//    outputs.add(pull);
+//    inputs.stream().forEach(n -> n.connect(pull));
+//    ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
+//
+//    ann.setIds();
     return ann;
   }
 
@@ -250,8 +271,8 @@ public class ArtificialNeuralNetwork {
 
   public void setIds() {
     List<AnnNodes> sorted = layers.stream().sorted().collect(Collectors.toList());
-    for(AnnNodes layer : sorted){
-      for(AnnNode node : layer){
+    for (AnnNodes layer : sorted) {
+      for (AnnNode node : layer) {
         node.setId(idCounter.getAndIncrement());
       }
     }

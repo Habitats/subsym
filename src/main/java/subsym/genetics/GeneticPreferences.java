@@ -221,7 +221,7 @@ public class GeneticPreferences {
     this.puzzle = puzzle;
   }
 
-  public GeneticProblem getPuzzle() {
+  public GeneticProblem getPuzzleCopy() {
     return puzzle.newInstance();
   }
 

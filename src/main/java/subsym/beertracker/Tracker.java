@@ -179,13 +179,13 @@ public class Tracker extends MultiTile {
       case WRAP:
         return (caught + badAvoid) / (numGood + numBad);
       case NO_WRAP:
-        return (caught * 1.5 + badAvoid) / (numGood * 1.5 + numBad);
+        return (caught * 1.1 + badAvoid) / (numGood * 1.1 + numBad);
       case PULL:
         double score = caught + badAvoid;
         double max = (numGood + numBad) * 1;
-        Log.v(TAG, String
-            .format("Score: %8.3f - Max: %8.3f - Good Pull: %4d - Bad Pull: %4d - Good: %3.0f - Bad: %3.0f", score, max, numGoodPull,
-                    numBadPull, numGood, numBad));
+//        Log.v(TAG, String
+//            .format("Score: %8.3f - Max: %8.3f - Good Pull: %4d - Bad Pull: %4d - Good: %3.0f - Bad: %3.0f", score, max, numGoodPull,
+//                    numBadPull, numGood, numBad));
         if (score / max > 1) {
           Log.v(TAG, "wut");
         }
