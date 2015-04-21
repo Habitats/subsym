@@ -65,13 +65,14 @@ public abstract class AnnNode implements Comparable<AnnNode> {
     annNode.addInput(this);
   }
 
-  public void crossConnect(AnnNode annNode) {
+  public InputNode crossConnect(AnnNode annNode) {
     if (crossNode == null) {
       crossNode = createInput(bound, 1.);
     }
     crossNode.inputWeights = inputWeights;
     annNode.inputWeights.put(crossNode, 1.);
     annNode.addInput(crossNode);
+    return crossNode;
   }
 
   private void addInput(AnnNode annNode) {

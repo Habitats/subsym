@@ -56,21 +56,21 @@ public class ArtificialNeuralNetwork {
   public static ArtificialNeuralNetwork buildWrappingCtrnn(AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
-    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs, true);
     return ann;
   }
 
   public static ArtificialNeuralNetwork buildNoWrapCtrnn(AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
-    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs, true);
     return ann;
   }
 
   public static ArtificialNeuralNetwork buildPullingCtrnn(AnnPreferences prefs) {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0., 0., 0., 0., 0.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 3);
-    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs);
+    ArtificialNeuralNetwork ann = createBeerAnn(prefs, inputs, outputs, true);
 //    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
 //    ann.setStateful();
 //
@@ -95,7 +95,7 @@ public class ArtificialNeuralNetwork {
     return ann;
   }
 
-  private static ArtificialNeuralNetwork createBeerAnn(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
+  private static ArtificialNeuralNetwork createBeerAnn(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs, boolean includeCrossnodes) {
     ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(prefs, inputs, outputs);
     ann.setStateful();
 
@@ -105,16 +105,25 @@ public class ArtificialNeuralNetwork {
                                       .sorted((o1, o2) -> o1.getGlobalId().compareTo(o2.getGlobalId()))//
                                       .collect(Collectors.toList()));
     ann.addBiasNode(new WeightBound(-10, 0), nodes);
-    ann.getLayers().subList(1, layers.size() - 1).stream().forEach(layer -> {
-      layer.stream().forEach(n -> {
-        layer.stream().filter(other -> !n.equals(other)).forEach(n::crossConnect);
-      });
-    });
+    if (includeCrossnodes) {
+      ann.addCrossNodes(ann, layers);
+    }
     ann.addSelfNode(new WeightBound(-5, 5), nodes);
     ann.getLayers().stream().flatMap(AnnNodes::stream).forEach(n -> n.setActivationFunction(new Sigmoid()));
 
     ann.setIds();
     return ann;
+  }
+
+  private void addCrossNodes(ArtificialNeuralNetwork ann, List<AnnNodes> layers) {
+    ann.getLayers().subList(1, layers.size() - 1).stream().forEach(layer -> {
+      layer.stream().forEach(n -> {
+        layer.stream().filter(other -> !(Long.compare(n.hashCode(), other.hashCode()) == 0)).forEach((annNode) -> {
+          InputNode inputNode = n.crossConnect(annNode);
+          ann.biasNodes.add(inputNode);
+        });
+      });
+    });
   }
 
   public void addBiasNode(WeightBound bound, AnnNodes nodes) {
