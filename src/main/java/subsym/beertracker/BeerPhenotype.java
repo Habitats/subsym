@@ -94,8 +94,7 @@ public class BeerPhenotype implements Phenotype {
 
   @Override
   public String toString() {
-    return beerGenotype.toList().stream().map(i -> String.format("%3d", i).replaceAll(" ", "0"))
-        .collect(Collectors.joining("  ", "Pheno > ", ""));
+    return beerGenotype.toList().stream().map(i -> String.format("%3d", i).replaceAll(" ", "0")).collect(Collectors.joining(" "));
   }
 
 }

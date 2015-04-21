@@ -34,7 +34,6 @@ public class Piece extends MultiTile {
   }
 
   protected void collision(Direction dir) {
-//    Log.v(TAG, "Collision: " + dir.name());
     if (dir == Direction.DOWN) {
       if (getY() == 0) {
         tracker.onAvoided(this);

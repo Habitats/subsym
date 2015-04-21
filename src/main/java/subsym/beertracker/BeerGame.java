@@ -1,5 +1,6 @@
 package subsym.beertracker;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -109,7 +110,7 @@ public class BeerGame {
     List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     BeerPhenotype.setValues(values, ann);
-//    ann.statePrint();
+    ann.statePrint();
     simulateFallingPieces(board, tracker, ann, getSimulationSeed(), false);
   }
 
@@ -198,14 +199,17 @@ public class BeerGame {
     } else {
       numBad++;
     }
-    if ((lastStartX + lastWidth + piece.getWidth() + 1) > board.getWidth()) {
-      startPositionX = r.nextInt(lastStartX - piece.getWidth() - 1);
-    } else {
-      int delta = lastStartX + lastWidth + 1;
-      startPositionX = delta + r.nextInt(board.getWidth() - delta);
+    List<Integer> possibleSpawns = new ArrayList<>();
+    if (piece.getWidth() < lastStartX) {
+      possibleSpawns.addAll(IntStream.range(0, lastStartX - piece.getWidth()).boxed().collect(Collectors.toSet()));
     }
-    lastWidth = width;
+    if (lastStartX + lastWidth + piece.getWidth() < board.getWidth()) {
+      possibleSpawns
+          .addAll(IntStream.range(lastStartX + lastWidth + 1, board.getWidth() - piece.getWidth() + 1).boxed().collect(Collectors.toSet()));
+    }
+    startPositionX = possibleSpawns.get(r.nextInt(possibleSpawns.size()));
     lastStartX = startPositionX;
+    lastWidth = piece.getWidth();
     IntStream.range(0, startPositionX).forEach(y -> piece.moveRight(false));
     return piece;
   }
@@ -283,7 +287,8 @@ public class BeerGame {
   public int getNumBadPull() {
     return tracker.getNumBadPull();
   }
-  public int getNumGoodPull(){
+
+  public int getNumGoodPull() {
     return tracker.getNumGoodPull();
   }
 

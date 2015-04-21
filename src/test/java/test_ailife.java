@@ -22,7 +22,9 @@ import subsym.ann.activation.Linear;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
 import subsym.beertracker.BeerGenotype;
+import subsym.beertracker.BeerPhenotype;
 import subsym.beertracker.BeerScenario;
+import subsym.genetics.GeneticPreferences;
 import subsym.genetics.Genotype;
 import subsym.gui.AIGridCanvas;
 import subsym.models.Board;
@@ -80,7 +82,9 @@ public class test_ailife {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(-5., 5.), 0.1, 0.2, 0.3);
     assertEquals(inputs.getValues(), Arrays.asList(0.1, 0.2, 0.3));
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(-5, 5), 2);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP, true), inputs, outputs);
+    ArtificialNeuralNetwork
+        ann =
+        new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP, true), inputs, outputs);
     ann.updateInput(0.8, 0.9, 0.2);
     assertEquals(inputs.getValues(), Arrays.asList(0.8, 0.9, 0.2));
     assertEquals(ann.getInputs(), Arrays.asList(0.8, 0.9, 0.2));
@@ -121,7 +125,9 @@ public class test_ailife {
   public void test_ctrnn() {
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(0, 1), 1., 1.);
     AnnNodes outputs = AnnNodes.createOutput(new WeightBound(0, 1), 1);
-    ArtificialNeuralNetwork ann = new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP, true), inputs, outputs);
+    ArtificialNeuralNetwork
+        ann =
+        new ArtificialNeuralNetwork(new AnnPreferences(1, 2, new Sigmoid(), BeerScenario.WRAP, true), inputs, outputs);
     ann.setStateful();
 
     AnnNodes nodes = ann.getLayers().get(1);
@@ -174,6 +180,36 @@ public class test_ailife {
     assertEquals(f1, f2, 0);
   }
 
+  @Test
+  public void test_beerOutput() {
+    String
+        text =
+        "089  151  212  098  236  135  221  166  247  206  235  192  208  133  140  135  140  139  248  176  099  126  227  001  124  100  157  248  237  063";
+    List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
+        .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
+    ArtificialNeuralNetwork ann = ArtificialNeuralNetwork.buildWrappingCtrnn(GeneticPreferences.getBeer().getAnnPreferences());
+    BeerPhenotype.setValues(values, ann);
+    ann.statePrint();
+
+    for (double a = 0; a < 2; a++) {
+      for (double b = 0; b < 2; b++) {
+        for (double c = 0; c < 2; c++) {
+          for (double d = 0; d < 2; d++) {
+            for (double e = 0; e < 2; e++) {
+              Log.v(TAG, "New input!");
+              for(int i = 0; i < 10; i++) {
+                ann.updateInput(a, b, c, d, e);
+                String inputs = "" + (int) a + (int) b + (int) c + (int) d;
+                String outputs = ann.getOutputs().stream().map(o -> String.format("%.3f", o)).collect(Collectors.joining(" "));
+                Log.v(TAG, String.format("Inputs: %s > Outputs: %s", inputs, outputs));
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   private List<Double> getRandom(int num, Random r) {
     return IntStream.range(0, num).mapToDouble(i -> r.nextDouble()).boxed().collect(Collectors.toList());
   }
@@ -200,4 +236,6 @@ public class test_ailife {
 
     canvas.requestFocus();
   }
+
+
 }
