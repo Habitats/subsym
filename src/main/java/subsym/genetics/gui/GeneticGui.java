@@ -130,10 +130,10 @@ public class GeneticGui extends AIGui {
     presetsComboBox
         .addActionListener(e -> setPreferences(GeneticPreferences.getPresets().get(((JComboBox) e.getSource()).getSelectedItem())));
 
+    beerScenarioSelection.addActionListener(e -> updatePreferences());
     matingSelection.addActionListener(e -> updatePreferences());
     adultSelection.addActionListener(e -> updatePreferences());
     puzzleSelect.addActionListener(e -> updatePreferences());
-    beerScenarioSelection.addActionListener(e -> updatePreferences());
 
     crossoverSlider.setMaximum((int) getSliderRes());
     crossoverSlider.addChangeListener(e -> {
@@ -161,9 +161,15 @@ public class GeneticGui extends AIGui {
     });
 
     runButton.addActionListener(e -> run());
-    stopButton.addActionListener(e -> listener.stop());
-    beerDemoButton.addActionListener(e -> new Thread(() -> listener.demo(prefs)).start());
-    aiLifeDemoButton.addActionListener(e -> new Thread(() ->listener.demo(prefs)).start());
+    stopButton.addActionListener(e -> stop());
+    beerDemoButton.addActionListener(e -> {
+      updatePreferences();
+      new Thread(() -> listener.demo(prefs)).start();
+    });
+    aiLifeDemoButton.addActionListener(e -> {
+      updatePreferences();
+      new Thread(() -> listener.demo(prefs)).start();
+    });
     benchMarkButton.addActionListener(e -> benchmark());
 
     crossoverInput.addActionListener(e -> updatePreferences());
@@ -210,6 +216,12 @@ public class GeneticGui extends AIGui {
     });
 
     updatePreferences();
+  }
+
+  private void stop() {
+    if (updatePreferences()) {
+      listener.stop();
+    }
   }
 
   private void run() {

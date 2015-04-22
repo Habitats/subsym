@@ -87,6 +87,7 @@ public class BeerGui extends AIGui<TileEntity> implements TrackerListener {
     manualButton.addActionListener(e -> game.stop(() -> game.manual(inputField.getText())));
     playButton.addActionListener(e -> game.stop(() -> game.play()));
 
+    scoreLabel.setVisible(false);
     onTick();
   }
 

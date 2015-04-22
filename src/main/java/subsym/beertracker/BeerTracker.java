@@ -82,7 +82,7 @@ public class BeerTracker extends GeneticProblem {
     BeerGame game = new BeerGame(annPrefs);
     game.setValues(best.toList());
     game.initGui();
-    game.simulate(annPrefs.getSimulationSeed() + count, true, Integer.MAX_VALUE);
+    game.simulate(annPrefs.getSimulationSeed() + count, true, 600);
 //    game.statePrint();
     count++;
   }

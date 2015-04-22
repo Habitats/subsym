@@ -174,7 +174,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
 
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(600, 600);
+    return new Dimension(650, 650);
   }
 
   @Override

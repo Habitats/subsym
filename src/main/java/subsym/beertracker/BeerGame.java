@@ -86,7 +86,6 @@ public class BeerGame {
       default:
         throw new IllegalStateException("No scenario!");
     }
-    Log.v(TAG, "Loading " + prefs.getBeerScenario().name() + " ...");
     reset();
   }
 
@@ -102,7 +101,7 @@ public class BeerGame {
   public void demo(long simulationSeed) {
     setSimulationSeed(simulationSeed);
     initGui();
-    simulateFallingPieces(board, tracker, null, simulationSeed, false, Integer.MAX_VALUE);
+    simulateFallingPieces(board, tracker, null, simulationSeed, false, 600);
   }
 
   public void generateNew() {
@@ -110,7 +109,7 @@ public class BeerGame {
     initGui();
     long seed = System.currentTimeMillis();
     setSimulationSeed(seed);
-    simulateFallingPieces(board, tracker, ann, seed, false, Integer.MAX_VALUE);
+    simulateFallingPieces(board, tracker, ann, seed, false, 600);
   }
 
   public void play() {
@@ -163,7 +162,7 @@ public class BeerGame {
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     setValues(values);
     ann.statePrint();
-    simulateFallingPieces(board, tracker, ann, getSimulationSeed(), false, Integer.MAX_VALUE);
+    simulateFallingPieces(board, tracker, ann, getSimulationSeed(), false, 600);
   }
 
   public void initGui() {
@@ -180,7 +179,13 @@ public class BeerGame {
 
   public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed, boolean shouldLog,
                                     int maxTime) {
-    this.ann = ann;
+    if (seed == 1000) {
+      seed = 1;
+      loadPreset(annPreferences.getBeerScenario());
+      ann = this.ann;
+      ann.statePrint();
+    }
+
     this.maxTime = maxTime;
     state = State.SIMULATING;
     lastWidth = 0;
@@ -216,6 +221,27 @@ public class BeerGame {
 //          Log.v(TAG, sensors.stream().map(s -> s.toString()).collect(Collectors.joining("\t", "", "")));
       }
     }
+  }
+
+  private void loadPreset(BeerScenario beerScenario) {
+    switch (beerScenario) {
+      case WRAP:
+        setValues(
+            "062 030 203 111 027 120 226 249 194 039 156 070 048 043 116 206 021 192 073 014 017 138 157 002 159 074 123 224 206 019 049 087 063 157 009 025 208 205 249 078 070 212 114 028 149 050 195 161 119 166 249 156 056 199 099 136 250 191 026 132");
+        break;
+      case NO_WRAP:
+        setValues(
+            "005 148 021 045 064 203 243 197 043 068 193 190 217 229 060 186 153 015 037 003 039 145 168 240 003 224 001 076 062 174 049 153 064 200");
+        break;
+      case PULL:
+        setValues(
+            "045 143 161 071 165 242 047 052 002 064 030 240 248 225 251 205 129 237 106 028 010 212 241 106 009 225 059 083 255 241 096 150 131 070 082 153");
+        break;
+    }
+  }
+
+  private void setValues(String s) {
+    setValues(Arrays.asList(s.split("\\s+")).stream().map(Integer::parseInt).collect(Collectors.toList()));
   }
 
   private void moveTracker(Tracker tracker, ArtificialNeuralNetwork ann) {

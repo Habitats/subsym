@@ -21,8 +21,8 @@ import subsym.ann.WeightBound;
 import subsym.ann.activation.Linear;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
-import subsym.beertracker.BeerGame;
 import subsym.beertracker.BeerGenotype;
+import subsym.beertracker.BeerPhenotype;
 import subsym.beertracker.BeerScenario;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.Genotype;
@@ -180,6 +180,18 @@ public class test_ailife {
     assertEquals(f1, f2, 0);
   }
 
+  private static List<Double> getTimeConstants(List<Double> values) {
+    return values.stream().map(g -> g + 1).collect(Collectors.toList());
+  }
+
+  private static List<Double> getGains(List<Double> values) {
+    return values.stream().map(g -> (g * 4) + 1).collect(Collectors.toList());
+  }
+
+  private static List<Double> getNormalizedValues(List<Integer> values) {
+    return values.stream().mapToDouble(BeerPhenotype::normalize).boxed().collect(Collectors.toList());
+  }
+
   @Test
   public void test_beerOutput() {
     String
@@ -189,9 +201,20 @@ public class test_ailife {
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     AnnPreferences annPreferences = GeneticPreferences.getBeer().getAnnPreferences();
     ArtificialNeuralNetwork ann = ArtificialNeuralNetwork.buildWrappingCtrnn(annPreferences);
-    BeerGame game = new BeerGame(annPreferences);
-    game.setValues(values);
+    int numNodes = (int) ann.getOutputNodeStream().count();
+    int numWeights = ann.getNumWeights();
+    List<Double> normalizedValues = getNormalizedValues(values);
+
+    List<Double> weights = normalizedValues.subList(0, numWeights);
+    List<Double> timeConstants = getTimeConstants(normalizedValues.subList(numWeights, numWeights + numNodes));
+    List<Double> gains = getGains(normalizedValues.subList(numWeights + numNodes, numWeights + numNodes * 2));
+    ann.setWeights(weights);
+    ann.setTimeConstants(timeConstants);
+    ann.setGains(gains);
+    ann.resetInternalState();
+    ann.updateInput(1., 1., 1., 1., 1.);
     ann.statePrint();
+
 
     for (double a = 0; a < 2; a++) {
       for (double b = 0; b < 2; b++) {
@@ -199,14 +222,15 @@ public class test_ailife {
           for (double d = 0; d < 2; d++) {
             for (double e = 0; e < 2; e++) {
 //              Log.v(TAG, "New input!");
-              for (int i = 0; i < 3; i++) {
-                ann.updateInput(a, b, c, d, e);
-              }
+//              ann.statePrint();
               String inputs = "" + (int) a + (int) b + (int) c + (int) d + (int) e;
               String[] split = inputs.replaceAll("1+", "1").replaceAll("0+", " ").trim().split(" ");
               if (split.length > 1) {
                 continue;
               }
+//              ann.resetInternalState();
+              ann.updateInput(a, b, c, d, e);
+              ann.statePrint();
               String outputs = ann.getOutputs().stream().map(o -> String.format("%.3f", o)).collect(Collectors.joining(" "));
               System.out.println(String.format("%s > %s > %s", inputs, outputs, move(ann.getOutputs())));
 
