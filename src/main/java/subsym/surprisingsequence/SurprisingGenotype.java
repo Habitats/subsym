@@ -65,6 +65,7 @@ public class SurprisingGenotype extends Genotype {
 
   public void setBits(BitSet bits) {
     this.bits = bits;
+    resetFitness();
   }
 
   public List<Integer> getAlphabet() {

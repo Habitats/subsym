@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import subsym.Log;
+import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.matingselection.MatingSelection;
 
@@ -20,6 +22,7 @@ public class Population {
   private PopulationList nextGeneration;
 
   private int currentGeneration = 0;
+  private Random r = ArtificialNeuralNetwork.random();
 
 
   public Population(GeneticPreferences prefs) {
@@ -89,7 +92,6 @@ public class Population {
 
 //    int numBitsToMutate = (int) Math.ceil(genotypeMutationRate * currentPopulation.peekBest().size());
     int numIndividualsToMutate = (int) Math.ceil(populationMutationRate * currentPopulation.size());
-    Random r = new Random();
     for (int i = 0; i < (numIndividualsToMutate); i++) {
       Collections.swap(mutationCandidates, i, r.nextInt(mutationCandidates.size() - i));
     }
@@ -97,12 +99,22 @@ public class Population {
 //      Log.v(TAG, "MUTATION ...");
 //      String before = v.getPaddedBitString();
 //      Log.v(TAG, before);
-      v.mutate(genotypeMutationRate);
+      v.mutate(applyGaussian(genotypeMutationRate));
 //      String after = v.getPaddedBitString();
 //      Log.v(TAG, after);
 //      Log.v(TAG, IntStream.range(0, v.size()).mapToObj(i -> before.charAt(i) == after.charAt(i) ? " " : "x").collect(Collectors.joining()));
       nextGeneration.add(v);
     });
+  }
+
+  private double applyGaussian(double rate) {
+    double v = r.nextGaussian() / 5;
+    v = v > 0 ? v * (1 - rate) : v * -1 * rate;
+    if (v > 0 && v < 1) {
+      rate += v;
+    }
+    Log.v(TAG, rate);
+    return rate;
   }
 
   public void add(Genotype genotype) {

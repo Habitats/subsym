@@ -21,8 +21,8 @@ import subsym.ann.WeightBound;
 import subsym.ann.activation.Linear;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNodes;
+import subsym.beertracker.BeerGame;
 import subsym.beertracker.BeerGenotype;
-import subsym.beertracker.BeerPhenotype;
 import subsym.beertracker.BeerScenario;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.Genotype;
@@ -187,8 +187,10 @@ public class test_ailife {
         "034 221 126 248 082 073 062 124 073 187 061 171 016 095 138 102 030 121 021 097 014 236 085 146 082 205 107 231 160 184 048 235 026 015 152 103 213 222 177 182 071 218 200 053 144 027 162 139 120 180 213 216 016 244 053 252 074 178 064 005";
     List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
-    ArtificialNeuralNetwork ann = ArtificialNeuralNetwork.buildWrappingCtrnn(GeneticPreferences.getBeer().getAnnPreferences());
-    BeerPhenotype.setValues(values, ann);
+    AnnPreferences annPreferences = GeneticPreferences.getBeer().getAnnPreferences();
+    ArtificialNeuralNetwork ann = ArtificialNeuralNetwork.buildWrappingCtrnn(annPreferences);
+    BeerGame game = new BeerGame(annPreferences);
+    game.setValues(values);
     ann.statePrint();
 
     for (double a = 0; a < 2; a++) {

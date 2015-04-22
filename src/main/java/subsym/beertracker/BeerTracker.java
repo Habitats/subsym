@@ -61,7 +61,7 @@ public class BeerTracker extends GeneticProblem {
   @Override
   public void onSolved() {
     BeerGenotype best = (BeerGenotype) getPopulation().getBestGenotype();
-//    Log.v(TAG, best.getPhenotype() + " > Fitness > " + String.format("%.3f ", best.fitness()));
+    Log.v(TAG, best.getPhenotype() + " > Fitness > " + String.format("%.3f ", best.fitness()));
     int v = (int) ((System.currentTimeMillis() - start) / 1000.);
     Log.v(TAG, String.format("Search finished in %d seconds", v));
 
@@ -72,19 +72,19 @@ public class BeerTracker extends GeneticProblem {
 
   @Override
   public void demo(GeneticPreferences prefs) {
-    BeerScenario scenario = prefs.getAnnPreferences().getBeerScenario();
-    BeerGame game = new BeerGame(scenario);
+    BeerGame game = new BeerGame(prefs.getAnnPreferences());
     game.demo(prefs.getAnnPreferences().getSimulationSeed());
 
   }
 
   private void simulate(BeerGenotype best) {
     BeerPhenotype pheno = (BeerPhenotype) best.getPhenotype();
-    ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
-    BeerGame game = new BeerGame(annPrefs.getBeerScenario());
+//    ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
+    BeerGame game = new BeerGame(annPrefs);
+    game.setValues(best.toList());
     game.initGui();
-    game.simulate(ann, annPrefs.getSimulationSeed() + count, true);
-    ann.statePrint();
+    game.simulate(annPrefs.getSimulationSeed() + count, true);
+    game.statePrint();
     count++;
   }
 }

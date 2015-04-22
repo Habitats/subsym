@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import subsym.Log;
 import subsym.ailife.entity.Empty;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
+import subsym.ann.nodes.OutputNode;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
@@ -37,6 +39,18 @@ public class BeerGame {
     return simulationSeed;
   }
 
+  public Stream<OutputNode> getOutputNodeStream() {
+    return ann.getOutputNodeStream();
+  }
+
+  public int getNumWeights() {
+    return ann.getNumWeights();
+  }
+
+  public void statePrint() {
+    ann.statePrint();
+  }
+
 
   private enum State {
     ABORTING, SIMULATING, IDLE;
@@ -56,9 +70,22 @@ public class BeerGame {
   private State state;
   private BeerGui gui;
 
-  public BeerGame(BeerScenario scenario) {
-    this.scenario = scenario;
+  public BeerGame(AnnPreferences prefs) {
+    this.scenario = prefs.getBeerScenario();
     state = State.IDLE;
+    switch (prefs.getBeerScenario()) {
+      case WRAP:
+        ann = ArtificialNeuralNetwork.buildWrappingCtrnn(prefs);
+        break;
+      case NO_WRAP:
+        ann = ArtificialNeuralNetwork.buildNoWrapCtrnn(prefs);
+        break;
+      case PULL:
+        ann = ArtificialNeuralNetwork.buildPullingCtrnn(prefs);
+        break;
+      default:
+        throw new IllegalStateException("No scenario!");
+    }
     reset();
   }
 
@@ -91,11 +118,37 @@ public class BeerGame {
     simulateFallingPieces(board, tracker, null, System.currentTimeMillis(), false);
   }
 
+  public void setValues(List<Integer> values) {
+    int numNodes = (int) ann.getOutputNodeStream().count();
+    int numWeights = ann.getNumWeights();
+    List<Double> normalizedValues = getNormalizedValues(values);
+
+    List<Double> weights = normalizedValues.subList(0, numWeights);
+    List<Double> timeConstants = getTimeConstants(normalizedValues.subList(numWeights, numWeights + numNodes));
+    List<Double> gains = getGains(normalizedValues.subList(numWeights + numNodes, numWeights + numNodes * 2));
+    ann.setWeights(weights);
+    ann.setTimeConstants(timeConstants);
+    ann.setGains(gains);
+  }
+
+  private static List<Double> getTimeConstants(List<Double> values) {
+    return values.stream().map(g -> g + 1).collect(Collectors.toList());
+  }
+
+  private static List<Double> getGains(List<Double> values) {
+    return values.stream().map(g -> (g * 4) + 1).collect(Collectors.toList());
+  }
+
+  private static List<Double> getNormalizedValues(List<Integer> values) {
+    return values.stream().mapToDouble(BeerPhenotype::normalize).boxed().collect(Collectors.toList());
+  }
+
   public void manual(String text) {
     reset();
     initGui();
     gui.setInput(text);
     AnnPreferences beerDefault = AnnPreferences.getBeerDefault();
+    ArtificialNeuralNetwork ann = null;
     switch (scenario) {
       case WRAP:
         ann = ArtificialNeuralNetwork.buildWrappingCtrnn(beerDefault);
@@ -109,7 +162,7 @@ public class BeerGame {
     }
     List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
-    BeerPhenotype.setValues(values, ann);
+    setValues(values);
     ann.statePrint();
     simulateFallingPieces(board, tracker, ann, getSimulationSeed(), false);
   }
@@ -121,13 +174,13 @@ public class BeerGame {
     gui.setAdapter(board);
   }
 
-  public double simulate(ArtificialNeuralNetwork ann, long seed, boolean shouldLog) {
-    this.ann = ann;
+  public double simulate(long seed, boolean shouldLog) {
     simulateFallingPieces(board, tracker, ann, seed, false);
     return getScore();
   }
 
   public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed, boolean shouldLog) {
+    this.ann = ann;
     state = State.SIMULATING;
     lastWidth = 0;
     lastStartX = 0;

@@ -77,6 +77,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   public Genotype fromString(final String s) {
     size = s.length();
     bits = BitSet.valueOf(new long[]{Long.parseLong(s, 2)});
+    resetFitness();
     return this;
   }
 
@@ -115,14 +116,10 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   // mutate each bit with a given probability
   public void mutate(double mutationRate) {
-//    double offset = random.nextGaussian() * random.nextGaussian();
-//    Log.v(TAG, offset);
-
     IntStream.range(0, size()).filter(i -> Math.random() < mutationRate).forEach((bitIndex) -> {
       bits.flip(bitIndex);
-      resetFitness();
     });
-
+    resetFitness();
   }
 
   // mutate each bit with a given probability
@@ -149,6 +146,7 @@ public abstract class Genotype implements Comparable<Genotype> {
       int start = intIndex * groupSize;
       IntStream.range(0, groupSize).forEach(bitIndex -> bitSet.set(start + bitIndex, bitInt.get(bitIndex)));
     });
+    resetFitness();
     return bitSet;
   }
 
