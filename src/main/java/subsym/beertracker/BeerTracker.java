@@ -4,7 +4,6 @@ import java.util.stream.IntStream;
 
 import subsym.Log;
 import subsym.ann.AnnPreferences;
-import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 
@@ -84,7 +83,7 @@ public class BeerTracker extends GeneticProblem {
     game.setValues(best.toList());
     game.initGui();
     game.simulate(annPrefs.getSimulationSeed() + count, true);
-    game.statePrint();
+//    game.statePrint();
     count++;
   }
 }

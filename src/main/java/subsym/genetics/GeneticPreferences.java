@@ -44,6 +44,7 @@ public class GeneticPreferences {
   private int maxGenerations;
   private AnnPreferences annPreferences;
   private boolean grayCode;
+  private boolean shouldGaussian;
 
   public GeneticPreferences(int populationSize, double crossOverRate, double populationMutationRate, double genomeMutationRate,
                             AdultSelection adultSelectionMode, MatingSelection mateSelectionMode, int maxGenerations) {
@@ -55,6 +56,7 @@ public class GeneticPreferences {
     this.mateSelectionMode = mateSelectionMode;
     this.maxGenerations = maxGenerations;
     this.annPreferences = AnnPreferences.getBeerDefault();
+    this.shouldGaussian = true;
   }
 
   public AdultSelection getAdultSelectionMode() {
@@ -144,7 +146,7 @@ public class GeneticPreferences {
   }
 
   public static GeneticPreferences getBeer() {
-    GeneticPreferences prefs = new GeneticPreferences(100, 0.2, 0.95, 0.015, new Mixing(0.40), new Rank(), 500);
+    GeneticPreferences prefs = new GeneticPreferences(100, 0.2, 0.95, 0.015, new Mixing(0.40), new Rank(), 1000);
     GeneticProblem problem = new BeerTracker(prefs, AnnPreferences.getBeerDefault());
     prefs.setPuzzle(problem);
 
@@ -321,5 +323,13 @@ public class GeneticPreferences {
 
   public void setGrayCode(boolean grayCode) {
     this.grayCode = grayCode;
+  }
+
+  public void setShouldGaussian(boolean shouldGaussian) {
+    this.shouldGaussian = shouldGaussian;
+  }
+
+  public boolean shouldGaussian() {
+    return shouldGaussian;
   }
 }

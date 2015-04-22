@@ -126,10 +126,7 @@ public abstract class Genotype implements Comparable<Genotype> {
   public void mutateBlock(double mutationRate) {
     for (int i = 0; i < size(); i += getBitGroupSize()) {
       if (Math.random() < mutationRate) {
-        IntStream.range(i, i + getBitGroupSize()).forEach((bitIndex -> {
-          bits.set(bitIndex, Math.random() < .5 ? true : false);
-//          bits.flip(bitIndex);
-        }));
+        IntStream.range(i, i + getBitGroupSize()).forEach((bitIndex -> bits.set(bitIndex, Math.random() < .5 ? true : false)));
       }
     }
     resetFitness();

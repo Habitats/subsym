@@ -114,6 +114,7 @@ public class GeneticGui extends AIGui {
   private AIComboBox<BeerScenario> beerScenarioSelection;
   private AILabel beerScenarioLabel;
   private JTextField seedInput;
+  private JCheckBox gaussianCheckbox;
 
   public GeneticGui() {
     prefs = GeneticPreferences.getDefault();
@@ -384,6 +385,7 @@ public class GeneticGui extends AIGui {
       annPreferences.setSimulationSeed(Integer.parseInt(seedInput.getText()));
 
       prefs.setGrayCode(grayCheckbox.isSelected());
+      prefs.setShouldGaussian(gaussianCheckbox.isSelected());
       prefs.setCrossOverRate(Double.parseDouble(crossoverInput.getText()));
       prefs.setGenomeMutationRate(Double.parseDouble(genomeMutationInput.getText()));
       prefs.setPopulationMutationRate(Double.parseDouble(populationMutationInput.getText()));
@@ -526,6 +528,7 @@ public class GeneticGui extends AIGui {
     matingSelection.setSelectedItem(prefs.getMateSelectionMode().getClass().getSimpleName());
 
     incrementingCheckBox.setSelected(prefs.shouldIncrement());
+    gaussianCheckbox.setSelected(prefs.shouldGaussian());
     maxGenerationsInput.setText(String.valueOf(prefs.getMaxGenerations()));
 
     if (prefs.getAdultSelectionMode() instanceof OverProduction) {

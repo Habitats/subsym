@@ -99,7 +99,7 @@ public class Population {
 //      Log.v(TAG, "MUTATION ...");
 //      String before = v.getPaddedBitString();
 //      Log.v(TAG, before);
-      v.mutate(applyGaussian(genotypeMutationRate));
+      v.mutate(prefs.shouldGaussian() ? applyGaussian(genotypeMutationRate) : genotypeMutationRate);
 //      String after = v.getPaddedBitString();
 //      Log.v(TAG, after);
 //      Log.v(TAG, IntStream.range(0, v.size()).mapToObj(i -> before.charAt(i) == after.charAt(i) ? " " : "x").collect(Collectors.joining()));
@@ -108,12 +108,12 @@ public class Population {
   }
 
   private double applyGaussian(double rate) {
-    double v = r.nextGaussian() / 5;
-    v = v > 0 ? v * (1 - rate) : v * -1 * rate;
-    if (v > 0 && v < 1) {
-      rate += v;
+    double gaussian = r.nextGaussian() / 5;
+    gaussian = gaussian > 0 ? gaussian * (1 - rate) : gaussian * -1 * rate;
+    if (gaussian > 0 && gaussian < 1) {
+      rate += gaussian;
     }
-    Log.v(TAG, rate);
+    Log.v(TAG, String.format("Rate: %.5f - Gaussian: %.5f", rate, gaussian));
     return rate;
   }
 
