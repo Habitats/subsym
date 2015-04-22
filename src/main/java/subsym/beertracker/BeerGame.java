@@ -22,7 +22,7 @@ import subsym.models.entity.TileEntity;
 public class BeerGame {
 
   private static final String TAG = BeerGame.class.getSimpleName();
-  private final BeerScenario scenario;
+  private final AnnPreferences annPreferences;
   private ArtificialNeuralNetwork ann;
   private int numGood;
   private int numBad;
@@ -30,9 +30,10 @@ public class BeerGame {
   private int lastWidth;
   private int lastStartX;
   private long simulationSeed;
+  private int maxTime;
 
   public BeerScenario getScenario() {
-    return scenario;
+    return annPreferences.getBeerScenario();
   }
 
   public long getSimulationSeed() {
@@ -64,14 +65,13 @@ public class BeerGame {
   private Board<TileEntity> board;
 
   private Tracker tracker;
-  private final int MAX_TIME = 600;
   private int time = 0;
   private boolean shouldWrap = true;
   private State state;
   private BeerGui gui;
 
   public BeerGame(AnnPreferences prefs) {
-    this.scenario = prefs.getBeerScenario();
+    annPreferences = prefs;
     state = State.IDLE;
     switch (prefs.getBeerScenario()) {
       case WRAP:
@@ -86,6 +86,7 @@ public class BeerGame {
       default:
         throw new IllegalStateException("No scenario!");
     }
+    Log.v(TAG, "Loading " + prefs.getBeerScenario().name() + " ...");
     reset();
   }
 
@@ -101,7 +102,7 @@ public class BeerGame {
   public void demo(long simulationSeed) {
     setSimulationSeed(simulationSeed);
     initGui();
-    simulateFallingPieces(board, tracker, null, simulationSeed, false);
+    simulateFallingPieces(board, tracker, null, simulationSeed, false, Integer.MAX_VALUE);
   }
 
   public void generateNew() {
@@ -109,13 +110,13 @@ public class BeerGame {
     initGui();
     long seed = System.currentTimeMillis();
     setSimulationSeed(seed);
-    simulateFallingPieces(board, tracker, ann, seed, false);
+    simulateFallingPieces(board, tracker, ann, seed, false, Integer.MAX_VALUE);
   }
 
   public void play() {
     reset();
     initGui();
-    simulateFallingPieces(board, tracker, null, System.currentTimeMillis(), false);
+    simulateFallingPieces(board, tracker, null, System.currentTimeMillis(), false, 600);
   }
 
   public void setValues(List<Integer> values) {
@@ -147,24 +148,22 @@ public class BeerGame {
     reset();
     initGui();
     gui.setInput(text);
-    AnnPreferences beerDefault = AnnPreferences.getBeerDefault();
-    ArtificialNeuralNetwork ann = null;
-    switch (scenario) {
+    switch (getScenario()) {
       case WRAP:
-        ann = ArtificialNeuralNetwork.buildWrappingCtrnn(beerDefault);
+        ann = ArtificialNeuralNetwork.buildWrappingCtrnn(annPreferences);
         break;
       case NO_WRAP:
-        ann = ArtificialNeuralNetwork.buildNoWrapCtrnn(beerDefault);
+        ann = ArtificialNeuralNetwork.buildNoWrapCtrnn(annPreferences);
         break;
       case PULL:
-        ann = ArtificialNeuralNetwork.buildPullingCtrnn(beerDefault);
+        ann = ArtificialNeuralNetwork.buildPullingCtrnn(annPreferences);
         break;
     }
     List<Integer> values = Arrays.asList(text.trim().split("\\s+")).stream()//
         .mapToInt(Integer::parseInt).boxed().collect(Collectors.toList());
     setValues(values);
     ann.statePrint();
-    simulateFallingPieces(board, tracker, ann, getSimulationSeed(), false);
+    simulateFallingPieces(board, tracker, ann, getSimulationSeed(), false, Integer.MAX_VALUE);
   }
 
   public void initGui() {
@@ -174,13 +173,15 @@ public class BeerGame {
     gui.setAdapter(board);
   }
 
-  public double simulate(long seed, boolean shouldLog) {
-    simulateFallingPieces(board, tracker, ann, seed, false);
+  public double simulate(long seed, boolean shouldLog, int maxTime) {
+    simulateFallingPieces(board, tracker, ann, seed, false, maxTime);
     return getScore();
   }
 
-  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed, boolean shouldLog) {
+  public void simulateFallingPieces(Board<TileEntity> board, Tracker tracker, ArtificialNeuralNetwork ann, long seed, boolean shouldLog,
+                                    int maxTime) {
     this.ann = ann;
+    this.maxTime = maxTime;
     state = State.SIMULATING;
     lastWidth = 0;
     lastStartX = 0;
@@ -191,7 +192,7 @@ public class BeerGame {
       Piece piece = spawnPiece(board, tracker, r);
       boolean spawnNext = false;
       while (!spawnNext) {
-        if (time >= MAX_TIME || state == State.ABORTING) {
+        if (time >= maxTime || state == State.ABORTING) {
           state = State.IDLE;
           return;
         }
@@ -223,7 +224,7 @@ public class BeerGame {
     }
     List<Double> sensors = tracker.getSensors().stream().mapToDouble(b -> b ? 1. : 0.).boxed().collect(Collectors.toList());
     List<Double> outputs = ann.getOutputs();
-    switch (scenario) {
+    switch (getScenario()) {
       case WRAP:
         ann.updateInput(sensors.subList(0, 5));
         tracker.move(outputs.subList(0, 2), true);
@@ -310,7 +311,7 @@ public class BeerGame {
   }
 
   public int getTime() {
-    return MAX_TIME - time;
+    return maxTime - time;
   }
 
   public double getScore() {

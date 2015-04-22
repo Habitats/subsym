@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import subsym.Log;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.matingselection.MatingSelection;
@@ -113,7 +112,7 @@ public class Population {
     if (gaussian > 0 && gaussian < 1) {
       rate += gaussian;
     }
-    Log.v(TAG, String.format("Rate: %.5f - Gaussian: %.5f", rate, gaussian));
+//    Log.v(TAG, String.format("Rate: %.5f - Gaussian: %.5f", rate, gaussian));
     return rate;
   }
 

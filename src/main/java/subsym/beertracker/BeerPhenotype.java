@@ -33,7 +33,7 @@ public class BeerPhenotype implements Phenotype {
   public double fitness() {
     if (score == null) {
       game.setValues(beerGenotype.toList());
-      score = game.simulate(prefs.getSimulationSeed(), false);
+      score = game.simulate(prefs.getSimulationSeed(), false, 600);
     }
     return score;
   }

@@ -133,6 +133,7 @@ public class GeneticGui extends AIGui {
     matingSelection.addActionListener(e -> updatePreferences());
     adultSelection.addActionListener(e -> updatePreferences());
     puzzleSelect.addActionListener(e -> updatePreferences());
+    beerScenarioSelection.addActionListener(e -> updatePreferences());
 
     crossoverSlider.setMaximum((int) getSliderRes());
     crossoverSlider.addChangeListener(e -> {

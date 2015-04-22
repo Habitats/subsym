@@ -2,7 +2,6 @@
 .metadata/
 .project
 *.db
-*.txt
 bin/
 *.jar
 .settings/
