@@ -10,4 +10,5 @@ public interface AiLifeSimulator {
   void move(Robot robot);
 
   int getMaxSteps();
+
 }

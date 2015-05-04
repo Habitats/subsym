@@ -6,8 +6,8 @@ import java.util.Random;
 
 import javax.swing.*;
 
+import subsym.ailife.AiLifeReinforcementSimulator;
 import subsym.boids.Boids;
-import subsym.genetics.Genetics;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -49,10 +49,13 @@ public class Main {
 //        panel.add(broid);
 //
 //        buildFrame(panel, null, null);
-        new Genetics();
+//        new Genetics();
 //
 //        BeerGame.demo();
 //        AiLifeGui.demo();
+
+
+        AiLifeReinforcementSimulator sim = new AiLifeReinforcementSimulator();
       }
 
 
