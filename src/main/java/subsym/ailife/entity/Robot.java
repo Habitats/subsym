@@ -101,6 +101,9 @@ public class Robot extends TileEntity {
       case 2:
         moveRight();
         break;
+      case 3:
+        moveBack();
+        break;
       default:
         throw new IllegalStateException("Invalid index!");
     }
@@ -136,6 +139,24 @@ public class Robot extends TileEntity {
         break;
       case LEFT:
         setPositionWrapped(getX() - 1, getY());
+        break;
+    }
+  }
+
+  private void moveBack() {
+//    Log.v(TAG, "Moving forward ...");
+    switch (dir) {
+      case UP:
+        setPositionWrapped(getX(), getY() - 1);
+        break;
+      case RIGHT:
+        setPositionWrapped(getX() - 1, getY());
+        break;
+      case DOWN:
+        setPositionWrapped(getX(), getY() + 1);
+        break;
+      case LEFT:
+        setPositionWrapped(getX() + 1, getY());
         break;
     }
   }

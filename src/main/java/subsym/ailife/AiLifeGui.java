@@ -84,7 +84,15 @@ public class AiLifeGui extends AIGui<TileEntity> {
         printBoard();
       }
     });
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "simulate");
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), Direction.DOWN);
+    actionMap.put(Direction.DOWN, new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        robot.move(3);
+        printBoard();
+      }
+    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), "simulate");
     actionMap.put("simulate", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
