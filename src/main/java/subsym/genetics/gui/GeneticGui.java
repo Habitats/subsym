@@ -10,7 +10,7 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import subsym.Log;
-import subsym.ailife.AiLife;
+import subsym.ailife.AiLifeAnnSimulator;
 import subsym.ann.AnnPreferences;
 import subsym.beertracker.BeerScenario;
 import subsym.beertracker.BeerTracker;
@@ -442,9 +442,9 @@ public class GeneticGui extends AIGui {
     } else if (puzzle.equals(OneMax.class.getSimpleName())) {
       setVisibleOneMax(true);
       return new OneMax(prefs, Integer.parseInt(bitVectorSizeInput.getText()));
-    } else if (puzzle.equals(AiLife.class.getSimpleName())) {
+    } else if (puzzle.equals(AiLifeAnnSimulator.class.getSimpleName())) {
       setVisibleAiLife(true);
-      return new AiLife(prefs, prefs.getAnnPreferences());
+      return new AiLifeAnnSimulator(prefs, prefs.getAnnPreferences());
     } else if (puzzle.equals(BeerTracker.class.getSimpleName())) {
       setVisibleBeer(true);
       return new BeerTracker(prefs, prefs.getAnnPreferences());
@@ -572,7 +572,7 @@ public class GeneticGui extends AIGui {
     AnnPreferences annPreferences = prefs.getAnnPreferences();
     grayCheckbox.setSelected(annPreferences.shouldGrayCode());
     seedInput.setText(String.valueOf(annPreferences.getSimulationSeed()));
-    if (prefs.getPuzzleCopy() instanceof AiLife) {
+    if (prefs.getPuzzleCopy() instanceof AiLifeAnnSimulator) {
       annHiddenNeuronInput.setText(String.valueOf(annPreferences.getHiddenNeuronCount()));
       annHiddenLayerInput.setText(String.valueOf(annPreferences.getHiddenLayerCount()));
       singleCheckbox.setSelected(annPreferences.isSingle());

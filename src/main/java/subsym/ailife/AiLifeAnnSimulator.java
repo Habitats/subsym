@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 import subsym.Log;
+import subsym.Main;
 import subsym.ailife.entity.Empty;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
@@ -20,14 +21,15 @@ import subsym.models.entity.TileEntity;
 /**
  * Created by anon on 20.03.2015.
  */
-public class AiLife extends GeneticProblem {
+public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulator {
 
-  private static final String TAG = AiLife.class.getSimpleName();
+  private static final String TAG = AiLifeAnnSimulator.class.getSimpleName();
 
   private Robot robot;
   private AnnPreferences annPrefs;
+  private ArtificialNeuralNetwork ann;
 
-  public AiLife() {
+  public AiLifeAnnSimulator() {
     super(null);
     Board<TileEntity> board = createAiLifeBoard(0101);
 
@@ -35,14 +37,14 @@ public class AiLife extends GeneticProblem {
     board.set(robot);
   }
 
-  public AiLife(GeneticPreferences prefs, AnnPreferences annPrefs) {
+  public AiLifeAnnSimulator(GeneticPreferences prefs, AnnPreferences annPrefs) {
     super(prefs);
     this.annPrefs = annPrefs;
   }
 
   @Override
   protected double getCrossoverCut() {
-    return ArtificialNeuralNetwork.random().nextDouble();
+    return Main.random().nextDouble();
   }
 
   @Override
@@ -67,12 +69,12 @@ public class AiLife extends GeneticProblem {
 
   @Override
   public GeneticProblem newInstance(GeneticPreferences prefs) {
-    return new AiLife(prefs, annPrefs);
+    return new AiLifeAnnSimulator(prefs, annPrefs);
   }
 
   @Override
   public GeneticProblem newInstance() {
-    return new AiLife(getPreferences(), annPrefs);
+    return new AiLifeAnnSimulator(getPreferences(), annPrefs);
   }
 
   @Override
@@ -85,18 +87,21 @@ public class AiLife extends GeneticProblem {
     AiLifeGenotype best = (AiLifeGenotype) getPopulation().getBestGenotype();
     Log.v(TAG, best.fitness());
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
-    ArtificialNeuralNetwork ann = pheno.getArtificialNeuralNetwork();
-    Log.v(TAG,
-          String.format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(), pheno.fitness()));
+    ann = pheno.getArtificialNeuralNetwork();
+    Log.v(TAG, String
+        .format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(),
+                pheno.fitness()));
     List<Board<TileEntity>> boards = new ArrayList<>();
-    IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
-    AiLifeGui.simulate(boards, ann, () -> Log.v(TAG, this));
+    IntStream.range(0, annPrefs.isSingle() ? 1 : 5)
+        .forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
+    AiLifeGui.simulate(boards, this, () -> Log.v(TAG, this));
   }
 
   public static Board<TileEntity> createAiLifeBoard(long seed) {
     Board<TileEntity> board = new Board<>(10, 10);
     Random random = new Random(seed);
-    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
+    IntStream.range(0, 10)
+        .forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
     return board;
   }
 
@@ -110,5 +115,19 @@ public class AiLife extends GeneticProblem {
     }
   }
 
+  @Override
+  public void move(Robot robot) {
+    if (ann == null) {
+      Log.v(TAG, "No Artificial Neural Network present! Simulation exiting ...");
+      return;
+    }
+    int indexOfBest = ann.getBestIndex(robot.getSensoryInput());
+    robot.move(indexOfBest);
+  }
+
+  @Override
+  public int getMaxSteps() {
+    return 60;
+  }
 }
 

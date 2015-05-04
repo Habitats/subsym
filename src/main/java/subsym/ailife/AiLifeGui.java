@@ -1,6 +1,5 @@
 package subsym.ailife;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,10 +11,10 @@ import java.util.List;
 import javax.swing.*;
 
 import subsym.Log;
+import subsym.Main;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
-import subsym.ann.ArtificialNeuralNetwork;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
@@ -35,7 +34,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private static final String TAG = AiLifeGui.class.getSimpleName();
   private AIGridCanvas<TileEntity> canvas;
   private Robot robot;
-  private ArtificialNeuralNetwork ann;
+  private AiLifeSimulator simulator;
   private JPanel mainPanel;
   private AIButton simulateButton;
   private AIButton generateButton;
@@ -50,8 +49,8 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private long numFood;
   private long numPoison;
 
-  public AiLifeGui(Board<TileEntity> board, ArtificialNeuralNetwork ann) {
-    this.ann = ann;
+  public AiLifeGui(Board<TileEntity> board, AiLifeSimulator simulator) {
+    this.simulator = simulator;
     this.board = board;
     buildFrame(mainPanel, null, null);
 
@@ -116,9 +115,9 @@ public class AiLifeGui extends AIGui<TileEntity> {
   }
 
   private void generateRandomBoard() {
-    int seed = ArtificialNeuralNetwork.random().nextInt();
+    int seed = Main.random().nextInt();
     Log.v(TAG, "Board seed: " + seed);
-    board = AiLife.createAiLifeBoard(seed);
+    board = AiLifeAnnSimulator.createAiLifeBoard(seed);
     initBoard(board);
     Log.v(TAG, board.getFormattedBoard());
     onTick(0);
@@ -126,14 +125,9 @@ public class AiLifeGui extends AIGui<TileEntity> {
 
   public void simulate(Runnable callback) {
     new Thread(() -> {
-      if (ann == null) {
-        Log.v(TAG, "No Artificial Neural Network present! Simulation exiting ...");
-        return;
-      }
       initBoard(board);
-      for (int i = 1; i <= 60; i++) {
-        int indexOfBest = ann.getBestIndex(robot.getSensoryInput());
-        robot.move(indexOfBest);
+      for (int i = 1; i <= simulator.getMaxSteps(); i++) {
+        simulator.move(robot);
         onTick(i);
         try {
           Thread.sleep(simulationSpeedSlider.getValue());
@@ -147,6 +141,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       callback.run();
     }).start();
   }
+
 
   private void initBoard(Board<TileEntity> board) {
     canvas.setAdapter(board);
@@ -194,23 +189,23 @@ public class AiLifeGui extends AIGui<TileEntity> {
 
   @Override
   public AITextArea getInputField() {
-    throw new NotImplementedException();
+    throw new IllegalStateException("Not implemented!");
   }
 
-  public static void show(Board<TileEntity> board, ArtificialNeuralNetwork ann) {
+  public static void show(Board<TileEntity> board, AiLifeSimulator ann) {
     AiLifeGui gui = new AiLifeGui(board, ann);
     gui.simulate();
   }
 
   public static void demo() {
-    Board<TileEntity> board = AiLife.createAiLifeBoard(1);
+    Board<TileEntity> board = AiLifeAnnSimulator.createAiLifeBoard(1);
     AiLifeGui demo = new AiLifeGui(board, null);
     demo.robot = new Robot(0, 0, board);
     board.set(demo.robot);
     board.notifyDataChanged();
   }
 
-  public static void simulate(List<Board<TileEntity>> boards, ArtificialNeuralNetwork ann, Runnable callback) {
+  public static void simulate(List<Board<TileEntity>> boards, AiLifeSimulator ann, Runnable callback) {
     AiLifeGui gui = new AiLifeGui(boards.get(0), ann);
     simulate(boards, callback, gui);
   }

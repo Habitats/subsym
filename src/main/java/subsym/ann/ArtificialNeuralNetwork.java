@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import subsym.Log;
+import subsym.Main;
 import subsym.ann.activation.ActivationFunction;
 import subsym.ann.activation.Sigmoid;
 import subsym.ann.nodes.AnnNode;
@@ -23,7 +24,6 @@ import subsym.ann.nodes.OutputNode;
 public class ArtificialNeuralNetwork {
 
   private static final String TAG = ArtificialNeuralNetwork.class.getSimpleName();
-  private static Random random = new Random(1234);
   private final int hiddenLayerCount;
   private final int hiddenNeuronCount;
   private final AnnNodes inputs;
@@ -39,7 +39,7 @@ public class ArtificialNeuralNetwork {
   public ArtificialNeuralNetwork(AnnPreferences prefs, AnnNodes inputs, AnnNodes outputs) {
     layers = new ArrayList<>();
     idCounter = new AtomicInteger();
-    random = new Random(prefs.getRandomSeed());
+    Main.random = new Random(prefs.getRandomSeed());
     this.hiddenLayerCount = prefs.getHiddenLayerCount();
     this.hiddenNeuronCount = prefs.getHiddenNeuronCount();
     this.inputs = inputs;
@@ -47,10 +47,6 @@ public class ArtificialNeuralNetwork {
     this.activationFunction = prefs.getActivationFunction();
     createNetwork();
     setActivationFunction();
-  }
-
-  public static Random random() {
-    return random;
   }
 
   public static ArtificialNeuralNetwork buildWrappingCtrnn(AnnPreferences prefs) {

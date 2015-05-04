@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import subsym.ann.ArtificialNeuralNetwork;
+import subsym.Main;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.matingselection.MatingSelection;
 
@@ -21,7 +21,7 @@ public class Population {
   private PopulationList nextGeneration;
 
   private int currentGeneration = 0;
-  private Random r = ArtificialNeuralNetwork.random();
+  private Random r = Main.random();
 
 
   public Population(GeneticPreferences prefs) {

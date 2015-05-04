@@ -10,14 +10,14 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.ann.ArtificialNeuralNetwork;
+import subsym.Main;
 
 /**
  * Created by anon on 21.02.2015.
  */
 public abstract class Genotype implements Comparable<Genotype> {
 
-  private static Random random = ArtificialNeuralNetwork.random();
+  private static Random random = Main.random();
   private int generationOrigin = 0;
   private int size;
   private Double fitness;

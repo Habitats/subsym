@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import subsym.ann.ArtificialNeuralNetwork;
+import subsym.Main;
 import subsym.gui.ColorUtils;
 import subsym.gui.Direction;
 import subsym.models.Board;
@@ -35,8 +35,8 @@ public class Robot extends TileEntity {
 
   public List<Double> getRandomSensoryInput() {
     List<Double> randomInput = Collections.nCopies(6, 0.).stream().collect(Collectors.toList());
-    randomInput.set(ArtificialNeuralNetwork.random().nextInt(3), 1.);
-    randomInput.set(3 + ArtificialNeuralNetwork.random().nextInt(3), 1.);
+    randomInput.set(Main.random().nextInt(3), 1.);
+    randomInput.set(3 + Main.random().nextInt(3), 1.);
     return randomInput;
   }
 

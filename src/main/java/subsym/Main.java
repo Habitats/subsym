@@ -2,6 +2,7 @@ package subsym;
 
 
 import java.awt.*;
+import java.util.Random;
 
 import javax.swing.*;
 
@@ -19,6 +20,7 @@ public class Main {
 
   public static final String TAG = Main.class.getSimpleName();
   private static Plot chart;
+  public static Random random = new Random(1234);
 
   public static void main(String[] args) {
     loadGui();
@@ -76,4 +78,7 @@ public class Main {
   }
 
 
+  public static Random random() {
+    return random;
+  }
 }

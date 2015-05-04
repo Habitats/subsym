@@ -62,7 +62,7 @@ public class AiLifePhenotype implements Phenotype {
     int rounds = prefs.isSingle() ? 1 : 5;
     IntStream.range(0, rounds).forEach(run -> {
       long seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : goodSeeds.get(run);
-      Board<TileEntity> board = AiLife.createAiLifeBoard(seed);
+      Board<TileEntity> board = AiLifeAnnSimulator.createAiLifeBoard(seed);
 //      Log.v(TAG, ann.getNumWeights());
 
       Robot robot = new Robot(0, 0, board);

@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import subsym.Main;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.WeightBound;
 import subsym.ann.activation.ActivationFunction;
@@ -41,15 +42,15 @@ public abstract class AnnNode implements Comparable<AnnNode> {
   //##################################################################
 
   public static OutputNode createOutput(WeightBound bound) {
-    return new OutputNode(ArtificialNeuralNetwork.random(), bound);
+    return new OutputNode(Main.random(), bound);
   }
 
   public static InputNode createInput(WeightBound bound, Double value) {
-    return new InputNode(value, ArtificialNeuralNetwork.random(), bound);
+    return new InputNode(value, Main.random(), bound);
   }
 
   public static AnnNode createBias(WeightBound bound) {
-    return new InputNode(1., ArtificialNeuralNetwork.random(), bound);
+    return new InputNode(1., Main.random(), bound);
   }
 
   //##################################################################
