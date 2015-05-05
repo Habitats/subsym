@@ -15,6 +15,7 @@ import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
+import subsym.gui.Direction;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
@@ -122,7 +123,13 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
       return;
     }
     int indexOfBest = ann.getBestIndex(robot.getSensoryInput());
-    robot.move(indexOfBest);
+    if(indexOfBest == 0)
+      robot.move(Direction.LEFT);
+    else if(indexOfBest == 1)
+      robot.move(Direction.UP);
+    else if(indexOfBest== 2){
+      robot.move(Direction.RIGHT);
+    }
   }
 
   @Override

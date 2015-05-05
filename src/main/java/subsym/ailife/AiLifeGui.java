@@ -65,7 +65,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(0);
+        robot.move(Direction.LEFT);
         simulator.updateGui();
         printBoard();
       }
@@ -74,7 +74,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.UP, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(1);
+        robot.move(Direction.UP);
         printBoard();
         simulator.updateGui();
       }
@@ -83,7 +83,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(2);
+        robot.move(Direction.RIGHT);
         printBoard();
         simulator.updateGui();
       }
@@ -92,7 +92,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.DOWN, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(3);
+        robot.move(Direction.DOWN);
         printBoard();
         simulator.updateGui();
       }

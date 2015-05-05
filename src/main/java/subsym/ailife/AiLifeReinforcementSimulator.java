@@ -50,19 +50,19 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
 //    board = fromFile("4-big-one.txt");
 //    board = fromFile("5-even-bigger.txt");
 
+//    gui.simulate(() -> Log.v(TAG, "Yolo"));
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
-    qMap = QLearningEngine.learn(100, this);
+    qMap = QLearningEngine.learn(1000, this);
 
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
     gui = new AiLifeGui(board, this, robot);
     gui.setAdapter(board);
-//    gui.simulate(() -> Log.v(TAG, "Yolo"));
 
-    drawBestActions();
+    drawBestActions(qMap);
   }
 
-  private void drawBestActions() {
+  private void drawBestActions(Map<AiLifeState, Map<QAction, Double>> qMap) {
     board.getItems().forEach(i -> i.setDescription(""));
     Set<AiLifeState> states = qMap.keySet();
     AiLifeState currentState = new AiLifeState(board);
@@ -72,7 +72,10 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
     // find the best action for any given state
     Map<AiLifeState, QAction> bestActions = matchingStates.stream() //
         .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
-    bestActions.keySet().forEach(s -> board.get(s.getRobotLocation()).setDescription(bestActions.get(s).toString()));
+    bestActions.keySet().forEach(s -> {
+      QAction bestAction = bestActions.get(s);
+      board.get(s.getRobotLocation()).setDescription(String.format("%s  %5.2f", bestAction.toString(),qMap.get(s).get(bestAction)));
+    });
 //    gui.setAdapter(board);
     board.notifyDataChanged();
 //    AiLifeGui.demo(board, robot);
@@ -160,7 +163,8 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
 
   @Override
   public void execute(QAction a) {
-    robot.move(actions.get(a).getId());
+    Direction id = actions.get(a);
+    robot.move(id);
   }
 
   @Override
@@ -171,12 +175,12 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
   @Override
   public double getReward() {
 //    return 1. / (1 + robot.getTravelDistance()) +
-    return robot.getFoodCount() * 10 - robot.getPoisonCount() * 2 - robot.getTravelDistance();
+    return robot.getFoodCount() * 100 - robot.getPoisonCount() * 200 - robot.getTravelDistance();
   }
 
   @Override
-  public void iterationDone(Map<AiLifeState, Map<QAction, Double>> map) {
-//    Map<QAction, Double> state = map.get(board.getId());
+  public void onStep(Map<AiLifeState, Map<QAction, Double>> qMap) {
+    drawBestActions(qMap);
   }
 
   private QAction getBestAction(Map<QAction, Double> actionMap) {
@@ -192,7 +196,7 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
 
   @Override
   public void updateGui() {
-    drawBestActions();
+    drawBestActions(qMap);
   }
 
   public static class AiLifeState implements QState {

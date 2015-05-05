@@ -13,6 +13,7 @@ import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.WeightBound;
 import subsym.ann.nodes.AnnNodes;
 import subsym.genetics.Phenotype;
+import subsym.gui.Direction;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
@@ -74,7 +75,13 @@ public class AiLifePhenotype implements Phenotype {
         int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
 //        Log.v(TAG, robot.getSensoryInput() + " " + outputs);
 //        Log.v(TAG, ann.getWeights().stream().map(String::valueOf).collect(Collectors.joining(" ")));
-        robot.move(indexOfBest);
+        if(indexOfBest == 0)
+        robot.move(Direction.LEFT);
+        else if(indexOfBest == 1)
+          robot.move(Direction.UP);
+        else if(indexOfBest== 2){
+          robot.move(Direction.RIGHT);
+        }
       }
 
       fitness.getAndAdd(robot.getScore());

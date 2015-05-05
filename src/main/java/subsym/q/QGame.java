@@ -20,5 +20,5 @@ public interface QGame<T extends QState> {
 
   double getReward();
 
-  void iterationDone(Map<T, Map<QAction, Double>> map);
+  void onStep(Map<T, Map<QAction, Double>> map);
 }

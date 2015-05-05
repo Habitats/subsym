@@ -33,8 +33,8 @@ public class QLearningEngine {
 
         update(q, state, newState, a, r, learningRate, 1. / iterations);
 
+        game.onStep(q.map);
       }
-      game.iterationDone(q.map);
       Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
     }
 

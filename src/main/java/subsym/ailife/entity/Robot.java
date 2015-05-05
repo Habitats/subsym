@@ -93,22 +93,22 @@ public class Robot extends TileEntity {
     return getBoard().get(x, y);
   }
 
-  public void move(int index) {
+  public void move(Direction dir) {
     Vec oldPosition = getPosition().copy();
 
     TileEntity tile = new Empty((int) oldPosition.x, (int) oldPosition.y, getBoard());
     getBoard().set(tile);
-    switch (index) {
-      case 0:
+    switch (dir) {
+      case LEFT:
         moveLeft();
         break;
-      case 1:
+      case UP:
         moveForward();
         break;
-      case 2:
+      case RIGHT:
         moveRight();
         break;
-      case 3:
+      case DOWN:
         moveBack();
         break;
       default:
@@ -126,6 +126,7 @@ public class Robot extends TileEntity {
 //    Log.v(TAG, getBoard().getFormattedBoard());
     getBoard().notifyDataChanged();
   }
+
 
   private void setPositionWrapped(int x, int y) {
     int newX = (x + getBoard().getWidth()) % getBoard().getWidth();
