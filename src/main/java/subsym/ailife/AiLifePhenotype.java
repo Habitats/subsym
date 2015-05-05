@@ -65,7 +65,7 @@ public class AiLifePhenotype implements Phenotype {
       Board<TileEntity> board = AiLifeAnnSimulator.createAiLifeBoard(seed);
 //      Log.v(TAG, ann.getNumWeights());
 
-      Robot robot = new Robot(0, 0, board);
+      Robot robot = new Robot(0, 0, board, true);
       board.set(robot);
       for (int i = 0; i < 60; i++) {
 //        Log.v(TAG, board.getFormattedBoard());

@@ -140,11 +140,30 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
   }
 
   public String getFormattedBoard() {
-    String xRow = IntStream.range(0, getWidth()).mapToObj(x -> String.format("%-10d", x)).collect(Collectors.joining("   ", "   ", "  "));
-    return "\n" + IntStream.range(0, getWidth()).mapToObj(y -> IntStream.range(0, getHeight()) //
-        .mapToObj(x -> String.format("%1$-10s", get(x, getHeight() - 1 - y).getDescription()))
-        .collect(Collectors.joining(" | ", (getHeight() - 1 - y) + "[ ", " ]")))//
-        .collect(Collectors.joining("\n", "", "\n" + xRow));
+    String xRow = IntStream.range(0, getWidth())//
+        .mapToObj(x -> String.format("%-10d", x)) //
+        .collect(Collectors.joining("", "\n", "\n"));
+    String board = xRow;
+    for (int y = 0; y < getHeight(); y++) {
+      for (int x = 0; x < getWidth(); x++) {
+        board += String.format("%1$-10s", get(x, getHeight() - 1 - y).getDescription());
+      }
+      board += "\n";
+    }
+//    String board = "\n" + IntStream.range(0, getWidth()) //
+//        .mapToObj(y -> IntStream.range(0, getHeight()) //
+//            .mapToObj(x -> String.format("%1$-10s", get(x, getHeight() - 1 - y).getDescription()))
+//            .collect(Collectors.joining(" | ", (getHeight() - 1 - y) + "[ ", " ]")))//
+//        .collect(Collectors.joining("\n", "", "\n" + xRow));
+
+    return board;
+  }
+
+  public String getId() {
+    return getItems().stream() //
+        .map(i -> new StringBuilder() //
+            .append(i.getClass().getSimpleName().charAt(0)).append(i.getX()).append(":").append(i.getY()).append(" "))
+        .collect(Collectors.joining());
   }
 
   @Override

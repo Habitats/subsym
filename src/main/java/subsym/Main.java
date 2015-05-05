@@ -49,12 +49,12 @@ public class Main {
 //        panel.add(broid);
 //
 //        buildFrame(panel, null, null);
-//        new Genetics();
 //
 //        BeerGame.demo();
 //        AiLifeGui.demo();
 
 
+//        new Genetics();
         AiLifeReinforcementSimulator sim = new AiLifeReinforcementSimulator();
       }
 

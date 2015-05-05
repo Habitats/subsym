@@ -33,7 +33,7 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
     super(null);
     Board<TileEntity> board = createAiLifeBoard(0101);
 
-    robot = new Robot(0, 0, board);
+    robot = new Robot(0, 0, board, true);
     board.set(robot);
   }
 
@@ -94,7 +94,7 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
     List<Board<TileEntity>> boards = new ArrayList<>();
     IntStream.range(0, annPrefs.isSingle() ? 1 : 5)
         .forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
-    AiLifeGui.simulate(boards, this, () -> Log.v(TAG, this));
+    AiLifeGui.simulate(boards, this, () -> Log.v(TAG, this), new Robot(0, 0, boards.get(0), true));
   }
 
   public static Board<TileEntity> createAiLifeBoard(long seed) {

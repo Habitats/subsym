@@ -1,7 +1,5 @@
 import org.junit.Test;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -51,7 +49,7 @@ public class test_ailife {
     board.set(new Poison(1, 3, board));
     board.set(new Food(0, 2, board));
     board.set(new Food(1, 2, board));
-    Robot robot = new Robot(0, 0, board);
+    Robot robot = new Robot(0, 0, board, true);
     board.set(robot);
 
     assertEquals(robot.getFoodSensorInput(), Arrays.asList(0, 0, 0));
@@ -267,25 +265,6 @@ public class test_ailife {
   private void displayGui(Board<TileEntity> board, final Robot robot) {
     AIGridCanvas<TileEntity> canvas = new AIGridCanvas<>();
     canvas.setAdapter(board);
-    canvas.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-          case KeyEvent.VK_A:
-            robot.move(0);
-            break;
-          case KeyEvent.VK_W:
-            robot.move(1);
-            break;
-          case KeyEvent.VK_D:
-            robot.move(2);
-            break;
-        }
-      }
-    });
-
-    canvas.requestFocus();
   }
-
 
 }

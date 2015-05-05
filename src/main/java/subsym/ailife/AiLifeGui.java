@@ -45,17 +45,14 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private AISlider simulationSpeedSlider;
   private AILabel scoreLabel;
   private Board<TileEntity> board;
-  private final int startX;
-  private final int startY;
   private boolean shouldStop = false;
   private long numFood;
   private long numPoison;
 
-  public AiLifeGui(Board<TileEntity> board, AiLifeSimulator simulator, int startX, int startY) {
+  public AiLifeGui(Board<TileEntity> board, AiLifeSimulator simulator, Robot robot) {
     this.simulator = simulator;
     this.board = board;
-    this.startX = startX;
-    this.startY = startY;
+    this.robot = robot;
     buildFrame(mainPanel, null, null);
 
     simulateButton.addActionListener(e -> simulate());
@@ -69,7 +66,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(0);
-//        printBoard();
+        printBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), Direction.UP);
@@ -77,7 +74,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(1);
-//        printBoard();
+        printBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
@@ -85,7 +82,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(2);
-//        printBoard();
+        printBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), Direction.DOWN);
@@ -93,7 +90,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(3);
-//        printBoard();
+        printBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), "simulate");
@@ -159,7 +156,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     canvas.setAdapter(board);
     numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
     numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
-    robot = new Robot(startX,startY, board);
+    robot = new Robot(robot.getStartX(), robot.getStartY(), board, robot.isDirectional());
     this.board.set(robot);
     this.board.notifyDataChanged();
     if (isVisible()) {
@@ -204,21 +201,13 @@ public class AiLifeGui extends AIGui<TileEntity> {
     throw new IllegalStateException("Not implemented!");
   }
 
-  public static void show(Board<TileEntity> board, AiLifeSimulator ann, int startX, int startY) {
-    AiLifeGui gui = new AiLifeGui(board, ann, startX, startY);
-    gui.simulate();
+  public static void demo(Board<TileEntity> board, Robot robot) {
+    AiLifeGui demo = new AiLifeGui(board, null, robot);
+    demo.initBoard(board);
   }
 
-  public static void demo() {
-    Board<TileEntity> board = AiLifeAnnSimulator.createAiLifeBoard(1);
-    AiLifeGui demo = new AiLifeGui(board, null, 0, 0);
-    demo.robot = new Robot(0, 0, board);
-    board.set(demo.robot);
-    board.notifyDataChanged();
-  }
-
-  public static void simulate(List<Board<TileEntity>> boards, AiLifeSimulator ann, Runnable callback) {
-    AiLifeGui gui = new AiLifeGui(boards.get(0), ann, 0, 0);
+  public static void simulate(List<Board<TileEntity>> boards, AiLifeSimulator ann, Runnable callback, Robot robot) {
+    AiLifeGui gui = new AiLifeGui(boards.get(0), ann, robot);
     simulate(boards, callback, gui);
   }
 

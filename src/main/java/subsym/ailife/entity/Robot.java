@@ -22,9 +22,15 @@ public class Robot extends TileEntity {
   private static final String TAG = Robot.class.getSimpleName();
   private final long numPoison;
   private final long numFood;
+  private final boolean isDirectional;
+  private final int startY;
+  private final int startX;
   private int poisonCount;
   private int foodCount;
   private double score;
+  private Direction dir;
+
+  private int travelDistance;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = new ArrayList<>();
@@ -40,13 +46,14 @@ public class Robot extends TileEntity {
     return randomInput;
   }
 
-  private Direction dir;
-
-  public Robot(int x, int y, Board board) {
+  public Robot(int x, int y, Board board, boolean isDirectional) {
     super(x, y, board);
-    dir = Direction.UP;
-   numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
-   numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
+    startX = x;
+    startY = y;
+    this.isDirectional = isDirectional;
+    setDirection(Direction.UP);
+    numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
+    numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
   }
 
   public List<Double> getFoodSensorInput() {
@@ -61,7 +68,7 @@ public class Robot extends TileEntity {
 
   private List<TileEntity> getSensorNeighbors() {
     List<TileEntity> neighbors;
-    switch (dir) {
+    switch (getDir()) {
       case UP:
         neighbors = Arrays.asList(getWrapped(-1, 0), getWrapped(0, 1), getWrapped(1, 0));
         break;
@@ -113,8 +120,10 @@ public class Robot extends TileEntity {
     } else if (oldTile instanceof Food) {
       foodCount++;
     }
+    travelDistance++;
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
     getBoard().set(this);
+//    Log.v(TAG, getBoard().getFormattedBoard());
     getBoard().notifyDataChanged();
   }
 
@@ -127,7 +136,7 @@ public class Robot extends TileEntity {
 
   private void moveForward() {
 //    Log.v(TAG, "Moving forward ...");
-    switch (dir) {
+    switch (getDir()) {
       case UP:
         setPositionWrapped(getX(), getY() + 1);
         break;
@@ -145,7 +154,7 @@ public class Robot extends TileEntity {
 
   private void moveBack() {
 //    Log.v(TAG, "Moving forward ...");
-    switch (dir) {
+    switch (getDir()) {
       case UP:
         setPositionWrapped(getX(), getY() - 1);
         break;
@@ -163,44 +172,44 @@ public class Robot extends TileEntity {
 
   private void moveRight() {
 //    Log.v(TAG, "Moving right ...");
-    switch (dir) {
+    switch (getDir()) {
       case UP:
         setPositionWrapped(getX() + 1, getY());
-        dir = Direction.RIGHT;
+        setDirection(Direction.RIGHT);
         break;
       case RIGHT:
         setPositionWrapped(getX(), getY() - 1);
-        dir = Direction.DOWN;
+        setDirection(Direction.DOWN);
         break;
       case DOWN:
         setPositionWrapped(getX() - 1, getY());
-        dir = Direction.LEFT;
+        setDirection(Direction.LEFT);
         break;
       case LEFT:
         setPositionWrapped(getX(), getY() + 1);
-        dir = Direction.UP;
+        setDirection(Direction.UP);
         break;
     }
   }
 
   private void moveLeft() {
 //    Log.v(TAG, "Moving left ...");
-    switch (dir) {
+    switch (getDir()) {
       case UP:
         setPositionWrapped(getX() - 1, getY());
-        dir = Direction.LEFT;
+        setDirection(Direction.LEFT);
         break;
       case RIGHT:
         setPositionWrapped(getX(), getY() + 1);
-        dir = Direction.UP;
+        setDirection(Direction.UP);
         break;
       case DOWN:
         setPositionWrapped(getX() + 1, getY());
-        dir = Direction.RIGHT;
+        setDirection(Direction.RIGHT);
         break;
       case LEFT:
         setPositionWrapped(getX(), getY() - 1);
-        dir = Direction.DOWN;
+        setDirection(Direction.DOWN);
         break;
     }
   }
@@ -209,12 +218,14 @@ public class Robot extends TileEntity {
   public void draw(Graphics g, int x, int y) {
     super.draw(g, x, y);
 //    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
-    drawArrow(g, x, y, dir);
+    if (isDirectional) {
+      drawArrow(g, x, y, getDir());
+    }
   }
 
   @Override
   public String getDescription() {
-    return "Robot " + dir.name().charAt(0);
+    return "Robot " + getDir().name().charAt(0);
   }
 
   public int getFoodCount() {
@@ -239,7 +250,31 @@ public class Robot extends TileEntity {
     return delta / max;
   }
 
+  public int getTravelDistance() {
+    return travelDistance;
+  }
+
   public void setScore(double score) {
     this.score = score;
+  }
+
+  public Direction getDir() {
+    return dir;
+  }
+
+  public void setDirection(Direction dir) {
+    this.dir = isDirectional ? dir : Direction.UP;
+  }
+
+  public boolean isDirectional() {
+    return isDirectional;
+  }
+
+  public int getStartX() {
+    return startX;
+  }
+
+  public int getStartY() {
+    return startY;
   }
 }

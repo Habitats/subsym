@@ -4,23 +4,42 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import subsym.Log;
 import subsym.ailife.entity.Empty;
 import subsym.ailife.entity.Food;
 import subsym.ailife.entity.Poison;
 import subsym.ailife.entity.Robot;
+import subsym.gui.Direction;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
+import subsym.q.QAction;
+import subsym.q.QGame;
+import subsym.q.QLearningEngine;
+import subsym.q.QState;
 
 /**
  * Created by mail on 04.05.2015.
  */
-public class AiLifeReinforcementSimulator implements AiLifeSimulator {
+public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame {
 
-  private  Board<TileEntity> board;
+  private static final String TAG = AiLifeReinforcementSimulator.class.getSimpleName();
+  private AiLifeGui gui;
+  private Map<QState, Map<QAction, Double>> qMap;
+  private Board<TileEntity> board;
   private int startX;
   private int startY;
+  private Robot robot;
+  private int numFood;
+  private List<List<Integer>> content;
+  private Map<QAction, Direction> actions;
 
   public AiLifeReinforcementSimulator() {
     board = fromFile("1-simple.txt");
@@ -29,54 +48,125 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator {
 //    board = fromFile("4-big-one.txt");
 //    board = fromFile("5-even-bigger.txt");
 
-    AiLifeGui.show(board, this, startX, startY);
+    actions = Arrays.asList(Direction.values()).stream() //
+        .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
+    qMap = QLearningEngine.learn(1000, this);
+
+    gui = new AiLifeGui(initBoard(board.getWidth(), board.getHeight(), content), this, robot);
+    gui.simulate(() -> Log.v(TAG, "Yolo"));
+
+//    AiLifeGui.demo(board, robot);
   }
 
   public Board<TileEntity> fromFile(String fileName) {
     try {
-      Path path = FileSystems.getDefault().getPath("q",fileName );
-      List<String> content = Files.readAllLines(path);
-      String[] specs = content.remove(0).split("\\s");
-      int width = Integer.parseInt(specs[0]);
-      int height = Integer.parseInt(specs[1]);
-      startX = Integer.parseInt(specs[2]);
-      startY = Integer.parseInt(specs[3]);
-      int numFood = Integer.parseInt(specs[4]);
-      Board<TileEntity> board = new Board<>(width, height);
-
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          String s = content.get(y).split("\\s")[x];
-          TileEntity tile;
-          switch (s) {
-            case "0":
-              tile = new Empty(x, y, board);
-              break;
-            case "-1":
-              tile = new Poison(x, y, board);
-              break;
-            case "-2":
-              tile = new Robot(x, y, board);
-              break;
-            default:
-              tile = new Food(x, y, board);
-          }
-          board.set(tile);
-        }
-      }
-
-      return board;
+      Path path = FileSystems.getDefault().getPath("q", fileName);
+      content = Files.readAllLines(path).stream()//
+          .map(strLst -> Arrays.asList(strLst.split("\\s")).stream() //
+              .mapToInt(Integer::parseInt).boxed() //
+              .collect(Collectors.toList())).collect(Collectors.toList());
+      List<Integer> specs = content.remove(0);
+      int width = specs.get(0);
+      int height = specs.get(1);
+      startX = specs.get(2);
+      startY = specs.get(3);
+      numFood = specs.get(4);
+      return initBoard(width, height, content);
     } catch (IOException e) {
       throw new IllegalStateException("Unable to read AiLife map from file!");
     }
   }
 
+  private Board<TileEntity> initBoard(int width, int height, List<List<Integer>> content) {
+    Board<TileEntity> board = new Board<>(width, height);
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int s = content.get(y).get(x);
+        TileEntity tile;
+        switch (s) {
+          case 0:
+            tile = new Empty(x, y, board);
+            break;
+          case -1:
+            tile = new Poison(x, y, board);
+            break;
+          case -2:
+            robot = new Robot(x, y, board, false);
+            tile = robot;
+            break;
+          default:
+            tile = new Food(x, y, board);
+        }
+        board.set(tile);
+      }
+    }
+
+    return board;
+  }
+
+  public List<QAction> getActions() {
+    return new ArrayList<>(actions.keySet());
+  }
+
   @Override
   public void move(Robot robot) {
+    Map<QAction, Double> actions = qMap.get(computeState());
+    QAction
+        bestAction =
+        Collections.max(actions.keySet(), (a1, a2) -> Double.compare(actions.get(a1), actions.get(a2)));
+    execute(bestAction);
   }
 
   @Override
   public int getMaxSteps() {
     return Integer.MAX_VALUE;
+  }
+
+  @Override
+  public void restart() {
+    board = initBoard(board.getWidth(), board.getHeight(), content);
+  }
+
+  @Override
+  public boolean solution() {
+    return robot.getFoodCount() == numFood;
+//           && robot.getX() == startX && robot.getY() == startY;
+  }
+
+  @Override
+  public void execute(QAction a) {
+    robot.move(actions.get(a).getId());
+  }
+
+  @Override
+  public QState computeState() {
+    return new QState() {
+
+      @Override
+      public int hashCode() {
+        return board.getId().hashCode();
+      }
+
+      @Override
+      public boolean equals(Object obj) {
+        return board.getId().equals(obj.toString());
+      }
+
+      @Override
+      public String toString() {
+        return board.getId();
+      }
+    };
+  }
+
+  @Override
+  public double getReward() {
+    return 1. / (1 + robot.getTravelDistance()) + robot.getFoodCount() - robot.getPoisonCount() * 10;
+  }
+
+  @Override
+  public void iterationDone(Map<QState, Map<QAction, Double>> map) {
+
   }
 }
