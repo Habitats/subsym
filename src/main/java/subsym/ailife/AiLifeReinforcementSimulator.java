@@ -44,15 +44,15 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
   private Map<QAction, Direction> actions;
 
   public AiLifeReinforcementSimulator() {
-//    board = fromFile("1-simple.txt");
+    board = fromFile("1-simple.txt");
 //    board = fromFile("2-still-simple.txt");
-    board = fromFile("3-dont-be-greedy.txt");
+//    board = fromFile("3-dont-be-greedy.txt");
 //    board = fromFile("4-big-one.txt");
 //    board = fromFile("5-even-bigger.txt");
 
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
-    qMap = QLearningEngine.learn(1000, this);
+    qMap = QLearningEngine.learn(100, this);
 
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
     gui = new AiLifeGui(board, this, robot);
@@ -155,8 +155,7 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
 
   @Override
   public boolean solution() {
-    return robot.getFoodCount() == numFood
-           && robot.getX() == startX && robot.getY() == startY;
+    return robot.getFoodCount() == numFood && robot.getX() == startX && robot.getY() == startY;
   }
 
   @Override
@@ -171,7 +170,8 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
 
   @Override
   public double getReward() {
-    return 1. / (1 + robot.getTravelDistance()) + robot.getFoodCount() - robot.getPoisonCount() * 10;
+//    return 1. / (1 + robot.getTravelDistance()) +
+    return robot.getFoodCount() * 10 - robot.getPoisonCount() * 2 - robot.getTravelDistance();
   }
 
   @Override

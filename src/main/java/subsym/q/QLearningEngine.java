@@ -2,6 +2,7 @@ package subsym.q;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,10 +65,13 @@ public class QLearningEngine {
     }
 
     public double bestNextGivenAction(T s, QAction a) {
-      try {
-        return Collections.max(map.get(s).values());
-      } catch (Exception e) {
+      Map<QAction, Double> actionMap = map.get(s);
+      if (actionMap == null) {
         return 0;
+      } else {
+        Comparator<QAction> actionComparator = (a1, a2) -> Double.compare(actionMap.get(a1), actionMap.get(a2));
+        QAction bestAction = Collections.max(actionMap.keySet(), actionComparator);
+        return actionMap.get(bestAction);
       }
     }
 
