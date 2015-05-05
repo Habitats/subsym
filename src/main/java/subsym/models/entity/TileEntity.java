@@ -15,6 +15,7 @@ public abstract class TileEntity extends Entity {
   private static final String TAG = TileEntity.class.getSimpleName();
   private final Board board;
   private boolean modified;
+  private String description = "";
 
   public TileEntity(int x, int y, Board board) {
     super(x, y);
@@ -86,6 +87,9 @@ public abstract class TileEntity extends Entity {
   public void draw(Graphics g, int x, int y) {
     g.setColor(getColor());
     g.fillRect(x, y, getItemWidth(), getItemHeight());
+    if (description.length() > 0) {
+      drawStringCenter(g, description, x, y, getItemWidth(), getItemHeight());
+    }
   }
 
   protected Board<TileEntity> getBoard() {
@@ -98,6 +102,10 @@ public abstract class TileEntity extends Entity {
   }
 
   public String getDescription() {
-    return "";
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
   }
 }

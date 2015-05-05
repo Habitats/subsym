@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by mail on 05.05.2015.
  */
-public interface QGame {
+public interface QGame<T extends QState> {
 
   void restart();
 
@@ -16,9 +16,9 @@ public interface QGame {
 
   void execute(QAction a);
 
-  QState computeState();
+  T computeState();
 
   double getReward();
 
-  void iterationDone(Map<QState, Map<QAction, Double>> map);
+  void iterationDone(Map<T, Map<QAction, Double>> map);
 }

@@ -6,6 +6,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import subsym.ailife.entity.Food;
+import subsym.ailife.entity.Robot;
 import subsym.models.entity.TileEntity;
 
 /**
@@ -161,6 +163,7 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
 
   public String getId() {
     return getItems().stream() //
+        .filter(item -> (item instanceof Food) || (item instanceof Robot)) //
         .map(i -> new StringBuilder() //
             .append(i.getClass().getSimpleName().charAt(0)).append(i.getX()).append(":").append(i.getY()).append(" "))
         .collect(Collectors.joining());

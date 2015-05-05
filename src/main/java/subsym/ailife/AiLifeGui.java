@@ -66,6 +66,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       @Override
       public void actionPerformed(ActionEvent e) {
         robot.move(0);
+        simulator.updateGui();
         printBoard();
       }
     });
@@ -75,6 +76,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       public void actionPerformed(ActionEvent e) {
         robot.move(1);
         printBoard();
+        simulator.updateGui();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
@@ -83,6 +85,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       public void actionPerformed(ActionEvent e) {
         robot.move(2);
         printBoard();
+        simulator.updateGui();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), Direction.DOWN);
@@ -91,6 +94,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
       public void actionPerformed(ActionEvent e) {
         robot.move(3);
         printBoard();
+        simulator.updateGui();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), "simulate");
