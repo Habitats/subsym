@@ -46,6 +46,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private int numFood;
   private List<List<Integer>> content;
   private Map<QAction, Direction> actions;
+  private Map<AiLifeState, QAction> bestActions;
 
   public AiLifeQSimulator() {
 //    String scenario = "1-simple.txt";
@@ -61,7 +62,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
     double learningRate = 0.9;
     double discountRate = .9;
-    qMap = QLearningEngine.learn(1000, this, learningRate, discountRate);
+    qMap = QLearningEngine.learn(2000, this, learningRate, discountRate);
 
     Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
                              scenario, AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
@@ -88,14 +89,16 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     if (gui == null) {
       return;
     }
-    Set<AiLifeState> states = qMap.keySet();
-    AiLifeState currentState = computeState();
-    // states with the same food config
-    List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
 
     // find the best action for any given state
-    Map<AiLifeState, QAction> bestActions = matchingStates.stream() //
-        .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
+    if (bestActions == null || robot.getLastStepReward() > 0) {
+      // states with the same food config
+      Set<AiLifeState> states = qMap.keySet();
+      AiLifeState currentState = computeState();
+      List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
+      bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
+    }
+
     drawBestActionArrows(bestActions);
 //    drawDetailedBestAction(qMap, bestActions);
     gui.setAdapter(board);

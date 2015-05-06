@@ -20,7 +20,7 @@ public class Main {
 
   public static final String TAG = Main.class.getSimpleName();
   private static Plot chart;
-  public static Random random = new Random();
+  public static Random random = new Random(1234);
 
   public static void main(String[] args) {
     loadGui();
