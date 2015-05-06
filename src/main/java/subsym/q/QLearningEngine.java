@@ -21,30 +21,33 @@ public class QLearningEngine {
     Q q = new Q();
     double learningRate = 0.1;
     double discountRate = .5;
+    long start = System.currentTimeMillis();
+    T currentState = null;
     for (int i = 0; i < iterations; i++) {
       game.restart();
       while (!game.solution()) {
 //        Log.v(TAG, state);
-        T lastState = game.computeState();
+        T lastState = currentState == null ? game.computeState() : currentState;
         QAction a = q.selectAction(game);
         game.execute(a);
         game.onStep(q.map);
-        T currentState = game.computeState();
+         currentState = game.computeState();
 //        Log.v(TAG, newState);
         double r = game.getReward();
 
-        update(q, lastState, currentState, a, r, learningRate, discountRate, game);
+        update(q, lastState, currentState, a, r, learningRate, discountRate);
 
       }
       Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
     }
 
+    Log.v(TAG, String.format("Training completed in %d s", (int)((System.currentTimeMillis() - start)/1000.)));
+
     return q.map;
   }
 
   private static <T extends QState> void update(Q q, T lastState, T currentState, QAction a, double r, double learningRate,
-                                                double discountRate, QGame<T> game) {
-    T nextState = game.nextState(a, currentState);
+                                                double discountRate) {
     double maxScoreIfBestAction = q.bestNextGivenAction(currentState);
     double oldScore = q.get(lastState, a);
     double delta = learningRate * (r + discountRate * maxScoreIfBestAction - oldScore);
