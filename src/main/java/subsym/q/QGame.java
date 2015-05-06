@@ -22,5 +22,5 @@ public interface QGame<T extends QState> {
 
   void onStep(Map<T, Map<QAction, Double>> map);
 
-  T nextState(QAction a, T newState);
+//  T nextState(QAction a, T newState);
 }

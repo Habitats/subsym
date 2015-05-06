@@ -70,19 +70,6 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       gui.terminate();
     }
   }
-//
-//  private  void simulate() {
-//    board = initBoard(board.getWidth(), board.getHeight(), content);
-//    gui.setAdapter(board);
-//    while (!solution()) {
-//      move(robot);
-//      drawBestActions(qMap);
-//      try {
-//        Thread.sleep(gui.getSimulationSpeed());
-//      } catch (InterruptedException e) {
-//      }
-//    }
-//  }
 
   private void drawBestActions(Map<AiLifeState, Map<QAction, Double>> qMap) {
     board.getItems().forEach(i -> i.setDescription(""));
@@ -214,20 +201,19 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   @Override
   public double getReward() {
-//    return 1. / (1 + robot.getTravelDistance()) +
     return robot.getLastStepReward();
   }
 
   @Override
   public void onStep(Map<AiLifeState, Map<QAction, Double>> qMap) {
-    if (gui != null) {
-      drawBestActions(qMap);
-      board.notifyDataChanged();
-      try {
-        Thread.sleep(gui.getSimulationSpeed());
-      } catch (InterruptedException e) {
-      }
-    }
+//    if (gui != null) {
+//      drawBestActions(qMap);
+//      board.notifyDataChanged();
+//      try {
+//        Thread.sleep(gui.getSimulationSpeed());
+//      } catch (InterruptedException e) {
+//      }
+//    }
   }
 
   private QAction getBestAction(Map<QAction, Double> actionMap) {
@@ -245,28 +231,28 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     drawBestActions(qMap);
   }
 
-  @Override
-  public AiLifeState nextState(QAction a, AiLifeState newState) {
-    Direction id = actions.get(a);
-    List<Vec> foodLocations = new ArrayList<>(newState.getFoodLocations());
-    Vec robotLocation = newState.getRobotLocation().copy();
-    switch (id) {
-      case UP:
-        robotLocation.y = (robotLocation.y + 1) % board.getHeight();
-        break;
-      case RIGHT:
-        robotLocation.x = (robotLocation.x + 1) % board.getWidth();
-        break;
-      case DOWN:
-        robotLocation.y = (robotLocation.y * -1 + board.getHeight()) % board.getHeight();
-        break;
-      case LEFT:
-        robotLocation.x = (robotLocation.x - 1 + board.getWidth()) % board.getWidth();
-        break;
-    }
-    AiLifeState nextState = new AiLifeState(foodLocations, robotLocation);
-    return nextState;
-  }
+//  @Override
+//  public AiLifeState nextState(QAction a, AiLifeState newState) {
+//    Direction id = actions.get(a);
+//    List<Integer[]> foodLocations = new ArrayList<>(newState.getFoodLocations());
+//    Vec robotLocation = newState.getRobotLocation().copy();
+//    switch (id) {
+//      case UP:
+//        robotLocation.y = (robotLocation.y + 1) % board.getHeight();
+//        break;
+//      case RIGHT:
+//        robotLocation.x = (robotLocation.x + 1) % board.getWidth();
+//        break;
+//      case DOWN:
+//        robotLocation.y = (robotLocation.y * -1 + board.getHeight()) % board.getHeight();
+//        break;
+//      case LEFT:
+//        robotLocation.x = (robotLocation.x - 1 + board.getWidth()) % board.getWidth();
+//        break;
+//    }
+//    AiLifeState nextState = new AiLifeState(foodLocations, robotLocation);
+//    return nextState;
+//  }
 
   public static class AiLifeState implements QState {
 
