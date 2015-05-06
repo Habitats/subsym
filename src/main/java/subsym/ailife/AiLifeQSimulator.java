@@ -251,7 +251,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   }
 
   @Override
-  public Collection<AiLifeState> getHistoryStream() {
+  public Deque<AiLifeState> getHistoryStream() {
     return stateHistory;
   }
 

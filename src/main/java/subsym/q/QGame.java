@@ -1,6 +1,6 @@
 package subsym.q;
 
-import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public interface QGame<T extends QState> {
   void addHisory(T lastState);
 
 
-  Collection<T> getHistoryStream();
+  Deque<T> getHistoryStream();
 
 //  T nextState(QAction a, T newState);
 }
