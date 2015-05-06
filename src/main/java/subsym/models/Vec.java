@@ -118,7 +118,7 @@ public class Vec {
   }
 
   public String getId() {
-    return x+":" + y;
+    return new StringBuilder().append("[").append(x).append("|").append(y).append("]").toString();
   }
 
   @Override

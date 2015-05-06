@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +50,9 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 //    String scenario = "1-simple.txt";
 //    String scenario = "2-still-simple.txt";
 //    String scenario = "3-dont-be-greedy.txt";
-    String scenario = "4-big-one.txt";
-//    String scenario = "5-even-bigger.txt";
-    
+//    String scenario = "4-big-one.txt";
+    String scenario = "5-even-bigger.txt";
+
     board = fromFile(scenario);
 
     actions = Arrays.asList(Direction.values()).stream() //
@@ -59,10 +60,10 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
     double learningRate = 0.9;
     double discountRate = .9;
-    qMap = QLearningEngine.learn(1000, this, learningRate, discountRate);
+    qMap = QLearningEngine.learn(2000, this, learningRate, discountRate);
 
     Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
-scenario,                             AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
+                             scenario, AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
 
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
     gui = new AiLifeGui(board, this, robot);
@@ -217,9 +218,8 @@ scenario,                             AiLifeState.states, AiLifeState.foodCache.
   public AiLifeState computeState() {
     List<Vec> foodLocations = board.getItems().stream() //
         .filter(i -> i instanceof Food).map(food -> Vec.create(food.getX(), food.getY())).collect(Collectors.toList());
-    Vec robotLocation = board.getItems().stream() //
-        .filter(i -> i instanceof Robot).map(robot -> Vec.create(robot.getX(), robot.getY())).findFirst().get();
-    return new AiLifeState(foodLocations, robotLocation);
+    Vec robotLocation  = Vec.create(robot.getX(), robot.getY());
+    return new AiLifeState(foodLocations,robotLocation);
   }
 
   @Override
@@ -286,16 +286,19 @@ scenario,                             AiLifeState.states, AiLifeState.foodCache.
     private final int robotKey;
 
     public AiLifeState(List<Vec> foodLocations, Vec robotLocation) {
-      foodKey = getKey(foodLocations);
-      foodCache.putIfAbsent(foodKey, foodLocations);
+      foodKey = foodLocations.stream().map(Vec::getId) //
+          .sorted(Comparator.<String>naturalOrder()) //
+          .collect(Collectors.joining("&")).hashCode();
       robotKey = robotLocation.hashCode();
+      foodCache.putIfAbsent(foodKey, foodLocations);
       robotCache.putIfAbsent(robotKey, robotLocation);
       states++;
-      id = (robotKey + ":" + foodKey).hashCode();
-    }
+//      String s1 = "F:" + foodKey + " R:" + robotKey;
+      String s2 = foodLocations.stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
+                      .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.x + ":" + (int) robotLocation.y;
+      id = s2.hashCode();
 
-    private static int getKey(List<Vec> foodLocations) {
-      return foodLocations.stream().map(Vec::getId).collect(Collectors.joining(":")).hashCode();
+//      Log.v(TAG, String.format("%0$-30s \t %s", s1, s2));
     }
 
     @Override
@@ -308,11 +311,11 @@ scenario,                             AiLifeState.states, AiLifeState.foodCache.
       return hashCode() == obj.hashCode();
     }
 
-    @Override
-    public String toString() {
-      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
-                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
-    }
+//    @Override
+//    public String toString() {
+//      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
+//                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
+//    }
 
     public List<Vec> getFoodLocations() {
       return foodCache.get(foodKey);
