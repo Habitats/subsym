@@ -59,7 +59,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
     double learningRate = 0.9;
     double discountRate = .9;
-    qMap = QLearningEngine.learn(2000, this, learningRate, discountRate);
+    qMap = QLearningEngine.learn(1000, this, learningRate, discountRate);
 
     Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
 scenario,                             AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
