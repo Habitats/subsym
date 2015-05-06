@@ -17,10 +17,10 @@ public class QLearningEngine {
 
   private static final String TAG = QLearningEngine.class.getSimpleName();
 
-  public static <T extends QState> Map<T, Map<QAction, Double>> learn(int iterations, QGame<T> game) {
+  public static <T extends QState> Map<T, Map<QAction, Double>> learn(int iterations, QGame<T> game, double learningRate,
+                                                                      double discountRate) {
     Q q = new Q();
-    double learningRate = 0.1;
-    double discountRate = .5;
+
     long start = System.currentTimeMillis();
     T currentState = null;
     for (int i = 0; i < iterations; i++) {
@@ -31,17 +31,17 @@ public class QLearningEngine {
         QAction a = q.selectAction(game);
         game.execute(a);
         game.onStep(q.map);
-         currentState = game.computeState();
+        currentState = game.computeState();
 //        Log.v(TAG, newState);
         double r = game.getReward();
 
         update(q, lastState, currentState, a, r, learningRate, discountRate);
 
       }
+
       Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
     }
-
-    Log.v(TAG, String.format("Training completed in %d s", (int)((System.currentTimeMillis() - start)/1000.)));
+    Log.v(TAG, String.format("Training completed in %d s", (int) ((System.currentTimeMillis() - start) / 1000.)));
 
     return q.map;
   }
