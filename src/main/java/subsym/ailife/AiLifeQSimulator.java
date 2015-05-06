@@ -244,7 +244,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   }
 
   private List<AiLifeState> getStatesMatchingFood(Set<AiLifeState> states, AiLifeState currentState) {
-    List<Vec> foodLocations = currentState.getFoodLocations();
+    Collection<Vec> foodLocations = currentState.getFoodLocations();
     return states.stream().filter(state -> state.getFoodLocations().equals(foodLocations)).collect(Collectors.toList());
   }
 
@@ -279,13 +279,13 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   public static class AiLifeState implements QState {
 
     private final int id;
-    private static final Map<Integer, List<Vec>> foodCache = new HashMap<>();
+    private static final Map<Integer, Collection<Vec>> foodCache = new HashMap<>();
     private static final Map<Integer, Vec> robotCache = new HashMap<>();
     private static int states = 0;
     private final int foodKey;
     private final int robotKey;
 
-    public AiLifeState(List<Vec> foodLocations, Vec robotLocation) {
+    public AiLifeState(Collection<Vec> foodLocations, Vec robotLocation) {
       foodKey = foodLocations.stream().map(Vec::getId) //
           .sorted(Comparator.<String>naturalOrder()) //
           .collect(Collectors.joining("&")).hashCode();
@@ -317,7 +317,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 //                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
 //    }
 
-    public List<Vec> getFoodLocations() {
+    public Collection<Vec> getFoodLocations() {
       return foodCache.get(foodKey);
     }
 
