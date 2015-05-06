@@ -18,7 +18,10 @@ public class Poison extends ImageTileEntity {
   @Override
   public void draw(Graphics g, int x, int y) {
     super.draw(g, x, y);
-    g.drawImage(getImage(), x, y, null);
+//    g.drawImage(getImage(), x, y, null);
+    if (getDirection() != null) {
+      drawArrow(g, x, y, getDirection());
+    }
   }
 
   @Override

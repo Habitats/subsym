@@ -13,4 +13,12 @@ public interface AiLifeSimulator {
 
   default void updateGui() {
   }
+
+  default void reset() {
+
+  }
+
+  default void onTick() {
+
+  }
 }

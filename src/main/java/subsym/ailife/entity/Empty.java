@@ -22,8 +22,12 @@ public class Empty extends TileEntity {
 
   @Override
   public void draw(Graphics g, int x, int y) {
-    g.setColor(getColor());
-    g.fillRect(x, y, getItemWidth(), getItemHeight());
+    super.draw(g,x,y);
+//    g.setColor(getColor());
+//    g.fillRect(x, y, getItemWidth(), getItemHeight());
+    if (getDirection() != null) {
+      drawArrow(g, x, y, getDirection());
+    }
     if (getDescription().length() > 0) {
       drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
     }

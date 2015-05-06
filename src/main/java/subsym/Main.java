@@ -6,8 +6,8 @@ import java.util.Random;
 
 import javax.swing.*;
 
+import subsym.ailife.AiLifeQSimulator;
 import subsym.boids.Boids;
-import subsym.genetics.Genetics;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
@@ -54,8 +54,8 @@ public class Main {
 //        AiLifeGui.demo();
 
 
-        new Genetics();
-//        AiLifeReinforcementSimulator sim = new AiLifeReinforcementSimulator();
+//        new Genetics();
+        AiLifeQSimulator sim = new AiLifeQSimulator();
       }
 
 

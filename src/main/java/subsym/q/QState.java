@@ -8,5 +8,4 @@ public interface QState {
   boolean equals(Object o);
 
   int hashCode();
-
 }

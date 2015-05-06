@@ -31,6 +31,7 @@ public class Robot extends TileEntity {
   private Direction dir;
 
   private int travelDistance;
+  private int lastStepReward;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = new ArrayList<>();
@@ -117,8 +118,12 @@ public class Robot extends TileEntity {
     TileEntity oldTile = getBoard().get(getX(), getY());
     if (oldTile instanceof Poison) {
       poisonCount++;
+      lastStepReward = -20;
     } else if (oldTile instanceof Food) {
       foodCount++;
+      lastStepReward = 5;
+    } else {
+      lastStepReward = -1;
     }
     travelDistance++;
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
@@ -249,6 +254,10 @@ public class Robot extends TileEntity {
     double delta = deltaFood * 2 + deltaPoison * -3;
     double max = numFood * 2;
     return delta / max;
+  }
+
+  public int getLastStepReward() {
+    return lastStepReward;
   }
 
   public int getTravelDistance() {

@@ -111,12 +111,23 @@ public class AiLifeGui extends AIGui<TileEntity> {
         generateRandomBoard();
       }
     });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), "reset");
+    actionMap.put("reset", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        simulator.reset();
+      }
+    });
 
     addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
         shouldStop = true;
       }
     });
+  }
+
+  public void terminate() {
+    this.shouldStop = true;
   }
 
   private void simulate() {
@@ -155,6 +166,9 @@ public class AiLifeGui extends AIGui<TileEntity> {
     }).start();
   }
 
+  public int getSimulationSpeed() {
+    return simulationSpeedSlider.getValue();
+  }
 
   private void initBoard(Board<TileEntity> board) {
     canvas.setAdapter(board);
@@ -173,6 +187,8 @@ public class AiLifeGui extends AIGui<TileEntity> {
     poisonLabel.setText(String.format("Poison: %2d/%2d", robot.getPoisonCount(), numPoison));
     timeLabel.setText(String.format("Time: %2d", time));
     scoreLabel.setText(String.format("Score: %.3f", robot.getScore()));
+
+    simulator.onTick();
   }
 
   @Override

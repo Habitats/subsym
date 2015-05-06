@@ -16,6 +16,7 @@ public abstract class TileEntity extends Entity {
   private final Board board;
   private boolean modified;
   private String description = "";
+  private Direction direction;
 
   public TileEntity(int x, int y, Board board) {
     super(x, y);
@@ -35,14 +36,17 @@ public abstract class TileEntity extends Entity {
 
   protected void drawStringCenter(Graphics g, String s, int XPos, int YPos, int itemWidth, int itemHeight) {
     Graphics2D g2d = (Graphics2D) g;
-    Font font = new Font("Consolas", Font.PLAIN, 14);
+    Font font = new Font("Consolas", Font.PLAIN, 12);
     g.setFont(font);
     g.setColor(Theme.getForeground());
-    int stringLen = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getWidth();
-    int stringHeight = (int) g2d.getFontMetrics().getStringBounds(s, g2d).getHeight();
+    String[] split = s.split("\n");
+    int stringLen = (int) g2d.getFontMetrics().getStringBounds(split[0], g2d).getWidth();
+    int stringHeight = (int) g2d.getFontMetrics().getStringBounds(split[0], g2d).getHeight();
     int offsetWidth = itemWidth / 2 - stringLen / 2;
     int offsetHeight = itemHeight - stringHeight / 2;
-    g2d.drawString(s, offsetWidth + XPos, offsetHeight + YPos);
+    for (int i = 0; i < split.length; i++) {
+      g2d.drawString(split[i], offsetWidth + XPos, offsetHeight + YPos - 10 * i);
+    }
   }
 
   protected void drawArrow(Graphics g, int x, int y, Direction direction) {
@@ -87,6 +91,7 @@ public abstract class TileEntity extends Entity {
   public void draw(Graphics g, int x, int y) {
     g.setColor(getColor());
     g.fillRect(x, y, getItemWidth(), getItemHeight());
+
     if (description.length() > 0) {
       drawStringCenter(g, description, x, y, getItemWidth(), getItemHeight());
     }
@@ -107,5 +112,13 @@ public abstract class TileEntity extends Entity {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public void setDirection(Direction direction) {
+    this.direction = direction;
+  }
+
+  public Direction getDirection() {
+    return direction;
   }
 }

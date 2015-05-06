@@ -40,7 +40,7 @@ public abstract class AIGui<T extends Entity> extends JFrame {
   public void setAdapter(AIAdapter<T> adapter) {
 //    setAdapter.setOrigin(minX, minY);
     getDrawingCanvas().setAdapter(adapter);
-    Log.v(TAG, "setting setAdapter!" + adapter);
+//    Log.v(TAG, "setting setAdapter!" + adapter);
     getMainPanel().repaint();
   }
 

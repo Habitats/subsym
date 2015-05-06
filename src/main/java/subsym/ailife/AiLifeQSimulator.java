@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import subsym.Log;
 import subsym.Main;
 import subsym.ailife.entity.Empty;
 import subsym.ailife.entity.Food;
@@ -30,9 +31,9 @@ import subsym.q.QState;
 /**
  * Created by mail on 04.05.2015.
  */
-public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLifeReinforcementSimulator.AiLifeState> {
+public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator.AiLifeState> {
 
-  private static final String TAG = AiLifeReinforcementSimulator.class.getSimpleName();
+  private static final String TAG = AiLifeQSimulator.class.getSimpleName();
   private AiLifeGui gui;
   private Map<AiLifeState, Map<QAction, Double>> qMap;
   private Board<TileEntity> board;
@@ -43,29 +44,50 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
   private List<List<Integer>> content;
   private Map<QAction, Direction> actions;
 
-  public AiLifeReinforcementSimulator() {
-    board = fromFile("1-simple.txt");
+  public AiLifeQSimulator() {
+//    board = fromFile("1-simple.txt");
 //    board = fromFile("2-still-simple.txt");
 //    board = fromFile("3-dont-be-greedy.txt");
 //    board = fromFile("4-big-one.txt");
-//    board = fromFile("5-even-bigger.txt");
+    board = fromFile("5-even-bigger.txt");
 
 //    gui.simulate(() -> Log.v(TAG, "Yolo"));
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
-    qMap = QLearningEngine.learn(1000, this);
+
+    board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
+    qMap = QLearningEngine.learn(10000, this);
 
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
     gui = new AiLifeGui(board, this, robot);
-    gui.setAdapter(board);
-
-    drawBestActions(qMap);
+    gui.simulate(() -> Log.v(TAG, "yolo"));
   }
+
+  @Override
+  public void onTick() {
+    drawBestActions(qMap);
+    if(solution())
+      gui.terminate();
+  }
+//
+//  private  void simulate() {
+//    board = initBoard(board.getWidth(), board.getHeight(), content);
+//    gui.setAdapter(board);
+//    while (!solution()) {
+//      move(robot);
+//      drawBestActions(qMap);
+//      try {
+//        Thread.sleep(gui.getSimulationSpeed());
+//      } catch (InterruptedException e) {
+//      }
+//    }
+//  }
 
   private void drawBestActions(Map<AiLifeState, Map<QAction, Double>> qMap) {
     board.getItems().forEach(i -> i.setDescription(""));
+    board.getItems().forEach(i -> i.setDirection(null));
     Set<AiLifeState> states = qMap.keySet();
-    AiLifeState currentState = new AiLifeState(board);
+    AiLifeState currentState = computeState();
     // states with the same food config
     List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
 
@@ -74,11 +96,20 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
         .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
-      board.get(s.getRobotLocation()).setDescription(String.format("%s  %5.2f", bestAction.toString(),qMap.get(s).get(bestAction)));
+      Map<QAction, Double> actions = qMap.get(s);
+      drawDetailed(s, bestAction, actions);
+      board.get(s.getRobotLocation()).setDirection(this.actions.get(bestAction));
     });
-//    gui.setAdapter(board);
+    gui.setAdapter(board);
     board.notifyDataChanged();
-//    AiLifeGui.demo(board, robot);
+  }
+
+  private void drawDetailed(AiLifeState s, QAction bestAction, Map<QAction, Double> actions) {
+    String actionValues = actions.keySet().stream() //
+        .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
+        .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a)))
+        .collect(Collectors.joining("\n", "\n\n", ""));
+    board.get(s.getRobotLocation()).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
   }
 
   public Board<TileEntity> fromFile(String fileName) {
@@ -128,6 +159,12 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
     return board;
   }
 
+  @Override
+  public void reset() {
+    board = initBoard(board.getWidth(), board.getHeight(), content);
+    gui.setAdapter(board);
+  }
+
   public List<QAction> getActions() {
     return new ArrayList<>(actions.keySet());
   }
@@ -141,7 +178,6 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
       bestAction = Collections.max(actions.keySet(), (a1, a2) -> Double.compare(actions.get(a1), actions.get(a2)));
     } else {
       bestAction = getActions().get(Main.random().nextInt(getActions().size()));
-//      return;
     }
     execute(bestAction);
   }
@@ -169,18 +205,29 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
 
   @Override
   public AiLifeState computeState() {
-    return new AiLifeState(board);
+    List<Vec> foodLocations = board.getItems().stream() //
+        .filter(i -> i instanceof Food).map(food -> Vec.create(food.getX(), food.getY())).collect(Collectors.toList());
+    Vec robotLocation = board.getItems().stream() //
+        .filter(i -> i instanceof Robot).map(robot -> Vec.create(robot.getX(), robot.getY())).findFirst().get();
+    return new AiLifeState(foodLocations, robotLocation);
   }
 
   @Override
   public double getReward() {
 //    return 1. / (1 + robot.getTravelDistance()) +
-    return robot.getFoodCount() * 100 - robot.getPoisonCount() * 200 - robot.getTravelDistance();
+    return robot.getLastStepReward();
   }
 
   @Override
   public void onStep(Map<AiLifeState, Map<QAction, Double>> qMap) {
-    drawBestActions(qMap);
+    if (gui != null) {
+      drawBestActions(qMap);
+      board.notifyDataChanged();
+      try {
+        Thread.sleep(gui.getSimulationSpeed());
+      } catch (InterruptedException e) {
+      }
+    }
   }
 
   private QAction getBestAction(Map<QAction, Double> actionMap) {
@@ -199,19 +246,41 @@ public class AiLifeReinforcementSimulator implements AiLifeSimulator, QGame<AiLi
     drawBestActions(qMap);
   }
 
+  @Override
+  public AiLifeState nextState(QAction a, AiLifeState newState) {
+    Direction id = actions.get(a);
+    List<Vec> foodLocations = new ArrayList<>(newState.getFoodLocations());
+    Vec robotLocation = newState.getRobotLocation().copy();
+    switch (id) {
+      case UP:
+        robotLocation.y = (robotLocation.y + 1) % board.getHeight();
+        break;
+      case RIGHT:
+        robotLocation.x = (robotLocation.x + 1) % board.getWidth();
+        break;
+      case DOWN:
+        robotLocation.y = (robotLocation.y * -1 + board.getHeight()) % board.getHeight();
+        break;
+      case LEFT:
+        robotLocation.x = (robotLocation.x - 1 + board.getWidth()) % board.getWidth();
+        break;
+    }
+    AiLifeState nextState = new AiLifeState(foodLocations, robotLocation);
+    return nextState;
+  }
+
   public static class AiLifeState implements QState {
 
-    private final String id;
     private final List<Vec> foodLocations;
     private final Vec robotLocation;
+    private final String id;
 
-    public AiLifeState(Board<TileEntity> board) {
-      id = board.getId();
-      foodLocations = board.getItems().stream() //
-          .filter(i -> i instanceof Food).map(food -> Vec.create(food.getX(), food.getY()))
-          .collect(Collectors.toList());
-      robotLocation = board.getItems().stream() //
-          .filter(i -> i instanceof Robot).map(robot -> Vec.create(robot.getX(), robot.getY())).findFirst().get();
+    public AiLifeState(List<Vec> foodLocations, Vec robotLocation) {
+      this.foodLocations = foodLocations;
+      this.robotLocation = robotLocation;
+      id = foodLocations.stream() //
+               .map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
+               .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.x + ":" + (int) robotLocation.y;
     }
 
     @Override

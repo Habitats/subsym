@@ -25,6 +25,9 @@ public class Food extends ImageTileEntity {
   public void draw(Graphics g, int x, int y) {
     super.draw(g, x, y);
     g.drawImage(getImage(), x, y, null);
+    if (getDirection() != null) {
+      drawArrow(g, x, y, getDirection());
+    }
 //    drawStringCenter(g, getDescription(), x, y, getItemWidth(), getItemHeight());
   }
 
