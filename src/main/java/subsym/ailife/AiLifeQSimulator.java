@@ -48,15 +48,14 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 //    board = fromFile("1-simple.txt");
 //    board = fromFile("2-still-simple.txt");
 //    board = fromFile("3-dont-be-greedy.txt");
-//    board = fromFile("4-big-one.txt");
-    board = fromFile("5-even-bigger.txt");
+    board = fromFile("4-big-one.txt");
+//    board = fromFile("5-even-bigger.txt");
 
-//    gui.simulate(() -> Log.v(TAG, "Yolo"));
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
 
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-    qMap = QLearningEngine.learn(10000, this);
+    qMap = QLearningEngine.learn(300, this);
 
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
     gui = new AiLifeGui(board, this, robot);
