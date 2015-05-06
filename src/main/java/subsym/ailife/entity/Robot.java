@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import subsym.Main;
@@ -20,11 +21,13 @@ import subsym.models.entity.TileEntity;
 public class Robot extends TileEntity {
 
   private static final String TAG = Robot.class.getSimpleName();
-  private final long numPoison;
-  private final long numFood;
+  private long numPoison;
+  private long numFood;
   private final boolean isDirectional;
   private final int startY;
   private final int startX;
+  private Map<Vec, TileEntity> poison;
+  private Map<Vec, TileEntity> food;
   private int poisonCount;
   private int foodCount;
   private double score;
@@ -53,8 +56,14 @@ public class Robot extends TileEntity {
     startY = y;
     this.isDirectional = isDirectional;
     setDirection(Direction.UP);
-    numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
-    numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
+  }
+
+  public void init() {
+    List<TileEntity> items = getBoard().getItems();
+    numPoison = items.stream().filter(i -> i instanceof Poison).count();
+    numFood = items.stream().filter(i -> i instanceof Food).count();
+    poison = items.stream().filter(i -> i instanceof Poison).collect(Collectors.toMap(i -> i.getPosition(), i -> i));
+    food = items.stream().filter(i -> i instanceof Food).collect(Collectors.toMap(i -> i.getPosition(), i -> i));
   }
 
   public List<Double> getFoodSensorInput() {
@@ -116,12 +125,15 @@ public class Robot extends TileEntity {
         throw new IllegalStateException("Invalid index!");
     }
     TileEntity oldTile = getBoard().get(getX(), getY());
+    Vec newPosition = oldTile.getPosition();
     if (oldTile instanceof Poison) {
       poisonCount++;
       lastStepReward = -20;
+      poison.remove(newPosition);
     } else if (oldTile instanceof Food) {
       foodCount++;
       lastStepReward = 5;
+      food.remove(newPosition);
     } else {
       lastStepReward = -1;
     }
@@ -256,6 +268,14 @@ public class Robot extends TileEntity {
     return delta / max;
   }
 
+  public Map<Vec, TileEntity> getPoison() {
+    return poison;
+  }
+
+  public Map<Vec, TileEntity> getFood() {
+    return food;
+  }
+
   public int getLastStepReward() {
     return lastStepReward;
   }
@@ -287,4 +307,6 @@ public class Robot extends TileEntity {
   public int getStartY() {
     return startY;
   }
+
+
 }
