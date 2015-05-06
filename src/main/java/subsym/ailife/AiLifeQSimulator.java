@@ -46,11 +46,13 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private Map<QAction, Direction> actions;
 
   public AiLifeQSimulator() {
-//    board = fromFile("1-simple.txt");
-//    board = fromFile("2-still-simple.txt");
-//    board = fromFile("3-dont-be-greedy.txt");
-//    board = fromFile("4-big-one.txt");
-    board = fromFile("5-even-bigger.txt");
+//    String scenario = "1-simple.txt";
+//    String scenario = "2-still-simple.txt";
+//    String scenario = "3-dont-be-greedy.txt";
+    String scenario = "4-big-one.txt";
+//    String scenario = "5-even-bigger.txt";
+    
+    board = fromFile(scenario);
 
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
@@ -59,8 +61,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     double discountRate = .9;
     qMap = QLearningEngine.learn(2000, this, learningRate, discountRate);
 
-    Log.v(TAG, String.format("#States: %d > FoodCache: %d > RobotCache: %d", //
-                             AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
+    Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
+scenario,                             AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
 
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
     gui = new AiLifeGui(board, this, robot);
