@@ -14,7 +14,7 @@ import subsym.ann.WeightBound;
 /**
  * Created by anon on 20.03.2015.
  */
-public class AnnNodes implements Comparable<AnnNodes>,Iterable<AnnNode> {
+public class AnnNodes implements Comparable<AnnNodes>, Iterable<AnnNode> {
 
   private final List<AnnNode> values;
   private final int id;

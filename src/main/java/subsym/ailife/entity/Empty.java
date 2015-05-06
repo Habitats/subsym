@@ -22,7 +22,7 @@ public class Empty extends TileEntity {
 
   @Override
   public void draw(Graphics g, int x, int y) {
-    super.draw(g,x,y);
+    super.draw(g, x, y);
 //    g.setColor(getColor());
 //    g.fillRect(x, y, getItemWidth(), getItemHeight());
     if (getDirection() != null) {

@@ -75,11 +75,11 @@ public class AiLifePhenotype implements Phenotype {
         int indexOfBest = outputs.indexOf(outputs.stream().max(Double::compare).get());
 //        Log.v(TAG, robot.getSensoryInput() + " " + outputs);
 //        Log.v(TAG, ann.getWeights().stream().map(String::valueOf).collect(Collectors.joining(" ")));
-        if(indexOfBest == 0)
-        robot.move(Direction.LEFT);
-        else if(indexOfBest == 1)
+        if (indexOfBest == 0) {
+          robot.move(Direction.LEFT);
+        } else if (indexOfBest == 1) {
           robot.move(Direction.UP);
-        else if(indexOfBest== 2){
+        } else if (indexOfBest == 2) {
           robot.move(Direction.RIGHT);
         }
       }

@@ -53,7 +53,6 @@ public class Main {
 //        BeerGame.demo();
 //        AiLifeGui.demo();
 
-
 //        new Genetics();
         AiLifeQSimulator sim = new AiLifeQSimulator();
       }

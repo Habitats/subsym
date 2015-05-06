@@ -19,9 +19,10 @@ public class PopulationList {
 //    c = new HashSet<>();
   }
 
-  public Stream<Genotype> parallellStream(){
+  public Stream<Genotype> parallellStream() {
     return c.parallelStream();
   }
+
   public Stream<Genotype> stream() {
     return c.stream();
   }

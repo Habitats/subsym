@@ -89,7 +89,7 @@ public class AnnPreferences {
   }
 
   public void shouldGrayCode(boolean shouldGrayCode) {
-   this.shouldGrayCode = shouldGrayCode;
+    this.shouldGrayCode = shouldGrayCode;
   }
 
   public long getSimulationSeed() {

@@ -42,7 +42,7 @@ public class QLearningEngine {
     return q.map;
   }
 
-  private static <T extends QState> void update(Q q, T lastState ,T currentState, QAction a, double r, double learningRate,
+  private static <T extends QState> void update(Q q, T lastState, T currentState, QAction a, double r, double learningRate,
                                                 double discountRate, QGame<T> game) {
     T nextState = game.nextState(a, currentState);
     double maxScoreIfBestAction = q.bestNextGivenAction(currentState);

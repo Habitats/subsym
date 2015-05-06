@@ -66,8 +66,9 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   @Override
   public void onTick() {
     drawBestActions(qMap);
-    if(solution())
+    if (solution()) {
       gui.terminate();
+    }
   }
 //
 //  private  void simulate() {
@@ -107,8 +108,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private void drawDetailed(AiLifeState s, QAction bestAction, Map<QAction, Double> actions) {
     String actionValues = actions.keySet().stream() //
         .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
-        .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a)))
-        .collect(Collectors.joining("\n", "\n\n", ""));
+        .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
     board.get(s.getRobotLocation()).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
   }
 
@@ -237,8 +237,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private List<AiLifeState> getStatesMatchingFood(Set<AiLifeState> states, AiLifeState currentState) {
     List<Vec> foodLocations = currentState.getFoodLocations();
     return states.stream().filter(state -> state.getFoodLocations().containsAll(foodLocations)  //
-                                           && foodLocations.containsAll(state.getFoodLocations()))
-        .collect(Collectors.toList());
+                                           && foodLocations.containsAll(state.getFoodLocations())).collect(Collectors.toList());
   }
 
   @Override

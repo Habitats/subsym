@@ -89,20 +89,17 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
     Log.v(TAG, best.fitness());
     AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
     ann = pheno.getArtificialNeuralNetwork();
-    Log.v(TAG, String
-        .format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(),
-                pheno.fitness()));
+    Log.v(TAG,
+          String.format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(), pheno.fitness()));
     List<Board<TileEntity>> boards = new ArrayList<>();
-    IntStream.range(0, annPrefs.isSingle() ? 1 : 5)
-        .forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
+    IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
     AiLifeGui.simulate(boards, this, () -> Log.v(TAG, this), new Robot(0, 0, boards.get(0), true));
   }
 
   public static Board<TileEntity> createAiLifeBoard(long seed) {
     Board<TileEntity> board = new Board<>(10, 10);
     Random random = new Random(seed);
-    IntStream.range(0, 10)
-        .forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
+    IntStream.range(0, 10).forEach(x -> IntStream.range(0, 10).forEach(y -> board.set(getRandomTile(board, x, y, random.nextDouble()))));
     return board;
   }
 
@@ -123,11 +120,11 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
       return;
     }
     int indexOfBest = ann.getBestIndex(robot.getSensoryInput());
-    if(indexOfBest == 0)
+    if (indexOfBest == 0) {
       robot.move(Direction.LEFT);
-    else if(indexOfBest == 1)
+    } else if (indexOfBest == 1) {
       robot.move(Direction.UP);
-    else if(indexOfBest== 2){
+    } else if (indexOfBest == 2) {
       robot.move(Direction.RIGHT);
     }
   }
