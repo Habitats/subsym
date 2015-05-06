@@ -114,7 +114,11 @@ public class Vec {
 
   @Override
   public int hashCode() {
-    return (x+":" + y).hashCode();
+    return getId().hashCode();
+  }
+
+  public String getId() {
+    return x+":" + y;
   }
 
   @Override
@@ -129,4 +133,5 @@ public class Vec {
   public Vec copy() {
     return Vec.create(x, y);
   }
+
 }

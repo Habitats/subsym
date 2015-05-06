@@ -278,29 +278,26 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   public static class AiLifeState implements QState {
 
-    //    private final List<Vec> foodLocations;
-    private final Vec robotLocation;
     private final String id;
     private static final Map<Integer, List<Vec>> foodCache = new HashMap<>();
     private static final Map<Integer, Vec> robotCache = new HashMap<>();
+    public static int states = 0;
     private final int foodKey;
     private final int robotKey;
 
     public AiLifeState(List<Vec> foodLocations, Vec robotLocation) {
       foodKey = getKey(foodLocations);
       foodCache.putIfAbsent(foodKey, foodLocations);
-//          this.foodLocations = foodLocations;
       robotKey = robotLocation.hashCode();
       robotCache.putIfAbsent(robotKey, robotLocation);
-      this.robotLocation = robotLocation;
+      states++;
       id = foodLocations.stream() //
                .map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
                .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.x + ":" + (int) robotLocation.y;
     }
 
     private static int getKey(List<Vec> foodLocations) {
-      Comparator<Vec> vecComparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
-      return foodLocations.stream().sorted(vecComparator).map(String::valueOf).collect(Collectors.joining(":")).hashCode();
+      return foodLocations.stream().map(Vec::getId).collect(Collectors.joining(":")).hashCode();
     }
 
     @Override
