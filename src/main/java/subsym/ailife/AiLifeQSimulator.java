@@ -9,7 +9,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,13 +49,15 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private List<List<Integer>> content;
   private Map<QAction, Direction> actions;
   private Map<AiLifeState, QAction> bestActions;
+  private Deque<AiLifeState> stateHistory;
 
   public AiLifeQSimulator() {
 //    String scenario = "1-simple.txt";
 //    String scenario = "2-still-simple.txt";
-//    String scenario = "3-dont-be-greedy.txt";
+    String scenario = "3-dont-be-greedy.txt";
 //    String scenario = "4-big-one.txt";
-    String scenario = "5-even-bigger.txt";
+//    String scenario = "5-even-bigger.txt";
+    stateHistory = new LinkedList<>();
 
     board = fromFile(scenario);
 
@@ -236,6 +240,19 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   @Override
   public void onStep(Map<AiLifeState, Map<QAction, Double>> qMap) {
 
+  }
+
+  @Override
+  public void addHisory(AiLifeState lastState) {
+    stateHistory.addFirst(lastState);
+    if (stateHistory.size() > 1) {
+      stateHistory.removeLast();
+    }
+  }
+
+  @Override
+  public Collection<AiLifeState> getHistoryStream() {
+    return stateHistory;
   }
 
   private QAction getBestAction(Map<QAction, Double> actionMap) {

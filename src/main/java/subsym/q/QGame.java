@@ -1,5 +1,6 @@
 package subsym.q;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,11 @@ public interface QGame<T extends QState> {
   double getReward();
 
   void onStep(Map<T, Map<QAction, Double>> map);
+
+  void addHisory(T lastState);
+
+
+  Collection<T> getHistoryStream();
 
 //  T nextState(QAction a, T newState);
 }

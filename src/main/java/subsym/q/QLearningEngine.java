@@ -28,6 +28,7 @@ public class QLearningEngine {
       while (!game.solution()) {
 //        Log.v(TAG, state);
         T lastState = currentState == null ? game.computeState() : currentState;
+        game.addHisory(lastState);
         QAction a = q.selectAction(game);
         game.execute(a);
         game.onStep(q.map);
