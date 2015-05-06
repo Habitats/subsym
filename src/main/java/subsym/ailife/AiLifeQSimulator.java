@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,8 +50,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 //    board = fromFile("1-simple.txt");
 //    board = fromFile("2-still-simple.txt");
 //    board = fromFile("3-dont-be-greedy.txt");
-//    board = fromFile("4-big-one.txt");
-    board = fromFile("5-even-bigger.txt");
+    board = fromFile("4-big-one.txt");
+//    board = fromFile("5-even-bigger.txt");
 
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
@@ -58,12 +60,12 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     double discountRate = .9;
 //    DoubleStream.of(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.).forEach(learningRate -> {
 //      DoubleStream.of(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.).forEach(discountRate -> {
-        board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-        qMap = QLearningEngine.learn(1000, this, learningRate, discountRate);
+    board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
+    qMap = QLearningEngine.learn(1000, this, learningRate, discountRate);
 
-        board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-        gui = new AiLifeGui(board, this, robot);
-        gui.simulate(() -> Log.v(TAG, "yolo"));
+    board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
+    gui = new AiLifeGui(board, this, robot);
+    gui.simulate(() -> Log.v(TAG, "yolo"));
 //      });
 //    });
   }
@@ -92,8 +94,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     // find the best action for any given state
     Map<AiLifeState, QAction> bestActions = matchingStates.stream() //
         .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
-//    drawBestActionArrows(bestActions);
-    drawDetailedBestAction(qMap, bestActions);
+    drawBestActionArrows(bestActions);
+//    drawDetailedBestAction(qMap, bestActions);
     gui.setAdapter(board);
     board.notifyDataChanged();
   }
