@@ -205,8 +205,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   @Override
   public AiLifeState computeState() {
-    List<Vec> foodLocations = board.getItems().stream() //
-        .filter(i -> i instanceof Food).map(food -> Vec.create(food.getX(), food.getY())).collect(Collectors.toList());
+    List<Integer[]> foodLocations = board.getItems().stream() //
+        .filter(i -> i instanceof Food).map(food -> new Integer[]{food.getX(), food.getY()}).collect(Collectors.toList());
     Vec robotLocation = board.getItems().stream() //
         .filter(i -> i instanceof Robot).map(robot -> Vec.create(robot.getX(), robot.getY())).findFirst().get();
     return new AiLifeState(foodLocations, robotLocation);
@@ -235,7 +235,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   }
 
   private List<AiLifeState> getStatesMatchingFood(Set<AiLifeState> states, AiLifeState currentState) {
-    List<Vec> foodLocations = currentState.getFoodLocations();
+    List<Integer[]> foodLocations = currentState.getFoodLocations();
     return states.stream().filter(state -> state.getFoodLocations().containsAll(foodLocations)  //
                                            && foodLocations.containsAll(state.getFoodLocations())).collect(Collectors.toList());
   }
@@ -270,16 +270,17 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   public static class AiLifeState implements QState {
 
-    private final List<Vec> foodLocations;
+    private final List<Integer[]> foodLocations;
     private final Vec robotLocation;
     private final String id;
 
-    public AiLifeState(List<Vec> foodLocations, Vec robotLocation) {
+    public AiLifeState(List<Integer[]> foodLocations, Vec robotLocation) {
       this.foodLocations = foodLocations;
       this.robotLocation = robotLocation;
-      id = foodLocations.stream() //
-               .map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
-               .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.x + ":" + (int) robotLocation.y;
+      id = new StringBuilder().append(foodLocations.stream() //
+                                          .map(v -> new StringBuilder().append("F").append(v[0]).append(":").append(v[1]).toString()) //
+                                          .collect(Collectors.joining())).append("R").append((int) robotLocation.x).append(":")
+          .append((int) robotLocation.y).toString();
     }
 
     @Override
@@ -297,7 +298,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       return id;
     }
 
-    public List<Vec> getFoodLocations() {
+    public List<Integer[]> getFoodLocations() {
       return foodLocations;
     }
 
