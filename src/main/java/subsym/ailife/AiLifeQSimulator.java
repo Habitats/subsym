@@ -48,8 +48,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 //    board = fromFile("1-simple.txt");
 //    board = fromFile("2-still-simple.txt");
 //    board = fromFile("3-dont-be-greedy.txt");
-    board = fromFile("4-big-one.txt");
-//    board = fromFile("5-even-bigger.txt");
+//    board = fromFile("4-big-one.txt");
+    board = fromFile("5-even-bigger.txt");
 
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
