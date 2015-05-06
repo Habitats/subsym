@@ -50,7 +50,7 @@ public class Robot extends TileEntity {
     return randomInput;
   }
 
-  public Robot(int x, int y, Board board, boolean isDirectional) {
+  public Robot(int x, int y, Board<TileEntity> board, boolean isDirectional) {
     super(x, y, board);
     startX = x;
     startY = y;

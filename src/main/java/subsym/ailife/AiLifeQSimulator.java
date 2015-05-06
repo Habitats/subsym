@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
     double learningRate = 0.9;
     double discountRate = .9;
-    qMap = QLearningEngine.learn(2000, this, learningRate, discountRate);
+    qMap = QLearningEngine.learn(1000, this, learningRate, discountRate);
 
     Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
                              scenario, AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
@@ -164,6 +165,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
         board.set(tile);
       }
     }
+    robot.init();
 
     return board;
   }
