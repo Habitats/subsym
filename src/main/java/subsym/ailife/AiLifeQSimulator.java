@@ -291,7 +291,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       foodCache.putIfAbsent(foodKey, foodLocations);
 //          this.foodLocations = foodLocations;
       robotKey = robotLocation.hashCode();
-      robotCache.putIfAbsent(foodKey, robotLocation);
+      robotCache.putIfAbsent(robotKey, robotLocation);
       this.robotLocation = robotLocation;
       id = foodLocations.stream() //
                .map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
