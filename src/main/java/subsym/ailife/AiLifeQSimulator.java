@@ -276,16 +276,29 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   public static class AiLifeState implements QState {
 
-    private final List<Vec> foodLocations;
+    //    private final List<Vec> foodLocations;
     private final Vec robotLocation;
     private final String id;
+    private static final Map<Integer, List<Vec>> foodCache = new HashMap<>();
+    private static final Map<Integer, Vec> robotCache = new HashMap<>();
+    private final int foodKey;
+    private final int robotKey;
 
     public AiLifeState(List<Vec> foodLocations, Vec robotLocation) {
-      this.foodLocations = foodLocations;
+      foodKey = getKey(foodLocations);
+      foodCache.putIfAbsent(foodKey, foodLocations);
+//          this.foodLocations = foodLocations;
+      robotKey = robotLocation.hashCode();
+      robotCache.putIfAbsent(foodKey, robotLocation);
       this.robotLocation = robotLocation;
       id = foodLocations.stream() //
                .map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
                .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.x + ":" + (int) robotLocation.y;
+    }
+
+    private static int getKey(List<Vec> foodLocations) {
+      Comparator<Vec> vecComparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
+      return foodLocations.stream().sorted(vecComparator).map(String::valueOf).collect(Collectors.joining(":")).hashCode();
     }
 
     @Override
@@ -304,11 +317,11 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     }
 
     public List<Vec> getFoodLocations() {
-      return foodLocations;
+      return foodCache.get(foodKey);
     }
 
     public Vec getRobotLocation() {
-      return robotLocation;
+      return robotCache.get(robotKey);
     }
   }
 }

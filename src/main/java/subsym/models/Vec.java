@@ -113,6 +113,11 @@ public class Vec {
   }
 
   @Override
+  public int hashCode() {
+    return (x+":" + y).hashCode();
+  }
+
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof Vec) {
       Vec o = (Vec) obj;
