@@ -27,7 +27,7 @@ public class QLearningEngine {
       game.restart();
       while (!game.solution()) {
 //        Log.v(TAG, state);
-        T lastState = currentState == null ? game.computeState() : currentState;
+        T lastState =  game.computeState();
         game.addHisory(lastState);
         QAction a = q.selectAction(game);
         game.execute(a);
@@ -37,9 +37,8 @@ public class QLearningEngine {
         double r = game.getReward();
 
         for (T state : game.getHistoryStream()) {
-          update(q, lastState, currentState, a, r, learningRate, discountRate);
-          currentState = lastState;
-          lastState = state;
+          update(q, state, currentState, a, r, learningRate, discountRate);
+          currentState = state;
         }
       }
 
