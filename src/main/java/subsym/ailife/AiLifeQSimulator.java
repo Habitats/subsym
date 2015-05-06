@@ -72,31 +72,41 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   }
 
   private void drawBestActions(Map<AiLifeState, Map<QAction, Double>> qMap) {
-    board.getItems().forEach(i -> i.setDescription(""));
-    board.getItems().forEach(i -> i.setDirection(null));
+    if (gui == null) {
+      return;
+    }
     Set<AiLifeState> states = qMap.keySet();
     AiLifeState currentState = computeState();
     // states with the same food config
     List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
 
     // find the best action for any given state
-    Map<AiLifeState, QAction> bestActions = matchingStates.stream() //
-        .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
-    bestActions.keySet().forEach(s -> {
-      QAction bestAction = bestActions.get(s);
-      Map<QAction, Double> actions = qMap.get(s);
-      drawDetailed(s, bestAction, actions);
-      board.get(s.getRobotLocation()).setDirection(this.actions.get(bestAction));
-    });
+    drawBestActionArrows(qMap, matchingStates);
+//    drawDetailedBestAction(qMap, bestActions);
     gui.setAdapter(board);
     board.notifyDataChanged();
   }
 
-  private void drawDetailed(AiLifeState s, QAction bestAction, Map<QAction, Double> actions) {
-    String actionValues = actions.keySet().stream() //
-        .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
-        .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
-    board.get(s.getRobotLocation()).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
+  private void drawBestActionArrows(Map<AiLifeState, Map<QAction, Double>> qMap, List<AiLifeState> matchingStates) {
+    board.getItems().forEach(i -> i.setDirection(null));
+    Map<AiLifeState, QAction> bestActions = matchingStates.stream() //
+        .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
+    bestActions.keySet().forEach(s -> {
+      QAction bestAction = bestActions.get(s);
+      board.get(s.getRobotLocation()).setDirection(this.actions.get(bestAction));
+    });
+  }
+
+  private void drawDetailedBestAction(Map<AiLifeState, Map<QAction, Double>> qMap, Map<AiLifeState, QAction> bestActions) {
+    board.getItems().forEach(i -> i.setDescription(""));
+    bestActions.keySet().forEach(s -> {
+      QAction bestAction = bestActions.get(s);
+      Map<QAction, Double> actions = qMap.get(s);
+      String actionValues = actions.keySet().stream() //
+          .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
+          .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
+      board.get(s.getRobotLocation()).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
+    });
   }
 
   public Board<TileEntity> fromFile(String fileName) {
