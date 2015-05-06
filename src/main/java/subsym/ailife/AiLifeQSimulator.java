@@ -243,8 +243,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   private List<AiLifeState> getStatesMatchingFood(Set<AiLifeState> states, AiLifeState currentState) {
     List<Vec> foodLocations = currentState.getFoodLocations();
-    return states.stream().filter(state -> state.getFoodLocations().containsAll(foodLocations)  //
-                                           && foodLocations.containsAll(state.getFoodLocations())).collect(Collectors.toList());
+    return states.stream().filter(state -> state.getFoodLocations().equals(foodLocations)).collect(Collectors.toList());
   }
 
   @Override
