@@ -231,14 +231,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   @Override
   public void onStep(Map<AiLifeState, Map<QAction, Double>> qMap) {
-//    if (gui != null) {
-//      drawBestActions(qMap);
-//      board.notifyDataChanged();
-//      try {
-//        Thread.sleep(gui.getSimulationSpeed());
-//      } catch (InterruptedException e) {
-//      }
-//    }
+
   }
 
   private QAction getBestAction(Map<QAction, Double> actionMap) {
@@ -254,29 +247,6 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   public void updateGui() {
     drawBestActions(qMap);
   }
-
-//  @Override
-//  public AiLifeState nextState(QAction a, AiLifeState newState) {
-//    Direction id = actions.get(a);
-//    List<Integer[]> foodLocations = new ArrayList<>(newState.getFoodLocations());
-//    Vec robotLocation = newState.getRobotLocation().copy();
-//    switch (id) {
-//      case UP:
-//        robotLocation.y = (robotLocation.y + 1) % board.getHeight();
-//        break;
-//      case RIGHT:
-//        robotLocation.x = (robotLocation.x + 1) % board.getWidth();
-//        break;
-//      case DOWN:
-//        robotLocation.y = (robotLocation.y * -1 + board.getHeight()) % board.getHeight();
-//        break;
-//      case LEFT:
-//        robotLocation.x = (robotLocation.x - 1 + board.getWidth()) % board.getWidth();
-//        break;
-//    }
-//    AiLifeState nextState = new AiLifeState(foodLocations, robotLocation);
-//    return nextState;
-//  }
 
   public static class AiLifeState implements QState {
 
@@ -313,11 +283,11 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       return hashCode() == obj.hashCode();
     }
 
-//    @Override
-//    public String toString() {
-//      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
-//                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
-//    }
+    @Override
+    public String toString() {
+      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
+                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
+    }
 
     public Collection<Vec> getFoodLocations() {
       return foodCache.get(foodKey);
