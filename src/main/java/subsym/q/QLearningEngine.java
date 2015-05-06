@@ -36,8 +36,11 @@ public class QLearningEngine {
 //        Log.v(TAG, newState);
         double r = game.getReward();
 
-        update(q, lastState, currentState, a, r, learningRate, discountRate);
-
+        for (T state : game.getHistoryStream()) {
+          update(q, lastState, currentState, a, r, learningRate, discountRate);
+          currentState = lastState;
+          lastState = state;
+        }
       }
 
       Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
