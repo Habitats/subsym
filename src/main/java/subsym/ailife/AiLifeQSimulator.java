@@ -278,10 +278,10 @@ scenario,                             AiLifeState.states, AiLifeState.foodCache.
 
   public static class AiLifeState implements QState {
 
-    private final String id;
+    private final int id;
     private static final Map<Integer, List<Vec>> foodCache = new HashMap<>();
     private static final Map<Integer, Vec> robotCache = new HashMap<>();
-    public static int states = 0;
+    private static int states = 0;
     private final int foodKey;
     private final int robotKey;
 
@@ -291,9 +291,7 @@ scenario,                             AiLifeState.states, AiLifeState.foodCache.
       robotKey = robotLocation.hashCode();
       robotCache.putIfAbsent(robotKey, robotLocation);
       states++;
-      id = foodLocations.stream() //
-               .map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
-               .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.x + ":" + (int) robotLocation.y;
+      id = (robotKey + ":" + foodKey).hashCode();
     }
 
     private static int getKey(List<Vec> foodLocations) {
@@ -302,17 +300,18 @@ scenario,                             AiLifeState.states, AiLifeState.foodCache.
 
     @Override
     public int hashCode() {
-      return id.hashCode();
+      return id;
     }
 
     @Override
     public boolean equals(Object obj) {
-      return id.equals(obj.toString());
+      return hashCode() == obj.hashCode();
     }
 
     @Override
     public String toString() {
-      return id;
+      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
+                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
     }
 
     public List<Vec> getFoodLocations() {
