@@ -218,10 +218,11 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   @Override
   public AiLifeState computeState() {
-    List<Vec> foodLocations = board.getItems().stream() //
-        .filter(i -> i instanceof Food).map(food -> Vec.create(food.getX(), food.getY())).collect(Collectors.toList());
-    Vec robotLocation  = Vec.create(robot.getX(), robot.getY());
-    return new AiLifeState(foodLocations,robotLocation);
+//    Collection<Vec> foodLocations = board.getItems().stream() //
+//        .filter(i -> i instanceof Food).map(food -> Vec.create(food.getX(), food.getY())).collect(Collectors.toList());
+    Collection<Vec> foodLocations = new ArrayList<>(robot.getFood().keySet());
+    Vec robotLocation = Vec.create(robot.getX(), robot.getY());
+    return new AiLifeState(foodLocations, robotLocation);
   }
 
   @Override
