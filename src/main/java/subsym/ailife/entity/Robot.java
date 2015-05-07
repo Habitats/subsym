@@ -57,7 +57,7 @@ public class Robot extends TileEntity {
     setDirection(Direction.UP);
   }
 
-  public void init() {
+  public void init(Map<TileEntity, Integer> foods) {
     List<TileEntity> items = getBoard().getItems();
     numPoison = items.stream().filter(i -> i instanceof Poison).count();
     numFood = items.stream().filter(i -> i instanceof Food).count();
