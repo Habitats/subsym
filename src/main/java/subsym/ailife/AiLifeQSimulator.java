@@ -62,7 +62,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   public AiLifeQSimulator() {
     double learningRate = .9;
     double discountRate = .9;
-    scenario = scenario4;
+    scenario = scenario5;
     run(scenario, learningRate, discountRate, QLearningEngine.MAX_ITERATION);
   }
 
@@ -97,12 +97,12 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     if (solution()) {
       gui.terminate();
       Log.v(TAG, "Time: " + robot.getTravelDistance() + " > Poison: " + robot.getPoisonCount());
-      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
+//      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
     }
     if (robot.getTravelDistance() > 1000) {
       Log.v(TAG, "Stuck :( ... " + computeState().getFoodLocations().size() + " foods left");
       gui.terminate();
-      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
+//      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
     }
   }
 

@@ -20,6 +20,7 @@ public class QLearningEngine {
 
   public static final boolean DEBUG = false;
   public final static int STATE_HISTORY_THRESHOLD = 1;
+  public final static int MAX_ITERATION = 3000;
 
   public static <T extends QState> Map<T, Map<QAction, Double>> learn(int iterations, QGame<T> game, double learningRate,
                                                                       double discountRate) {
