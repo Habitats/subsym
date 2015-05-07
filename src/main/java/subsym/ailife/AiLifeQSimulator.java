@@ -174,6 +174,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private Board<TileEntity> initBoard(int width, int height, List<List<Integer>> content) {
     Board<TileEntity> board = new Board<>(width, height);
 
+    Map<TileEntity, Integer> foods = new HashMap<>();
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int s = content.get(y).get(x);
@@ -191,11 +192,12 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
             break;
           default:
             tile = new Food(x, y, board);
+            foods.put(tile, s-1);
         }
         board.set(tile);
       }
     }
-    robot.init();
+    robot.init(foods);
 
     return board;
   }
