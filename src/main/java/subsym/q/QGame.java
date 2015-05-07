@@ -21,7 +21,7 @@ public interface QGame<T extends QState> {
 
   double getReward();
 
-  void onStep(Map<T, Map<QAction, Double>> map);
+  void onStep(Map<T, Map<QAction, Float>> map);
 
   void addHisory(T lastState, QAction a);
 

@@ -39,7 +39,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   private static final String TAG = AiLifeQSimulator.class.getSimpleName();
   private AiLifeGui gui;
-  private Map<AiLifeState, Map<QAction, Double>> qMap;
+  private Map<AiLifeState, Map<QAction, Float>> qMap;
   private Board<TileEntity> board;
   private int startX;
   private int startY;
@@ -62,7 +62,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   public AiLifeQSimulator() {
     double learningRate = .9;
     double discountRate = .9;
-    scenario = scenario4;
+    scenario = scenario5;
     run(scenario, learningRate, discountRate, QLearningEngine.MAX_ITERATION);
   }
 
@@ -106,7 +106,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     }
   }
 
-  private void drawBestActions(Map<AiLifeState, Map<QAction, Double>> qMap) {
+  private void drawBestActions(Map<AiLifeState, Map<QAction,Float>> qMap) {
     if (gui == null) {
       return;
     }
@@ -139,11 +139,11 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     });
   }
 
-  private void drawDetailedBestAction(Map<AiLifeState, Map<QAction, Double>> qMap, Map<AiLifeState, QAction> bestActions) {
+  private void drawDetailedBestAction(Map<AiLifeState, Map<QAction, Float>> qMap, Map<AiLifeState, QAction> bestActions) {
     board.getItems().forEach(i -> i.setDescription(""));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
-      Map<QAction, Double> actions = qMap.get(s);
+      Map<QAction, Float> actions = qMap.get(s);
       String actionValues = actions.keySet().stream() //
           .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
           .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
@@ -219,7 +219,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     this.robot = robot;
     QAction bestAction;
     if (qMap.containsKey(state)) {
-      Map<QAction, Double> actions = qMap.get(state);
+      Map<QAction, Float> actions = qMap.get(state);
       List<QAction> randomized = new ArrayList<>(actions.keySet());
       Collections.shuffle(randomized, Main.random());
       bestAction = Collections.max(randomized, (a1, a2) -> Double.compare(actions.get(a1), actions.get(a2)));
@@ -261,7 +261,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   }
 
   @Override
-  public void onStep(Map<AiLifeState, Map<QAction, Double>> qMap) {
+  public void onStep(Map<AiLifeState, Map<QAction, Float>> qMap) {
     if (QLearningEngine.DEBUG) {
       this.qMap = qMap;
       drawBestActions(qMap);
