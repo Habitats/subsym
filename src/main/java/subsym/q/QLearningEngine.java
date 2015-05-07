@@ -20,9 +20,9 @@ public class QLearningEngine {
 
   public static final boolean DEBUG = false;
   public final static int STATE_HISTORY_THRESHOLD = 1;
-  public final static int MAX_ITERATION = 2000;
+  public final static int MAX_ITERATION = 3000;
 
-  public static <T extends QState> Map<T, Map<QAction, Float>> learn(int iterations, QGame<T> game, double learningRate,
+  public static <T extends QState> Map<T, Map<QAction, Double>> learn(int iterations, QGame<T> game, double learningRate,
                                                                       double discountRate) {
     Q q = new Q();
 
@@ -34,7 +34,7 @@ public class QLearningEngine {
       while (!game.solution()) {
         if (q.map.get(lastState) == null) {
           List<QAction> actions = game.getActions();
-          Map<QAction, Float> actionMap = actions.stream().collect(Collectors.toMap(a -> a, a -> 0.f));
+          Map<QAction, Double> actionMap = actions.stream().collect(Collectors.toMap(a -> a, a -> 0.));
           q.map.put(game.computeState(), actionMap);
         }
         QAction a = q.selectAction(game, (iterations - i) / (double) iterations);
@@ -82,12 +82,12 @@ public class QLearningEngine {
     double oldScore = q.get(lastState, a);
     double delta = learningRate * (r + discountRate * maxScoreIfBestAction - oldScore);
     double score = oldScore + delta;
-    q.set(lastState, a, (float) score);
+    q.set(lastState, a, score);
   }
 
   public static class Q<T extends QState> {
 
-    private Map<T, Map<QAction, Float>> map;
+    private Map<T, Map<QAction, Double>> map;
     private double count = 1;
 
     public Q() {
@@ -106,7 +106,7 @@ public class QLearningEngine {
     }
 
     public double bestNextGivenAction(T s) {
-      Map<QAction, Float> actionMap = map.get(s);
+      Map<QAction, Double> actionMap = map.get(s);
       if (actionMap == null) {
         return 0;
       } else {
@@ -116,8 +116,8 @@ public class QLearningEngine {
       }
     }
 
-    public void set(T s, QAction a, float value) {
-      Map<QAction, Float> actions;
+    public void set(T s, QAction a, double value) {
+      Map<QAction, Double> actions;
       if (map.containsKey(s)) {
         actions = map.get(s);
       } else {
@@ -129,7 +129,7 @@ public class QLearningEngine {
 
     public QAction selectAction(QGame game, double iterationRate) {
       QState key = game.computeState();
-      Map<QAction, Float> actionMap = map.get(key);
+      Map<QAction, Double> actionMap = map.get(key);
 
       boolean pickRandom = Main.random().nextDouble() < 0.01 + .400 * iterationRate;
 //      Log.v(TAG, v);
@@ -141,13 +141,13 @@ public class QLearningEngine {
       }
     }
 
-    private QAction getRandomAction(Map<QAction, Float> actionMap) {
+    private QAction getRandomAction(Map<QAction, Double> actionMap) {
       List<QAction> actions = new ArrayList<>(actionMap.keySet());
       return actions.get(Main.random().nextInt(actionMap.size()));
     }
 
-    private QAction getBestAction(Map<QAction, Float> actionMap) {
-      return actionMap.keySet().stream().max((a1, a2) -> Float.compare(actionMap.get(a1), actionMap.get(a2))).get();
+    private QAction getBestAction(Map<QAction, Double> actionMap) {
+      return actionMap.keySet().stream().max((a1, a2) -> Double.compare(actionMap.get(a1), actionMap.get(a2))).get();
     }
   }
 }
