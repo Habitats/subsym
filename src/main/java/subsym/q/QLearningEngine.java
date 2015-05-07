@@ -70,7 +70,7 @@ public class QLearningEngine {
         System.out.print("#");
       }
     }
-    System.out.print(String.format(" > Completed in %d s", (int) ((System.currentTimeMillis() - start) / 1000.)));
+    System.out.print(String.format(" > Completed in %d s > States: %d", (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size()));
     System.out.println();
 
     return q.map;
