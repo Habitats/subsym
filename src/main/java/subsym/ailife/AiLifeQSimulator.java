@@ -100,7 +100,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 //      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
     }
     if (robot.getTravelDistance() > 1000) {
-      Log.v(TAG, "Stuck :( ... " + computeState().getFoodLocations().size() + " foods left");
+      Log.v(TAG, "Stuck :( ... " + AiLifeState.getFoodLocations(computeState().id).size() + " foods left");
       gui.terminate();
 //      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
     }
@@ -134,7 +134,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     board.getItems().forEach(i -> i.setDirection(null));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
-      Vec location = Robot.getLocationFromBits(s.getRobotLocation(), board.getWidth(), board.getHeight());
+      Vec location = Robot.getLocationFromBits(AiLifeState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
       board.get(location).setDirection(this.actions.get(bestAction));
     });
   }
@@ -147,7 +147,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       String actionValues = actions.keySet().stream() //
           .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
           .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
-      Vec location = Robot.getLocationFromBits(s.getRobotLocation(), board.getWidth(), board.getHeight());
+      Vec location = Robot.getLocationFromBits(AiLifeState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
       board.get(location).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
     });
   }
@@ -292,8 +292,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   }
 
   private List<AiLifeState> getStatesMatchingFood(Set<AiLifeState> states, AiLifeState currentState) {
-    BitSet foodLocations = currentState.getFoodLocations();
-    return states.stream().filter(state -> state.getFoodLocations().equals(foodLocations)).collect(Collectors.toList());
+    BitSet foodLocations = AiLifeState.getFoodLocations(currentState.id);
+    return states.stream().filter(state -> AiLifeState.getFoodLocations(state.id).equals(foodLocations)).collect(Collectors.toList());
   }
 
   @Override
@@ -313,7 +313,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       int size = robot.getFood().size();
       TOTAL_FOOD = robot.getFood().size();
 
-      id = (BitSet)foodLocations.clone();
+      id = (BitSet) foodLocations.clone();
       id.set(size + robotLocation.nextSetBit(0));
       states++;
     }
@@ -331,11 +331,11 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       return false;
     }
 
-    public BitSet getFoodLocations() {
+    public static BitSet getFoodLocations(BitSet id) {
       return id.get(0, TOTAL_FOOD);
     }
 
-    public BitSet getRobotLocation() {
+    public static BitSet getRobotLocation(BitSet id) {
       return id.get(TOTAL_FOOD, TOTAL_FOOD + id.nextSetBit(TOTAL_FOOD));
     }
   }
