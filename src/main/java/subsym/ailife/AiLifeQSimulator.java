@@ -62,7 +62,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   public AiLifeQSimulator() {
     double learningRate = .9;
     double discountRate = .9;
-    scenario = scenario4;
+    scenario = scenario5;
     run(scenario, learningRate, discountRate, QLearningEngine.MAX_ITERATION);
   }
 
