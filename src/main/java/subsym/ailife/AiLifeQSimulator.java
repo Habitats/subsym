@@ -307,14 +307,18 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     private static int states = 0;
     private final BitSet foodKey;
     private final BitSet robotKey;
+    private static int TOTAL_FOOD;
 
     public AiLifeState(Robot robot) {
       BitSet foodLocations = robot.getFoodId();
       BitSet robotLocation = robot.getRobotId();
       int size = robot.getFood().size();
+      TOTAL_FOOD = robot.getFood().size();
 
       foodKey = (BitSet) foodLocations.clone(); //
       robotKey = (BitSet) robotLocation.clone();
+      id = (BitSet) foodLocations.clone();
+      id.set(TOTAL_FOOD + robotLocation.nextSetBit(0));
       states++;
       id = (BitSet) foodKey.clone();
       id.set(size + robotKey.nextSetBit(0));
@@ -335,10 +339,12 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
     public BitSet getFoodLocations() {
       return foodKey;
+      return id.get(0, TOTAL_FOOD);
     }
 
     public BitSet getRobotLocation() {
       return robotKey;
+      return id.get(TOTAL_FOOD, id.nextSetBit(TOTAL_FOOD));
     }
   }
 }
