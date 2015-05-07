@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
@@ -134,7 +134,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     board.getItems().forEach(i -> i.setDirection(null));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
-      Vec location = s.getRobotLocation();
+      Vec location = Robot.getLocationFromBits(s.getRobotLocation(), board.getWidth(), board.getHeight());
       board.get(location).setDirection(this.actions.get(bestAction));
     });
   }
@@ -147,7 +147,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       String actionValues = actions.keySet().stream() //
           .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
           .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
-      Vec location = s.getRobotLocation();
+      Vec location = Robot.getLocationFromBits(s.getRobotLocation(), board.getWidth(), board.getHeight());
       board.get(location).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
     });
   }
@@ -292,7 +292,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   }
 
   private List<AiLifeState> getStatesMatchingFood(Set<AiLifeState> states, AiLifeState currentState) {
-    Collection<Vec> foodLocations = currentState.getFoodLocations();
+    BitSet foodLocations = currentState.getFoodLocations();
     return states.stream().filter(state -> state.getFoodLocations().equals(foodLocations)).collect(Collectors.toList());
   }
 
@@ -303,43 +303,42 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   public static class AiLifeState implements QState {
 
-    private final int id;
-    private static final Map<Integer, Collection<Vec>> foodCache = new HashMap<>();
-    private static final Map<Integer, Vec> robotCache = new HashMap<>();
+    private final BitSet id;
     private static int states = 0;
-    private final int foodKey;
-    private final int robotKey;
+    private final BitSet foodKey;
+    private final BitSet robotKey;
 
     public AiLifeState(Robot robot) {
-      Collection<Vec> foodLocations = new ArrayList<>(robot.getFood().keySet());
-      Vec robotLocation = Vec.create(robot.getX(), robot.getY());
+      BitSet foodLocations = robot.getFoodId();
+      BitSet robotLocation = robot.getRobotId();
+      int size = robot.getFood().size();
 
-      foodKey = foodLocations.stream().map(Vec::getId) //
-          .collect(Collectors.joining("&")).hashCode();
-      robotKey = robotLocation.hashCode();
-      foodCache.putIfAbsent(foodKey, foodLocations);
-      robotCache.putIfAbsent(robotKey, robotLocation);
+      foodKey = (BitSet) foodLocations.clone(); //
+      robotKey = (BitSet) robotLocation.clone();
       states++;
-      String s1 = "F:" + foodKey + " R:" + robotKey;
-      id = s1.hashCode();
+      id = (BitSet) foodKey.clone();
+      id.set(size + robotKey.nextSetBit(0));
     }
 
     @Override
     public int hashCode() {
-      return id;
+      return id.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-      return hashCode() == obj.hashCode();
+      if (obj instanceof AiLifeState) {
+        return ((AiLifeState) obj).id.equals(this.id);
+      }
+      return false;
     }
 
-    public Collection<Vec> getFoodLocations() {
-      return foodCache.get(foodKey);
+    public BitSet getFoodLocations() {
+      return foodKey;
     }
 
-    public Vec getRobotLocation() {
-      return robotCache.get(robotKey);
+    public BitSet getRobotLocation() {
+      return robotKey;
     }
   }
 }

@@ -3,6 +3,7 @@ package subsym.ailife.entity;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +28,16 @@ public class Robot extends TileEntity {
   private final int startY;
   private final int startX;
   private Map<Vec, TileEntity> poison;
-  private Map<Vec, TileEntity> food;
+  private Map<TileEntity, Integer> food;
   private int poisonCount;
   private int foodCount;
   private Direction dir;
 
   private int travelDistance;
   private double lastStepReward;
+
+  private BitSet foodId;
+  private BitSet robotId;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = new ArrayList<>();
@@ -62,12 +66,21 @@ public class Robot extends TileEntity {
     numPoison = items.stream().filter(i -> i instanceof Poison).count();
     numFood = items.stream().filter(i -> i instanceof Food).count();
     poison = items.stream().filter(i -> i instanceof Poison).collect(Collectors.toMap(i -> i.getPosition(), i -> i));
-    food = items.stream().filter(i -> i instanceof Food).collect(Collectors.toMap(i -> i.getPosition(), i -> i));
+    food = Collections.unmodifiableMap(foods);
+
+    foodId = new BitSet();
+    foodId.set(0, foods.size(), true);
+    robotId = new BitSet();
+    robotId.set(getLocation1D(), true);
 
     travelDistance = 0;
     lastStepReward = 0;
     foodCount = 0;
     poisonCount = 0;
+  }
+
+  public BitSet getRobotId() {
+    return robotId;
   }
 
   public List<Double> getFoodSensorInput() {
@@ -112,6 +125,7 @@ public class Robot extends TileEntity {
 
     TileEntity tile = new Empty((int) oldPosition.getX(), (int) oldPosition.getY(), getBoard());
     getBoard().set(tile);
+    robotId.set(getLocation1D(), false);
     switch (dir) {
       case LEFT:
         moveLeft();
@@ -134,13 +148,14 @@ public class Robot extends TileEntity {
       poisonCount++;
       lastStepReward = -20;
       poison.remove(newPosition);
-    } else if (oldTile instanceof Food) {
+    } else if (oldTile instanceof Food && consumedFood(oldTile)) {
       foodCount++;
       lastStepReward = 10;
-      food.remove(newPosition);
+      foodId.set(food.get(oldTile), false);
     } else {
       lastStepReward = -0.20000001;
     }
+    robotId.set(getLocation1D(), true);
     travelDistance++;
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
     getBoard().set(this);
@@ -148,6 +163,11 @@ public class Robot extends TileEntity {
     getBoard().notifyDataChanged();
   }
 
+  private boolean consumedFood(TileEntity oldTile) {
+    Integer foodIndex = food.get(oldTile);
+    boolean foodPresent = foodId.get(foodIndex);
+    return foodPresent;
+  }
 
   private void setPositionWrapped(int x, int y) {
     int newX = (x + getBoard().getWidth()) % getBoard().getWidth();
@@ -276,7 +296,7 @@ public class Robot extends TileEntity {
   public Map<Vec, TileEntity> getPoison() {
     return poison;
   }
-  public Map<Vec, TileEntity> getFood() {
+  public Map<TileEntity, Integer> getFood() {
     return food;
   }
 
@@ -308,5 +328,17 @@ public class Robot extends TileEntity {
     return startY;
   }
 
+  public BitSet getFoodId() {
+    return foodId;
+  }
 
+  public int getLocation1D() {
+    return getY() * getBoard().getWidth() + getX();
+  }
+
+  public static Vec getLocationFromBits(BitSet location, int width, int height) {
+    int x = location.nextSetBit(0) % width;
+    int y = (location.nextSetBit(0) - x) / height;
+    return Vec.create(x, y);
+  }
 }
