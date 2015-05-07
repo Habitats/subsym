@@ -311,23 +311,16 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     private static int states = 0;
     private final int foodKey;
     private final int robotKey;
-//    private final String s;
 
     public AiLifeState(Collection<Vec> foodLocations, Vec robotLocation, int size) {
       foodKey = foodLocations.stream().map(Vec::getId) //
-//          .sorted(Comparator.<String>naturalOrder()) //
           .collect(Collectors.joining("&")).hashCode();
       robotKey = robotLocation.hashCode();
       foodCache.putIfAbsent(foodKey, foodLocations);
       robotCache.putIfAbsent(robotKey, robotLocation);
       states++;
       String s1 = "F:" + foodKey + " R:" + robotKey;
-//      String s1 = foodLocations.stream().map(v -> "F:" + (int) v.getX() + ":" + (int) v.getY()) //
-//                      .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.getX() + ":" + (int) robotLocation.getY();
       id = s1.hashCode();
-
-//      s = String.valueOf(System.currentTimeMillis());
-//      Log.v(TAG, String.format("%0$-30s \t %s", s1, s2));
     }
 
     @Override
@@ -339,13 +332,6 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     public boolean equals(Object obj) {
       return hashCode() == obj.hashCode();
     }
-
-//    @Override
-//    public String toString() {
-////      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
-////                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
-//      return s;
-//    }
 
     public Collection<Vec> getFoodLocations() {
       return foodCache.get(foodKey);
