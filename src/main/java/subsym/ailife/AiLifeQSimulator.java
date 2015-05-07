@@ -252,7 +252,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   public AiLifeState computeState() {
     Collection<Vec> foodLocations = new ArrayList<>(robot.getFood().keySet());
     Vec robotLocation = Vec.create(robot.getX(), robot.getY());
-    return new AiLifeState(foodLocations, robotLocation);
+    return new AiLifeState(foodLocations, robotLocation, robot.getFood().size());
   }
 
   @Override
@@ -311,7 +311,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     private final int robotKey;
 //    private final String s;
 
-    public AiLifeState(Collection<Vec> foodLocations, Vec robotLocation) {
+    public AiLifeState(Collection<Vec> foodLocations, Vec robotLocation, int size) {
       foodKey = foodLocations.stream().map(Vec::getId) //
 //          .sorted(Comparator.<String>naturalOrder()) //
           .collect(Collectors.joining("&")).hashCode();
