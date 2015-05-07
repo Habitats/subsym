@@ -156,6 +156,7 @@ public class Robot extends TileEntity {
 //    Log.v(TAG, "New position: " + newX + ", " + newY);
   }
 
+
   private void moveForward() {
 //    Log.v(TAG, "Moving forward ...");
     switch (getDir()) {
@@ -275,7 +276,6 @@ public class Robot extends TileEntity {
   public Map<Vec, TileEntity> getPoison() {
     return poison;
   }
-
   public Map<Vec, TileEntity> getFood() {
     return food;
   }

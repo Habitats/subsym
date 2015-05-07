@@ -192,7 +192,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
             break;
           default:
             tile = new Food(x, y, board);
-            foods.put(tile, s-1);
+            foods.put(tile, s - 1);
         }
         board.set(tile);
       }
