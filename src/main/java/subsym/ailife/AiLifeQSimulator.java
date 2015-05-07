@@ -88,9 +88,6 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     }
     qMap = QLearningEngine.learn(maxIterations, this, learningRate, discountRate);
 
-//    Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
-//                             scenario, AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
-
     simulate();
   }
 
@@ -137,7 +134,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     board.getItems().forEach(i -> i.setDirection(null));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
-      board.get(s.getRobotLocation()).setDirection(this.actions.get(bestAction));
+      Vec location = s.getRobotLocation();
+      board.get(location).setDirection(this.actions.get(bestAction));
     });
   }
 
@@ -149,7 +147,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       String actionValues = actions.keySet().stream() //
           .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
           .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
-      board.get(s.getRobotLocation()).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
+      Vec location = s.getRobotLocation();
+      board.get(location).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
     });
   }
 
@@ -251,8 +250,6 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   @Override
   public AiLifeState computeState() {
-//    Collection<Vec> foodLocations = board.getItems().stream() //
-//        .filter(i -> i instanceof Food).map(food -> Vec.create(food.getX(), food.getY())).collect(Collectors.toList());
     Collection<Vec> foodLocations = new ArrayList<>(robot.getFood().keySet());
     Vec robotLocation = Vec.create(robot.getX(), robot.getY());
     return new AiLifeState(foodLocations, robotLocation);
