@@ -14,7 +14,6 @@ public class Vec {
   private Vec(double x, double y) {
     this.setX(x);
     this.setY(y);
-    setId();
   }
 
   // instance methods
@@ -120,11 +119,7 @@ public class Vec {
   }
 
   public String getId() {
-    return id;
-  }
-
-  public void setId() {
-    id = x + ":" + y;
+    return x + ":" + y;
   }
 
   @Override
@@ -146,7 +141,6 @@ public class Vec {
 
   public void setX(double x) {
     this.x = x;
-    setId();
   }
 
   public double getY() {
@@ -155,6 +149,5 @@ public class Vec {
 
   public void setY(double y) {
     this.y = y;
-    setId();
   }
 }

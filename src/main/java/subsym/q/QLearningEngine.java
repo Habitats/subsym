@@ -20,7 +20,6 @@ public class QLearningEngine {
 
   public static final boolean DEBUG = false;
   public final static int STATE_HISTORY_THRESHOLD = 1;
-  public final static int MAX_ITERATION = 5000;
 
   public static <T extends QState> Map<T, Map<QAction, Double>> learn(int iterations, QGame<T> game, double learningRate,
                                                                       double discountRate) {
@@ -38,14 +37,15 @@ public class QLearningEngine {
           q.map.put(game.computeState(), actionMap);
         }
         QAction a = q.selectAction(game, (iterations - i) / (double) iterations);
-        game.addHisory(lastState, a);
+        if (STATE_HISTORY_THRESHOLD > 1) {
+          game.addHisory(lastState, a);
+        }
         game.execute(a);
         game.onStep(q.map);
         T currentState = game.computeState();
-        lastState = currentState;
         double r = game.getReward();
-        if (r <= 0) {
-          update(q, game.getHistory().getFirst(), currentState, a, r, learningRate, discountRate);
+        if (r <= 0 || STATE_HISTORY_THRESHOLD == 1) {
+          update(q, lastState, currentState, a, r, learningRate, discountRate);
         } else {
           for (T state : game.getHistory()) {
             update(q, state, currentState, game.getHistoryAction(state), r, learningRate, discountRate);
@@ -53,6 +53,7 @@ public class QLearningEngine {
             currentState = state;
           }
         }
+        lastState = currentState;
 
         if (DEBUG) {
           try {
