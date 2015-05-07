@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import subsym.Log;
 import subsym.Main;
@@ -17,34 +18,58 @@ public class QLearningEngine {
 
   private static final String TAG = QLearningEngine.class.getSimpleName();
 
+  public static final boolean DEBUG = false;
+  public final static int STATE_HISTORY_THRESHOLD = 1;
+  public final static int MAX_ITERATION = 3000;
+
   public static <T extends QState> Map<T, Map<QAction, Double>> learn(int iterations, QGame<T> game, double learningRate,
                                                                       double discountRate) {
     Q q = new Q();
 
+    Log.v2(TAG, "Training ... ");
     long start = System.currentTimeMillis();
-    T currentState = null;
     for (int i = 0; i < iterations; i++) {
       game.restart();
+      T lastState = game.computeState();
       while (!game.solution()) {
-//        Log.v(TAG, state);
-        T lastState =  game.computeState();
-        game.addHisory(lastState);
-        QAction a = q.selectAction(game);
+        if (q.map.get(lastState) == null) {
+          List<QAction> actions = game.getActions();
+          Map<QAction, Double> actionMap = actions.stream().collect(Collectors.toMap(a -> a, a -> 0.));
+          q.map.put(game.computeState(), actionMap);
+        }
+        QAction a = q.selectAction(game, (iterations - i) / (double) iterations);
+        game.addHisory(lastState, a);
         game.execute(a);
         game.onStep(q.map);
-        currentState = game.computeState();
-//        Log.v(TAG, newState);
+        T currentState = game.computeState();
+        lastState = currentState;
         double r = game.getReward();
+        if (r <= 0) {
+          update(q, game.getHistory().getFirst(), currentState, a, r, learningRate, discountRate);
+        } else {
+          for (T state : game.getHistory()) {
+            update(q, state, currentState, game.getHistoryAction(state), r, learningRate, discountRate);
+            r *= 0.7;
+            currentState = state;
+          }
+        }
 
-        for (T state : game.getHistoryStream()) {
-          update(q, state, currentState, a, r, learningRate, discountRate);
-          currentState = state;
+        if (DEBUG) {
+          try {
+            Thread.sleep(200);
+            Log.v(TAG, "Sleep ...");
+          } catch (InterruptedException e) {
+          }
         }
       }
 
-      Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
+      //      Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
+      if ((i % 100) == 0) {
+        System.out.print("#");
+      }
     }
-    Log.v(TAG, String.format("Training completed in %d s", (int) ((System.currentTimeMillis() - start) / 1000.)));
+    System.out.print(String.format(" > Completed in %d s", (int) ((System.currentTimeMillis() - start) / 1000.)));
+    System.out.println();
 
     return q.map;
   }
@@ -61,6 +86,7 @@ public class QLearningEngine {
   public static class Q<T extends QState> {
 
     private Map<T, Map<QAction, Double>> map;
+    private double count = 1;
 
     public Q() {
       map = new HashMap<>();
@@ -99,10 +125,13 @@ public class QLearningEngine {
       actions.put(a, newState);
     }
 
-    public QAction selectAction(QGame game) {
-      Map<QAction, Double> actionMap = map.get(game.computeState());
-      boolean pickRandom = Main.random().nextDouble() < .1;
-      if (actionMap != null && !pickRandom && actionMap.size() == 4) {
+    public QAction selectAction(QGame game, double iterationRate) {
+      QState key = game.computeState();
+      Map<QAction, Double> actionMap = map.get(key);
+
+      boolean pickRandom = Main.random().nextDouble() < 0.01 + .300 * iterationRate;
+//      Log.v(TAG, v);
+      if (!pickRandom && actionMap.size() >= 0) {
         return getBestAction(actionMap);
       } else {
         List<QAction> actions = game.getActions();

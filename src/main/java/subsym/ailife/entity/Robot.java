@@ -30,11 +30,10 @@ public class Robot extends TileEntity {
   private Map<Vec, TileEntity> food;
   private int poisonCount;
   private int foodCount;
-  private double score;
   private Direction dir;
 
   private int travelDistance;
-  private int lastStepReward;
+  private double lastStepReward;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = new ArrayList<>();
@@ -64,6 +63,11 @@ public class Robot extends TileEntity {
     numFood = items.stream().filter(i -> i instanceof Food).count();
     poison = items.stream().filter(i -> i instanceof Poison).collect(Collectors.toMap(i -> i.getPosition(), i -> i));
     food = items.stream().filter(i -> i instanceof Food).collect(Collectors.toMap(i -> i.getPosition(), i -> i));
+
+    travelDistance = 0;
+    lastStepReward = 0;
+    foodCount = 0;
+    poisonCount = 0;
   }
 
   public List<Double> getFoodSensorInput() {
@@ -106,7 +110,7 @@ public class Robot extends TileEntity {
   public void move(Direction dir) {
     Vec oldPosition = getPosition().copy();
 
-    TileEntity tile = new Empty((int) oldPosition.x, (int) oldPosition.y, getBoard());
+    TileEntity tile = new Empty((int) oldPosition.getX(), (int) oldPosition.getY(), getBoard());
     getBoard().set(tile);
     switch (dir) {
       case LEFT:
@@ -132,10 +136,10 @@ public class Robot extends TileEntity {
       poison.remove(newPosition);
     } else if (oldTile instanceof Food) {
       foodCount++;
-      lastStepReward = 5;
+      lastStepReward = 10;
       food.remove(newPosition);
     } else {
-      lastStepReward = -1;
+      lastStepReward = -0.20000001;
     }
     travelDistance++;
 //    Log.v(TAG, "Robot ate: " + oldTile.getClass().getSimpleName());
@@ -276,16 +280,12 @@ public class Robot extends TileEntity {
     return food;
   }
 
-  public int getLastStepReward() {
+  public double getLastStepReward() {
     return lastStepReward;
   }
 
   public int getTravelDistance() {
     return travelDistance;
-  }
-
-  public void setScore(double score) {
-    this.score = score;
   }
 
   public Direction getDir() {

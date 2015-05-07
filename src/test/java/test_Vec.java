@@ -22,8 +22,8 @@ public class test_Vec {
   @Test
   public void test_static_create() {
     Vec v = Vec.create(1, 2);
-    assertEquals(v.x, 1., 0);
-    assertEquals(v.y, 2., 0);
+    assertEquals(v.getX(), 1., 0);
+    assertEquals(v.getY(), 2., 0);
   }
 
   @Test

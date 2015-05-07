@@ -47,8 +47,8 @@ public abstract class AICanvas<T extends Entity, A extends AIAdapter<T>> extends
     Point start = new Point();
     Point end = new Point();
 
-    start.setLocation(p.x, p.y);
-    end.setLocation(p.x + v.x / 2, p.y + v.y / 2);
+    start.setLocation(p.getX(), p.getY());
+    end.setLocation(p.getX() + v.getX() / 2, p.getY() + v.getY() / 2);
 
     createArrowShape((Graphics2D) g, start, end);
   }

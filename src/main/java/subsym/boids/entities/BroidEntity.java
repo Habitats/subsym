@@ -46,8 +46,8 @@ public abstract class BroidEntity extends Entity {
 
 
   public void wrapAround(int width, int height) {
-    position.x = (position.x + width) % width;
-    position.y = (position.y + height) % height;
+    position.setX((position.getX() + width) % width);
+    position.setY((position.getY() + height) % height);
   }
 
   protected abstract int getMaxSpeed();

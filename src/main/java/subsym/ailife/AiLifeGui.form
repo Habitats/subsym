@@ -85,7 +85,7 @@
               <maximum value="1000"/>
               <minimum value="1"/>
               <paintLabels value="false"/>
-              <value value="50"/>
+              <value value="10"/>
               <valueIsAdjusting value="false"/>
             </properties>
           </component>

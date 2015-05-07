@@ -52,7 +52,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
   public AiLifeGui(Board<TileEntity> board, AiLifeSimulator simulator, Robot robot) {
     this.simulator = simulator;
     this.board = board;
-    this.robot = robot;
+    this.setRobot(robot);
     buildFrame(mainPanel, null, null);
 
     simulateButton.addActionListener(e -> simulate());
@@ -65,7 +65,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(Direction.LEFT);
+        getRobot().move(Direction.LEFT);
         simulator.updateGui();
         printBoard();
       }
@@ -74,7 +74,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.UP, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(Direction.UP);
+        getRobot().move(Direction.UP);
         printBoard();
         simulator.updateGui();
       }
@@ -83,7 +83,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(Direction.RIGHT);
+        getRobot().move(Direction.RIGHT);
         printBoard();
         simulator.updateGui();
       }
@@ -92,7 +92,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
     actionMap.put(Direction.DOWN, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        robot.move(Direction.DOWN);
+        getRobot().move(Direction.DOWN);
         printBoard();
         simulator.updateGui();
       }
@@ -151,14 +151,14 @@ public class AiLifeGui extends AIGui<TileEntity> {
     new Thread(() -> {
       initBoard(board);
       for (int i = 1; i <= simulator.getMaxSteps(); i++) {
-        simulator.move(robot);
+        simulator.move(getRobot());
         onTick(i);
         try {
           Thread.sleep(simulationSpeedSlider.getValue());
         } catch (InterruptedException e) {
         }
         if (shouldStop) {
-          Log.v(TAG, "Exiting ...");
+//          Log.v(TAG, "Exiting ...");
           return;
         }
       }
@@ -174,19 +174,19 @@ public class AiLifeGui extends AIGui<TileEntity> {
     canvas.setAdapter(board);
     numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
     numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
-    robot = new Robot(robot.getStartX(), robot.getStartY(), board, robot.isDirectional());
-    this.board.set(robot);
-    this.board.notifyDataChanged();
+    board.set(robot);
+    setRobot(robot);
+    board.notifyDataChanged();
     if (isVisible()) {
       onTick(0);
     }
   }
 
   public void onTick(int time) {
-    foodLabel.setText(String.format("Food: %2d/%2d", robot.getFoodCount(), numFood));
-    poisonLabel.setText(String.format("Poison: %2d/%2d", robot.getPoisonCount(), numPoison));
+    foodLabel.setText(String.format("Food: %2d/%2d", getRobot().getFoodCount(), numFood));
+    poisonLabel.setText(String.format("Poison: %2d/%2d", getRobot().getPoisonCount(), numPoison));
     timeLabel.setText(String.format("Time: %2d", time));
-    scoreLabel.setText(String.format("Score: %.3f", robot.getScore()));
+    scoreLabel.setText(String.format("Score: %.3f", getRobot().getScore()));
 
     simulator.onTick();
   }
@@ -238,5 +238,13 @@ public class AiLifeGui extends AIGui<TileEntity> {
     }
     gui.board = boards.remove(0);
     gui.simulate(() -> simulate(boards, callback, gui));
+  }
+
+  public Robot getRobot() {
+    return robot;
+  }
+
+  public void setRobot(Robot robot) {
+    this.robot = robot;
   }
 }

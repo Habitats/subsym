@@ -59,6 +59,9 @@ public class Log {
     }
   }
 
+  private static void logFlat(String msg) {
+    System.out.print(msg);
+  }
   private static void log(String msg) {
     System.out.println(msg);
   }
@@ -80,5 +83,9 @@ public class Log {
 
   public static void setLogField(AIContiniousScrollPane statusField) {
     Log.logField = statusField;
+  }
+
+  public static void v2(String tag, String msg) {
+    logFlat(String.format("%s > %s > %s", getPrettyDate(), tag, msg.toString()));
   }
 }

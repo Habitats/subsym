@@ -7,42 +7,44 @@ import java.util.Arrays;
  */
 public class Vec {
 
-  public double x;
-  public double y;
+  private double x;
+  private double y;
+  private String id;
 
   private Vec(double x, double y) {
-    this.x = x;
-    this.y = y;
+    this.setX(x);
+    this.setY(y);
+    setId();
   }
 
   // instance methods
 
   public Vec multiply(Vec v) {
-    x *= v.x;
-    y *= v.y;
+    setX(getX() * v.getX());
+    setY(getY() * v.getY());
     return this;
   }
 
   public Vec subtract(Vec v) {
-    x -= v.x;
-    y -= v.y;
+    setX(getX() - v.getX());
+    setY(getY() - v.getY());
     return this;
   }
 
   public Vec divide(Vec v) {
-    x /= v.x;
-    y /= v.y;
+    setX(getX() / v.getX());
+    setY(getY() / v.getY());
     return this;
   }
 
   public Vec add(Vec v) {
-    x += v.x;
-    y += v.y;
+    setX(getX() + v.getX());
+    setY(getY() + v.getY());
     return this;
   }
 
   public double lenght() {
-    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
   }
 
   public Vec normalize() {
@@ -50,53 +52,53 @@ public class Vec {
   }
 
   public Vec divide(double size) {
-    x /= size;
-    y /= size;
+    setX(getX() / size);
+    setY(getY() / size);
     return this;
   }
 
   public Vec multiply(double o) {
-    x *= o;
-    y *= o;
+    setX(getX() * o);
+    setY(getY() * o);
     return this;
   }
 
   // static methods
 
   public static Vec add(Vec u, Vec z, Vec... vecs) {
-    Vec sum = new Vec(u.x, u.y).add(z);
+    Vec sum = new Vec(u.getX(), u.getY()).add(z);
     Arrays.asList(vecs).stream().forEach(v -> sum.add(v));
     return sum;
   }
 
   public static Vec subtract(Vec u, Vec z, Vec... vecs) {
-    Vec first = new Vec(u.x, u.y).subtract(z);
+    Vec first = new Vec(u.getX(), u.getY()).subtract(z);
     Arrays.asList(vecs).stream().forEach(v -> first.subtract(v));
     return first;
   }
 
   public static Vec multiply(Vec u, Vec z, Vec... vecs) {
-    Vec sum = new Vec(u.x, u.y).multiply(z);
+    Vec sum = new Vec(u.getX(), u.getY()).multiply(z);
     Arrays.asList(vecs).stream().forEach(v -> sum.multiply(v));
     return sum;
   }
 
   public static Vec divide(Vec u, Vec z, Vec... vecs) {
-    Vec sum = new Vec(u.x, u.y).divide(z);
+    Vec sum = new Vec(u.getX(), u.getY()).divide(z);
     Arrays.asList(vecs).stream().forEach(v -> sum.divide(v));
     return sum;
   }
 
   public static Vec divide(Vec v, double size) {
-    return new Vec(v.x / size, v.y / size);
+    return new Vec(v.getX() / size, v.getY() / size);
   }
 
   public static Vec multiply(Vec v, double o) {
-    return new Vec(v.x * o, v.y * o);
+    return new Vec(v.getX() * o, v.getY() * o);
   }
 
   public static double lenght(Vec v) {
-    return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
+    return Math.sqrt(Math.pow(v.getX(), 2) + Math.pow(v.getY(), 2));
   }
 
   public static Vec normalize(Vec v) {
@@ -105,7 +107,7 @@ public class Vec {
 
   @Override
   public String toString() {
-    return "(" + x + ", " + y + ") - | " + lenght() + " |";
+    return "(" + getX() + ", " + getY() + ") - | " + lenght() + " |";
   }
 
   public static Vec create(double x, double y) {
@@ -118,20 +120,41 @@ public class Vec {
   }
 
   public String getId() {
-    return new StringBuilder().append("[").append(x).append("|").append(y).append("]").toString();
+    return id;
+  }
+
+  public void setId() {
+    id = x + ":" + y;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Vec) {
       Vec o = (Vec) obj;
-      return o.x == x && o.y == y;
+      return o.getX() == getX() && o.getY() == getY();
     }
     return false;
   }
 
   public Vec copy() {
-    return Vec.create(x, y);
+    return Vec.create(getX(), getY());
   }
 
+  public double getX() {
+    return x;
+  }
+
+  public void setX(double x) {
+    this.x = x;
+    setId();
+  }
+
+  public double getY() {
+    return y;
+  }
+
+  public void setY(double y) {
+    this.y = y;
+    setId();
+  }
 }

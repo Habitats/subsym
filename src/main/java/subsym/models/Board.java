@@ -136,7 +136,7 @@ public class Board<T extends TileEntity> extends AIAdapter<T> {
   }
 
   public T get(Vec oldPosition) {
-    return get((int) oldPosition.x, (int) oldPosition.y);
+    return get((int) oldPosition.getX(), (int) oldPosition.getY());
   }
 
   public String getFormattedBoard() {

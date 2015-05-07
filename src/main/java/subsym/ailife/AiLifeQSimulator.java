@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -49,43 +48,64 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private List<List<Integer>> content;
   private Map<QAction, Direction> actions;
   private Map<AiLifeState, QAction> bestActions;
+
+  public static final String scenario1 = "1-simple.txt";
+  public static final String scenario2 = "2-still-simple.txt";
+  public static final String scenario3 = "3-dont-be-greedy.txt";
+  public static final String scenario4 = "4-big-one.txt";
+  public static final String scenario5 = "5-even-bigger.txt";
+  private final String scenario;
+
+  private Map<QState, QAction> stateHistoryActions;
   private Deque<AiLifeState> stateHistory;
 
   public AiLifeQSimulator() {
-//    String scenario = "1-simple.txt";
-//    String scenario = "2-still-simple.txt";
-    String scenario = "3-dont-be-greedy.txt";
-//    String scenario = "4-big-one.txt";
-//    String scenario = "5-even-bigger.txt";
+    double learningRate = .9;
+    double discountRate = .9;
+    scenario = scenario4;
+    run(scenario, learningRate, discountRate, QLearningEngine.MAX_ITERATION);
+  }
+
+  private void simulate() {
+    board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
+    gui = new AiLifeGui(board, this, robot);
+    gui.simulate(() -> Log.v(TAG, ""));
+  }
+
+  private void run(String scenario, double learningRate, double discountRate, int maxIterations) {
     stateHistory = new LinkedList<>();
+    stateHistoryActions = new HashMap<>();
 
     board = fromFile(scenario);
 
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
 
-    double learningRate = 0.9;
-    double discountRate = .9;
-    qMap = QLearningEngine.learn(2000, this, learningRate, discountRate);
+    if (QLearningEngine.DEBUG) {
+      gui = new AiLifeGui(board, this, robot);
+      board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
+      gui.setAdapter(board);
+    }
+    qMap = QLearningEngine.learn(maxIterations, this, learningRate, discountRate);
 
-    Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
-                             scenario, AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
+//    Log.v(TAG, String.format("Scenarior: %s > #States: %d > FoodCache: %d > RobotCache: %d", //
+//                             scenario, AiLifeState.states, AiLifeState.foodCache.size(), AiLifeState.robotCache.size()));
 
-    board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-    gui = new AiLifeGui(board, this, robot);
-    gui.simulate(() -> Log.v(TAG, "yolo"));
+    simulate();
   }
 
   @Override
   public void onTick() {
     drawBestActions(qMap);
     if (solution()) {
-
       gui.terminate();
+      Log.v(TAG, "Time: " + robot.getTravelDistance() + " > Poison: " + robot.getPoisonCount());
+      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
     }
     if (robot.getTravelDistance() > 1000) {
       Log.v(TAG, "Stuck :( ... " + computeState().getFoodLocations().size() + " foods left");
       gui.terminate();
+      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
     }
   }
 
@@ -95,16 +115,20 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     }
 
     // find the best action for any given state
-    if (bestActions == null || robot.getLastStepReward() > 0) {
-      // states with the same food config
-      Set<AiLifeState> states = qMap.keySet();
-      AiLifeState currentState = computeState();
-      List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
-      bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
+//    if (bestActions == null || robot.getLastStepReward() > 0 || QLearningEngine.DEBUG) {
+//      // states with the same food config
+//      Set<AiLifeState> states = qMap.keySet();
+//      AiLifeState currentState = computeState();
+//      List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
+//      bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
+//    }
+
+    if (QLearningEngine.DEBUG) {
+      drawDetailedBestAction(qMap, bestActions);
+    } else {
+//      drawBestActionArrows(bestActions);
     }
 
-    drawBestActionArrows(bestActions);
-//    drawDetailedBestAction(qMap, bestActions);
     gui.setAdapter(board);
     board.notifyDataChanged();
   }
@@ -183,6 +207,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     gui.setAdapter(board);
   }
 
+  @Override
   public List<QAction> getActions() {
     return new ArrayList<>(actions.keySet());
   }
@@ -190,6 +215,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   @Override
   public void move(Robot robot) {
     AiLifeState state = computeState();
+    this.robot = robot;
     QAction bestAction;
     if (qMap.containsKey(state)) {
       Map<QAction, Double> actions = qMap.get(state);
@@ -239,20 +265,29 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   @Override
   public void onStep(Map<AiLifeState, Map<QAction, Double>> qMap) {
-
+    if (QLearningEngine.DEBUG) {
+      this.qMap = qMap;
+      drawBestActions(qMap);
+    }
   }
 
   @Override
-  public void addHisory(AiLifeState lastState) {
+  public void addHisory(AiLifeState lastState, QAction a) {
     stateHistory.addFirst(lastState);
-    if (stateHistory.size() > 1) {
+    stateHistoryActions.put(lastState, a);
+    if (stateHistory.size() > QLearningEngine.STATE_HISTORY_THRESHOLD) {
       stateHistory.removeLast();
     }
   }
 
   @Override
-  public Deque<AiLifeState> getHistoryStream() {
+  public Deque<AiLifeState> getHistory() {
     return stateHistory;
+  }
+
+  @Override
+  public QAction getHistoryAction(AiLifeState state) {
+    return stateHistoryActions.get(state);
   }
 
   private QAction getBestAction(Map<QAction, Double> actionMap) {
@@ -277,20 +312,22 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     private static int states = 0;
     private final int foodKey;
     private final int robotKey;
+//    private final String s;
 
     public AiLifeState(Collection<Vec> foodLocations, Vec robotLocation) {
       foodKey = foodLocations.stream().map(Vec::getId) //
-          .sorted(Comparator.<String>naturalOrder()) //
+//          .sorted(Comparator.<String>naturalOrder()) //
           .collect(Collectors.joining("&")).hashCode();
       robotKey = robotLocation.hashCode();
       foodCache.putIfAbsent(foodKey, foodLocations);
       robotCache.putIfAbsent(robotKey, robotLocation);
       states++;
-//      String s1 = "F:" + foodKey + " R:" + robotKey;
-      String s2 = foodLocations.stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
-                      .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.x + ":" + (int) robotLocation.y;
-      id = s2.hashCode();
+      String s1 = "F:" + foodKey + " R:" + robotKey;
+//      String s1 = foodLocations.stream().map(v -> "F:" + (int) v.getX() + ":" + (int) v.getY()) //
+//                      .collect(Collectors.joining(" ")) + " R:" + (int) robotLocation.getX() + ":" + (int) robotLocation.getY();
+      id = s1.hashCode();
 
+//      s = String.valueOf(System.currentTimeMillis());
 //      Log.v(TAG, String.format("%0$-30s \t %s", s1, s2));
     }
 
@@ -304,11 +341,12 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
       return hashCode() == obj.hashCode();
     }
 
-    @Override
-    public String toString() {
-      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
-                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
-    }
+//    @Override
+//    public String toString() {
+////      return getFoodLocations().stream().map(v -> "F:" + (int) v.x + ":" + (int) v.y) //
+////                 .collect(Collectors.joining(" ")) + " R:" + (int) getRobotLocation().x + ":" + (int) getRobotLocation().y;
+//      return s;
+//    }
 
     public Collection<Vec> getFoodLocations() {
       return foodCache.get(foodKey);

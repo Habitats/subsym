@@ -23,10 +23,12 @@ public interface QGame<T extends QState> {
 
   void onStep(Map<T, Map<QAction, Double>> map);
 
-  void addHisory(T lastState);
+  void addHisory(T lastState, QAction a);
 
 
-  Deque<T> getHistoryStream();
+  Deque<T> getHistory();
+
+  QAction getHistoryAction(T state);
 
 //  T nextState(QAction a, T newState);
 }

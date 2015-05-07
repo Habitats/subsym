@@ -19,11 +19,11 @@ public abstract class Entity {
   }
 
   public int getX() {
-    return (int) position.x;
+    return (int) position.getX();
   }
 
   public int getY() {
-    return (int) position.y;
+    return (int) position.getY();
   }
 
   public Color getColor() {
