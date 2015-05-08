@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import subsym.Main;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.Genotype;
 import subsym.genetics.Population;

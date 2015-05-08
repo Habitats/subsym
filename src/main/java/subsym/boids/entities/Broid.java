@@ -2,6 +2,7 @@ package subsym.boids.entities;
 
 import java.awt.*;
 
+import subsym.Main;
 import subsym.boids.BoidAdapter;
 import subsym.gui.ColorUtils;
 import subsym.models.Vec;

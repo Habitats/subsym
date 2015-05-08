@@ -3,6 +3,7 @@ package subsym.lolz;
 import java.util.stream.IntStream;
 
 import subsym.Log;
+import subsym.Main;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 
