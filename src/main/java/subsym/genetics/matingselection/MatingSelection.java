@@ -20,7 +20,7 @@ public interface MatingSelection {
   default Genotype spinAndRemove(List<Genotype> populationList, Function<Genotype, Double> mapper) {
     Map<Genotype, Double> adjusted = populationList.stream().collect(Collectors.toMap(i -> i, mapper, (a, b) -> a + b));
     double sum = adjusted.values().stream().mapToDouble(Double::doubleValue).sum();
-    double index = Math.random() * sum;
+    double index = Main.random().nextDouble() * sum;
     AtomicDouble i = new AtomicDouble(0);
     Genotype parent = adjusted.keySet().stream()//
         .filter(v -> i.addAndGet(adjusted.get(v)) >= index)//

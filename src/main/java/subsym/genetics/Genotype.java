@@ -116,7 +116,7 @@ public abstract class Genotype implements Comparable<Genotype> {
 
   // mutate each bit with a given probability
   public void mutate(double mutationRate) {
-    IntStream.range(0, size()).filter(i -> Math.random() < mutationRate).forEach((bitIndex) -> {
+    IntStream.range(0, size()).filter(i -> Main.random().nextDouble() < mutationRate).forEach((bitIndex) -> {
       bits.flip(bitIndex);
     });
     resetFitness();
@@ -125,8 +125,8 @@ public abstract class Genotype implements Comparable<Genotype> {
   // mutate each bit with a given probability
   public void mutateBlock(double mutationRate) {
     for (int i = 0; i < size(); i += getBitGroupSize()) {
-      if (Math.random() < mutationRate) {
-        IntStream.range(i, i + getBitGroupSize()).forEach((bitIndex -> bits.set(bitIndex, Math.random() < .5 ? true : false)));
+      if (Main.random().nextDouble() < mutationRate) {
+        IntStream.range(i, i + getBitGroupSize()).forEach((bitIndex -> bits.set(bitIndex, Main.random().nextDouble() < .5 ? true : false)));
       }
     }
     resetFitness();

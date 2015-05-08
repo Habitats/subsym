@@ -45,7 +45,7 @@ public class Population {
 
   public void crossOver(double crossOverRate, MatingSelection matingMode) {
     while (getFreeSpots() > 0) {
-      crossOverSingle(crossOverRate, Math.random(), matingMode);
+      crossOverSingle(crossOverRate, Main.random().nextDouble(), matingMode);
     }
   }
 
@@ -58,7 +58,7 @@ public class Population {
     Genotype p1 = matingMode.selectNext(populationList);
     Genotype p2 = matingMode.selectNext(populationList);
 
-    if (Math.random() < crossOverRate) {
+    if (Main.random().nextDouble() < crossOverRate) {
       Genotype c1 = Genotype.crossOver(p1, p2, cut);
       Genotype c2 = Genotype.crossOver(p2, p1, cut);
       c1.setGenerationOrigin(currentGeneration + 1);

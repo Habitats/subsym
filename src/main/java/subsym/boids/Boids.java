@@ -1,5 +1,6 @@
 package subsym.boids;
 
+import subsym.Main;
 import subsym.boids.entities.Broid;
 import subsym.boids.entities.Obstacle;
 import subsym.boids.entities.Predator;
@@ -42,7 +43,7 @@ public class Boids implements Runnable {
         try {
           Thread.sleep(updateFrequency);
           while (adapter.notFull()) {
-            Broid boid = new Broid((int) (Math.random() * width), (int) (Math.random() * height));
+            Broid boid = new Broid((int) (Main.random().nextDouble() * width), (int) (Main.random().nextDouble() * height));
             adapter.add(boid);
           }
 
@@ -61,13 +62,13 @@ public class Boids implements Runnable {
 
   public void spawnPredator() {
     synchronized (adapter) {
-      adapter.add(new Predator((int) (Math.random() * width), (int) (Math.random() * height)));
+      adapter.add(new Predator((int) (Main.random().nextDouble() * width), (int) (Main.random().nextDouble() * height)));
     }
   }
 
   public void spawnObsticle() {
     synchronized (adapter) {
-      adapter.add(new Obstacle((int) (Math.random() * width), (int) (Math.random() * height)));
+      adapter.add(new Obstacle((int) (Main.random().nextDouble() * width), (int) (Main.random().nextDouble() * height)));
     }
   }
 

@@ -28,7 +28,7 @@ public class Lolz extends GeneticProblem {
 
   @Override
   protected double getCrossoverCut() {
-    return Math.random();
+    return Main.random().nextDouble();
   }
 
   @Override

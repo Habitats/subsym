@@ -16,7 +16,7 @@ public class Broid extends BroidEntity {
   public Broid(int x, int y) {
     super(x, 0, y);
     setColor(getOriginalColor());
-    setVelocity(Math.random(), Math.random());
+    setVelocity(Main.random().nextDouble(), Main.random().nextDouble());
   }
 
   public Color getOriginalColor() {

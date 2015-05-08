@@ -26,7 +26,7 @@ public class OneMax extends GeneticProblem {
 
   @Override
   protected double getCrossoverCut() {
-    return Math.random();
+    return Main.random().nextDouble();
   }
 
   @Override
