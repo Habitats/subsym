@@ -15,6 +15,7 @@ import subsym.gui.Direction;
 import subsym.models.Board;
 import subsym.models.Vec;
 import subsym.models.entity.TileEntity;
+import subsym.q.QPreferences;
 
 /**
  * Created by Patrick on 23.03.2015.
@@ -146,14 +147,14 @@ public class Robot extends TileEntity {
     Vec newPosition = oldTile.getPosition();
     if (oldTile instanceof Poison) {
       poisonCount++;
-      lastStepReward = -20;
+      lastStepReward = QPreferences.POISON_PENALTY;
       poison.remove(newPosition);
     } else if (oldTile instanceof Food && consumedFood(oldTile)) {
       foodCount++;
-      lastStepReward = 10;
+      lastStepReward = QPreferences.FOOD_REWARD;
       foodId.set(food.get(oldTile), false);
     } else {
-      lastStepReward = -0.20000001;
+      lastStepReward = QPreferences.STEP_PENALTY;
     }
     robotId.set(getLocation1D(), true);
     travelDistance++;
@@ -338,7 +339,7 @@ public class Robot extends TileEntity {
 
   public static Vec getLocationFromBits(BitSet location, int width, int height) {
     int x = location.nextSetBit(0) % width;
-    int y = (location.nextSetBit(0) - x) / height;
+    int y = (location.nextSetBit(0) - x) / width;
     return Vec.create(x, y);
   }
 }

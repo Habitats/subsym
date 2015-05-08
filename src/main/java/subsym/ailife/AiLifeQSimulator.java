@@ -90,12 +90,16 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     if (solution()) {
       gui.terminate();
       Log.v(TAG, "Time: " + robot.getTravelDistance() + " > Poison: " + robot.getPoisonCount());
-//      run(SCENARIO, .9, .9, QLearningEngine.MAX_ITERATION);
+      if (QPreferences.RUN_FOREVER) {
+        run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
+      }
     }
     if (robot.getTravelDistance() > 1000) {
       Log.v(TAG, "Stuck :( ... " + AiLifeState.getFoodLocations(computeState().id).size() + " foods left");
       gui.terminate();
-//      run(SCENARIO, .9, .9, QLearningEngine.MAX_ITERATION);
+      if (QPreferences.RUN_FOREVER) {
+        run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
+      }
     }
   }
 
@@ -105,18 +109,18 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     }
 
     // find the best action for any given state
-//    if (bestActions == null || robot.getLastStepReward() > 0 || QLearningEngine.DEBUG) {
-//      // states with the same food config
-//      Set<AiLifeState> states = qMap.keySet();
-//      AiLifeState currentState = computeState();
-//      List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
-//      bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
-//    }
+    if (bestActions == null || robot.getLastStepReward() > 0 || QPreferences.DEBUG) {
+      // states with the same food config
+      Set<AiLifeState> states = qMap.keySet();
+      AiLifeState currentState = computeState();
+      List<AiLifeState> matchingStates = getStatesMatchingFood(states, currentState);
+      bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
+    }
 
     if (QPreferences.DEBUG) {
       drawDetailedBestAction(qMap, bestActions);
-    } else {
-//      drawBestActionArrows(bestActions);
+    } else if(QPreferences.DRAW_ARROWS){
+      drawBestActionArrows(bestActions);
     }
 
     gui.setAdapter(board);
@@ -280,7 +284,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     return stateHistoryActions.get(state);
   }
 
-  private QAction getBestAction(Map<QAction, Double> actionMap) {
+  private QAction getBestAction(Map<QAction, Float> actionMap) {
     return actionMap.keySet().stream().max((o1, o2) -> Double.compare(actionMap.get(o1), actionMap.get(o2))).get();
   }
 
