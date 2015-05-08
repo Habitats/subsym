@@ -1,4 +1,4 @@
-package subsym.ailife;
+package subsym.flatland;
 
 import subsym.ann.AnnPreferences;
 import subsym.genetics.Genotype;
@@ -7,15 +7,15 @@ import subsym.genetics.Phenotype;
 /**
  * Created by anon on 21.03.2015.
  */
-public class AiLifeGenotype extends Genotype {
+public class FlatlandGenotype extends Genotype {
 
   private final AnnPreferences prefs;
-  private AiLifePhenotype phenotype;
+  private FlatlandPhenotype phenotype;
 
-  public AiLifeGenotype(AnnPreferences prefs) {
+  public FlatlandGenotype(AnnPreferences prefs) {
     super(true);
     this.prefs = prefs;
-    phenotype = new AiLifePhenotype(this, prefs);
+    phenotype = new FlatlandPhenotype(this, prefs);
   }
 
   public void randomize() {
@@ -24,13 +24,13 @@ public class AiLifeGenotype extends Genotype {
 
   @Override
   protected Genotype newInstance() {
-    return new AiLifeGenotype(prefs);
+    return new FlatlandGenotype(prefs);
   }
 
   @Override
   public void copy(Genotype copy) {
-    AiLifeGenotype aiCopy = (AiLifeGenotype) copy;
-    aiCopy.phenotype = new AiLifePhenotype(aiCopy, prefs);
+    FlatlandGenotype aiCopy = (FlatlandGenotype) copy;
+    aiCopy.phenotype = new FlatlandPhenotype(aiCopy, prefs);
   }
 
 

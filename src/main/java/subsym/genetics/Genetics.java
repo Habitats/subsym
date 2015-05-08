@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import subsym.Log;
-import subsym.ailife.AiLifeAnnSimulator;
+import subsym.flatland.FlatlandAnnSimulator;
 import subsym.beertracker.BeerTracker;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.Mixing;
@@ -198,7 +198,7 @@ public class Genetics implements GeneticGuiListener {
 
   public static List<String> values() {
     return Arrays.asList(BeerTracker.class.getSimpleName(), SurprisingSequences.class.getSimpleName(), Lolz.class.getSimpleName(),
-                         OneMax.class.getSimpleName(), AiLifeAnnSimulator.class.getSimpleName());
+                         OneMax.class.getSimpleName(), FlatlandAnnSimulator.class.getSimpleName());
   }
 
   @Override

@@ -1,11 +1,11 @@
-package subsym.ailife;
+package subsym.flatland;
 
-import subsym.ailife.entity.Robot;
+import subsym.flatland.entity.Robot;
 
 /**
  * Created by mail on 04.05.2015.
  */
-public interface AiLifeSimulator {
+public interface FlatlandSimulator {
 
   void move(Robot robot);
 

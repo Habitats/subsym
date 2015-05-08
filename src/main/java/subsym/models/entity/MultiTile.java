@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import subsym.ailife.entity.Empty;
+import subsym.flatland.entity.Empty;
 import subsym.gui.Direction;
 import subsym.models.Board;
 

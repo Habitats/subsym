@@ -1,4 +1,4 @@
-package subsym.ailife;
+package subsym.flatland;
 
 
 import java.awt.*;
@@ -12,9 +12,9 @@ import javax.swing.*;
 
 import subsym.Log;
 import subsym.Main;
-import subsym.ailife.entity.Food;
-import subsym.ailife.entity.Poison;
-import subsym.ailife.entity.Robot;
+import subsym.flatland.entity.Food;
+import subsym.flatland.entity.Poison;
+import subsym.flatland.entity.Robot;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
@@ -29,12 +29,12 @@ import subsym.models.entity.TileEntity;
 /**
  * Created by Patrick on 26.03.2015.
  */
-public class AiLifeGui extends AIGui<TileEntity> {
+public class FlatlandGui extends AIGui<TileEntity> {
 
-  private static final String TAG = AiLifeGui.class.getSimpleName();
+  private static final String TAG = FlatlandGui.class.getSimpleName();
   private AIGridCanvas<TileEntity> canvas;
   private Robot robot;
-  private AiLifeSimulator simulator;
+  private FlatlandSimulator simulator;
   private JPanel mainPanel;
   private AIButton simulateButton;
   private AIButton generateButton;
@@ -49,7 +49,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private long numFood;
   private long numPoison;
 
-  public AiLifeGui(Board<TileEntity> board, AiLifeSimulator simulator, Robot robot) {
+  public FlatlandGui(Board<TileEntity> board, FlatlandSimulator simulator, Robot robot) {
     this.simulator = simulator;
     this.board = board;
     this.setRobot(robot);
@@ -141,7 +141,7 @@ public class AiLifeGui extends AIGui<TileEntity> {
   private void generateRandomBoard() {
     int seed = Main.random().nextInt();
     Log.v(TAG, "Board seed: " + seed);
-    board = AiLifeAnnSimulator.createAiLifeBoard(seed);
+    board = FlatlandAnnSimulator.createAiLifeBoard(seed);
     initBoard(board);
     Log.v(TAG, board.getFormattedBoard());
     onTick(0);
@@ -222,16 +222,16 @@ public class AiLifeGui extends AIGui<TileEntity> {
   }
 
   public static void demo(Board<TileEntity> board, Robot robot) {
-    AiLifeGui demo = new AiLifeGui(board, null, robot);
+    FlatlandGui demo = new FlatlandGui(board, null, robot);
     demo.initBoard(board);
   }
 
-  public static void simulate(List<Board<TileEntity>> boards, AiLifeSimulator ann, Runnable callback, Robot robot) {
-    AiLifeGui gui = new AiLifeGui(boards.get(0), ann, robot);
+  public static void simulate(List<Board<TileEntity>> boards, FlatlandSimulator ann, Runnable callback, Robot robot) {
+    FlatlandGui gui = new FlatlandGui(boards.get(0), ann, robot);
     simulate(boards, callback, gui);
   }
 
-  private static void simulate(List<Board<TileEntity>> boards, Runnable callback, AiLifeGui gui) {
+  private static void simulate(List<Board<TileEntity>> boards, Runnable callback, FlatlandGui gui) {
     if (boards.isEmpty()) {
       callback.run();
       return;

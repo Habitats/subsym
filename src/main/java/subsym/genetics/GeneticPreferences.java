@@ -3,7 +3,7 @@ package subsym.genetics;
 import java.util.HashMap;
 import java.util.Map;
 
-import subsym.ailife.AiLifeAnnSimulator;
+import subsym.flatland.FlatlandAnnSimulator;
 import subsym.ann.AnnPreferences;
 import subsym.ann.activation.Sigmoid;
 import subsym.beertracker.BeerScenario;
@@ -139,7 +139,7 @@ public class GeneticPreferences {
 
   public static GeneticPreferences getAiLife() {
     GeneticPreferences prefs = new GeneticPreferences(30, 0.1, 0.9, 0.05, new Mixing(0.05), new Rank(), 700);
-    GeneticProblem problem = new AiLifeAnnSimulator(prefs, AnnPreferences.getAiLifeDefault());
+    GeneticProblem problem = new FlatlandAnnSimulator(prefs, AnnPreferences.getAiLifeDefault());
     prefs.setPuzzle(problem);
     prefs.setAnnPreferences(new AnnPreferences(0, 6, new Sigmoid(), BeerScenario.WRAP, false));
     return prefs;

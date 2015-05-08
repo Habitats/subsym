@@ -1,17 +1,17 @@
-package subsym.ailife;
+package subsym.flatland;
 
 import java.util.BitSet;
 
-import subsym.ailife.entity.Robot;
+import subsym.flatland.entity.Robot;
 import subsym.q.QState;
 
-class AiLifeQState implements QState {
+class FlatlandQState implements QState {
 
   public final BitSet id;
   private static int states = 0;
   private static int TOTAL_FOOD;
 
-  public AiLifeQState(Robot robot) {
+  public FlatlandQState(Robot robot) {
     BitSet foodLocations = robot.getFoodId();
     BitSet robotLocation = robot.getRobotId();
     int size = robot.getFood().size();
@@ -29,8 +29,8 @@ class AiLifeQState implements QState {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof AiLifeQState) {
-      return ((AiLifeQState) obj).id.equals(this.id);
+    if (obj instanceof FlatlandQState) {
+      return ((FlatlandQState) obj).id.equals(this.id);
     }
     return false;
   }

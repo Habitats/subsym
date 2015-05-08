@@ -1,4 +1,4 @@
-package subsym.ailife;
+package subsym.flatland;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.ailife.entity.Robot;
+import subsym.flatland.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.WeightBound;
@@ -20,17 +20,17 @@ import subsym.models.entity.TileEntity;
 /**
  * Created by anon on 21.03.2015.
  */
-public class AiLifePhenotype implements Phenotype {
+public class FlatlandPhenotype implements Phenotype {
 
-  private static final String TAG = AiLifePhenotype.class.getSimpleName();
+  private static final String TAG = FlatlandPhenotype.class.getSimpleName();
   private final AnnPreferences prefs;
   private final ArtificialNeuralNetwork ann;
-  private final AiLifeGenotype aiLifeGenotype;
+  private final FlatlandGenotype flatlandGenotype;
   private Double score;
   public static final List<Long> goodSeeds = Arrays.asList(new Long[]{-1517918040L, 1968097058L, 875635521L, 1489956094L, -1643623517L});
 
-  public AiLifePhenotype(AiLifeGenotype aiLifeGenotype, AnnPreferences prefs) {
-    this.aiLifeGenotype = aiLifeGenotype;
+  public FlatlandPhenotype(FlatlandGenotype flatlandGenotype, AnnPreferences prefs) {
+    this.flatlandGenotype = flatlandGenotype;
     this.prefs = prefs;
 
     AnnNodes inputs = AnnNodes.createInput(new WeightBound(0, 1), 0., 0., 0., 0., 0., 0.);
@@ -39,8 +39,8 @@ public class AiLifePhenotype implements Phenotype {
     ann.setIds();
   }
 
-  public void setValues(AiLifeGenotype aiLifeGenotype) {
-    ann.setWeights(getNormalizedValues(aiLifeGenotype.toList()));
+  public void setValues(FlatlandGenotype flatlandGenotype) {
+    ann.setWeights(getNormalizedValues(flatlandGenotype.toList()));
   }
 
   @Override
@@ -57,13 +57,13 @@ public class AiLifePhenotype implements Phenotype {
   }
 
   private double boardFitness() {
-    setValues(aiLifeGenotype);
+    setValues(flatlandGenotype);
 
     AtomicDouble fitness = new AtomicDouble();
     int rounds = prefs.isSingle() ? 1 : 5;
     IntStream.range(0, rounds).forEach(run -> {
-      long seed = prefs.isDynamic() ? aiLifeGenotype.getCurrentGeneration() + run : goodSeeds.get(run);
-      Board<TileEntity> board = AiLifeAnnSimulator.createAiLifeBoard(seed);
+      long seed = prefs.isDynamic() ? flatlandGenotype.getCurrentGeneration() + run : goodSeeds.get(run);
+      Board<TileEntity> board = FlatlandAnnSimulator.createAiLifeBoard(seed);
 //      Log.v(TAG, ann.getNumWeights());
 
       Robot robot = new Robot(0, 0, board, true);
@@ -103,7 +103,7 @@ public class AiLifePhenotype implements Phenotype {
 
   @Override
   public String toString() {
-    return getNormalizedValues(aiLifeGenotype.toList()).stream().map(i -> String.format("%.3f", i))
+    return getNormalizedValues(flatlandGenotype.toList()).stream().map(i -> String.format("%.3f", i))
         .collect(Collectors.joining(", ", " > Pheno > ", ""));
   }
 

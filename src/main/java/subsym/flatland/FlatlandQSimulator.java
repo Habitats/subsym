@@ -1,4 +1,4 @@
-package subsym.ailife;
+package subsym.flatland;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 
 import subsym.Log;
 import subsym.Main;
-import subsym.ailife.entity.Empty;
-import subsym.ailife.entity.Food;
-import subsym.ailife.entity.Poison;
-import subsym.ailife.entity.Robot;
+import subsym.flatland.entity.Empty;
+import subsym.flatland.entity.Food;
+import subsym.flatland.entity.Poison;
+import subsym.flatland.entity.Robot;
 import subsym.gui.Direction;
 import subsym.models.Board;
 import subsym.models.Vec;
@@ -36,11 +36,11 @@ import subsym.q.QState;
 /**
  * Created by mail on 04.05.2015.
  */
-public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
+public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQState> {
 
-  private static final String TAG = AiLifeQSimulator.class.getSimpleName();
-  private AiLifeGui gui;
-  private Map<AiLifeQState, Map<QAction, Float>> qMap;
+  private static final String TAG = FlatlandQSimulator.class.getSimpleName();
+  private FlatlandGui gui;
+  private Map<FlatlandQState, Map<QAction, Float>> qMap;
   private Board<TileEntity> board;
   private int startX;
   private int startY;
@@ -48,12 +48,12 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
   private int numFood;
   private List<List<Integer>> content;
   private Map<QAction, Direction> actions;
-  private Map<AiLifeQState, QAction> bestActions;
+  private Map<FlatlandQState, QAction> bestActions;
 
   private Map<QState, QAction> stateHistoryActions;
-  private Deque<AiLifeQState> stateHistory;
+  private Deque<FlatlandQState> stateHistory;
 
-  public AiLifeQSimulator() {
+  public FlatlandQSimulator() {
     double learningRate = .9;
     double discountRate = .9;
     run(QPreferences.SCENARIO, learningRate, discountRate, QPreferences.MAX_ITERATION);
@@ -61,7 +61,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
 
   private void simulate() {
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-    gui = new AiLifeGui(board, this, robot);
+    gui = new FlatlandGui(board, this, robot);
     gui.simulate(() -> Log.v(TAG, ""));
   }
 
@@ -75,7 +75,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
 
     if (QPreferences.DEBUG) {
-      gui = new AiLifeGui(board, this, robot);
+      gui = new FlatlandGui(board, this, robot);
       board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
       gui.setAdapter(board);
     }
@@ -95,7 +95,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
       }
     }
     if (robot.getTravelDistance() > 1000) {
-      Log.v(TAG, "Stuck :( ... " + AiLifeQState.getFoodLocations(computeState().id).size() + " foods left");
+      Log.v(TAG, "Stuck :( ... " + FlatlandQState.getFoodLocations(computeState().id).size() + " foods left");
       gui.terminate();
       if (QPreferences.RUN_FOREVER) {
         run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
@@ -103,7 +103,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
     }
   }
 
-  private void drawBestActions(Map<AiLifeQState, Map<QAction, Float>> qMap) {
+  private void drawBestActions(Map<FlatlandQState, Map<QAction, Float>> qMap) {
     if (gui == null) {
       return;
     }
@@ -111,9 +111,9 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
     // find the best action for any given state
     if (bestActions == null || robot.getLastStepReward() > 0 || QPreferences.DEBUG) {
       // states with the same food config
-      Set<AiLifeQState> states = qMap.keySet();
-      AiLifeQState currentState = computeState();
-      List<AiLifeQState> matchingStates = getStatesMatchingFood(states, currentState);
+      Set<FlatlandQState> states = qMap.keySet();
+      FlatlandQState currentState = computeState();
+      List<FlatlandQState> matchingStates = getStatesMatchingFood(states, currentState);
       bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
     }
 
@@ -127,16 +127,16 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
     board.notifyDataChanged();
   }
 
-  private void drawBestActionArrows(Map<AiLifeQState, QAction> bestActions) {
+  private void drawBestActionArrows(Map<FlatlandQState, QAction> bestActions) {
     board.getItems().forEach(i -> i.setDirection(null));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
-      Vec location = Robot.getLocationFromBits(AiLifeQState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
+      Vec location = Robot.getLocationFromBits(FlatlandQState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
       board.get(location).setDirection(this.actions.get(bestAction));
     });
   }
 
-  private void drawDetailedBestAction(Map<AiLifeQState, Map<QAction, Float>> qMap, Map<AiLifeQState, QAction> bestActions) {
+  private void drawDetailedBestAction(Map<FlatlandQState, Map<QAction, Float>> qMap, Map<FlatlandQState, QAction> bestActions) {
     board.getItems().forEach(i -> i.setDescription(""));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
@@ -144,7 +144,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
       String actionValues = actions.keySet().stream() //
           .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
           .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
-      Vec location = Robot.getLocationFromBits(AiLifeQState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
+      Vec location = Robot.getLocationFromBits(FlatlandQState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
       board.get(location).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
     });
   }
@@ -212,7 +212,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
 
   @Override
   public void move(Robot robot) {
-    AiLifeQState state = computeState();
+    FlatlandQState state = computeState();
     this.robot = robot;
     QAction bestAction;
     if (qMap.containsKey(state)) {
@@ -248,8 +248,8 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
   }
 
   @Override
-  public AiLifeQState computeState() {
-    return new AiLifeQState(robot);
+  public FlatlandQState computeState() {
+    return new FlatlandQState(robot);
   }
 
   @Override
@@ -258,7 +258,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
   }
 
   @Override
-  public void onStep(Map<AiLifeQState, Map<QAction, Float>> qMap) {
+  public void onStep(Map<FlatlandQState, Map<QAction, Float>> qMap) {
     if (QPreferences.DEBUG) {
       this.qMap = qMap;
       drawBestActions(qMap);
@@ -266,7 +266,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
   }
 
   @Override
-  public void addHisory(AiLifeQState lastState, QAction a) {
+  public void addHisory(FlatlandQState lastState, QAction a) {
     stateHistory.addFirst(lastState);
     stateHistoryActions.put(lastState, a);
     if (stateHistory.size() > QPreferences.BACKUP_THRESHOLD) {
@@ -275,12 +275,12 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
   }
 
   @Override
-  public Deque<AiLifeQState> getHistory() {
+  public Deque<FlatlandQState> getHistory() {
     return stateHistory;
   }
 
   @Override
-  public QAction getHistoryAction(AiLifeQState state) {
+  public QAction getHistoryAction(FlatlandQState state) {
     return stateHistoryActions.get(state);
   }
 
@@ -288,9 +288,9 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQState> {
     return actionMap.keySet().stream().max((o1, o2) -> Double.compare(actionMap.get(o1), actionMap.get(o2))).get();
   }
 
-  private List<AiLifeQState> getStatesMatchingFood(Set<AiLifeQState> states, AiLifeQState currentState) {
-    BitSet foodLocations = AiLifeQState.getFoodLocations(currentState.id);
-    return states.stream().filter(state -> AiLifeQState.getFoodLocations(state.id).equals(foodLocations)).collect(Collectors.toList());
+  private List<FlatlandQState> getStatesMatchingFood(Set<FlatlandQState> states, FlatlandQState currentState) {
+    BitSet foodLocations = FlatlandQState.getFoodLocations(currentState.id);
+    return states.stream().filter(state -> FlatlandQState.getFoodLocations(state.id).equals(foodLocations)).collect(Collectors.toList());
   }
 
   @Override

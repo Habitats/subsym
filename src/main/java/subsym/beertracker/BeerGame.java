@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import subsym.Log;
-import subsym.ailife.entity.Empty;
+import subsym.flatland.entity.Empty;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.nodes.OutputNode;

@@ -1,4 +1,4 @@
-package subsym.ailife.entity;
+package subsym.flatland.entity;
 
 import java.awt.*;
 

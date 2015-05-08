@@ -3,7 +3,7 @@ package subsym.beertracker;
 import java.awt.*;
 import java.util.stream.IntStream;
 
-import subsym.ailife.entity.Empty;
+import subsym.flatland.entity.Empty;
 import subsym.gui.ColorUtils;
 import subsym.gui.Direction;
 import subsym.models.Board;

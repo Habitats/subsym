@@ -1,4 +1,4 @@
-package subsym.ailife;
+package subsym.flatland;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.stream.IntStream;
 
 import subsym.Log;
 import subsym.Main;
-import subsym.ailife.entity.Empty;
-import subsym.ailife.entity.Food;
-import subsym.ailife.entity.Poison;
-import subsym.ailife.entity.Robot;
+import subsym.flatland.entity.Empty;
+import subsym.flatland.entity.Food;
+import subsym.flatland.entity.Poison;
+import subsym.flatland.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
@@ -22,15 +22,15 @@ import subsym.models.entity.TileEntity;
 /**
  * Created by anon on 20.03.2015.
  */
-public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulator {
+public class FlatlandAnnSimulator extends GeneticProblem implements FlatlandSimulator {
 
-  private static final String TAG = AiLifeAnnSimulator.class.getSimpleName();
+  private static final String TAG = FlatlandAnnSimulator.class.getSimpleName();
 
   private Robot robot;
   private AnnPreferences annPrefs;
   private ArtificialNeuralNetwork ann;
 
-  public AiLifeAnnSimulator() {
+  public FlatlandAnnSimulator() {
     super(null);
     Board<TileEntity> board = createAiLifeBoard(0101);
 
@@ -38,7 +38,7 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
     board.set(robot);
   }
 
-  public AiLifeAnnSimulator(GeneticPreferences prefs, AnnPreferences annPrefs) {
+  public FlatlandAnnSimulator(GeneticPreferences prefs, AnnPreferences annPrefs) {
     super(prefs);
     this.annPrefs = annPrefs;
   }
@@ -56,7 +56,7 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
   @Override
   public void initPopulation() {
     IntStream.range(0, getPopulationSize()).forEach(i -> {
-      AiLifeGenotype genotype = new AiLifeGenotype(annPrefs);
+      FlatlandGenotype genotype = new FlatlandGenotype(annPrefs);
       genotype.randomize();
       getPopulation().add(genotype);
     });
@@ -70,12 +70,12 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
 
   @Override
   public GeneticProblem newInstance(GeneticPreferences prefs) {
-    return new AiLifeAnnSimulator(prefs, annPrefs);
+    return new FlatlandAnnSimulator(prefs, annPrefs);
   }
 
   @Override
   public GeneticProblem newInstance() {
-    return new AiLifeAnnSimulator(getPreferences(), annPrefs);
+    return new FlatlandAnnSimulator(getPreferences(), annPrefs);
   }
 
   @Override
@@ -85,15 +85,15 @@ public class AiLifeAnnSimulator extends GeneticProblem implements AiLifeSimulato
 
   @Override
   public void onSolved() {
-    AiLifeGenotype best = (AiLifeGenotype) getPopulation().getBestGenotype();
+    FlatlandGenotype best = (FlatlandGenotype) getPopulation().getBestGenotype();
     Log.v(TAG, best.fitness());
-    AiLifePhenotype pheno = (AiLifePhenotype) best.getPhenotype();
+    FlatlandPhenotype pheno = (FlatlandPhenotype) best.getPhenotype();
     ann = pheno.getArtificialNeuralNetwork();
     Log.v(TAG,
           String.format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(), pheno.fitness()));
     List<Board<TileEntity>> boards = new ArrayList<>();
-    IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(AiLifePhenotype.goodSeeds.get(i))));
-    AiLifeGui.simulate(boards, this, () -> Log.v(TAG, this), new Robot(0, 0, boards.get(0), true));
+    IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(FlatlandPhenotype.goodSeeds.get(i))));
+    FlatlandGui.simulate(boards, this, () -> Log.v(TAG, this), new Robot(0, 0, boards.get(0), true));
   }
 
   public static Board<TileEntity> createAiLifeBoard(long seed) {

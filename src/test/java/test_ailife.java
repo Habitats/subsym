@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import subsym.Log;
-import subsym.ailife.AiLifeGenotype;
-import subsym.ailife.AiLifePhenotype;
-import subsym.ailife.entity.Empty;
-import subsym.ailife.entity.Food;
-import subsym.ailife.entity.Poison;
-import subsym.ailife.entity.Robot;
+import subsym.flatland.FlatlandGenotype;
+import subsym.flatland.FlatlandPhenotype;
+import subsym.flatland.entity.Empty;
+import subsym.flatland.entity.Food;
+import subsym.flatland.entity.Poison;
+import subsym.flatland.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.WeightBound;
@@ -109,7 +109,7 @@ public class test_ailife {
 
   @Test
   public void test_annMutate() {
-//    Genotype genotype = new AiLifeGenotype(AnnPreferences.getAiLifeDefault());
+//    Genotype genotype = new FlatlandGenotype(AnnPreferences.getAiLifeDefault());
     Genotype genotype = new BeerGenotype(AnnPreferences.getBeerDefault());
     IntStream.range(0, 100).forEach(i -> {
       Log.v(TAG, genotype.getBitsString().length() + " " + genotype.getBitsString());
@@ -167,11 +167,11 @@ public class test_ailife {
     AnnPreferences preferences = AnnPreferences.getAiLifeDefault();
     preferences.setSingle(true);
     preferences.setDynamic(false);
-    AiLifeGenotype genotype = new AiLifeGenotype(preferences);
+    FlatlandGenotype genotype = new FlatlandGenotype(preferences);
     genotype.randomize();
     Genotype copy = genotype.copy();
-    AiLifePhenotype p1 = (AiLifePhenotype) genotype.getPhenotype();
-    AiLifePhenotype p2 = (AiLifePhenotype) copy.getPhenotype();
+    FlatlandPhenotype p1 = (FlatlandPhenotype) genotype.getPhenotype();
+    FlatlandPhenotype p2 = (FlatlandPhenotype) copy.getPhenotype();
     double f1 = copy.fitness();
     double f2 = genotype.fitness();
     assertEquals(f1, f2, 0);

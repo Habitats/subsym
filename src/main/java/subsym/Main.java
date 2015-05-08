@@ -6,7 +6,7 @@ import java.util.Random;
 
 import javax.swing.*;
 
-import subsym.ailife.AiLifeQSimulator;
+import subsym.flatland.FlatlandQSimulator;
 import subsym.boids.Boids;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
@@ -51,10 +51,10 @@ public class Main {
 //        buildFrame(panel, null, null);
 //
 //        BeerGame.demo();
-//        AiLifeGui.demo();
+//        FlatlandGui.demo();
 
 //        new Genetics();
-        AiLifeQSimulator sim = new AiLifeQSimulator();
+        FlatlandQSimulator sim = new FlatlandQSimulator();
       }
 
 
