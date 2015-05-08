@@ -30,6 +30,7 @@ import subsym.models.entity.TileEntity;
 import subsym.q.QAction;
 import subsym.q.QGame;
 import subsym.q.QLearningEngine;
+import subsym.q.QPreferences;
 import subsym.q.QState;
 
 /**
@@ -49,21 +50,13 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   private Map<QAction, Direction> actions;
   private Map<AiLifeState, QAction> bestActions;
 
-  public static final String scenario1 = "1-simple.txt";
-  public static final String scenario2 = "2-still-simple.txt";
-  public static final String scenario3 = "3-dont-be-greedy.txt";
-  public static final String scenario4 = "4-big-one.txt";
-  public static final String scenario5 = "5-even-bigger.txt";
-  private final String scenario;
-
   private Map<QState, QAction> stateHistoryActions;
   private Deque<AiLifeState> stateHistory;
 
   public AiLifeQSimulator() {
     double learningRate = .9;
     double discountRate = .9;
-    scenario = scenario5;
-    run(scenario, learningRate, discountRate, QLearningEngine.MAX_ITERATION);
+    run(QPreferences.SCENARIO, learningRate, discountRate, QPreferences.MAX_ITERATION);
   }
 
   private void simulate() {
@@ -81,7 +74,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
 
-    if (QLearningEngine.DEBUG) {
+    if (QPreferences.DEBUG) {
       gui = new AiLifeGui(board, this, robot);
       board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
       gui.setAdapter(board);
@@ -97,16 +90,16 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
     if (solution()) {
       gui.terminate();
       Log.v(TAG, "Time: " + robot.getTravelDistance() + " > Poison: " + robot.getPoisonCount());
-//      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
+//      run(SCENARIO, .9, .9, QLearningEngine.MAX_ITERATION);
     }
     if (robot.getTravelDistance() > 1000) {
       Log.v(TAG, "Stuck :( ... " + AiLifeState.getFoodLocations(computeState().id).size() + " foods left");
       gui.terminate();
-//      run(scenario, .9, .9, QLearningEngine.MAX_ITERATION);
+//      run(SCENARIO, .9, .9, QLearningEngine.MAX_ITERATION);
     }
   }
 
-  private void drawBestActions(Map<AiLifeState, Map<QAction,Float>> qMap) {
+  private void drawBestActions(Map<AiLifeState, Map<QAction, Float>> qMap) {
     if (gui == null) {
       return;
     }
@@ -120,7 +113,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 //      bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
 //    }
 
-    if (QLearningEngine.DEBUG) {
+    if (QPreferences.DEBUG) {
       drawDetailedBestAction(qMap, bestActions);
     } else {
 //      drawBestActionArrows(bestActions);
@@ -262,7 +255,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
 
   @Override
   public void onStep(Map<AiLifeState, Map<QAction, Float>> qMap) {
-    if (QLearningEngine.DEBUG) {
+    if (QPreferences.DEBUG) {
       this.qMap = qMap;
       drawBestActions(qMap);
     }
@@ -272,7 +265,7 @@ public class AiLifeQSimulator implements AiLifeSimulator, QGame<AiLifeQSimulator
   public void addHisory(AiLifeState lastState, QAction a) {
     stateHistory.addFirst(lastState);
     stateHistoryActions.put(lastState, a);
-    if (stateHistory.size() > QLearningEngine.STATE_HISTORY_THRESHOLD) {
+    if (stateHistory.size() > QPreferences.BACKUP_THRESHOLD) {
       stateHistory.removeLast();
     }
   }
