@@ -1,9 +1,5 @@
 package subsym.flatland;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -19,14 +15,9 @@ import java.util.stream.Collectors;
 
 import subsym.Log;
 import subsym.Main;
-import subsym.flatland.entity.Empty;
-import subsym.flatland.entity.Food;
-import subsym.flatland.entity.Poison;
 import subsym.flatland.entity.Robot;
 import subsym.gui.Direction;
-import subsym.models.Board;
 import subsym.models.Vec;
-import subsym.models.entity.TileEntity;
 import subsym.q.QAction;
 import subsym.q.QGame;
 import subsym.q.QLearningEngine;
@@ -41,17 +32,13 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
   private static final String TAG = FlatlandQSimulator.class.getSimpleName();
   private Flatland flatland;
   private Map<FlatlandQState, Map<QAction, Float>> qMap;
-  private Board<TileEntity> board;
-  private int startX;
-  private int startY;
-  private Robot robot;
-  private int numFood;
-  private List<List<Integer>> content;
+
   private Map<QAction, Direction> actions;
   private Map<FlatlandQState, QAction> bestActions;
 
   private Map<QState, QAction> stateHistoryActions;
   private Deque<FlatlandQState> stateHistory;
+  private double lastReward;
 
   public FlatlandQSimulator() {
     double learningRate = .9;
@@ -59,29 +46,19 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
     run(QPreferences.SCENARIO, learningRate, discountRate, QPreferences.MAX_ITERATION);
   }
 
-  private void simulate() {
-    board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-    flatland = new Flatland(board, this, robot, true);
-    flatland.simulate(() -> Log.v(TAG, ""));
-  }
-
   private void run(String scenario, double learningRate, double discountRate, int maxIterations) {
     stateHistory = new LinkedList<>();
     stateHistoryActions = new HashMap<>();
 
-    board = fromFile(scenario);
+    flatland = new Flatland(this, true);
+    flatland.loadFromFile(scenario);
 
     actions = Arrays.asList(Direction.values()).stream() //
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
 
-    if (QPreferences.DEBUG) {
-      flatland = new Flatland(board, this, robot, true);
-      board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-      flatland.setBoard(board);
-    }
     qMap = QLearningEngine.train(maxIterations, this, learningRate, discountRate);
 
-    simulate();
+    flatland.simulate(true);
   }
 
   @Override
@@ -91,23 +68,24 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
     }
     if (solution()) {
       flatland.terminate();
-      Log.v(TAG, "Time: " + robot.getTravelDistance() + " > Poison: " + robot.getPoisonCount());
+      Log.v(TAG, "Time: " + flatland.getTravelDistance() + " > Poison: " + flatland.getPoisonCount());
       if (QPreferences.RUN_FOREVER) {
         run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
       }
     }
-    if (robot.getTravelDistance() > 1000) {
+    if (flatland.getTravelDistance() > 1000) {
       Log.v(TAG, "Stuck :( ... " + FlatlandQState.getFoodLocations(computeState().id).size() + " foods left");
       flatland.terminate();
       if (QPreferences.RUN_FOREVER) {
         run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
       }
     }
+
   }
 
   private void drawBestActions(Map<FlatlandQState, Map<QAction, Float>> qMap) {
     // find the best action for any given state
-    if (bestActions == null || robot.getLastStepReward() > 0 || QPreferences.DEBUG) {
+    if (bestActions == null || lastReward > 0 || QPreferences.DEBUG) {
       // states with the same food config
       Set<FlatlandQState> states = qMap.keySet();
       FlatlandQState currentState = computeState();
@@ -120,87 +98,28 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
     } else if (QPreferences.DRAW_ARROWS) {
       drawBestActionArrows(bestActions);
     }
-
-    flatland.setBoard(board);
-    board.notifyDataChanged();
   }
 
   private void drawBestActionArrows(Map<FlatlandQState, QAction> bestActions) {
-    board.getItems().forEach(i -> i.setDirection(null));
+    flatland.getItems().forEach(i -> i.setDirection(null));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
-      Vec location = Robot.getLocationFromBits(FlatlandQState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
-      board.get(location).setDirection(this.actions.get(bestAction));
+      Vec location = Robot.getLocationFromBits(FlatlandQState.getRobotLocation(s.id), flatland.getWidth(), flatland.getHeight());
+      flatland.get(location).setDirection(this.actions.get(bestAction));
     });
   }
 
   private void drawDetailedBestAction(Map<FlatlandQState, Map<QAction, Float>> qMap, Map<FlatlandQState, QAction> bestActions) {
-    board.getItems().forEach(i -> i.setDescription(""));
+    flatland.getItems().forEach(i -> i.setDescription(""));
     bestActions.keySet().forEach(s -> {
       QAction bestAction = bestActions.get(s);
       Map<QAction, Float> actions = qMap.get(s);
       String actionValues = actions.keySet().stream() //
           .sorted((o1, o2) -> o1.toString().compareTo(o2.toString())) //
           .map(a -> String.format("%s %5.2f", a.toString().charAt(0), actions.get(a))).collect(Collectors.joining("\n", "\n\n", ""));
-      Vec location = Robot.getLocationFromBits(FlatlandQState.getRobotLocation(s.id), board.getWidth(), board.getHeight());
-      board.get(location).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
+      Vec location = Robot.getLocationFromBits(FlatlandQState.getRobotLocation(s.id), flatland.getWidth(), flatland.getHeight());
+      flatland.get(location).setDescription(String.format("%s %s", bestAction.toString(), actionValues));
     });
-  }
-
-  public Board<TileEntity> fromFile(String fileName) {
-    try {
-      Path path = FileSystems.getDefault().getPath("q", fileName);
-      content = Files.readAllLines(path).stream()//
-          .map(strLst -> Arrays.asList(strLst.split("\\s")).stream() //
-              .mapToInt(Integer::parseInt).boxed() //
-              .collect(Collectors.toList())).collect(Collectors.toList());
-      List<Integer> specs = content.remove(0);
-      int width = specs.get(0);
-      int height = specs.get(1);
-      startX = specs.get(2);
-      startY = specs.get(3);
-      numFood = specs.get(4);
-      return initBoard(width, height, content);
-    } catch (IOException e) {
-      throw new IllegalStateException("Unable to read AiLife map from file!");
-    }
-  }
-
-  private Board<TileEntity> initBoard(int width, int height, List<List<Integer>> content) {
-    Board<TileEntity> board = new Board<>(width, height);
-
-    Map<TileEntity, Integer> foods = new HashMap<>();
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        int s = content.get(y).get(x);
-        TileEntity tile;
-        switch (s) {
-          case 0:
-            tile = new Empty(x, y, board);
-            break;
-          case -1:
-            tile = new Poison(x, y, board);
-            break;
-          case -2:
-            robot = new Robot(x, y, board, false);
-            tile = robot;
-            break;
-          default:
-            tile = new Food(x, y, board);
-            foods.put(tile, s - 1);
-        }
-        board.set(tile);
-      }
-    }
-    robot.init(foods);
-
-    return board;
-  }
-
-  @Override
-  public void reset() {
-    board = initBoard(board.getWidth(), board.getHeight(), content);
-    flatland.setBoard(board);
   }
 
   @Override
@@ -211,7 +130,6 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
   @Override
   public void move(Robot robot) {
     FlatlandQState state = computeState();
-    this.robot = robot;
     QAction bestAction;
     if (qMap.containsKey(state)) {
       Map<QAction, Float> actions = qMap.get(state);
@@ -231,28 +149,23 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
 
   @Override
   public void restart() {
-    board = initBoard(board.getWidth(), board.getHeight(), content);
+    flatland.reset();
   }
 
   @Override
   public boolean solution() {
-    return robot.getFoodCount() == numFood && robot.getX() == startX && robot.getY() == startY;
+    return flatland.getFoodCount() == flatland.getMaxFoodCount() && flatland.robotAtStart();
   }
 
   @Override
   public void execute(QAction a) {
     Direction id = actions.get(a);
-    robot.move(id);
+    flatland.move(id);
   }
 
   @Override
   public FlatlandQState computeState() {
-    return new FlatlandQState(robot);
-  }
-
-  @Override
-  public double getReward() {
-    return robot.getLastStepReward();
+    return new FlatlandQState(flatland);
   }
 
   @Override
@@ -291,5 +204,23 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
     return states.stream().filter(state -> FlatlandQState.getFoodLocations(state.id).equals(foodLocations)).collect(Collectors.toList());
   }
 
+  @Override
+  public double getReward() {
+    return lastReward;
+  }
 
+  @Override
+  public void onFoodConsumed() {
+    lastReward = QPreferences.FOOD_REWARD;
+  }
+
+  @Override
+  public void onNormalMove() {
+    lastReward = QPreferences.STEP_PENALTY;
+  }
+
+  @Override
+  public void onPoisonConsumed() {
+    lastReward = QPreferences.POISON_PENALTY;
+  }
 }

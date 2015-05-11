@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import subsym.flatland.entity.Robot;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.WeightBound;
 import subsym.ann.nodes.AnnNodes;
+import subsym.flatland.entity.Robot;
 import subsym.genetics.Phenotype;
 import subsym.gui.Direction;
 import subsym.models.Board;
@@ -66,7 +66,7 @@ public class FlatlandPhenotype implements Phenotype {
       Board<TileEntity> board = FlatlandAnnSimulator.createAiLifeBoard(seed);
 //      Log.v(TAG, ann.getNumWeights());
 
-      Robot robot = new Robot(0, 0, board, true);
+      Robot robot = new Robot(0, 0, board, true, new Flatland(new FlatlandAnnSimulator(null, prefs), false));
       board.set(robot);
       for (int i = 0; i < 60; i++) {
 //        Log.v(TAG, board.getFormattedBoard());

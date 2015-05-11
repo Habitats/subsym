@@ -7,12 +7,12 @@ import java.util.stream.IntStream;
 
 import subsym.Log;
 import subsym.Main;
+import subsym.ann.AnnPreferences;
+import subsym.ann.ArtificialNeuralNetwork;
 import subsym.flatland.entity.Empty;
 import subsym.flatland.entity.Food;
 import subsym.flatland.entity.Poison;
 import subsym.flatland.entity.Robot;
-import subsym.ann.AnnPreferences;
-import subsym.ann.ArtificialNeuralNetwork;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 import subsym.gui.Direction;
@@ -30,13 +30,13 @@ public class FlatlandAnnSimulator extends GeneticProblem implements FlatlandSimu
   private AnnPreferences annPrefs;
   private ArtificialNeuralNetwork ann;
 
-  public FlatlandAnnSimulator() {
-    super(null);
-    Board<TileEntity> board = createAiLifeBoard(0101);
-
-    robot = new Robot(0, 0, board, true);
-    board.set(robot);
-  }
+//  public FlatlandAnnSimulator() {
+//    super(null);
+//    Board<TileEntity> board = createAiLifeBoard(0101);
+//
+//    robot = new Robot(0, 0, board, true, this);
+//    board.set(robot);
+//  }
 
   public FlatlandAnnSimulator(GeneticPreferences prefs, AnnPreferences annPrefs) {
     super(prefs);
@@ -93,7 +93,21 @@ public class FlatlandAnnSimulator extends GeneticProblem implements FlatlandSimu
           String.format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(), pheno.fitness()));
     List<Board<TileEntity>> boards = new ArrayList<>();
     IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(FlatlandPhenotype.goodSeeds.get(i))));
-    Flatland.simulate(boards, this, () -> Log.v(TAG, this), new Robot(0, 0, boards.get(0), true));
+    simulate(boards, this, () -> Log.v(TAG, this));
+  }
+
+  public static void simulate(List<Board<TileEntity>> boards, FlatlandSimulator ann, Runnable callback) {
+    Flatland flatland = new Flatland(ann, true);
+    simulate(boards, callback, flatland);
+  }
+
+  private static void simulate(List<Board<TileEntity>> boards, Runnable callback, Flatland flatland) {
+    if (boards.isEmpty()) {
+      callback.run();
+      return;
+    }
+    flatland.setBoard(boards.remove(0));
+    flatland.simulate(() -> simulate(boards, callback, flatland));
   }
 
   public static Board<TileEntity> createAiLifeBoard(long seed) {
@@ -132,6 +146,21 @@ public class FlatlandAnnSimulator extends GeneticProblem implements FlatlandSimu
   @Override
   public int getMaxSteps() {
     return 60;
+  }
+
+  @Override
+  public void onNormalMove() {
+
+  }
+
+  @Override
+  public void onFoodConsumed() {
+
+  }
+
+  @Override
+  public void onPoisonConsumed() {
+
   }
 }
 

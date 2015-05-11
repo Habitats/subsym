@@ -2,7 +2,6 @@ package subsym.flatland;
 
 import java.util.BitSet;
 
-import subsym.flatland.entity.Robot;
 import subsym.q.QState;
 
 class FlatlandQState implements QState {
@@ -11,11 +10,11 @@ class FlatlandQState implements QState {
   private static int states = 0;
   private static int TOTAL_FOOD;
 
-  public FlatlandQState(Robot robot) {
-    BitSet foodLocations = robot.getFoodId();
-    BitSet robotLocation = robot.getRobotId();
-    int size = robot.getFood().size();
-    TOTAL_FOOD = robot.getFood().size();
+  public FlatlandQState(Flatland flatland) {
+    BitSet foodLocations = flatland.getFoodId();
+    BitSet robotLocation = flatland.getRobotId();
+    int size = flatland.getMaxFoodCount();
+    TOTAL_FOOD = flatland.getMaxFoodCount();
 
     id = (BitSet) foodLocations.clone();
     id.set(size + robotLocation.nextSetBit(0));

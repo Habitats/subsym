@@ -16,7 +16,7 @@ public class QPreferences {
   public static final int MAX_ITERATION = 3000;
   public static final double UPPER_RANDOM_THRESHOLD = .31;
   public static final double LOWER_RANDOM_THRESHOLD = 0.01;
-  public static final String SCENARIO = SCENARIOS[3];
+  public static final String SCENARIO = SCENARIOS[2];
 
   public static final double STEP_PENALTY = -0.50000001;
   public static final double FOOD_REWARD = 10;

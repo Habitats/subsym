@@ -10,11 +10,13 @@ public interface FlatlandSimulator {
   void move(Robot robot);
 
   int getMaxSteps();
-  default void reset() {
-
-  }
 
   default void onTick() {
-
   }
+
+  void onNormalMove();
+
+  void onFoodConsumed();
+
+  void onPoisonConsumed();
 }

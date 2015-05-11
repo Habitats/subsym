@@ -46,7 +46,7 @@ public class FlatlandGui extends AIGui<TileEntity> {
   private void init(final Flatland flatland) {
     this.flatland = flatland;
 
-    simulateButton.addActionListener(e -> flatland.simulate());
+    simulateButton.addActionListener(e -> flatland.simulate(true));
     generateButton.addActionListener(e -> flatland.generateRandomBoard());
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -84,7 +84,7 @@ public class FlatlandGui extends AIGui<TileEntity> {
     actionMap.put("simulate", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        flatland.simulate();
+        flatland.simulate(true);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "generate");

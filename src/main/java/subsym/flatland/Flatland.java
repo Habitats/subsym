@@ -1,14 +1,25 @@
 package subsym.flatland;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import subsym.Log;
 import subsym.Main;
+import subsym.flatland.entity.Empty;
 import subsym.flatland.entity.Food;
 import subsym.flatland.entity.Poison;
 import subsym.flatland.entity.Robot;
 import subsym.gui.Direction;
 import subsym.models.Board;
+import subsym.models.Vec;
 import subsym.models.entity.TileEntity;
 
 /**
@@ -22,23 +33,79 @@ public class Flatland {
   private Board<TileEntity> board;
   private boolean shouldStop = false;
   private Robot robot;
-  private final boolean showGui;
-  private int numFood;
+  private boolean showGui;
   private int numPoison;
+  private int startX;
+  private int startY;
+  private int numFood;
+  private List<List<Integer>> content;
 
-  public Flatland(Board<TileEntity> board, FlatlandSimulator simulator, Robot robot, boolean showGui) {
-    this.board = board;
+  public Flatland(FlatlandSimulator simulator, boolean showGui) {
     this.simulator = simulator;
-    this.robot = robot;
     this.showGui = showGui;
+
     if (showGui) {
       setGui();
     }
   }
 
+  public void loadFromFile(String fileName) {
+    board = readBoardFromFile(fileName);
+    setBoard(board);
+  }
+
+  private Board<TileEntity> readBoardFromFile(String fileName) {
+    try {
+      Path path = FileSystems.getDefault().getPath("q", fileName);
+      content = Files.readAllLines(path).stream()//
+          .map(strLst -> Arrays.asList(strLst.split("\\s")).stream() //
+              .mapToInt(Integer::parseInt).boxed() //
+              .collect(Collectors.toList())).collect(Collectors.toList());
+      List<Integer> specs = content.remove(0);
+      int width = specs.get(0);
+      int height = specs.get(1);
+      startX = specs.get(2);
+      startY = specs.get(3);
+      numFood = specs.get(4);
+      return initBoard(width, height, content);
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to read AiLife map from file!");
+    }
+  }
+
+  private Board<TileEntity> initBoard(int width, int height, List<List<Integer>> content) {
+    Board<TileEntity> board = new Board<>(width, height);
+
+    Map<TileEntity, Integer> foods = new HashMap<>();
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int s = content.get(y).get(x);
+        TileEntity tile;
+        switch (s) {
+          case 0:
+            tile = new Empty(x, y, board);
+            break;
+          case -1:
+            tile = new Poison(x, y, board);
+            break;
+          case -2:
+            robot = new Robot(x, y, board, false, this);
+            tile = robot;
+            break;
+          default:
+            tile = new Food(x, y, board);
+            foods.put(tile, s - 1);
+        }
+        board.set(tile);
+      }
+    }
+    robot.init(foods);
+
+    return board;
+  }
+
   private void setGui() {
     gui = FlatlandGui.get(this);
-    gui.setAdapter(board);
     gui.setVisible(showGui);
   }
 
@@ -50,18 +117,11 @@ public class Flatland {
     }
   }
 
-  public static void simulate(List<Board<TileEntity>> boards, FlatlandSimulator ann, Runnable callback, Robot robot) {
-    Flatland flatland = new Flatland(boards.get(0), ann, robot, true);
-    simulate(boards, callback, flatland);
-  }
-
-  private static void simulate(List<Board<TileEntity>> boards, Runnable callback, Flatland flatland) {
-    if (boards.isEmpty()) {
-      callback.run();
-      return;
-    }
-    flatland.board = boards.remove(0);
-    flatland.simulate(() -> simulate(boards, callback, flatland));
+  public void simulate(boolean showGui) {
+////    Flatland flatland = new Flatland(simulator, true);
+    reset();
+    this.showGui = showGui;
+    simulate(() -> Log.v(TAG, "Simulating ..."));
   }
 
   private void initBoard(Board<TileEntity> board) {
@@ -77,10 +137,6 @@ public class Flatland {
 
   public void terminate() {
     this.shouldStop = true;
-  }
-
-  public void simulate() {
-    simulate(() -> Log.v(TAG, "Simulation done!"));
   }
 
   public void printBoard() {
@@ -101,13 +157,16 @@ public class Flatland {
       initBoard(board);
       for (int i = 1; i <= simulator.getMaxSteps(); i++) {
         simulator.move(robot);
-        onTick(i);
+        onSimulationTick(i);
+        if (shouldStop) {
+          break;
+        }
       }
       callback.run();
     }).start();
   }
 
-  public void onTick(int step) {
+  public void onSimulationTick(int step) {
     simulator.onTick();
     if (showGui) {
       gui.onTick(step);
@@ -115,15 +174,11 @@ public class Flatland {
         Thread.sleep(gui.getSimulationSpeed());
       } catch (InterruptedException e) {
       }
-      if (shouldStop) {
-//          Log.v(TAG, "Exiting ...");
-        return;
-      }
     }
   }
 
   public void reset() {
-    simulator.reset();
+    board = initBoard(getWidth(), getHeight(), content);
   }
 
   public int getMaxFoodCount() {
@@ -154,5 +209,53 @@ public class Flatland {
 
   public void move(Direction dir) {
     robot.move(dir);
+  }
+
+  public int getTravelDistance() {
+    return robot.getTravelDistance();
+  }
+
+  // ############ BOARD STUFF ################
+
+  public List<TileEntity> getItems() {
+    return board.getItems();
+  }
+
+  public int getHeight() {
+    return board.getHeight();
+  }
+
+  public int getWidth() {
+    return board.getWidth();
+  }
+
+  public boolean robotAtStart() {
+    int x = robot.getX();
+    int y = robot.getY();
+    return x == startX && y == startY;
+  }
+
+  public void onPoisonConsumed(TileEntity oldTile) {
+    simulator.onPoisonConsumed();
+  }
+
+  public void onFoodConsumed(TileEntity oldTile) {
+    simulator.onFoodConsumed();
+  }
+
+  public void onNormalMove(TileEntity oldTile) {
+    simulator.onNormalMove();
+  }
+
+  public BitSet getFoodId() {
+    return robot.getFoodId();
+  }
+
+  public BitSet getRobotId() {
+    return robot.getRobotId();
+  }
+
+  public TileEntity get(Vec location) {
+    return board.get(location);
   }
 }

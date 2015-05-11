@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import subsym.Main;
+import subsym.flatland.Flatland;
 import subsym.gui.ColorUtils;
 import subsym.gui.Direction;
 import subsym.models.Board;
 import subsym.models.Vec;
 import subsym.models.entity.TileEntity;
-import subsym.q.QPreferences;
 
 /**
  * Created by Patrick on 23.03.2015.
@@ -25,7 +25,9 @@ public class Robot extends TileEntity {
   private static final String TAG = Robot.class.getSimpleName();
   private long numPoison;
   private long numFood;
+  private final Board<TileEntity> board;
   private final boolean isDirectional;
+  private final Flatland flatland;
   private final int startY;
   private final int startX;
   private Map<Vec, TileEntity> poison;
@@ -33,12 +35,12 @@ public class Robot extends TileEntity {
   private int poisonCount;
   private int foodCount;
   private Direction dir;
+  private BitSet foodId;
+  private BitSet robotId;
 
   private int travelDistance;
   private double lastStepReward;
 
-  private BitSet foodId;
-  private BitSet robotId;
 
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = new ArrayList<>();
@@ -54,11 +56,13 @@ public class Robot extends TileEntity {
     return randomInput;
   }
 
-  public Robot(int x, int y, Board<TileEntity> board, boolean isDirectional) {
+  public Robot(int x, int y, Board<TileEntity> board, boolean isDirectional, Flatland flatland) {
     super(x, y, board);
     startX = x;
     startY = y;
+    this.board = board;
     this.isDirectional = isDirectional;
+    this.flatland = flatland;
     setDirection(Direction.UP);
   }
 
@@ -80,9 +84,6 @@ public class Robot extends TileEntity {
     poisonCount = 0;
   }
 
-  public BitSet getRobotId() {
-    return robotId;
-  }
 
   public List<Double> getFoodSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();
@@ -124,9 +125,9 @@ public class Robot extends TileEntity {
   public void move(Direction dir) {
     Vec oldPosition = getPosition().copy();
 
+    robotId.set(getLocation1D(), false);
     TileEntity tile = new Empty((int) oldPosition.getX(), (int) oldPosition.getY(), getBoard());
     getBoard().set(tile);
-    robotId.set(getLocation1D(), false);
     switch (dir) {
       case LEFT:
         moveLeft();
@@ -147,14 +148,14 @@ public class Robot extends TileEntity {
     Vec newPosition = oldTile.getPosition();
     if (oldTile instanceof Poison) {
       poisonCount++;
-      lastStepReward = QPreferences.POISON_PENALTY;
       poison.remove(newPosition);
-    } else if (oldTile instanceof Food && consumedFood(oldTile)) {
+      flatland.onPoisonConsumed(oldTile);
+    } else if (oldTile instanceof Food) {
       foodCount++;
-      lastStepReward = QPreferences.FOOD_REWARD;
       foodId.set(food.get(oldTile), false);
+      flatland.onFoodConsumed(oldTile);
     } else {
-      lastStepReward = QPreferences.STEP_PENALTY;
+      flatland.onNormalMove(oldTile);
     }
     robotId.set(getLocation1D(), true);
     travelDistance++;
@@ -164,11 +165,6 @@ public class Robot extends TileEntity {
     getBoard().notifyDataChanged();
   }
 
-  private boolean consumedFood(TileEntity oldTile) {
-    Integer foodIndex = food.get(oldTile);
-    boolean foodPresent = foodId.get(foodIndex);
-    return foodPresent;
-  }
 
   private void setPositionWrapped(int x, int y) {
     int newX = (x + getBoard().getWidth()) % getBoard().getWidth();
@@ -330,10 +326,6 @@ public class Robot extends TileEntity {
     return startY;
   }
 
-  public BitSet getFoodId() {
-    return foodId;
-  }
-
   public int getLocation1D() {
     return getY() * getBoard().getWidth() + getX();
   }
@@ -342,5 +334,13 @@ public class Robot extends TileEntity {
     int x = location.nextSetBit(0) % width;
     int y = (location.nextSetBit(0) - x) / width;
     return Vec.create(x, y);
+  }
+
+  public BitSet getFoodId() {
+    return foodId;
+  }
+
+  public BitSet getRobotId() {
+    return robotId;
   }
 }
