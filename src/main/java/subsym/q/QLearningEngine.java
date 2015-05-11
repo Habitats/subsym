@@ -18,7 +18,7 @@ public class QLearningEngine {
 
   private static final String TAG = QLearningEngine.class.getSimpleName();
 
-  public static <T extends QState> Map<T, Map<QAction, Float>> learn(int iterations, QGame<T> game, double learningRate,
+  public static <T extends QState> Map<T, Map<QAction, Float>> train(int iterations, QGame<T> game, double learningRate,
                                                                      double discountRate) {
     Q q = new Q();
 

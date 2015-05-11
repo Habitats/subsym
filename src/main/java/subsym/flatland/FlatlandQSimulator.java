@@ -79,7 +79,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
       board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
       gui.setAdapter(board);
     }
-    qMap = QLearningEngine.learn(maxIterations, this, learningRate, discountRate);
+    qMap = QLearningEngine.train(maxIterations, this, learningRate, discountRate);
 
     simulate();
   }
