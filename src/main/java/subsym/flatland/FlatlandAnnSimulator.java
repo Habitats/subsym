@@ -93,7 +93,7 @@ public class FlatlandAnnSimulator extends GeneticProblem implements FlatlandSimu
           String.format("Genotype size: %d - Phenotype size: %d - Fitness: %.3f", best.size(), pheno.getNumWeights(), pheno.fitness()));
     List<Board<TileEntity>> boards = new ArrayList<>();
     IntStream.range(0, annPrefs.isSingle() ? 1 : 5).forEach(i -> boards.add(createAiLifeBoard(FlatlandPhenotype.goodSeeds.get(i))));
-    FlatlandGui.simulate(boards, this, () -> Log.v(TAG, this), new Robot(0, 0, boards.get(0), true));
+    Flatland.simulate(boards, this, () -> Log.v(TAG, this), new Robot(0, 0, boards.get(0), true));
   }
 
   public static Board<TileEntity> createAiLifeBoard(long seed) {

@@ -39,7 +39,7 @@ import subsym.q.QState;
 public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQState> {
 
   private static final String TAG = FlatlandQSimulator.class.getSimpleName();
-  private FlatlandGui gui;
+  private Flatland flatland;
   private Map<FlatlandQState, Map<QAction, Float>> qMap;
   private Board<TileEntity> board;
   private int startX;
@@ -61,8 +61,8 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
 
   private void simulate() {
     board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-    gui = new FlatlandGui(board, this, robot);
-    gui.simulate(() -> Log.v(TAG, ""));
+    flatland = new Flatland(board, this, robot, true);
+    flatland.simulate(() -> Log.v(TAG, ""));
   }
 
   private void run(String scenario, double learningRate, double discountRate, int maxIterations) {
@@ -75,9 +75,9 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
         .collect(Collectors.toMap(dir -> QAction.create(dir.name()), Function.identity()));
 
     if (QPreferences.DEBUG) {
-      gui = new FlatlandGui(board, this, robot);
+      flatland = new Flatland(board, this, robot, true);
       board = initBoard(this.board.getWidth(), this.board.getHeight(), content);
-      gui.setAdapter(board);
+      flatland.setBoard(board);
     }
     qMap = QLearningEngine.train(maxIterations, this, learningRate, discountRate);
 
@@ -86,9 +86,11 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
 
   @Override
   public void onTick() {
-    drawBestActions(qMap);
+    if (flatland.isVisible()) {
+      drawBestActions(qMap);
+    }
     if (solution()) {
-      gui.terminate();
+      flatland.terminate();
       Log.v(TAG, "Time: " + robot.getTravelDistance() + " > Poison: " + robot.getPoisonCount());
       if (QPreferences.RUN_FOREVER) {
         run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
@@ -96,7 +98,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
     }
     if (robot.getTravelDistance() > 1000) {
       Log.v(TAG, "Stuck :( ... " + FlatlandQState.getFoodLocations(computeState().id).size() + " foods left");
-      gui.terminate();
+      flatland.terminate();
       if (QPreferences.RUN_FOREVER) {
         run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
       }
@@ -104,10 +106,6 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
   }
 
   private void drawBestActions(Map<FlatlandQState, Map<QAction, Float>> qMap) {
-    if (gui == null) {
-      return;
-    }
-
     // find the best action for any given state
     if (bestActions == null || robot.getLastStepReward() > 0 || QPreferences.DEBUG) {
       // states with the same food config
@@ -119,11 +117,11 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
 
     if (QPreferences.DEBUG) {
       drawDetailedBestAction(qMap, bestActions);
-    } else if(QPreferences.DRAW_ARROWS){
+    } else if (QPreferences.DRAW_ARROWS) {
       drawBestActionArrows(bestActions);
     }
 
-    gui.setAdapter(board);
+    flatland.setBoard(board);
     board.notifyDataChanged();
   }
 
@@ -202,7 +200,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
   @Override
   public void reset() {
     board = initBoard(board.getWidth(), board.getHeight(), content);
-    gui.setAdapter(board);
+    flatland.setBoard(board);
   }
 
   @Override
@@ -291,11 +289,6 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame<FlatlandQSta
   private List<FlatlandQState> getStatesMatchingFood(Set<FlatlandQState> states, FlatlandQState currentState) {
     BitSet foodLocations = FlatlandQState.getFoodLocations(currentState.id);
     return states.stream().filter(state -> FlatlandQState.getFoodLocations(state.id).equals(foodLocations)).collect(Collectors.toList());
-  }
-
-  @Override
-  public void updateGui() {
-    drawBestActions(qMap);
   }
 
 

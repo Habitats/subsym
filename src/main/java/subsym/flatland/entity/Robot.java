@@ -297,6 +297,7 @@ public class Robot extends TileEntity {
   public Map<Vec, TileEntity> getPoison() {
     return poison;
   }
+
   public Map<TileEntity, Integer> getFood() {
     return food;
   }

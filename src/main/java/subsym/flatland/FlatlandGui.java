@@ -6,15 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.List;
 
 import javax.swing.*;
 
-import subsym.Log;
-import subsym.Main;
-import subsym.flatland.entity.Food;
-import subsym.flatland.entity.Poison;
-import subsym.flatland.entity.Robot;
 import subsym.gui.AIButton;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGridCanvas;
@@ -23,7 +17,6 @@ import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Direction;
-import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
 /**
@@ -32,9 +25,9 @@ import subsym.models.entity.TileEntity;
 public class FlatlandGui extends AIGui<TileEntity> {
 
   private static final String TAG = FlatlandGui.class.getSimpleName();
+  private static FlatlandGui instance;
   private AIGridCanvas<TileEntity> canvas;
-  private Robot robot;
-  private FlatlandSimulator simulator;
+  private Flatland flatland;
   private JPanel mainPanel;
   private AIButton simulateButton;
   private AIButton generateButton;
@@ -44,19 +37,17 @@ public class FlatlandGui extends AIGui<TileEntity> {
   private AILabel foodLabel;
   private AISlider simulationSpeedSlider;
   private AILabel scoreLabel;
-  private Board<TileEntity> board;
-  private boolean shouldStop = false;
-  private long numFood;
-  private long numPoison;
 
-  public FlatlandGui(Board<TileEntity> board, FlatlandSimulator simulator, Robot robot) {
-    this.simulator = simulator;
-    this.board = board;
-    this.setRobot(robot);
+
+  private FlatlandGui() {
     buildFrame(mainPanel, null, null);
+  }
 
-    simulateButton.addActionListener(e -> simulate());
-    generateButton.addActionListener(e -> generateRandomBoard());
+  private void init(final Flatland flatland) {
+    this.flatland = flatland;
+
+    simulateButton.addActionListener(e -> flatland.simulate());
+    generateButton.addActionListener(e -> flatland.generateRandomBoard());
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap actionMap = mainPanel.getActionMap();
@@ -65,130 +56,68 @@ public class FlatlandGui extends AIGui<TileEntity> {
     actionMap.put(Direction.LEFT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        getRobot().move(Direction.LEFT);
-        simulator.updateGui();
-        printBoard();
+        flatland.move(Direction.LEFT);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), Direction.UP);
     actionMap.put(Direction.UP, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        getRobot().move(Direction.UP);
-        printBoard();
-        simulator.updateGui();
+        flatland.move(Direction.UP);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), Direction.RIGHT);
     actionMap.put(Direction.RIGHT, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        getRobot().move(Direction.RIGHT);
-        printBoard();
-        simulator.updateGui();
+        flatland.move(Direction.RIGHT);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), Direction.DOWN);
     actionMap.put(Direction.DOWN, new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        getRobot().move(Direction.DOWN);
-        printBoard();
-        simulator.updateGui();
+        flatland.move(Direction.DOWN);
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), "simulate");
     actionMap.put("simulate", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        simulate();
+        flatland.simulate();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0), "generate");
     actionMap.put("generate", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        generateRandomBoard();
+        flatland.generateRandomBoard();
       }
     });
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), "reset");
     actionMap.put("reset", new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        simulator.reset();
+        flatland.reset();
       }
     });
 
     addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        shouldStop = true;
+        flatland.terminate();
       }
     });
-  }
-
-  public void terminate() {
-    this.shouldStop = true;
-  }
-
-  private void simulate() {
-    simulate(() -> Log.v(TAG, "Simulation done!"));
-  }
-
-  private void printBoard() {
-    Log.v(TAG, board.getFormattedBoard());
-  }
-
-  private void generateRandomBoard() {
-    int seed = Main.random().nextInt();
-    Log.v(TAG, "Board seed: " + seed);
-    board = FlatlandAnnSimulator.createAiLifeBoard(seed);
-    initBoard(board);
-    Log.v(TAG, board.getFormattedBoard());
-    onTick(0);
-  }
-
-  public void simulate(Runnable callback) {
-    new Thread(() -> {
-      initBoard(board);
-      for (int i = 1; i <= simulator.getMaxSteps(); i++) {
-        simulator.move(getRobot());
-        onTick(i);
-        try {
-          Thread.sleep(simulationSpeedSlider.getValue());
-        } catch (InterruptedException e) {
-        }
-        if (shouldStop) {
-//          Log.v(TAG, "Exiting ...");
-          return;
-        }
-      }
-      callback.run();
-    }).start();
   }
 
   public int getSimulationSpeed() {
     return simulationSpeedSlider.getValue();
   }
 
-  private void initBoard(Board<TileEntity> board) {
-    canvas.setAdapter(board);
-    numFood = board.getItems().stream().filter(i -> i instanceof Food).count();
-    numPoison = board.getItems().stream().filter(i -> i instanceof Poison).count();
-    board.set(robot);
-    setRobot(robot);
-    board.notifyDataChanged();
-    if (isVisible()) {
-      onTick(0);
-    }
-  }
-
   public void onTick(int time) {
-    foodLabel.setText(String.format("Food: %2d/%2d", getRobot().getFoodCount(), numFood));
-    poisonLabel.setText(String.format("Poison: %2d/%2d", getRobot().getPoisonCount(), numPoison));
+    foodLabel.setText(String.format("Food: %2d/%2d", flatland.getFoodCount(), flatland.getMaxFoodCount()));
+    poisonLabel.setText(String.format("Poison: %2d/%2d", flatland.getPoisonCount(), flatland.getMaxPoisonCount()));
     timeLabel.setText(String.format("Time: %2d", time));
-    scoreLabel.setText(String.format("Score: %.3f", getRobot().getScore()));
-
-    simulator.onTick();
+    scoreLabel.setText(String.format("Score: %.3f", flatland.getScore()));
   }
 
   @Override
@@ -221,30 +150,11 @@ public class FlatlandGui extends AIGui<TileEntity> {
     throw new IllegalStateException("Not implemented!");
   }
 
-  public static void demo(Board<TileEntity> board, Robot robot) {
-    FlatlandGui demo = new FlatlandGui(board, null, robot);
-    demo.initBoard(board);
-  }
-
-  public static void simulate(List<Board<TileEntity>> boards, FlatlandSimulator ann, Runnable callback, Robot robot) {
-    FlatlandGui gui = new FlatlandGui(boards.get(0), ann, robot);
-    simulate(boards, callback, gui);
-  }
-
-  private static void simulate(List<Board<TileEntity>> boards, Runnable callback, FlatlandGui gui) {
-    if (boards.isEmpty()) {
-      callback.run();
-      return;
+  public static FlatlandGui get(Flatland flatland) {
+    if (instance == null) {
+      instance = new FlatlandGui();
     }
-    gui.board = boards.remove(0);
-    gui.simulate(() -> simulate(boards, callback, gui));
-  }
-
-  public Robot getRobot() {
-    return robot;
-  }
-
-  public void setRobot(Robot robot) {
-    this.robot = robot;
+    instance.init(flatland);
+    return instance;
   }
 }

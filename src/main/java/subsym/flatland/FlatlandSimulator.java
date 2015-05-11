@@ -10,10 +10,6 @@ public interface FlatlandSimulator {
   void move(Robot robot);
 
   int getMaxSteps();
-
-  default void updateGui() {
-  }
-
   default void reset() {
 
   }
