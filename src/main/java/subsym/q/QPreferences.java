@@ -13,7 +13,7 @@ public class QPreferences {
   public static final boolean DRAW_ARROWS = false;
 
   public static final int BACKUP_THRESHOLD = 1;
-  public static final int MAX_ITERATION = 300;
+  public static final int MAX_ITERATION = 3000;
   public static final double UPPER_RANDOM_THRESHOLD = .31;
   public static final double LOWER_RANDOM_THRESHOLD = 0.01;
   public static final String SCENARIO = SCENARIOS[3];

@@ -48,8 +48,8 @@ public class test_ailife {
     board.set(new Poison(1, 3, board));
     board.set(new Food(0, 2, board));
     board.set(new Food(1, 2, board));
-    Robot robot = new Robot(0, 0, board, true);
-    board.set(robot);
+//    Robot robot = new Robot(0, 0, board, true, this);
+//    board.set(robot);
 
 //    assertEquals(robot.getFoodSensorInput(), Arrays.asList(0, 0, 0));
 //    robot.move(1);
