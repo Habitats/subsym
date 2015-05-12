@@ -46,7 +46,6 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     QPreferences.SHOULD_TERMINATE = false;
     actions = Arrays.asList(Direction.values()).stream().collect(Collectors.toMap(dir -> QAction.get(dir), Function.identity()));
     run(QPreferences.LEARNING_RATE, QPreferences.DISCOUNT_RATE, QPreferences.MAX_ITERATION);
-
   }
 
   private void run(double learningRate, double discountRate, int maxIterations) {

@@ -26,21 +26,20 @@ public class QLearningEngine {
 
     Log.v(TAG, "Training ... ");
     long start = System.currentTimeMillis();
+    List<QAction> actions = game.getActions();
     for (int i = 0; i < iterations; i++) {
       game.restart();
       BitSet lastState = game.computeState();
+      double iterationRate = getIterationRate(iterations, i);
       while (!game.solution()) {
         if (QPreferences.SHOULD_TERMINATE) {
           Log.v(TAG, "Terminating training ...");
           return;
         }
         if (q.map.get(lastState) == null) {
-          List<QAction> actions = game.getActions();
-          Map<QAction, Float> actionMap = actions.stream().collect(Collectors.toMap(a -> a, a -> 0.f));
-          q.map.put(game.computeState(), actionMap);
+          q.map.put(game.computeState(), new HashMap<>(4));
         }
-        double iterationRate = getIterationRate(iterations, i);
-        QAction a = q.selectAction(game, iterationRate);
+        QAction a = q.selectAction(game, iterationRate, actions, q.map);
         if (QPreferences.BACKUP_THRESHOLD > 1) {
           game.addHisory(lastState, a);
         }
@@ -148,19 +147,19 @@ public class QLearningEngine {
       actions.put(a, value);
     }
 
-    public QAction selectAction(QGame game, double iterationRate) {
+    public QAction selectAction(QGame game, double iterationRate, List<QAction> actions, Map<BitSet, Map<QAction, Float>> map) {
       BitSet key = game.computeState();
-      Map<QAction, Float> actionMap = map.get(key);
+      Map<QAction, Float> actionMap = this.map.get(key);
 
       boolean
           pickRandom =
           Main.random().nextDouble() < QPreferences.LOWER_RANDOM_THRESHOLD + QPreferences.UPPER_RANDOM_THRESHOLD * iterationRate;
 //      Log.v(TAG, v);
-      if (!pickRandom && actionMap.size() >= 0) {
-        return getBestAction(actionMap);
+      if (!pickRandom) {
+        return getBestAction(actionMap, actions);
       } else {
-        List<QAction> actions = game.getActions();
-        return actions.get(Main.random().nextInt(actions.size()));
+        int randomIndex = Main.random().nextInt(actions.size());
+        return actions.get(randomIndex);
       }
     }
 
@@ -169,8 +168,37 @@ public class QLearningEngine {
       return actions.get(Main.random().nextInt(actionMap.size()));
     }
 
-    private QAction getBestAction(Map<QAction, Float> actionMap) {
-      return actionMap.keySet().stream().max((a1, a2) -> Float.compare(actionMap.get(a1), actionMap.get(a2))).get();
+    private QAction getBestAction(Map<QAction, Float> availableActions, List<QAction> allActions) {
+      int missing = allActions.size() - availableActions.size();
+      // there are some actions here
+      if (missing != allActions.size()) {
+        float best = availableActions.values().stream().max(Float::compare).get();
+        // there are good actions present, pick the best one
+        QAction qAction = availableActions.keySet().stream() //
+            .max((a1, a2) -> Float.compare(availableActions.get(a1), availableActions.get(a2))).get();
+        // found a good one, or they are all just here, and they suck
+        if (best > 0 || missing == 0) {
+          return qAction;
+        }
+      }
+
+      // some actions are missing, or they are all shit
+
+      // if they are ALL missing, just pick something random
+      if (missing == allActions.size()) {
+        QAction totallyRandomAction = allActions.get(Main.random().nextInt(allActions.size()));
+        availableActions.put(totallyRandomAction, 0.f);
+        return totallyRandomAction;
+      }
+
+      // so there are SOME stuff here, shouldn't override those
+      else {
+        QAction randomActionBetterThanThePresentOnes = allActions.stream() //
+            .filter(a -> !availableActions.containsKey(a)).collect(Collectors.toList())
+            .get(Main.random().nextInt( missing));
+        availableActions.put(randomActionBetterThanThePresentOnes, 0.f);
+        return randomActionBetterThanThePresentOnes;
+      }
     }
   }
 }
