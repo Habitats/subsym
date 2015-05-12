@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -116,19 +115,24 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
 
   private void drawBestActions(Map<BitSet, Map<QAction, Float>> qMap) {
     // find the best action for any given state
-    if (bestActions == null || lastReward > 0 || QPreferences.DEBUG) {
-      // states with the same food config
-      Set<BitSet> states = qMap.keySet();
-      BitSet currentState = computeState();
-      List<BitSet> matchingStates = getStatesMatchingFood(states, currentState);
-      bestActions = matchingStates.stream().collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
-    }
-
     if (QPreferences.DEBUG) {
+      getBestActions(qMap);
       drawDetailedBestAction(qMap, bestActions);
     } else if (QPreferences.DRAW_ARROWS) {
+      if (bestActions == null || lastReward > 0) {
+        bestActions = getBestActions(qMap);
+      }
       drawBestActionArrows(bestActions);
     }
+  }
+
+  private Map<BitSet, QAction> getBestActions(Map<BitSet, Map<QAction, Float>> qMap) {
+    // states with the same food config
+    BitSet currentState = computeState();
+    BitSet currentFoodState = FlatlandQState.getFoodLocations(currentState);
+    return qMap.keySet().stream() //
+        .filter(state -> currentFoodState.equals(FlatlandQState.getFoodLocations(state))) //
+        .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
   }
 
   private void drawBestActionArrows(Map<BitSet, QAction> bestActions) {
@@ -228,14 +232,6 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
 
   private QAction getBestAction(Map<QAction, Float> actionMap) {
     return actionMap.keySet().stream().max((o1, o2) -> Double.compare(actionMap.get(o1), actionMap.get(o2))).get();
-  }
-
-  private List<BitSet> getStatesMatchingFood(Set<BitSet> states, BitSet currentState) {
-    BitSet current = FlatlandQState.getFoodLocations(currentState);
-    return states.stream().filter(state -> {
-      BitSet other = FlatlandQState.getFoodLocations(state);
-      return other.equals(current);
-    }).collect(Collectors.toList());
   }
 
   @Override

@@ -31,8 +31,8 @@ public class QLearningEngine {
       BitSet lastState = game.computeState();
       while (!game.solution()) {
         if (QPreferences.SHOULD_TERMINATE) {
-          System.out.println();
           Log.v(TAG, "Terminating training ...");
+          return;
         }
         if (q.map.get(lastState) == null) {
           List<QAction> actions = game.getActions();

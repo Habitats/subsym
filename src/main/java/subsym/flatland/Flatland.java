@@ -52,7 +52,6 @@ public class Flatland {
 
   public void loadFromFile(String fileName) {
     board = readBoardFromFile(fileName);
-    setBoard(board);
   }
 
   private Board<TileEntity> readBoardFromFile(String fileName) {
