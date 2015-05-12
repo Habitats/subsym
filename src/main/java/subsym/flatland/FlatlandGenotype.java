@@ -33,7 +33,6 @@ public class FlatlandGenotype extends Genotype {
     aiCopy.phenotype = new FlatlandPhenotype(aiCopy, prefs);
   }
 
-
   @Override
   public Phenotype getPhenotype() {
     return phenotype;

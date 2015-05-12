@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by mail on 05.05.2015.
  */
-public interface QGame{
+public interface QGame {
 
   void restart();
 
@@ -26,10 +26,7 @@ public interface QGame{
 
   void addHisory(BitSet lastState, QAction a);
 
-
   Deque<BitSet> getHistory();
 
   QAction getHistoryAction(BitSet state);
-
-//  T nextState(QAction a, T newState);
 }

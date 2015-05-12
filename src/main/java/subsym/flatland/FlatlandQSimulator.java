@@ -44,14 +44,12 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
   @Override
   public void run() {
     QPreferences.SHOULD_TERMINATE = false;
-    double learningRate = .9;
-    double discountRate = .9;
     actions = Arrays.asList(Direction.values()).stream().collect(Collectors.toMap(dir -> QAction.get(dir), Function.identity()));
-    run(QPreferences.SCENARIO, learningRate, discountRate, QPreferences.MAX_ITERATION);
+    run(QPreferences.LEARNING_RATE, QPreferences.DISCOUNT_RATE, QPreferences.MAX_ITERATION);
 
   }
 
-  private void run(String scenario, double learningRate, double discountRate, int maxIterations) {
+  private void run(double learningRate, double discountRate, int maxIterations) {
     bestActions = null;
 
     if (QPreferences.SHOULD_TERMINATE) {
@@ -62,18 +60,15 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     stateHistory = new LinkedList<>();
     stateHistoryActions = new HashMap<>();
 
-    flatland = createFlatland(scenario);
+    flatland = createFlatland();
 
     QLearningEngine.train(maxIterations, this, learningRate, discountRate, new QCallback() {
 
       @Override
       public void onIteration(int i, Map<BitSet, Map<QAction, Float>> map) {
-        if ((i % 1000) == 0 && QPreferences.INTERMEDIATE_SIMULATIONS) {
+        if ((i % 100) == 0 && QPreferences.INTERMEDIATE_SIMULATIONS) {
           qMap = map;
-          tempFlatland = flatland;
-          flatland = createFlatland(scenario);
-          flatland.simulate(false);
-          flatland = tempFlatland;
+          simulateCurrentState(false);
         }
       }
 
@@ -89,12 +84,18 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
         }
       }
     });
-
   }
 
-  private Flatland createFlatland(String scenario) {
+  public void simulateCurrentState(boolean showGui) {
+    tempFlatland = flatland;
+    flatland = createFlatland();
+    flatland.simulate(showGui);
+    flatland = tempFlatland;
+  }
+
+  private Flatland createFlatland() {
     Flatland flatland = new Flatland(this, true);
-    flatland.loadFromFile(scenario);
+    flatland.loadFromFile(QPreferences.SCENARIO);
     return flatland;
   }
 
@@ -105,6 +106,8 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     }
     if (solution()) {
       flatland.terminate();
+      Log.v(TAG, "Simulation finished in " + flatland.getTravelDistance() + " steps! Poison eaten: " + flatland.getPoisonCount()
+                 + " - Food eaten: " + flatland.getFoodCount());
 //      Log.v(TAG, "Time: " + flatland.getTravelDistance() + " > Poison: " + flatland.getPoisonCount());
     }
     if (flatland.getTravelDistance() > 1000) {

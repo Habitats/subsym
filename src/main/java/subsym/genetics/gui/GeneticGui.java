@@ -10,10 +10,10 @@ import java.util.Arrays;
 import javax.swing.*;
 
 import subsym.Log;
-import subsym.flatland.FlatlandAnnSimulator;
 import subsym.ann.AnnPreferences;
 import subsym.beertracker.BeerScenario;
 import subsym.beertracker.BeerTracker;
+import subsym.flatland.FlatlandAnnSimulator;
 import subsym.genetics.GeneticPreferences;
 import subsym.genetics.GeneticProblem;
 import subsym.genetics.Genetics;

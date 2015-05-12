@@ -9,10 +9,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import subsym.Log;
-import subsym.flatland.entity.Empty;
 import subsym.ann.AnnPreferences;
 import subsym.ann.ArtificialNeuralNetwork;
 import subsym.ann.nodes.OutputNode;
+import subsym.flatland.entity.Empty;
 import subsym.models.Board;
 import subsym.models.entity.TileEntity;
 
@@ -32,6 +32,10 @@ public class BeerGame {
   private long simulationSeed;
   private int maxTime;
 
+  private enum State {
+    ABORTING, SIMULATING, IDLE;
+  }
+
   public BeerScenario getScenario() {
     return annPreferences.getBeerScenario();
   }
@@ -50,12 +54,6 @@ public class BeerGame {
 
   public void statePrint() {
     ann.statePrint();
-  }
-
-
-  private enum State {
-    ABORTING, SIMULATING, IDLE;
-
   }
 
   private int simulationSpeed = 0;

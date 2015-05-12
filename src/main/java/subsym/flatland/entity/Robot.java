@@ -41,7 +41,6 @@ public class Robot extends TileEntity {
   private int travelDistance;
   private double lastStepReward;
 
-
   public List<Double> getSensoryInput() {
     List<Double> sensoryInput = new ArrayList<>();
     sensoryInput.addAll(getFoodSensorInput());
@@ -83,7 +82,6 @@ public class Robot extends TileEntity {
     foodCount = 0;
     poisonCount = 0;
   }
-
 
   public List<Double> getFoodSensorInput() {
     List<TileEntity> neighbors = getSensorNeighbors();

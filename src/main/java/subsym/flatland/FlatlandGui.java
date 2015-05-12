@@ -34,18 +34,18 @@ public class FlatlandGui extends AIGui<TileEntity> {
   private AIButton generateButton;
   private AIButton resetButton;
   private AILabel timeLabel;
-  private AILabel poisonLabel;
   private AILabel foodLabel;
-  private AISlider simulationSpeedSlider;
   private AILabel scoreLabel;
-  private int TILE_SCALE = 30;
+  private AILabel poisonLabel;
+  private AISlider simulationSpeedSlider;
+  private static final int TILE_SCALE = 30;
   private Dimension preferredSize;
-  private boolean built = false;
+  private boolean isBuilt = false;
 
   private void init(final Flatland flatland) {
     this.flatland = flatland;
 
-    simulateButton.addActionListener(e -> flatland.simulate(true));
+    simulateButton.addActionListener(e -> new Thread(() -> flatland.simulate(true)).start());
     generateButton.addActionListener(e -> flatland.generateRandomBoard());
 
     InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -115,9 +115,9 @@ public class FlatlandGui extends AIGui<TileEntity> {
     setPreferredSize(preferredSize);
     Dimension minimumSize = new Dimension(650, 650);
     setMinimumSize(minimumSize);
-    if (!built) {
+    if (!isBuilt) {
       buildFrame(mainPanel, null, null);
-      built = true;
+      isBuilt = true;
     } else {
       pack();
     }

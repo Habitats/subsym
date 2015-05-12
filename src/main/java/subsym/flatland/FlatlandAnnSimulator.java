@@ -107,7 +107,7 @@ public class FlatlandAnnSimulator extends GeneticProblem implements FlatlandSimu
       return;
     }
     flatland.setBoard(boards.remove(0));
-    flatland.simulate(() -> simulate(boards, callback, flatland));
+    flatland.simulate(true, () -> simulate(boards, callback, flatland));
   }
 
   public static Board<TileEntity> createAiLifeBoard(long seed) {

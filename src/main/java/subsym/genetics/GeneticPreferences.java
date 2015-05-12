@@ -3,11 +3,11 @@ package subsym.genetics;
 import java.util.HashMap;
 import java.util.Map;
 
-import subsym.flatland.FlatlandAnnSimulator;
 import subsym.ann.AnnPreferences;
 import subsym.ann.activation.Sigmoid;
 import subsym.beertracker.BeerScenario;
 import subsym.beertracker.BeerTracker;
+import subsym.flatland.FlatlandAnnSimulator;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.FullTurnover;
 import subsym.genetics.adultselection.Mixing;

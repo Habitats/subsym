@@ -116,11 +116,21 @@ public class Flatland {
     }
   }
 
-  public void simulate(boolean showGui) {
-////    Flatland flatland = new Flatland(simulator, true);
+  public void simulate(boolean showGui, Runnable callback) {
+    shouldStop = false;
     reset();
     this.showGui = showGui;
-    simulate(() -> Log.v(TAG, "Simulation finished in " + getTravelDistance() + " steps! Poison eaten: " + getPoisonCount() + " - Food eaten: " + getFoodCount()));
+    initBoard(board);
+    setBoard(board);
+    for (int i = 1; i <= simulator.getMaxSteps(); i++) {
+      simulator.move(robot);
+      onSimulationTick(i);
+      if (shouldStop || QPreferences.SHOULD_TERMINATE) {
+//          Log.v(TAG, "Terminating simulation ...");
+        break;
+      }
+    }
+    callback.run();
   }
 
   private void initBoard(Board<TileEntity> board) {
@@ -151,20 +161,6 @@ public class Flatland {
     gui.onTick(0);
   }
 
-  public void simulate(Runnable callback) {
-      initBoard(board);
-      setBoard(board);
-      for (int i = 1; i <= simulator.getMaxSteps(); i++) {
-        simulator.move(robot);
-        onSimulationTick(i);
-        if (shouldStop || QPreferences.SHOULD_TERMINATE) {
-//          Log.v(TAG, "Terminating simulation ...");
-          break;
-        }
-      }
-      callback.run();
-  }
-
   public void onSimulationTick(int step) {
     simulator.onTick();
     if (showGui) {
@@ -192,8 +188,8 @@ public class Flatland {
     return showGui;
   }
 
-
   //########### ROBOT STUFF ################
+
   public int getFoodCount() {
     return robot.getFoodCount();
   }
@@ -256,5 +252,10 @@ public class Flatland {
 
   public TileEntity get(Vec location) {
     return board.get(location);
+  }
+
+  public void simulate(boolean b) {
+    simulate(b, () -> {
+    });
   }
 }

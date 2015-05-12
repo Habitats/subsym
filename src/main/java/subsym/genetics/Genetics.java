@@ -11,8 +11,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import subsym.Log;
-import subsym.flatland.FlatlandAnnSimulator;
 import subsym.beertracker.BeerTracker;
+import subsym.flatland.FlatlandAnnSimulator;
 import subsym.genetics.adultselection.AdultSelection;
 import subsym.genetics.adultselection.Mixing;
 import subsym.genetics.gui.GeneticGui;

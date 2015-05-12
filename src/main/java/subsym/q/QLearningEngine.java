@@ -39,7 +39,8 @@ public class QLearningEngine {
           Map<QAction, Float> actionMap = actions.stream().collect(Collectors.toMap(a -> a, a -> 0.f));
           q.map.put(game.computeState(), actionMap);
         }
-        QAction a = q.selectAction(game, (iterations - i) / (double) iterations);
+        double iterationRate = getIterationRate(iterations, i);
+        QAction a = q.selectAction(game, iterationRate);
         if (QPreferences.BACKUP_THRESHOLD > 1) {
           game.addHisory(lastState, a);
         }
@@ -80,15 +81,23 @@ public class QLearningEngine {
       //      Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
       if ((i % 100) == 0) {
 //        System.out.print("#");
-//        QPreferences.setProgress(i, iterations);
+        QPreferences.setProgress(i, iterations);
       }
       callback.onIteration(i, q.map);
     }
     QPreferences.setProgress(0, iterations);
-    Log.v(TAG, String.format("Training completed in %d s > States: %d", (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size()));
+    Log.v(TAG,
+          String.format("Training completed in %d s > States: %d", (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size()));
     System.out.println();
 
     callback.onFinished(q.map);
+  }
+
+  private static double getIterationRate(int iterations, int i) {
+    if (iterations > QPreferences.RANDOM_ITERATION_THRESHOLD) {
+      iterations = Math.min(iterations, QPreferences.RANDOM_ITERATION_THRESHOLD);
+    }
+    return Math.max(0, iterations - i) / (double) iterations;
   }
 
   private static float update(Q q, BitSet currentState, double r, double learningRate, double discountRate, double oldScore) {

@@ -62,6 +62,7 @@ public class Log {
   private static void logFlat(String msg) {
     System.out.print(msg);
   }
+
   private static void log(String msg) {
     System.out.println(msg);
   }

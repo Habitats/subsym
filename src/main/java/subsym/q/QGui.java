@@ -25,7 +25,8 @@ public class QGui extends AIGui {
   private AIButton stopButton;
   private JCheckBox intermediateCheckbox;
   private JTextField iterationsInput;
-  private FlatlandQSimulator flatland;
+  private AIButton restartButton;
+  private FlatlandQSimulator simulator;
   private String TAG = QGui.class.getSimpleName();
 
   public QGui() {
@@ -37,6 +38,7 @@ public class QGui extends AIGui {
 
     stopButton.addActionListener(e -> stop());
     trainButton.addActionListener(e -> flatland());
+    restartButton.addActionListener(e -> new Thread(() -> simulator.simulateCurrentState(true)).start());
     runForverCheckbox.setSelected(QPreferences.RUN_FOREVER);
     scenarioCombobox.setSelectedItem(QPreferences.SCENARIO);
     drawArrowsCheckbox.setSelected(QPreferences.DRAW_ARROWS);
@@ -49,17 +51,18 @@ public class QGui extends AIGui {
 
   private void stop() {
     QPreferences.SHOULD_TERMINATE = true;
-    flatland = null;
+    simulator = null;
     System.gc();
   }
 
   private void flatland() {
     QPreferences.MAX_ITERATION = Integer.parseInt(iterationsInput.getText());
-    if (flatland == null || !flatland.isRunning()) {
-      if(flatland != null)
-      flatland.clear();
-      flatland = new FlatlandQSimulator();
-      new Thread(flatland).start();
+    if (simulator == null || !simulator.isRunning()) {
+      if (simulator != null) {
+        simulator.clear();
+      }
+      simulator = new FlatlandQSimulator();
+      new Thread(simulator).start();
     } else {
       Log.v(TAG, "Already running!");
     }
