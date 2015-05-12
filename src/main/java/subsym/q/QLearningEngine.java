@@ -1,5 +1,7 @@
 package subsym.q;
 
+import gnu.trove.map.hash.THashMap;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -103,7 +105,7 @@ public class QLearningEngine {
 
   public static class Q {
 
-    private Map<BitSet, Map<QAction, Float>> map = new HashMap<>(10_000_000);
+    private Map<BitSet, Map<QAction, Float>> map =  new THashMap<>(1_000_000);
 
     public float get(BitSet s, QAction a) {
       float score;
