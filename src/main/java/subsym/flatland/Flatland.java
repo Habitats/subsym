@@ -52,6 +52,7 @@ public class Flatland {
 
   public void loadFromFile(String fileName) {
     board = readBoardFromFile(fileName);
+    setBoard(board);
   }
 
   private Board<TileEntity> readBoardFromFile(String fileName) {
@@ -120,7 +121,7 @@ public class Flatland {
 ////    Flatland flatland = new Flatland(simulator, true);
     reset();
     this.showGui = showGui;
-    simulate(() -> Log.v(TAG, "Simulation finished ..."));
+    simulate(() -> Log.v(TAG, "Simulation finished in " + getTravelDistance() + " steps! Poison eaten: " + getPoisonCount() + " - Food eaten: " + getFoodCount()));
   }
 
   private void initBoard(Board<TileEntity> board) {
@@ -152,19 +153,17 @@ public class Flatland {
   }
 
   public void simulate(Runnable callback) {
-    new Thread(() -> {
       initBoard(board);
       setBoard(board);
       for (int i = 1; i <= simulator.getMaxSteps(); i++) {
         simulator.move(robot);
         onSimulationTick(i);
         if (shouldStop || QPreferences.SHOULD_TERMINATE) {
-          Log.v(TAG, "Terminating simulation ...");
+//          Log.v(TAG, "Terminating simulation ...");
           break;
         }
       }
       callback.run();
-    }).start();
   }
 
   public void onSimulationTick(int step) {

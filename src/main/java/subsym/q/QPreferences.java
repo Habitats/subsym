@@ -16,11 +16,12 @@ public class QPreferences {
   public static List<String> SCENARIOS = Arrays.asList(new File("q").list());
 
   public static final boolean DEBUG = false;
-  public static boolean RUN_FOREVER = true;
+  public static boolean RUN_FOREVER = false;
   public static boolean DRAW_ARROWS = false;
+  public static boolean INTERMEDIATE_SIMULATIONS = true;
 
   public static final int BACKUP_THRESHOLD = 1;
-  public static final int MAX_ITERATION = 3000;
+  public static int MAX_ITERATION = 10000;
   public static final double UPPER_RANDOM_THRESHOLD = .31;
   public static final double LOWER_RANDOM_THRESHOLD = 0.01;
   public static String SCENARIO = SCENARIOS.get(4);

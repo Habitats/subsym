@@ -23,20 +23,25 @@ public class QGui extends AIGui {
   private JPanel mainPanel;
   private JProgressBar progressBar;
   private AIButton stopButton;
+  private JCheckBox intermediateCheckbox;
+  private JTextField iterationsInput;
   private FlatlandQSimulator flatland;
   private String TAG = QGui.class.getSimpleName();
 
   public QGui() {
     QPreferences.SCENARIOS.forEach(scenarioCombobox::addItem);
-    scenarioCombobox.addActionListener(e -> QPreferences.SCENARIO = scenarioCombobox.getSelectedItem().toString());
-    drawArrowsCheckbox.addActionListener(e -> QPreferences.DRAW_ARROWS = drawArrowsCheckbox.isSelected());
     runForverCheckbox.addActionListener(e -> QPreferences.RUN_FOREVER = runForverCheckbox.isSelected());
+    drawArrowsCheckbox.addActionListener(e -> QPreferences.DRAW_ARROWS = drawArrowsCheckbox.isSelected());
+    scenarioCombobox.addActionListener(e -> QPreferences.SCENARIO = scenarioCombobox.getSelectedItem().toString());
+    intermediateCheckbox.addActionListener(e -> QPreferences.INTERMEDIATE_SIMULATIONS = intermediateCheckbox.isSelected());
 
-    drawArrowsCheckbox.setSelected(QPreferences.DRAW_ARROWS);
+    stopButton.addActionListener(e -> stop());
+    trainButton.addActionListener(e -> flatland());
     runForverCheckbox.setSelected(QPreferences.RUN_FOREVER);
     scenarioCombobox.setSelectedItem(QPreferences.SCENARIO);
-    trainButton.addActionListener(e -> flatland());
-    stopButton.addActionListener(e -> stop());
+    drawArrowsCheckbox.setSelected(QPreferences.DRAW_ARROWS);
+    intermediateCheckbox.setSelected(QPreferences.INTERMEDIATE_SIMULATIONS);
+    iterationsInput.setText(String.valueOf(QPreferences.MAX_ITERATION));
 
     QPreferences.setProgressBar(progressBar);
     buildFrame(mainPanel, null, null);
@@ -49,6 +54,7 @@ public class QGui extends AIGui {
   }
 
   private void flatland() {
+    QPreferences.MAX_ITERATION = Integer.parseInt(iterationsInput.getText());
     if (flatland == null || !flatland.isRunning()) {
       if(flatland != null)
       flatland.clear();

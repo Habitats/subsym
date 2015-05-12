@@ -19,6 +19,7 @@ import subsym.flatland.entity.Robot;
 import subsym.gui.Direction;
 import subsym.models.Vec;
 import subsym.q.QAction;
+import subsym.q.QCallback;
 import subsym.q.QGame;
 import subsym.q.QLearningEngine;
 import subsym.q.QPreferences;
@@ -30,6 +31,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
 
   private static final String TAG = FlatlandQSimulator.class.getSimpleName();
   private Flatland flatland;
+  private Flatland tempFlatland;
   private Map<BitSet, Map<QAction, Float>> qMap;
 
   private Map<QAction, Direction> actions;
@@ -47,6 +49,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     double discountRate = .9;
     actions = Arrays.asList(Direction.values()).stream().collect(Collectors.toMap(dir -> QAction.get(dir), Function.identity()));
     run(QPreferences.SCENARIO, learningRate, discountRate, QPreferences.MAX_ITERATION);
+
   }
 
   private void run(String scenario, double learningRate, double discountRate, int maxIterations) {
@@ -60,12 +63,40 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     stateHistory = new LinkedList<>();
     stateHistoryActions = new HashMap<>();
 
-    flatland = new Flatland(this, true);
+    flatland = createFlatland(scenario);
+
+    QLearningEngine.train(maxIterations, this, learningRate, discountRate, new QCallback() {
+
+      @Override
+      public void onIteration(int i, Map<BitSet, Map<QAction, Float>> map) {
+        if ((i % 1000) == 0 && QPreferences.INTERMEDIATE_SIMULATIONS) {
+          qMap = map;
+          tempFlatland = flatland;
+          flatland = createFlatland(scenario);
+          flatland.simulate(false);
+          flatland = tempFlatland;
+        }
+      }
+
+      @Override
+      public void onFinished(Map<BitSet, Map<QAction, Float>> map) {
+        qMap = map;
+        flatland.simulate(true);
+
+        if (QPreferences.RUN_FOREVER) {
+          run();
+        } else {
+          isRunning = false;
+        }
+      }
+    });
+
+  }
+
+  private Flatland createFlatland(String scenario) {
+    Flatland flatland = new Flatland(this, true);
     flatland.loadFromFile(scenario);
-
-    qMap = QLearningEngine.train(maxIterations, this, learningRate, discountRate);
-
-    flatland.simulate(true);
+    return flatland;
   }
 
   @Override
@@ -75,21 +106,12 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     }
     if (solution()) {
       flatland.terminate();
-      Log.v(TAG, "Time: " + flatland.getTravelDistance() + " > Poison: " + flatland.getPoisonCount());
-      if (QPreferences.RUN_FOREVER) {
-        run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
-      } else {
-        isRunning = false;
-      }
+//      Log.v(TAG, "Time: " + flatland.getTravelDistance() + " > Poison: " + flatland.getPoisonCount());
     }
     if (flatland.getTravelDistance() > 1000) {
       Log.v(TAG, "Stuck :( ... " + FlatlandQState.getFoodLocations(computeState()).size() + " foods left");
       flatland.terminate();
-      if (QPreferences.RUN_FOREVER) {
-        run(QPreferences.SCENARIO, .9, .9, QPreferences.MAX_ITERATION);
-      }
     }
-
   }
 
   private void drawBestActions(Map<BitSet, Map<QAction, Float>> qMap) {

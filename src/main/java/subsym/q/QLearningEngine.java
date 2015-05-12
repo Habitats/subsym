@@ -21,10 +21,10 @@ public class QLearningEngine {
 
   private static final String TAG = QLearningEngine.class.getSimpleName();
 
-  public static Map<BitSet, Map<QAction, Float>> train(int iterations, QGame game, double learningRate, double discountRate) {
+  public static void train(int iterations, QGame game, double learningRate, double discountRate, QCallback callback) {
     Q q = new Q();
 
-    Log.v2(TAG, "Training ... ");
+    Log.v(TAG, "Training ... ");
     long start = System.currentTimeMillis();
     for (int i = 0; i < iterations; i++) {
       game.restart();
@@ -33,7 +33,6 @@ public class QLearningEngine {
         if (QPreferences.SHOULD_TERMINATE) {
           System.out.println();
           Log.v(TAG, "Terminating training ...");
-          return q.map;
         }
         if (q.map.get(lastState) == null) {
           List<QAction> actions = game.getActions();
@@ -80,16 +79,16 @@ public class QLearningEngine {
 
       //      Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
       if ((i % 100) == 0) {
-        System.out.print("#");
-        QPreferences.setProgress(i, iterations);
+//        System.out.print("#");
+//        QPreferences.setProgress(i, iterations);
       }
+      callback.onIteration(i, q.map);
     }
     QPreferences.setProgress(0, iterations);
-    System.out
-        .print(String.format(" > Completed in %d s > States: %d", (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size()));
+    Log.v(TAG, String.format("Training completed in %d s > States: %d", (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size()));
     System.out.println();
 
-    return q.map;
+    callback.onFinished(q.map);
   }
 
   private static float update(Q q, BitSet currentState, double r, double learningRate, double discountRate, double oldScore) {
@@ -105,7 +104,7 @@ public class QLearningEngine {
 
   public static class Q {
 
-    private Map<BitSet, Map<QAction, Float>> map =  new THashMap<>(1_000_000);
+    private Map<BitSet, Map<QAction, Float>> map = new THashMap<>(1_000_000);
 
     public float get(BitSet s, QAction a) {
       float score;
