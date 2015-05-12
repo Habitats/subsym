@@ -5,30 +5,20 @@ import subsym.gui.Direction;
 /**
  * Created by mail on 05.05.2015.
  */
-public class QAction {
+public enum QAction {
 
-  private final Direction id;
+  UP(0), RIGHT(1), DOWN(2), LEFT(3);
+  private final int i;
 
-  public QAction(Direction id) {
-    this.id = id;
+  QAction(int i) {
+    this.i = i;
   }
 
-  public static QAction create(Direction id) {
-    return new QAction(id);
+  public int getId() {
+    return i;
   }
-//
-//  @Override
-//  public int hashCode() {
-//    return id.hashCode();
-//  }
-//
-//  @Override
-//  public boolean equals(Object obj) {
-//    return toString().equals(obj.toString());
-//  }
 
-  @Override
-  public String toString() {
-    return id.name();
+  public static QAction get(Direction dir) {
+    return values()[dir.ordinal()];
   }
 }

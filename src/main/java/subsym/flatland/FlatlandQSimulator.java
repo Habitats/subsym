@@ -61,7 +61,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     flatland.loadFromFile(scenario);
 
     actions = Arrays.asList(Direction.values()).stream() //
-        .collect(Collectors.toMap(dir -> QAction.create(dir), Function.identity()));
+        .collect(Collectors.toMap(dir -> QAction.get(dir), Function.identity()));
 
     qMap = QLearningEngine.train(maxIterations, this, learningRate, discountRate);
 
