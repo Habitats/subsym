@@ -85,8 +85,9 @@ public class QLearningEngine {
       callback.onIteration(i, q.map);
     }
     QPreferences.setProgress(0, iterations);
-    Log.v(TAG,
-          String.format("Training completed in %d s > States: %d", (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size()));
+    Log.v(TAG, String.format("Training completed in %d s > States: %d > Actions: %d",  //
+                             (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size(),
+                             q.map.values().stream().mapToInt(Map::size).sum()));
     System.out.println();
 
     callback.onFinished(q.map);
