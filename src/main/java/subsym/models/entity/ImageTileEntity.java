@@ -2,7 +2,6 @@ package subsym.models.entity;
 
 import java.awt.*;
 
-import subsym.Log;
 import subsym.models.Board;
 import subsym.models.ResourceLoader;
 
@@ -25,7 +24,7 @@ public abstract class ImageTileEntity extends TileEntity {
     try {
       scaledInstance = resource.getScaledInstance(getBoard().getItemWidth(), getBoard().getItemHeight(), 0);
     } catch (Exception e) {
-      Log.v(TAG, "DRAWING ERROR!");
+//      Log.v(TAG, "DRAWING ERROR!");
     }
     return scaledInstance;
   }

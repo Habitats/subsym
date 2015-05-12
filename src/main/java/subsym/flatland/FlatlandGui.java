@@ -17,6 +17,7 @@ import subsym.gui.AILabel;
 import subsym.gui.AISlider;
 import subsym.gui.AITextArea;
 import subsym.gui.Direction;
+import subsym.models.AIAdapter;
 import subsym.models.entity.TileEntity;
 
 /**
@@ -37,11 +38,9 @@ public class FlatlandGui extends AIGui<TileEntity> {
   private AILabel foodLabel;
   private AISlider simulationSpeedSlider;
   private AILabel scoreLabel;
-
-
-  private FlatlandGui() {
-    buildFrame(mainPanel, null, null);
-  }
+  private int TILE_SCALE = 30;
+  private Dimension preferredSize;
+  private boolean built = false;
 
   private void init(final Flatland flatland) {
     this.flatland = flatland;
@@ -109,6 +108,21 @@ public class FlatlandGui extends AIGui<TileEntity> {
     });
   }
 
+  @Override
+  public void setAdapter(AIAdapter<TileEntity> adapter) {
+    super.setAdapter(adapter);
+    preferredSize = new Dimension(adapter.getWidth() * TILE_SCALE, adapter.getHeight() * TILE_SCALE);
+    setPreferredSize(preferredSize);
+    Dimension minimumSize = new Dimension(650, 650);
+    setMinimumSize(minimumSize);
+    if (!built) {
+      buildFrame(mainPanel, null, null);
+      built = true;
+    } else {
+      pack();
+    }
+  }
+
   public int getSimulationSpeed() {
     return simulationSpeedSlider.getValue();
   }
@@ -127,7 +141,7 @@ public class FlatlandGui extends AIGui<TileEntity> {
 
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(650, 650);
+    return preferredSize;
   }
 
   @Override

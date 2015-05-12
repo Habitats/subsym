@@ -52,14 +52,13 @@ public class Flatland {
 
   public void loadFromFile(String fileName) {
     board = readBoardFromFile(fileName);
-    setBoard(board);
   }
 
   private Board<TileEntity> readBoardFromFile(String fileName) {
     try {
       Path path = FileSystems.getDefault().getPath(QPreferences.PATH, fileName);
       content = Files.readAllLines(path).stream()//
-          .map(strLst -> Arrays.asList(strLst.split("\\s")).stream() //
+          .map(strLst -> Arrays.asList(strLst.trim().split("\\s+")).stream() //
               .mapToInt(Integer::parseInt).boxed() //
               .collect(Collectors.toList())).collect(Collectors.toList());
       List<Integer> specs = content.remove(0);
@@ -107,14 +106,13 @@ public class Flatland {
 
   private void setGui() {
     gui = FlatlandGui.get(this);
-    gui.setVisible(showGui);
   }
 
   public void setBoard(Board<TileEntity> board) {
     this.board = board;
     if (showGui) {
-      gui.setVisible(true);
       gui.setAdapter(board);
+      gui.setVisible(showGui);
     }
   }
 
@@ -156,6 +154,7 @@ public class Flatland {
   public void simulate(Runnable callback) {
     new Thread(() -> {
       initBoard(board);
+      setBoard(board);
       for (int i = 1; i <= simulator.getMaxSteps(); i++) {
         simulator.move(robot);
         onSimulationTick(i);

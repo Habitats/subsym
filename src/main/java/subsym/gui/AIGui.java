@@ -27,7 +27,7 @@ public abstract class AIGui<T extends Entity> extends JFrame {
     add(mainPanel);
     setDefaultCloseOperation(getDefaultCloseOperation());
     pack();
-    setLocationRelativeTo(getRootPane());
+    setLocationRelativeTo(null);
     setVisible(true);
   }
 

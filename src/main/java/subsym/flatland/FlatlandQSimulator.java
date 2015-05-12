@@ -45,10 +45,13 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     QPreferences.SHOULD_TERMINATE = false;
     double learningRate = .9;
     double discountRate = .9;
+    actions = Arrays.asList(Direction.values()).stream().collect(Collectors.toMap(dir -> QAction.get(dir), Function.identity()));
     run(QPreferences.SCENARIO, learningRate, discountRate, QPreferences.MAX_ITERATION);
   }
 
   private void run(String scenario, double learningRate, double discountRate, int maxIterations) {
+    bestActions = null;
+
     if (QPreferences.SHOULD_TERMINATE) {
       flatland.terminate();
       return;
@@ -59,9 +62,6 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
 
     flatland = new Flatland(this, true);
     flatland.loadFromFile(scenario);
-
-    actions = Arrays.asList(Direction.values()).stream() //
-        .collect(Collectors.toMap(dir -> QAction.get(dir), Function.identity()));
 
     qMap = QLearningEngine.train(maxIterations, this, learningRate, discountRate);
 
