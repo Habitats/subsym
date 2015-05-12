@@ -6,12 +6,12 @@ import java.util.Random;
 
 import javax.swing.*;
 
-import subsym.flatland.FlatlandQSimulator;
 import subsym.boids.Boids;
 import subsym.gui.AICanvas;
 import subsym.gui.AIGui;
 import subsym.gui.AITextArea;
 import subsym.gui.Plot;
+import subsym.q.QGui;
 
 /**
  * Created by anon on 28.01.2015.
@@ -54,7 +54,8 @@ public class Main {
 //        FlatlandGui.demo();
 
 //        new Genetics();
-        FlatlandQSimulator sim = new FlatlandQSimulator();
+//        FlatlandQSimulator sim = new FlatlandQSimulator();
+        new QGui();
       }
 
 

@@ -1,6 +1,7 @@
 package subsym.q;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,16 +19,20 @@ public class QLearningEngine {
 
   private static final String TAG = QLearningEngine.class.getSimpleName();
 
-  public static <T extends QState> Map<T, Map<QAction, Float>> train(int iterations, QGame<T> game, double learningRate,
-                                                                     double discountRate) {
+  public static Map<BitSet, Map<QAction, Float>> train(int iterations, QGame game, double learningRate, double discountRate) {
     Q q = new Q();
 
     Log.v2(TAG, "Training ... ");
     long start = System.currentTimeMillis();
     for (int i = 0; i < iterations; i++) {
       game.restart();
-      T lastState = game.computeState();
+      BitSet lastState = game.computeState();
       while (!game.solution()) {
+        if (QPreferences.SHOULD_TERMINATE) {
+          System.out.println();
+          Log.v(TAG, "Terminating training ...");
+          return q.map;
+        }
         if (q.map.get(lastState) == null) {
           List<QAction> actions = game.getActions();
           Map<QAction, Float> actionMap = actions.stream().collect(Collectors.toMap(a -> a, a -> 0.f));
@@ -39,14 +44,14 @@ public class QLearningEngine {
         }
         game.execute(a);
         game.onStep(q.map);
-        T currentState = game.computeState();
+        BitSet currentState = game.computeState();
         double r = game.getReward();
         if (r <= 0 || QPreferences.BACKUP_THRESHOLD == 1) {
           float oldScore = getLastScore(q, lastState, a);
           float newScore = update(q, currentState, r, learningRate, discountRate, oldScore);
           q.set(lastState, a, newScore);
         } else {
-          for (T state : game.getHistory()) {
+          for (BitSet state : game.getHistory()) {
             float oldScore = getLastScore(q, lastState, a);
             float newScore = update(q, currentState, r, learningRate, discountRate, oldScore);
             q.set(lastState, a, newScore);
@@ -74,8 +79,10 @@ public class QLearningEngine {
       //      Log.v(TAG, "Iteration " + (i + 1) + "/" + iterations);
       if ((i % 100) == 0) {
         System.out.print("#");
+        QPreferences.setProgress(i, iterations);
       }
     }
+    QPreferences.setProgress(0, iterations);
     System.out
         .print(String.format(" > Completed in %d s > States: %d", (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size()));
     System.out.println();
@@ -83,27 +90,22 @@ public class QLearningEngine {
     return q.map;
   }
 
-  private static <T extends QState> float update(Q q, T currentState, double r, double learningRate, double discountRate, double oldScore) {
+  private static float update(Q q, BitSet currentState, double r, double learningRate, double discountRate, double oldScore) {
     double maxScoreIfBestAction = q.bestNextGivenAction(currentState);
     double delta = learningRate * (r + discountRate * maxScoreIfBestAction - oldScore);
     double score = oldScore + delta;
     return (float) score;
   }
 
-  private static <T extends QState> float getLastScore(Q q, T lastState, QAction a) {
+  private static float getLastScore(Q q, BitSet lastState, QAction a) {
     return q.get(lastState, a);
   }
 
-  public static class Q<T extends QState> {
+  public static class Q {
 
-    private Map<T, Map<QAction, Float>> map;
-    private double count = 1;
+    private Map<BitSet, Map<QAction, Float>> map = new HashMap<>(10_000_000);
 
-    public Q() {
-      map = new HashMap<>();
-    }
-
-    public float get(T s, QAction a) {
+    public float get(BitSet s, QAction a) {
       float score;
       if (map.containsKey(s) && map.get(s).containsKey(a)) {
         score = map.get(s).get(a);
@@ -114,7 +116,7 @@ public class QLearningEngine {
       return score;
     }
 
-    public double bestNextGivenAction(T s) {
+    public double bestNextGivenAction(BitSet s) {
       Map<QAction, Float> actionMap = map.get(s);
       if (actionMap == null) {
         return 0;
@@ -125,7 +127,7 @@ public class QLearningEngine {
       }
     }
 
-    public void set(T s, QAction a, float value) {
+    public void set(BitSet s, QAction a, float value) {
       Map<QAction, Float> actions;
       if (map.containsKey(s)) {
         actions = map.get(s);
@@ -137,10 +139,12 @@ public class QLearningEngine {
     }
 
     public QAction selectAction(QGame game, double iterationRate) {
-      QState key = game.computeState();
+      BitSet key = game.computeState();
       Map<QAction, Float> actionMap = map.get(key);
 
-      boolean pickRandom = Main.random().nextDouble() < QPreferences.LOWER_RANDOM_THRESHOLD + QPreferences.UPPER_RANDOM_THRESHOLD * iterationRate;
+      boolean
+          pickRandom =
+          Main.random().nextDouble() < QPreferences.LOWER_RANDOM_THRESHOLD + QPreferences.UPPER_RANDOM_THRESHOLD * iterationRate;
 //      Log.v(TAG, v);
       if (!pickRandom && actionMap.size() >= 0) {
         return getBestAction(actionMap);

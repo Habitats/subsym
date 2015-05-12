@@ -21,6 +21,7 @@ import subsym.gui.Direction;
 import subsym.models.Board;
 import subsym.models.Vec;
 import subsym.models.entity.TileEntity;
+import subsym.q.QPreferences;
 
 /**
  * Created by mail on 11.05.2015.
@@ -56,7 +57,7 @@ public class Flatland {
 
   private Board<TileEntity> readBoardFromFile(String fileName) {
     try {
-      Path path = FileSystems.getDefault().getPath("q", fileName);
+      Path path = FileSystems.getDefault().getPath(QPreferences.PATH, fileName);
       content = Files.readAllLines(path).stream()//
           .map(strLst -> Arrays.asList(strLst.split("\\s")).stream() //
               .mapToInt(Integer::parseInt).boxed() //
@@ -121,7 +122,7 @@ public class Flatland {
 ////    Flatland flatland = new Flatland(simulator, true);
     reset();
     this.showGui = showGui;
-    simulate(() -> Log.v(TAG, "Simulating ..."));
+    simulate(() -> Log.v(TAG, "Simulation finished ..."));
   }
 
   private void initBoard(Board<TileEntity> board) {
@@ -158,7 +159,8 @@ public class Flatland {
       for (int i = 1; i <= simulator.getMaxSteps(); i++) {
         simulator.move(robot);
         onSimulationTick(i);
-        if (shouldStop) {
+        if (shouldStop || QPreferences.SHOULD_TERMINATE) {
+          Log.v(TAG, "Terminating simulation ...");
           break;
         }
       }
@@ -193,8 +195,8 @@ public class Flatland {
     return showGui;
   }
 
-  //########### ROBOT STUFF ################
 
+  //########### ROBOT STUFF ################
   public int getFoodCount() {
     return robot.getFoodCount();
   }
