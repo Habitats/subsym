@@ -22,10 +22,9 @@ public class QPreferences {
   public static boolean DRAW_ARROWS = false;
 
   public static boolean INTERMEDIATE_SIMULATIONS = true;
-  public static int MAX_ITERATION = 10000;
+  public static int MAX_ITERATION = 5000;
   public static final int BACKUP_THRESHOLD = 1;
   public static final double UPPER_RANDOM_THRESHOLD = .61;
-  public static final double LOWER_RANDOM_THRESHOLD = 0.045;
 
   public static final int RANDOM_ITERATION_THRESHOLD = 3000;
   public static final double LEARNING_RATE = 0.99;
