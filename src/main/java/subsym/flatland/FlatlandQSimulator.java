@@ -43,6 +43,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
 
   private Map<BitSet, Map<QAction, Float>> qMap;
   private Map<BitSet, Map<QAction, Float>> best;
+  private String scenario;
 
   @Override
   public void run() {
@@ -78,7 +79,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
       public void onFinished(Map<BitSet, Map<QAction, Float>> map) {
         qMap = map;
         int current = simulateCurrentState(false);
-        if (current < shortest) {
+        if (current < shortest || best == null) {
           shortest = current;
           if (best != null) {
             best.values().forEach(Map::clear);
@@ -113,7 +114,12 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
 
   private Flatland createFlatland() {
     Flatland flatland = new Flatland(this, true);
-    flatland.loadFromFile(QPreferences.SCENARIO);
+    if (scenario != QPreferences.SCENARIO && best != null) {
+      best.clear();
+      best = null;
+    }
+    scenario = QPreferences.SCENARIO;
+    flatland.loadFromFile(scenario);
     return flatland;
   }
 

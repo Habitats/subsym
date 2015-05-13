@@ -1,6 +1,8 @@
 package subsym.q;
 
 import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.*;
 
@@ -27,6 +29,9 @@ public class QGui extends AIGui {
   private JTextField iterationsInput;
   private AIButton restartButton;
   private AIButton bestButton;
+  private JLabel heapUsedLabel;
+  private JLabel heapLabel;
+  private AIButton panicButton;
   private FlatlandQSimulator simulator;
   private String TAG = QGui.class.getSimpleName();
 
@@ -41,20 +46,33 @@ public class QGui extends AIGui {
     bestButton.addActionListener(e -> new Thread(() -> simulator.simulateBestState()).start());
     trainButton.addActionListener(e -> flatland());
     restartButton.addActionListener(e -> new Thread(() -> simulator.simulateCurrentState(true)).start());
+    panicButton.addActionListener(e -> System.gc());
     runForverCheckbox.setSelected(QPreferences.RUN_FOREVER);
     scenarioCombobox.setSelectedItem(QPreferences.SCENARIO);
     drawArrowsCheckbox.setSelected(QPreferences.DRAW_ARROWS);
     intermediateCheckbox.setSelected(QPreferences.INTERMEDIATE_SIMULATIONS);
     iterationsInput.setText(String.valueOf(QPreferences.MAX_ITERATION));
 
+    new Timer().scheduleAtFixedRate(new TimerTask() {
+      @Override
+      public void run() {
+        updateHeapStats();
+      }
+    }, 0, 200);
+
     QPreferences.setProgressBar(progressBar);
     buildFrame(mainPanel, null, null);
   }
 
+  private void updateHeapStats() {
+    long heapSize = Runtime.getRuntime().totalMemory() / (1024 * 1024);
+    long heapMaxSize = Runtime.getRuntime().maxMemory() / (1024 * 1024);
+    long heapFreeSize = Runtime.getRuntime().freeMemory() / (1024 * 1024);
+    heapLabel.setText(String.format("Heap: %4d/%4d \t Free: %4d", heapSize, heapMaxSize, heapFreeSize));
+  }
+
   private void stop() {
     QPreferences.SHOULD_TERMINATE = true;
-    simulator = null;
-    System.gc();
   }
 
   private void flatland() {
@@ -80,7 +98,7 @@ public class QGui extends AIGui {
 
   @Override
   public Dimension getPreferredSize() {
-    return new Dimension(500, 200);
+    return new Dimension(450, 200);
   }
 
   @Override
