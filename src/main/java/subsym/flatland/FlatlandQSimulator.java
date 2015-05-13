@@ -91,6 +91,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
         flatland.simulate(true);
 
         if (QPreferences.RUN_FOREVER) {
+          System.gc();
           run();
         } else {
           isRunning = false;
