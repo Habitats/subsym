@@ -31,15 +31,18 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
   private static final String TAG = FlatlandQSimulator.class.getSimpleName();
   private Flatland flatland;
   private Flatland tempFlatland;
-  private Map<BitSet, Map<QAction, Float>> qMap;
 
   private Map<QAction, Direction> actions;
   private Map<BitSet, QAction> bestActions;
-
   private Map<BitSet, QAction> stateHistoryActions;
+
   private Deque<BitSet> stateHistory;
   private double lastReward;
   private boolean isRunning;
+  private int shortest = Integer.MAX_VALUE;
+
+  private Map<BitSet, Map<QAction, Float>> qMap;
+  private Map<BitSet, Map<QAction, Float>> best;
 
   @Override
   public void run() {
@@ -74,6 +77,16 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
       @Override
       public void onFinished(Map<BitSet, Map<QAction, Float>> map) {
         qMap = map;
+        int current = simulateCurrentState(false);
+        if (current < shortest) {
+          shortest = current;
+          if (best != null) {
+            best.values().forEach(Map::clear);
+            best.clear();
+          }
+          best = map;
+        }
+
         flatland.simulate(true);
 
         if (QPreferences.RUN_FOREVER) {
@@ -85,11 +98,17 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     });
   }
 
-  public void simulateCurrentState(boolean showGui) {
+  public void simulateBestState() {
+    qMap = best;
+    simulateCurrentState(true);
+  }
+
+  public int simulateCurrentState(boolean showGui) {
     tempFlatland = flatland;
     flatland = createFlatland();
-    flatland.simulate(showGui);
+    int distance = flatland.simulate(showGui);
     flatland = tempFlatland;
+    return distance;
   }
 
   private Flatland createFlatland() {
@@ -261,6 +280,6 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
   }
 
   public void clear() {
-    qMap.clear();
+    qMap = null;
   }
 }

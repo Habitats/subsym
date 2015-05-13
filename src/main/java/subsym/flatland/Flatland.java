@@ -116,7 +116,7 @@ public class Flatland {
     }
   }
 
-  public void simulate(boolean showGui, Runnable callback) {
+  public int simulate(boolean showGui, Runnable callback) {
     shouldStop = false;
     reset();
     this.showGui = showGui;
@@ -131,6 +131,7 @@ public class Flatland {
       }
     }
     callback.run();
+    return getTravelDistance();
   }
 
   private void initBoard(Board<TileEntity> board) {
@@ -254,8 +255,8 @@ public class Flatland {
     return board.get(location);
   }
 
-  public void simulate(boolean b) {
-    simulate(b, () -> {
+  public int simulate(boolean b) {
+    return simulate(b, () -> {
     });
   }
 }
