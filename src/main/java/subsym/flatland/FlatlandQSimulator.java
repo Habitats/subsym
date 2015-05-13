@@ -96,6 +96,11 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
           isRunning = false;
         }
       }
+
+      @Override
+      public void onTerminate() {
+        isRunning = false;
+      }
     });
   }
 

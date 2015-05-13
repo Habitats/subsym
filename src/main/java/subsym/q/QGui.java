@@ -69,6 +69,11 @@ public class QGui extends AIGui {
     long heapMaxSize = Runtime.getRuntime().maxMemory() / (1024 * 1024);
     long heapFreeSize = Runtime.getRuntime().freeMemory() / (1024 * 1024);
     heapLabel.setText(String.format("Heap: %4d/%4d \t Free: %4d", heapSize, heapMaxSize, heapFreeSize));
+
+    if (heapSize == heapMaxSize && heapFreeSize < 200) {
+      QPreferences.SHOULD_TERMINATE = true;
+      Log.v(TAG, "Oh shit oh shit oh shit!");
+    }
   }
 
   private void stop() {

@@ -11,4 +11,6 @@ public interface QCallback {
   void onIteration(int i, Map<BitSet, Map<QAction, Float>> map);
 
   void onFinished(Map<BitSet, Map<QAction, Float>> map);
+
+  void onTerminate();
 }

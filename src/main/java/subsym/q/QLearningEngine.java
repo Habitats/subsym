@@ -34,6 +34,7 @@ public class QLearningEngine {
       while (!game.solution()) {
         if (QPreferences.SHOULD_TERMINATE) {
           Log.v(TAG, "Terminating training ...");
+          callback.onTerminate();
           return;
         }
         if (q.map.get(lastState) == null) {
