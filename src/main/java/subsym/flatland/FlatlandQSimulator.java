@@ -79,14 +79,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
       public void onFinished(Map<BitSet, Map<QAction, Float>> map) {
         qMap = map;
         int current = simulateCurrentState(false);
-        if (current < shortest || best == null) {
-          shortest = current;
-          if (best != null) {
-            best.values().forEach(Map::clear);
-            best.clear();
-          }
-          best = map;
-        }
+        updateBest(map, current);
 
         flatland.simulate(true);
 
@@ -105,6 +98,17 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     });
   }
 
+  private void updateBest(Map<BitSet, Map<QAction, Float>> map, int current) {
+    if (current < shortest || best == null) {
+      shortest = current;
+      if (best != null) {
+        best.values().forEach(Map::clear);
+        best.clear();
+      }
+      best = map;
+    }
+  }
+
   public void simulateBestState() {
     qMap = best;
     simulateCurrentState(true);
@@ -114,6 +118,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     tempFlatland = flatland;
     flatland = createFlatland();
     int distance = flatland.simulate(showGui);
+    distance = (flatland.getPoisonCount() == 0) ? distance : Integer.MAX_VALUE;
     flatland = tempFlatland;
     return distance;
   }
