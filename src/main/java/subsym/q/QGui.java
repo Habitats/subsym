@@ -32,6 +32,7 @@ public class QGui extends AIGui {
   private JLabel heapUsedLabel;
   private JLabel heapLabel;
   private AIButton panicButton;
+  private JLabel iterationRate;
   private FlatlandQSimulator simulator;
   private String TAG = QGui.class.getSimpleName();
 
@@ -57,6 +58,7 @@ public class QGui extends AIGui {
       @Override
       public void run() {
         updateHeapStats();
+        iterationRate.setText(String.format("R: %5.3f", QPreferences.ITERATION_RATE));
       }
     }, 0, 200);
 
@@ -82,6 +84,7 @@ public class QGui extends AIGui {
 
   private void flatland() {
     QPreferences.MAX_ITERATION = Integer.parseInt(iterationsInput.getText());
+    QPreferences.RANDOM_ITERATION_THRESHOLD  = Math.max(0, QPreferences.MAX_ITERATION - 1500);
     if (simulator == null || !simulator.isRunning()) {
       if (simulator == null) {
         simulator = new FlatlandQSimulator();

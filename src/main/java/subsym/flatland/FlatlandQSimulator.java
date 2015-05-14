@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,11 +82,10 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
         qMap = map;
         int current = simulateCurrentState(false);
         updateBest(map, current);
-
-        flatland.simulate(true);
+//        flatland.simulate(true);
 
         if (QPreferences.RUN_FOREVER) {
-          run();
+          runAnother();
         } else {
           isRunning = false;
         }
@@ -95,6 +96,23 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
         isRunning = false;
       }
     });
+  }
+
+  private void runAnother() {
+    if (Runtime.getRuntime().totalMemory() == Runtime.getRuntime().maxMemory()
+        && Runtime.getRuntime().freeMemory() / (1024 * 1024) < 2000) {
+      Timer timer = new Timer();
+      Log.v(TAG, "Clearing memory ...");
+      System.gc();
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          FlatlandQSimulator.this.run();
+        }
+      }, 0, 5000);
+    } else {
+      run();
+    }
   }
 
   private void updateBest(Map<BitSet, Map<QAction, Float>> map, int current) {
@@ -117,7 +135,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     tempFlatland = flatland;
     flatland = createFlatland();
     int distance = flatland.simulate(showGui);
-    distance = (flatland.getPoisonCount() == 0) ? distance : Integer.MAX_VALUE;
+    distance = (flatland.getPoisonCount() == 0 && flatland.getFoodCount() == flatland.getMaxFoodCount()) ? distance : Integer.MAX_VALUE;
     flatland = tempFlatland;
     return distance;
   }

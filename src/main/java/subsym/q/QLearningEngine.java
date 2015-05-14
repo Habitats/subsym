@@ -24,7 +24,7 @@ public class QLearningEngine {
   public static void train(int iterations, QGame game, double learningRate, double discountRate, QCallback callback) {
     Q q = new Q();
 
-    Log.v(TAG, "Training ... ");
+//    Log.v(TAG, "Training ... ");
     long start = System.currentTimeMillis();
     List<QAction> actions = game.getActions();
     for (int i = 0; i < iterations; i++) {
@@ -40,7 +40,7 @@ public class QLearningEngine {
         if (q.map.get(lastState) == null) {
           q.map.put(game.computeState(), new HashMap<>(4));
         }
-        QAction a = q.selectAction(game, iterationRate, actions, q.map);
+        QAction a = q.selectAction(game, actions, i);
         if (QPreferences.BACKUP_THRESHOLD > 1) {
           game.addHisory(lastState, a);
         }
@@ -89,8 +89,6 @@ public class QLearningEngine {
     Log.v(TAG, String.format("Training completed in %d s > States: %d > Actions: %d",  //
                              (int) ((System.currentTimeMillis() - start) / 1000.), q.map.size(),
                              q.map.values().stream().mapToInt(Map::size).sum()));
-    System.out.println();
-
     callback.onFinished(q.map);
   }
 
@@ -149,14 +147,25 @@ public class QLearningEngine {
       actions.put(a, value);
     }
 
-    public QAction selectAction(QGame game, double iterationRate, List<QAction> actions, Map<BitSet, Map<QAction, Float>> map) {
+    public QAction selectAction(QGame game, List<QAction> actions, int currentIteration) {
       BitSet key = game.computeState();
       Map<QAction, Float> actionMap = this.map.get(key);
 
-      boolean
-          pickRandom =
-          Main.random().nextDouble() < QPreferences.LOWER_RANDOM_THRESHOLD + QPreferences.UPPER_RANDOM_THRESHOLD * iterationRate;
-//      Log.v(TAG, v);
+      double threshold;
+      if (currentIteration < 5000) {
+        threshold = 0.002;
+      } else if (currentIteration < QPreferences.RANDOM_ITERATION_THRESHOLD) {
+        double dy = QPreferences.RANDOM_THRESHOLD_END - QPreferences.RANDOM_THRESHOLD_START;
+        double dx = QPreferences.RANDOM_ITERATION_THRESHOLD;
+        threshold = dy / dx * currentIteration + QPreferences.RANDOM_THRESHOLD_START;
+        threshold = Math.min(QPreferences.RANDOM_THRESHOLD_MAX , threshold);
+      } else {
+        double dy = QPreferences.RANDOM_THRESHOLD_START - QPreferences.RANDOM_THRESHOLD_MAX;
+        double dx = QPreferences.MAX_ITERATION - QPreferences.RANDOM_ITERATION_THRESHOLD;
+        threshold = dy / dx * (currentIteration - QPreferences.RANDOM_ITERATION_THRESHOLD) + QPreferences.RANDOM_THRESHOLD_MAX;
+      }
+      boolean pickRandom = Main.random().nextDouble() < threshold;
+      QPreferences.ITERATION_RATE = threshold;
       if (!pickRandom) {
         return getBestAction(actionMap, actions);
       } else {
@@ -196,8 +205,7 @@ public class QLearningEngine {
       // so there are SOME stuff here, shouldn't override those
       else {
         QAction randomActionBetterThanThePresentOnes = allActions.stream() //
-            .filter(a -> !availableActions.containsKey(a)).collect(Collectors.toList())
-            .get(Main.random().nextInt( missing));
+            .filter(a -> !availableActions.containsKey(a)).collect(Collectors.toList()).get(Main.random().nextInt(missing));
         availableActions.put(randomActionBetterThanThePresentOnes, 0.f);
         return randomActionBetterThanThePresentOnes;
       }

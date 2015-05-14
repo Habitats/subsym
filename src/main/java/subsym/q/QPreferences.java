@@ -22,16 +22,18 @@ public class QPreferences {
   public static boolean DRAW_ARROWS = false;
 
   public static boolean INTERMEDIATE_SIMULATIONS = true;
-  public static int MAX_ITERATION = 3000;
+  public static int MAX_ITERATION = 15000;
   public static final int BACKUP_THRESHOLD = 1;
-  public static final double UPPER_RANDOM_THRESHOLD = .41;
-  public static final double LOWER_RANDOM_THRESHOLD = 0.105;
+  public static final double RANDOM_THRESHOLD_START = .0000;
+  public static final double RANDOM_THRESHOLD_END = 0.80;
+  public static final double RANDOM_THRESHOLD_MAX = 0.45;
+  public static double ITERATION_RATE = RANDOM_THRESHOLD_START;
 
-  public static final int RANDOM_ITERATION_THRESHOLD = 2500;
+  public static int RANDOM_ITERATION_THRESHOLD = 14000;
   public static final double LEARNING_RATE = 0.99;
   public static final double DISCOUNT_RATE = 0.99;
 
-  public static final double STEP_PENALTY = -0.01000001;
+  public static final double STEP_PENALTY = -1.71000001;
   public static final double FOOD_REWARD = 10;
   public static final double POISON_PENALTY = -50;
 
