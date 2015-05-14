@@ -22,7 +22,7 @@ public class QPreferences {
   public static boolean DRAW_ARROWS = false;
 
   public static boolean INTERMEDIATE_SIMULATIONS = true;
-  public static int MAX_ITERATION = 15000;
+  public static int MAX_ITERATION = 10000;
   public static final int BACKUP_THRESHOLD = 1;
   public static final double RANDOM_THRESHOLD_START = .0000;
   public static final double RANDOM_THRESHOLD_END = 0.80;
@@ -33,7 +33,7 @@ public class QPreferences {
   public static final double LEARNING_RATE = 0.99;
   public static final double DISCOUNT_RATE = 0.99;
 
-  public static final double STEP_PENALTY = -1.71000001;
+  public static final double STEP_PENALTY = -1.51000001;
   public static final double FOOD_REWARD = 10;
   public static final double POISON_PENALTY = -50;
 
