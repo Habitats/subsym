@@ -84,7 +84,7 @@ public class QGui extends AIGui {
 
   private void flatland() {
     QPreferences.MAX_ITERATION = Integer.parseInt(iterationsInput.getText());
-    QPreferences.RANDOM_ITERATION_THRESHOLD  = Math.max(0, QPreferences.MAX_ITERATION - 1500);
+    QPreferences.RANDOM_ITERATION_THRESHOLD = Math.max(0, QPreferences.MAX_ITERATION - 1500);
     if (simulator == null || !simulator.isRunning()) {
       if (simulator == null) {
         simulator = new FlatlandQSimulator();

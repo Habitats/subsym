@@ -158,7 +158,7 @@ public class QLearningEngine {
         double dy = QPreferences.RANDOM_THRESHOLD_END - QPreferences.RANDOM_THRESHOLD_START;
         double dx = QPreferences.RANDOM_ITERATION_THRESHOLD;
         threshold = dy / dx * currentIteration + QPreferences.RANDOM_THRESHOLD_START;
-        threshold = Math.min(QPreferences.RANDOM_THRESHOLD_MAX , threshold);
+        threshold = Math.min(QPreferences.RANDOM_THRESHOLD_MAX, threshold);
       } else {
         double dy = QPreferences.RANDOM_THRESHOLD_START - QPreferences.RANDOM_THRESHOLD_MAX;
         double dx = QPreferences.MAX_ITERATION - QPreferences.RANDOM_ITERATION_THRESHOLD;

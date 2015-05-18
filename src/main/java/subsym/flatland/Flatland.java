@@ -56,7 +56,7 @@ public class Flatland {
 
   private Board<TileEntity> readBoardFromFile(String fileName) {
     try {
-      Path path = FileSystems.getDefault().getPath(QPreferences.PATH, fileName);
+      Path path = FileSystems.getDefault().getPath(QPreferences.FOLDER, fileName);
       content = Files.readAllLines(path).stream()//
           .map(strLst -> Arrays.asList(strLst.trim().split("\\s+")).stream() //
               .mapToInt(Integer::parseInt).boxed() //

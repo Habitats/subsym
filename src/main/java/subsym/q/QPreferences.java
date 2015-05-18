@@ -12,9 +12,9 @@ import javax.swing.*;
 public class QPreferences {
 
   private static JProgressBar bar;
-  public static final String PATH = "q";
+  public static final String FOLDER = "q";
   public static boolean SHOULD_TERMINATE = false;
-  public static List<String> SCENARIOS = Arrays.asList(new File("q").list());
+  public static List<String> SCENARIOS = Arrays.asList(new File(FOLDER).list());
   public static String SCENARIO = SCENARIOS.get(4);
 
   public static final boolean DEBUG = false;
