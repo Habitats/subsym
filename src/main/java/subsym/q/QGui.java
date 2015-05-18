@@ -1,6 +1,8 @@
 package subsym.q;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,6 +44,23 @@ public class QGui extends AIGui {
     drawArrowsCheckbox.addActionListener(e -> QPreferences.DRAW_ARROWS = drawArrowsCheckbox.isSelected());
     scenarioCombobox.addActionListener(e -> QPreferences.SCENARIO = scenarioCombobox.getSelectedItem().toString());
     intermediateCheckbox.addActionListener(e -> QPreferences.INTERMEDIATE_SIMULATIONS = intermediateCheckbox.isSelected());
+
+    InputMap inputMap = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    ActionMap actionMap = mainPanel.getActionMap();
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0), "t");
+    actionMap.put("t", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        flatland();
+      }
+    });
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0), "s");
+    actionMap.put("s", new AbstractAction() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        stop();
+      }
+    });
 
     stopButton.addActionListener(e -> stop());
     bestButton.addActionListener(e -> new Thread(() -> simulator.simulateBestState()).start());
