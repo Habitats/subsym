@@ -185,7 +185,7 @@ public class FlatlandQSimulator implements FlatlandSimulator, QGame, Runnable {
     // states with the same food config
     BitSet currentState = computeState();
     BitSet currentFoodState = FlatlandQState.getFoodLocations(currentState);
-    return qMap.keySet().parallelStream() //
+    return qMap.keySet().stream() //
         .filter(state -> currentFoodState.equals(FlatlandQState.getFoodLocations(state))) //
         .collect(Collectors.toMap(s -> s, s -> getBestAction(qMap.get(s))));
   }

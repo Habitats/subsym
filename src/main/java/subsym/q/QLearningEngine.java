@@ -4,6 +4,7 @@ import gnu.trove.map.hash.THashMap;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ public class QLearningEngine {
     for (int i = 0; i < iterations; i++) {
       game.restart();
       BitSet lastState = game.computeState();
+      double iterationRate = getIterationRate(iterations, i);
       while (!game.solution()) {
         if (QPreferences.SHOULD_TERMINATE) {
           Log.v(TAG, "Terminating training ...");
@@ -128,8 +130,8 @@ public class QLearningEngine {
       if (actionMap == null) {
         return 0;
       } else {
-//        QAction bestAction = Collections.max(actionMap.keySet(), actionComparator);
-        QAction bestAction = actionMap.keySet().stream().max(getActionComparator(actionMap)).get();
+        Comparator<QAction> actionComparator = (a1, a2) -> Double.compare(actionMap.get(a1), actionMap.get(a2));
+        QAction bestAction = Collections.max(actionMap.keySet(), actionComparator);
         return actionMap.get(bestAction);
       }
     }
@@ -183,7 +185,8 @@ public class QLearningEngine {
       if (missing != allActions.size()) {
         float best = availableActions.values().stream().max(Float::compare).get();
         // there are good actions present, pick the best one
-        QAction qAction = availableActions.keySet().stream().max(getActionComparator(availableActions)).get();
+        QAction qAction = availableActions.keySet().stream() //
+            .max((a1, a2) -> Float.compare(availableActions.get(a1), availableActions.get(a2))).get();
         // found a good one, or they are all just here, and they suck
         if (best > 0 || missing == 0) {
           return qAction;
@@ -206,10 +209,6 @@ public class QLearningEngine {
         availableActions.put(randomActionBetterThanThePresentOnes, 0.f);
         return randomActionBetterThanThePresentOnes;
       }
-    }
-
-    private Comparator<QAction> getActionComparator(Map<QAction, Float> actionMap) {
-      return (a1, a2) -> Float.compare(actionMap.get(a1), actionMap.get(a2));
     }
   }
 }
