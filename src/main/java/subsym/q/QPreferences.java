@@ -33,7 +33,7 @@ public class QPreferences {
   public static final double LEARNING_RATE = 0.99;
   public static final double DISCOUNT_RATE = 0.99;
 
-  public static final double STEP_PENALTY = -1.51000001;
+  public static final double STEP_PENALTY = -1.01000001;
   public static final double FOOD_REWARD = 10;
   public static final double POISON_PENALTY = -50;
 
